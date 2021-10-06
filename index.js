@@ -40,7 +40,7 @@ app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'vi
 app.engine('html', require('ejs').renderFile)
 app.set('view engine', 'html')
 
-app.listen(3000, () => {
+app.listen(80, () => {
 
   app.use(express.static(__dirname + '/public'))
   app.use(express.static(__dirname + '/views'))

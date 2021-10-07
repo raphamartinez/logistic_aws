@@ -60,7 +60,7 @@ class Tables {
 
   createTableQuotation() {
     const sql = `CREATE TABLE IF NOT EXISTS quotation (id int NOT NULL AUTO_INCREMENT, 
-      id_item int NOT NULL, dateReg DATETIME, amount int,
+      id_item int NOT NULL, dateReg DATETIME, amount int, currency int,
       id_provider int, status int, price double,
       FOREIGN KEY (id_item) REFERENCES item (id),
       FOREIGN KEY (id_provider) REFERENCES provider (id),
@@ -126,7 +126,7 @@ class Tables {
   }
 
   createTableItem() {
-    const sql = `CREATE TABLE IF NOT EXISTS item (id int NOT NULL AUTO_INCREMENT, code VARCHAR (100), currency int,
+    const sql = `CREATE TABLE IF NOT EXISTS item (id int NOT NULL AUTO_INCREMENT, code VARCHAR (100), 
       name VARCHAR (100) NOT NULL, brand VARCHAR (50), description VARCHAR(150), type INT, km INT, status INT, plate VARCHAR (10), dateReg DATETIME NOT NULL,
       PRIMARY KEY (id))`
 

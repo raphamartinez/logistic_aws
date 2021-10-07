@@ -10,11 +10,11 @@ module.exports = app => {
     app.get('/item', [Middleware.bearer, Authorization('item', 'read')], async (req, res, next) => {
         try {
 
-            const cached = await cachelist.searchValue(`item`)
+            // const cached = await cachelist.searchValue(`item`)
 
-            if (cached) {
-                return res.json(JSON.parse(cached))
-            }
+            // if (cached) {
+            //     return res.json(JSON.parse(cached))
+            // }
 
             const items = await Item.list()
             cachelist.addCache(`item`, JSON.stringify(items), 60 * 60 * 2)

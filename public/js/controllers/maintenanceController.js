@@ -181,6 +181,7 @@ submitItem.addEventListener('submit', async (event) => {
     document.querySelector('[data-button-submit]').disabled = true;
 
     const date = new Date()
+    $('#price').unmask();
 
     const maintenance = {
         plate: plate,

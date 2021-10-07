@@ -21,7 +21,7 @@ window.onload = async function () {
     let a = `
       <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
 
-    let line = [item.idcode, item.car, item.date, item.km, item.code, item.name, item.type, item.provider, item.brand, item.amount, item.price, item.description, a]
+    let line = [item.idcode, item.car, item.date, item.km, item.code, item.name, item.type, item.provider, item.brand, `${item.amount}`, `${item.currency}`, `${item.price}`, item.description, a]
     itemsdt.push(line)
   })
 
@@ -118,6 +118,7 @@ const listMaintenances = (items) => {
       { title: "Proveedor" },
       { title: "Marca" },
       { title: "Cant" },
+      { title: "Moneda" },
       { title: "Precio" },
       { title: "Observación" },
       {

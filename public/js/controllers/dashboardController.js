@@ -7,8 +7,28 @@ window.onload = async function () {
   <span class="sr-only">Loading...</span>
 </div>
 `
-  const cars = await Connection.noBody('dashboard', 'GET')
   let user = JSON.parse(sessionStorage.getItem('user'))
+  let name = user.name.substring(0, (user.name + " ").indexOf(" "))
+  let username = document.querySelector('[data-username]')
+  username.innerHTML = name
+
+  const items = await Connection.noBody(`item`, 'GET')
+
+  let itemsdt = []
+
+  items.forEach(item => {
+
+    let a = `
+      <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
+
+    let line = [item.idcode, item.car, item.date, item.km, item.code, item.name, item.type, item.provider, item.brand, item.amount, item.price, item.description, a]
+    itemsdt.push(line)
+  })
+
+  listMaintenances(itemsdt)
+
+
+  const cars = await Connection.noBody('dashboard', 'GET')
 
   let dtview = []
   cars.forEach(car => {
@@ -27,9 +47,6 @@ window.onload = async function () {
 
   listCars(dtview)
 
-  let name = user.name.substring(0, (user.name + " ").indexOf(" "))
-  let username = document.querySelector('[data-username]')
-  username.innerHTML = name
   loading.innerHTML = " "
 }
 
@@ -77,6 +94,59 @@ const listCars = (data) => {
       'copy', 'csv', 'excel', 'pdf', 'print'
     ]
   })
-
-
 }
+
+
+const listMaintenances = (items) => {
+
+  if ($.fn.DataTable.isDataTable('#dataTable')) {
+    $('#dataTable').dataTable().fnClearTable();
+    $('#dataTable').dataTable().fnDestroy();
+    $('#dataTable').empty();
+  }
+
+  $("#dataItems").DataTable({
+    data: items,
+    columns: [
+      { title: "Id" },
+      { title: "Chapa" },
+      { title: "Fecha" },
+      { title: "KM" },
+      { title: "Cod Pieza" },
+      { title: "Pieza" },
+      { title: "Tipo de Troca" },
+      { title: "Proveedor" },
+      { title: "Marca" },
+      { title: "Cant" },
+      { title: "Precio" },
+      { title: "Observación" },
+      {
+        title: "Visualizar",
+        className: "finance-control"
+      }
+
+    ],
+    responsive: true,
+    paging: false,
+    ordering: true,
+    info: false,
+    scrollY: false,
+    scrollCollapse: true,
+    scrollX: true,
+    autoHeight: true,
+    lengthMenu: [[25, 50, 100, 150], [25, 50, 100, 150]],
+    pagingType: "numbers",
+    searchPanes: false,
+    fixedHeader: false,
+    searching: false,
+    dom: "<'row'<'col-md-6'l><'col-md-6'f>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>" +
+      "<'row'<'col-sm-12'B>>",
+
+    buttons: [
+      'copy', 'csv', 'excel', 'pdf', 'print'
+    ]
+  })
+}
+

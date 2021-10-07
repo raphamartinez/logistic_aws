@@ -13,8 +13,7 @@ window.onload = async function () {
 
     const providers = await Connection.noBody('provider', 'GET')
     selectProviders(providers)
-
-    $('#price').mask("###0.00", { reverse: true });
+    $('#price').mask('#.000.000.000.000.000,00', { reverse: true });
 
     selectCars(cars)
 
@@ -54,7 +53,7 @@ cars.addEventListener('change', async (event) => {
         let item = `
         <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
 
-        let line = [maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.type, maintenance.provider, maintenance.brand, maintenance.amount, maintenance.price, maintenance.description, a, item]
+        let line = [maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.type, maintenance.provider, maintenance.brand, maintenance.amount, maintenance.currency, maintenance.price, maintenance.description, a, item]
         items.push(line)
     })
 
@@ -74,6 +73,13 @@ modalInsert.addEventListener('click', async (event) => {
     submit.addEventListener('submit', async (event) => {
         event.preventDefault()
 
+        let loading = document.querySelector('[data-loading]')
+        loading.innerHTML = `
+    <div class="spinner-border text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    `
+
         $('#register').modal('hide')
 
         const provider = {
@@ -92,6 +98,7 @@ modalInsert.addEventListener('click', async (event) => {
         option.innerHTML = `${provider.name}</option>`
         document.querySelector('[data-providers]').appendChild(option)
 
+        loading.innerHTML = ``
         alert(obj.msg)
     })
 })
@@ -119,6 +126,7 @@ const listMaintenances = (maintenances) => {
             { title: "Proveedor" },
             { title: "Marca" },
             { title: "Cant" },
+            { title: "Moneda" },
             { title: "Precio" },
             { title: "Observación" },
             { title: "Opciones" },
@@ -145,9 +153,7 @@ const listMaintenances = (maintenances) => {
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>" +
             "<'row'<'col-sm-12'B>>",
-        rowReorder: {
-            selector: 'td:nth-child(2)'
-        },
+
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
@@ -159,6 +165,14 @@ const submitItem = document.querySelector('[data-submit-item]')
 
 submitItem.addEventListener('submit', async (event) => {
     event.preventDefault()
+
+    let loading = document.querySelector('[data-loading]')
+    loading.innerHTML = `
+<div class="spinner-border text-danger" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
+`
+
 
     const plate = document.querySelector('[data-cars]').value
 
@@ -176,6 +190,7 @@ submitItem.addEventListener('submit', async (event) => {
         amount: event.currentTarget.amount.value,
         price: event.currentTarget.price.value,
         type: event.currentTarget.type.value,
+        currency: event.currentTarget.currency.value,
         code: event.currentTarget.code.value,
         brand: event.currentTarget.brand.value,
         typedesc: document.querySelector('#type option:checked').innerHTML,
@@ -210,6 +225,7 @@ submitItem.addEventListener('submit', async (event) => {
     formData.append("code", maintenance.code);
     formData.append("km", maintenance.km);
     formData.append("brand", maintenance.brand);
+    formData.append("currency", maintenance.currency);
     formData.append("type", maintenance.type);
     formData.append("plate", maintenance.plate);
     formData.append("description", maintenance.description);
@@ -217,7 +233,7 @@ submitItem.addEventListener('submit', async (event) => {
 
     await Connection.bodyMultipart('item', formData, 'POST');
 
-    const rowNode = table.row.add([maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.typedesc, maintenance.providerdesc, maintenance.brand, maintenance.amount, maintenance.price, maintenance.description, a, item])
+    const rowNode = table.row.add([maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.typedesc, maintenance.providerdesc, maintenance.brand, maintenance.amount, maintenance.currency, maintenance.price, maintenance.description, a, item])
         .draw()
         .node();
 
@@ -231,7 +247,8 @@ submitItem.addEventListener('submit', async (event) => {
     const file = document.querySelectorAll('.custom-file-label')
     file[0].innerHTML = `Foto de la Pieza`
     file[1].innerHTML = `Foto de lo Presupuesto`
-
+    
+    loading.innerHTML = ``
 });
 
 const selectProviders = (providers) => {
@@ -244,3 +261,19 @@ const selectProviders = (providers) => {
     })
 
 }
+
+const currency = document.querySelector('[data-currency]')
+
+currency.addEventListener('change', async (event) => {
+
+    if (currency.value === "2") {
+        $('#price').unmask();
+        $('#price').mask('000.000.000.000.000,00', { reverse: true });
+    } else {
+        $('#price').unmask();
+        document.querySelector('#price').value = "0000"
+        $('#price').mask('000.000.000.000.000.000,00', { reverse: true });
+
+    }
+
+})

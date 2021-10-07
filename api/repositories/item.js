@@ -29,17 +29,22 @@ class Item {
 
     list(plate) {
         try {
-            let sql = `SELECT it.code, it.id, it.name, it.brand, it.plate, DATE_FORMAT(qt.dateReg, '%H:%i %d/%m/%Y') as date, if(it.type = 1, "Presupuesto", "Stock") as type, it.km, it.description,
+            let sql = `SELECT concat(pr.id, " - ", it.code) as idcode, it.code, it.id, it.name, it.brand, it.plate, DATE_FORMAT(qt.dateReg, '%H:%i %d/%m/%Y') as date, if(it.type = 1, "Presupuesto", "Stock") as type, it.km, it.description,
             qt.price, qt.amount, qt.status, pr.name as provider
             FROM api.item it 
             INNER JOIN api.quotation qt ON it.id = qt.id_item
             INNER JOIN api.provider pr ON qt.id_provider = pr.id `
 
-           if(plate) sql+= `
-           WHERE it.plate = '${plate}'
-           ORDER BY it.code`
+            if (plate) {
+                sql += `
+            WHERE it.plate = '${plate}'
+            ORDER BY it.code`
+            } else {
+                sql += `
+            ORDER BY it.code`
+            }
 
-           return query(sql)
+            return query(sql)
         } catch (error) {
             throw new InternalServerError('No se pudieron enumerar los login')
         }

@@ -15,7 +15,7 @@ module.exports = app => {
             // }
 
             const providers = await Provider.list()
-            cachelist.addCache(`provider`, JSON.stringify(providers), 60 * 60 * 12)
+            cachelist.addCache(`provider`, JSON.stringify(providers), 60 * 60 * 2)
 
             res.json(providers)
         } catch (err) {

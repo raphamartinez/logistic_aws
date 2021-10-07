@@ -28,8 +28,12 @@ controll
     .updateAny('item')
     .readAny('quotation')
     .createAny('quotation')
-    .deleteAny('quotation')
+    .deleteAny('quotation') 
     .updateAny('quotation')
+    .readAny('patrimony')
+    .createAny('patrimony')
+    .deleteAny('patrimony')
+    .updateAny('patrimony')
 
 
 module.exports = controll

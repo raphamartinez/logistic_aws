@@ -15,7 +15,7 @@ module.exports = app => {
             }
 
             const stocks = await Stock.list()
-            cachelist.addCache(`stock`, JSON.stringify(stocks), 60 * 60 * 12)
+            cachelist.addCache(`stock`, JSON.stringify(stocks), 60 * 60 * 2)
 
             res.json(stocks)
         } catch (err) {

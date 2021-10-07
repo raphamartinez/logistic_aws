@@ -25,13 +25,13 @@ const modalForm = () => {
                     <input name="phone" placeholder="Teléfono" type="tel" class="form-control">
                 </div>
                 <div class="form-group col-md-6">
-                <input name="mail" placeholder="Mail" type="email" class="form-control" required>
+                <input name="mail" placeholder="Mail" type="email" class="form-control">
                 </div>
                     <div class="form-group col-md-6">
                     <input name="address" placeholder="Dirección" type="text" class="form-control">
                 </div>
                 <div class="form-group col-md-6">
-                    <input name="ruc" placeholder="RUC" type="text" class="form-control" required>
+                    <input name="ruc" placeholder="RUC" type="text" class="form-control" >
                 </div>
                 </div>
                 <div class="modal-footer">

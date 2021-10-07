@@ -27,54 +27,53 @@
     <div id="wrapper  ">
         <div id="content-wrapper " class="d-flex flex-column">
             <header>
-                <nav class="navbar navbar-expand navbar-dark bg-gradient-secondary sticky-top topbar shadow mb-4"
-                    id="mainNav">
-                    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.html">
-                        <div class="sidebar-brand-icon">
-                            <img width="140" height="50" src="../img/launch.png" alt="Sunset Logo">
-                        </div>
-                    </a>
-
-                    <ul class="navbar-nav ml-auto">
-
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray small" data-username></span>
-                                <div class="icon-circle ">
-                                    <i class="fas fa-bars"></i>
-                                </div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item mb-2" href="./reemplazar.html">
-                                    <i class="fas fa-wrench fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Listado de Piezas
-                                </a>
-                                <a class="dropdown-item mb-2" href="./provider.html">
-                                    <i class="fas fa-comments-dollar fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Listado de Proveedores
-                                </a>
-                                <a class="dropdown-item mb-2" href="./presupuesto.html">
-                                    <i class="fas fa-address-card fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Listado de Presupuestos
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Salir
-                                </a>
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+                    <div class="container px-4 px-lg-5 text-white-50">
+                        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="./dashboard.html">
+                            <div class="sidebar-brand-icon">
+                                <img width="110" height="30" src="../img/Logowhite.png" alt="Sunset Logo">
                             </div>
-                        </li>
-                        <div class="container-fluid bg-gradient-primary fixed-menu responsive">
-                            <div class="collapse text-center p-4 responsive" id="navbarResponsive">
-                                <ul class="text-uppercase ml-auto" id="accordionSidebar">
+                        </a>
+                        <button class="navbar-toggler text-white-50" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation"><span
+                                class="navbar-toggler-icon"></span></button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-white-50" id="navbarDropdown" href="#"
+                                        role="button" data-bs-toggle="dropdown" aria-expanded="false">Menu</a>
+                                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item text-white-50" href="./vehiculos.html">Listado de Vehículos</a>
+                                        </li>
+                                        <li><a class="dropdown-item text-white-50" href="./patrimonio.html">Listado de Patrimonio</a>
+                                        </li>
+                                        <li><a class="dropdown-item text-white-50" href="./provider.html">Listado de Proveedores</a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider text-white-50" />
+                                        </li>
+                                        <li><a class="dropdown-item text-white-50" href="./reemplazar.html">Piezas a reemplazar</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                                <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4  dropdown ">
+                                    <a data-username class="nav-link dropdown-toggle text-white-50" id="dromenu"
+                                        href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item text-white-50" href="#!">Administracion</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider text-white-50"/>
+                                        </li>
+                                        <li><a class="dropdown-item text-white-50" data-toggle="modal" data-target="#logoutModal">Salir</a></li>
+                                    </ul>
                                 </ul>
-                            </div>
+
                         </div>
-                    </ul>
+                    </div>
                 </nav>
             </header>
 

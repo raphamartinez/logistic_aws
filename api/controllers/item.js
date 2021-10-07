@@ -17,7 +17,7 @@ module.exports = app => {
             }
 
             const items = await Item.list()
-            cachelist.addCache(`item`, JSON.stringify(items), 60 * 60 * 12)
+            cachelist.addCache(`item`, JSON.stringify(items), 60 * 60 * 2)
 
             res.json(items)
         } catch (err) {
@@ -39,21 +39,24 @@ module.exports = app => {
     })
 
 
-    app.post('/item', [Middleware.bearer, Authorization('item', 'create')], multer(multerConfig).fields([{ name: 'file', maxCount: 10 }, { name: 'voucher', maxCount: 1 }]), async (req, res, next) => {
-        
-        try {
-            const files = req.files
-            const item = req.body
-            const id_login = req.login.id_login
+    app.post('/item',
+        [Middleware.bearer, Authorization('item', 'create')],
+        multer(multerConfig)
+            .fields([{ name: 'file', maxCount: 10 }, { name: 'voucher', maxCount: 1 }]), async (req, res, next) => {
 
-            await Item.insert(files, item, id_login)
-            cachelist.delPrefix('item')
+                try {
+                    const files = req.files
+                    const item = req.body
+                    const id_login = req.login.id_login
 
-            res.status(201).json({ msg: `Pieza agregada con éxito.` })
-        } catch (err) {
-            next(err)
-        }
-    })
+                    await Item.insert(files, item, id_login)
+                    cachelist.delPrefix('item')
+
+                    res.status(201).json({ msg: `Pieza agregada con éxito.` })
+                } catch (err) {
+                    next(err)
+                }
+            })
 
     app.put('/item/:id', [Middleware.bearer, Authorization('item', 'update')], async (req, res, next) => {
         try {

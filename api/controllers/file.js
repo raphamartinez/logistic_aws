@@ -40,11 +40,11 @@ module.exports = app => {
                 return promisify(fs.unlink)(path.resolve(__dirname, "..", "..", "tmp", "uploads", req.params.key))
             }
 
-            const file = await File.delete(req.params.key)
+            await File.delete(req.params.key)
 
             cachelist.delPrefix('file')
 
-            res.json(file)
+            res.json({ msg: `Archivo eliminado con éxito.` })
         } catch (err) {
             next(err)
         }

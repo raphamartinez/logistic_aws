@@ -33,7 +33,7 @@ module.exports = app => {
             const id_login = req.login.id_login
 
             const quotations = await Quotation.insert(file, quotation, id_login)
-            cachelist.addCache(`quotation`, JSON.stringify(quotations), 60 * 60 * 1)
+            cachelist.addCache(`quotation`, JSON.stringify(quotations), 60 * 60 * 2)
 
             res.json(quotations)
         } catch (err) {

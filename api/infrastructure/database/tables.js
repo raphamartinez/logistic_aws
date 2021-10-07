@@ -11,6 +11,8 @@ class Tables {
     this.createTableFile()
     this.createTableQuotation()
     this.createTableVoucher()
+    this.createTablePatrimony()
+    this.createTablePatrimonyImage()
 
     return true
   } 
@@ -124,9 +126,37 @@ class Tables {
   }
 
   createTableItem() {
-    const sql = `CREATE TABLE IF NOT EXISTS item (id int NOT NULL AUTO_INCREMENT, code VARCHAR (100),
+    const sql = `CREATE TABLE IF NOT EXISTS item (id int NOT NULL AUTO_INCREMENT, code VARCHAR (100), currency int,
       name VARCHAR (100) NOT NULL, brand VARCHAR (50), description VARCHAR(150), type INT, km INT, status INT, plate VARCHAR (10), dateReg DATETIME NOT NULL,
       PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTablePatrimony(){
+    const sql = `CREATE TABLE IF NOT EXISTS api.patrimony (id int NOT NULL AUTO_INCREMENT, id_login int, datereg DATETIME, local VARCHAR(100), code VARCHAR(25), name VARCHAR(150), 
+    FOREIGN KEY (id_login) REFERENCES login (id), 
+    PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTablePatrimonyImage(){
+    const sql = `CREATE TABLE IF NOT EXISTS api.patrimonyImage (id int NOT NULL AUTO_INCREMENT, filename VARCHAR (250), mimetype VARCHAR (10) NOT NULL,
+    location VARCHAR (250) NOT NULL, size int, id_login int, id_patrimony int, datereg DATETIME, 
+    FOREIGN KEY (id_login) REFERENCES login (id), 
+    FOREIGN KEY (id_patrimony) REFERENCES patrimony (id), 
+    PRIMARY KEY (id))`
 
     this.connection.query(sql, (error) => {
       if (error) {

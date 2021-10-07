@@ -15,7 +15,7 @@ module.exports = app => {
             }
 
             const cars = await Car.list()
-            cachelist.addCache(`car`, JSON.stringify(cars), 60 * 60 * 1)
+            cachelist.addCache(`car`, JSON.stringify(cars), 60 * 60 * 2)
 
             res.json(cars)
         } catch (err) {
@@ -33,7 +33,7 @@ module.exports = app => {
             // }
 
             const cars = await Car.dashboard()
-            cachelist.addCache(`dashboard`, JSON.stringify(cars), 60 * 60 * 1)
+            cachelist.addCache(`dashboard`, JSON.stringify(cars), 60 * 60 * 2)
 
             res.json(cars)
         } catch (err) {

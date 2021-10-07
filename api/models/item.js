@@ -2,6 +2,8 @@ const RepositorieItem = require('../repositories/item')
 const RepositorieFile = require('../repositories/file')
 const RepositorieVoucher = require('../repositories/voucher')
 const RepositorieQuotation = require('../repositories/quotation')
+const cachelist = require('../infrastructure/redis/cache')
+const xlsx = require('read-excel-file/node')
 
 const { InvalidArgumentError, InternalServerError, NotFound } = require('./error')
 
@@ -21,15 +23,32 @@ class Item {
 
             return true
         } catch (error) {
-            console.log(error);
             throw new InternalServerError('Error.')
         }
     }
 
-    list(plate) {
+    async list(plate) {
         try {
-            return RepositorieItem.list(plate)
+            const data = await RepositorieItem.list(plate)
+
+            const filePath = `Vehiculos.xlsx`
+
+            let cars = await xlsx(filePath).then((rows) => {
+                return rows
+            })
+
+            cars.shift()
+
+            data.forEach(obj => {
+                let car = cars.find(dt => dt[4] === obj.plate)
+                console.log(cars);
+                obj.car = `${car[4]} - ${car[1]} - ${car[2]} - ${car[3]} - ${car[6]}`
+            })
+
+            return data
+
         } catch (error) {
+            console.log(error);
             throw new InternalServerError('Error.')
         }
     }

@@ -165,7 +165,7 @@ a {
 }
 
 a:hover {
-  color: #224abe;
+  color: #be2722;
   text-decoration: underline;
 }
 
@@ -10991,6 +10991,18 @@ iframe {
   width: 100%;
   background: #5a5c69!important;
 }
+
+.dropdown-item:focus, .dropdown-item:hover {
+  color: #1e2125;
+  background-color: #860000 !important;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  color: #fff;
+  text-decoration: none;
+  background-color: #e20e0e !important;
+}
+
 
 /* footer.sticky-footer {
   padding: 1rem 0;

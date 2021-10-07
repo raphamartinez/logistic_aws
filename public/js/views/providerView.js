@@ -16,10 +16,10 @@ const modalForm = () => {
                 <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <input name="name" placeholder="Proveedor nombre" type="text" class="form-control" required>
+                        <input name="name" placeholder="Proveedor nombre" style="text-transform:uppercase" type="text" class="form-control" required>
                     </div>
                     <div class="form-group col-md-6">
-                        <input name="salesman" placeholder="Vendedor" type="text" class="form-control" required>
+                        <input name="salesman" placeholder="Vendedor" style="text-transform:uppercase" type="text" class="form-control" required>
                     </div>
                     <div class="form-group col-md-6">
                     <input name="phone" placeholder="Teléfono" type="tel" class="form-control">
@@ -31,7 +31,7 @@ const modalForm = () => {
                     <input name="address" placeholder="Dirección" type="text" class="form-control">
                 </div>
                 <div class="form-group col-md-6">
-                    <input name="ruc" placeholder="RUC" type="text" class="form-control" >
+                    <input name="ruc" placeholder="RUC" style="text-transform:uppercase" type="text" class="form-control" >
                 </div>
                 </div>
                 <div class="modal-footer">

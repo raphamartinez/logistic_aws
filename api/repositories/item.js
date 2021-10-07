@@ -18,8 +18,8 @@ class Item {
 
     async update(item) {
         try {
-            const sql = 'UPDATE api.item SET id_provider = ? WHERE id = ?'
-            const result = await query(sql, [item.id_provider, item.id])
+            const sql = 'UPDATE api.item SET code = ? name = ? brand = ? status = ? type = ? km = ? description = ? WHERE id = ?'
+            const result = await query(sql, [item.code, item.name, item.brand, item.plate, item.status, item.type, item.km, item.description, item.id])
 
             return result
         } catch (error) {

@@ -16,10 +16,10 @@ class Quotation {
         }
     }
 
-    async update(quotation) {
+    async update(item) {
         try {
-            const sql = 'UPDATE api.quotation SET ? WHERE id = ?'
-            const result = await query(sql, [quotation.id])
+            const sql = 'UPDATE api.quotation SET id_provider = ? status = ? price = ? amount = ? WHERE id_item = ?'
+            const result = await query(sql, [item.provider, item.status, item.price, item.amount, item.id])
 
             return result
         } catch (error) {

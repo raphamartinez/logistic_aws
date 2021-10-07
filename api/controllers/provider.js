@@ -29,7 +29,7 @@ module.exports = app => {
 
             cachelist.delPrefix('provider')
 
-            res.status(201).json({id, msg: `Proveedor agregado con sucesso.`})
+            res.status(201).json({id, msg: `Proveedor agregado con éxito.`})
         } catch (err) {
             next(err)
         }
@@ -38,10 +38,10 @@ module.exports = app => {
     app.put('/provider/:id', [Middleware.bearer, Authorization('provider', 'update')], async ( req, res, next) => {
         try {
             const data = req.body
-            const result = await Provider.update(data, req.params.id)
+            await Provider.update(data, req.params.id)
             cachelist.delPrefix('provider')
 
-            res.json(result)
+            res.json({msg: `Proveedor actualizado correctamente.`})
         } catch (err) {
             next(err)
         }
@@ -49,10 +49,10 @@ module.exports = app => {
 
     app.delete('/provider/:id', [Middleware.bearer, Authorization('provider', 'delete')], async ( req, res, next) => {
         try {
-            const result = await Provider.delete(req.params.id)
+            await Provider.delete(req.params.id)
             cachelist.delPrefix('provider')
             
-            res.json(result)
+            res.json({msg: `Proveedor eliminado correctamente.`})
         } catch (err) {
             next(err)
         }

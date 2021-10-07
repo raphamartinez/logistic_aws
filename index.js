@@ -44,7 +44,10 @@ app.listen(80, () => {
 
   app.use(express.static(__dirname + '/public'))
   app.use(express.static(__dirname + '/views'))
-  app.use(express.static(__dirname + '/tmp'))
+  app.use(
+    "/files",
+    express.static(path.resolve(__dirname, 'tmp', 'uploads'))
+  );
 
   app.get('/', function (req, res) {
     res.render('login');

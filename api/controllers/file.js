@@ -4,6 +4,11 @@ const multer = require('multer')
 const multerConfig = require('../config/multer')
 const Authorization = require('../infrastructure/auth/authorization')
 const cachelist = require('../infrastructure/redis/cache')
+const aws = require('aws-sdk')
+const s3 = new aws.S3()
+const fs = require('fs')
+const path = require('path')
+const { promisify } = require('util')
 
 module.exports = app => {
 
@@ -16,16 +21,26 @@ module.exports = app => {
 
             cachelist.delPrefix('file')
 
-            res.json({msg: `Imagem agregada con éxito.`})
+            res.json({ msg: `Imagem agregada con éxito.` })
         } catch (err) {
             console.log(err);
             next(err)
         }
     })
 
-    app.delete('/file/:id', [Middleware.bearer, Authorization('file', 'delete')], async (req, res, next) => {
+    app.delete('/file/:key', [Middleware.bearer, Authorization('file', 'delete')], async (req, res, next) => {
         try {
-            const file = await File.delete(req.params.id)
+
+            if (process.env.STORAGE_TYPE === 's3') {
+                s3.deleteObject({
+                    Bucket: 'logisticrepositorie',
+                    Key: req.params.key
+                }).promise()
+            } else {
+                return promisify(fs.unlink)(path.resolve(__dirname, "..", "..", "tmp", "uploads", req.params.key))
+            }
+
+            const file = await File.delete(req.params.key)
 
             cachelist.delPrefix('file')
 

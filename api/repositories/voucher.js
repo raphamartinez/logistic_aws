@@ -4,8 +4,10 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 class Voucher {
     async insert(file, id_quotation, id_login) {
         try {
-            const sql = 'INSERT INTO api.voucher (filename, mimetype, path, size, id_quotation, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )'
-            await query(sql, [file.filename, file.mimetype, file.path, file.size, id_quotation, id_login])
+            if(file.path) file.location = `${process.env.BASE_URL}/files/${file.path}`
+
+            const sql = 'INSERT INTO api.voucher (filename, mimetype, location, size, id_quotation, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )'
+            await query(sql, [file.key, file.mimetype, file.location, file.size, id_quotation, id_login])
 
             return true
         } catch (error) {
@@ -35,7 +37,7 @@ class Voucher {
 
     list(file) {
         try {
-            let sql = `SELECT DATE_FORMAT(datereg, '%H:%i %d/%m/%Y') as datereg, path, size, id_login, mimetype, filename, id FROM file
+            let sql = `SELECT DATE_FORMAT(datereg, '%H:%i %d/%m/%Y') as datereg, location, size, id_login, mimetype, filename, id FROM file
             WHERE mimetype <> "" `
 
             return query(sql)

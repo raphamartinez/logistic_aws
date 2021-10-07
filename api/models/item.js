@@ -17,7 +17,7 @@ class Item {
                 await RepositorieFile.insert(file, id_item, id_login)
             }
 
-            if(files.voucher.length > 0) await RepositorieVoucher.insert(files.voucher[0], id_quotation, id_login)
+            if (files.voucher.length > 0) await RepositorieVoucher.insert(files.voucher[0], id_quotation, id_login)
 
             return true
         } catch (error) {
@@ -34,17 +34,21 @@ class Item {
         }
     }
 
-    update(data, id) {
+    async update(data, id) {
         try {
-            return RepositorieItem.update(data, id)
+            await RepositorieItem.update(data, id)
+            await RepositorieQuotation.update(data, id)
+
+            return true
+
         } catch (error) {
             throw new InternalServerError('Error.')
         }
     }
 
-    delete(id) {
+    delete(key) {
         try {
-            return RepositorieItem.delete(id)
+            return RepositorieItem.delete(key)
 
         } catch (error) {
             throw new InternalServerError('Error.')

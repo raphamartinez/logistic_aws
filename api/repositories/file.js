@@ -4,19 +4,21 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 class File {
     async insert(file, id_item, id_login) {
         try {
-            const sql = 'INSERT INTO api.file (filename, mimetype, path, size, id_item, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )'
-            await query(sql, [file.filename, file.mimetype, file.path, file.size, id_item, id_login])
+            if(file.name) file.key = file.name
+            if(!file.location) file.location = `${process.env.BASE_URL}/files/${file.key}`
+
+            const sql = 'INSERT INTO api.file (filename, mimetype, location, size, id_item, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )'
+            await query(sql, [file.key, file.mimetype, file.location, file.size, id_item, id_login])
 
             return true
         } catch (error) {
-            console.log(error);
             throw new InvalidArgumentError('No se pudo insertar el archivo en la base de datos')
         }
     }
 
-    delete(id_file) {
+    delete(key) {
         try {
-            const sql = `DELETE from api.file WHERE id = ${id_file}`
+            const sql = `DELETE from api.file WHERE filename = ${key}`
             return query(sql)
         } catch (error) {
             throw new InternalServerError('No se pudo borrar el archivo en la base de datos')
@@ -35,7 +37,7 @@ class File {
 
     list(file) {
         try {
-            let sql = `SELECT DATE_FORMAT(datereg, '%H:%i %d/%m/%Y') as datereg, path, size, id_login, mimetype, filename, id FROM file
+            let sql = `SELECT DATE_FORMAT(datereg, '%H:%i %d/%m/%Y') as datereg, location, size, id_login, mimetype, filename, id FROM file
             WHERE mimetype <> "" `
 
             return query(sql)

@@ -30,7 +30,7 @@ const selectCars = (cars) => {
     cars.map(car => {
         const option = document.createElement('option')
         option.value = car[4]
-        option.innerHTML = `${car[4]} - ${car[1]}</option>`
+        option.innerHTML = `${car[4]} - ${car[1]} - ${car[2]} - ${car[3]} - ${car[6]}</option>`
         document.querySelector('[data-cars]').appendChild(option)
     })
 
@@ -54,20 +54,6 @@ cars.addEventListener('change', async (event) => {
         let item = `
         <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
 
-        if (maintenance.type === "Presupuesto") {
-            item += `    <a data-toggle="popover" title="Visualizar Presupuestos"><i class="fas fa-shopping-cart" style="color:#32CD32;"><span style="
-            display: inline-block;
-            font-size: .60em;
-            font-weight: 700;
-            line-height: 1;
-            color: #fff;
-            text-align: left;
-            white-space: nowrap;
-            vertical-align: baseline;
-            border-radius: .50rem;" 
-            class="badge badge-success">0</span></i></a>`
-        }
-
         let line = [maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.type, maintenance.provider, maintenance.brand, maintenance.amount, maintenance.price, maintenance.description, a, item]
         items.push(line)
     })
@@ -78,36 +64,36 @@ cars.addEventListener('change', async (event) => {
 const modalInsert = document.querySelector('[data-modal-insert]')
 
 modalInsert.addEventListener('click', async (event) => {
-  event.preventDefault()
-
-  document.querySelector('[data-modal]').innerHTML = ""
-  document.querySelector('[data-modal]').appendChild(View.modalForm())
-  $('#register').modal('show')
-
-  const submit = document.querySelector('[data-input-provider]')
-  submit.addEventListener('submit', async (event) => {
     event.preventDefault()
 
-    $('#register').modal('hide')
+    document.querySelector('[data-modal]').innerHTML = ""
+    document.querySelector('[data-modal]').appendChild(View.modalForm())
+    $('#register').modal('show')
 
-    const provider = {
-      name: event.currentTarget.name.value,
-      ruc: event.currentTarget.ruc.value,
-      phone: event.currentTarget.phone.value,
-      salesman: event.currentTarget.salesman.value,
-      mail: event.currentTarget.mail.value,
-      address: event.currentTarget.address.value,
-    }
+    const submit = document.querySelector('[data-input-provider]')
+    submit.addEventListener('submit', async (event) => {
+        event.preventDefault()
 
-    const obj = await Connection.body(`provider`, { provider }, 'POST')
+        $('#register').modal('hide')
 
-    const option = document.createElement('option')
-    option.value = obj.id
-    option.innerHTML = `${provider.name}</option>`
-    document.querySelector('[data-providers]').appendChild(option)
+        const provider = {
+            name: event.currentTarget.name.value,
+            ruc: event.currentTarget.ruc.value,
+            phone: event.currentTarget.phone.value,
+            salesman: event.currentTarget.salesman.value,
+            mail: event.currentTarget.mail.value,
+            address: event.currentTarget.address.value,
+        }
 
-    alert(obj.msg)
-  })
+        const obj = await Connection.body(`provider`, { provider }, 'POST')
+
+        const option = document.createElement('option')
+        option.value = obj.id
+        option.innerHTML = `${provider.name}</option>`
+        document.querySelector('[data-providers]').appendChild(option)
+
+        alert(obj.msg)
+    })
 })
 
 
@@ -136,7 +122,10 @@ const listMaintenances = (maintenances) => {
             { title: "Precio" },
             { title: "Observación" },
             { title: "Opciones" },
-            { title: "Visualizar" }
+            {
+                title: "Visualizar",
+                className: "finance-control"
+            }
 
         ],
         responsive: true,
@@ -175,6 +164,8 @@ submitItem.addEventListener('submit', async (event) => {
 
     if (plate === "") return alert('Seleccione una chapa')
 
+    document.querySelector('[data-button-submit]').disabled = true;
+
     const date = new Date()
 
     const maintenance = {
@@ -205,19 +196,6 @@ submitItem.addEventListener('submit', async (event) => {
     let item = `
     <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
 
-    if (maintenance.type === "1") {
-        item += `    <a data-toggle="popover" title="Visualizar Presupuestos"><i class="fas fa-shopping-cart" style="color:#32CD32;"><span style="
-        display: inline-block;
-        font-size: .60em;
-        font-weight: 700;
-        line-height: 1;
-        color: #fff;
-        text-align: left;
-        white-space: nowrap;
-        vertical-align: baseline;
-        border-radius: .50rem;" 
-        class="badge badge-success">0</span></i></a>`
-    }
     const formData = new FormData()
 
     for (const file of files) {
@@ -247,26 +225,12 @@ submitItem.addEventListener('submit', async (event) => {
         .css('color', 'black')
         .animate({ color: '#CC0000' });
 
-    document.querySelector('#item').value = ""
-    document.querySelector('#item').placeholder = "Pieza a ser reemplazada *"
+    submitItem.reset();
+    document.querySelector('[data-button-submit]').disabled = false;
 
-    document.querySelector('#km').value = ""
-    document.querySelector('#km').placeholder = "Inserte el KM atual del vehiculo *"
-
-    document.querySelector('#obs').value = ""
-    document.querySelector('#obs').placeholder = "Observación"
-
-    document.querySelector('#file').value = ""
-    document.querySelector('#file').placeholder = "Foto de la Pieza"
-
-    document.querySelector('#type').value = ""
-    document.querySelector('#type').placeholder = "Origen de la nueva pieza *"
-
-    document.querySelector('#brand').value = ""
-    document.querySelector('#brand').placeholder = "Marca de la pieza"
-
-    document.querySelector('#code').value = ""
-    document.querySelector('#code').placeholder = "Codigo da Pieza "
+    const file = document.querySelectorAll('.custom-file-label')
+    file[0].innerHTML = `Foto de la Pieza`
+    file[1].innerHTML = `Foto de lo Presupuesto`
 
 });
 

@@ -269,6 +269,7 @@ currency.addEventListener('change', async (event) => {
 
     if (currency.value === "2") {
         $('#price').unmask();
+        document.querySelector('#price').value = "00"
         $('#price').mask('000.000.000.000.000,00', { reverse: true });
     } else {
         $('#price').unmask();

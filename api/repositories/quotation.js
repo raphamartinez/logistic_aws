@@ -3,11 +3,10 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 
 class Quotation {
 
-    async insert(quotation, item, price) {
-        console.log(item);
+    async insert(id_item, item) {
         try {
-            const sql = 'INSERT INTO api.quotation (id_item, id_provider, status, price, dateReg) values ( ?, ?, ?, ?, now() - interval 4 hour )'
-            await query(sql, [item, quotation.provider, quotation.status, price])
+            const sql = 'INSERT INTO api.quotation (id_item, id_provider, status, price, amount, dateReg) values ( ?, ?, ?, ?, ?, now() - interval 4 hour )'
+            await query(sql, [id_item, item.provider, item.status, item.price, item.amount])
 
             const sqlId = 'select LAST_INSERT_ID() as id from api.quotation LIMIT 1'
             const obj = await query(sqlId)

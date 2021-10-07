@@ -5,9 +5,9 @@ class Provider {
 
     async insert(data) {
         try {
-            await Repositorie.insert(data)
+            const id = await Repositorie.insert(data)
 
-            return true
+            return id
         } catch (error) {
             throw new InternalServerError('Error.')
         }

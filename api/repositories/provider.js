@@ -6,9 +6,12 @@ class Provider {
     async insert(provider) {
         try {
             const sql = 'INSERT INTO api.provider (name, RUC, phone, salesman, mail, address, dateReg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour)'
-            const result = await query(sql, [provider.name, provider.ruc, provider.phone, provider.salesman, provider.mail, provider.address])
+            await query(sql, [provider.name, provider.ruc, provider.phone, provider.salesman, provider.mail, provider.address])
 
-            return result
+            
+            const sqlId = 'select LAST_INSERT_ID() as id from api.provider LIMIT 1'
+            const obj = await query(sqlId)
+            return obj[0].id
         } catch (error) {
             console.log(error);
             throw new InvalidArgumentError('Error')

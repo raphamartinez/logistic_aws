@@ -8,7 +8,7 @@
     <meta name="description" content="site">
     <meta name="author" content="raphael martinez batista">
     <title>LOGISTICA
-</title>
+    </title>
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -89,8 +89,8 @@
                         </div>
                     </div>
                     <div class="row justify-content-md-center">
-                        <div class="col-lg-6">
-                            <div class="card shadow mb-4">
+                        <div class="col-lg-3">
+                            <div class="card shadow mb-3">
                                 <form data-submit-item enctype="multipart/form-data">
                                     <div class="card-header py-3">
                                         <h6 class="m-0 font-weight-bold text-danger">Reemplazar nueva pieza</h6>
@@ -101,20 +101,12 @@
                                                 type="number" class="form-control" required>
                                         </div>
                                         <div class="form-group">
-                                            <input id="code" name="code" placeholder="Codigo da Pieza "
-                                                type="text" class="form-control" required>
+                                            <input id="code" name="code" placeholder="Codigo da Pieza " type="text"
+                                                class="form-control" required>
                                         </div>
                                         <div class="form-group">
                                             <input id="item" name="item" placeholder="Pieza a ser reemplazada *"
                                                 type="text" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <input id="brand" name="brand" placeholder="Marca de la pieza "
-                                                type="text" class="form-control" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <input id="obs" name="obs" placeholder="Observación" type="text"
-                                                class="form-control">
                                         </div>
                                         <div class="form-group">
                                             <div class="input-group">
@@ -123,6 +115,45 @@
                                                         class="custom-file-input">
                                                     <label class="custom-file-label" for="inputGroupFile01">Foto de la
                                                         Pieza</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <button data-modal-insert class="btn btn-outline-success"
+                                                        type="button">Agregar nuevo</button>
+                                                </div>
+                                                <select id="provider" name="provider" type="text" class="form-control" data-providers
+                                                    required>
+                                                    <option value="" selected hidden="hidden">Proveedor *
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="brand" name="brand" placeholder="Marca de la pieza " type="text"
+                                                class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="amount" name="amount" placeholder="Cant" min="0" type="number"
+                                                class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="price" name="price" placeholder="Precio" type="text"
+                                                class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input id="obs" name="obs" placeholder="Observación" type="text"
+                                                class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="custom-file">
+                                                    <input id="voucher" name="voucher" type="file"
+                                                        class="custom-file-input" required>
+                                                    <label class="custom-file-label" for="inputGroupFile01">Foto de lo
+                                                        presupuesto</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,7 +174,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-9">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-danger">Tabla del Piezas</h6>
@@ -173,7 +204,7 @@
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>© LOGISTICA
-</span>
+                        </span>
                     </div>
                 </div>
             </footer>
@@ -210,6 +241,8 @@
         crossorigin="anonymous"></script>
 
     <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js"></script>
     <script src="../js/libs/sb-admin-2.min.js"></script>

@@ -1,4 +1,5 @@
 import { Connection } from '../services/connection.js'
+import { View } from '../views/providerView.js'
 
 window.onload = async function () {
     let loading = document.querySelector('[data-loading]')
@@ -9,6 +10,11 @@ window.onload = async function () {
 `
     const cars = await Connection.noBody('car/excel', 'GET')
     let user = JSON.parse(sessionStorage.getItem('user'))
+
+    const providers = await Connection.noBody('provider', 'GET')
+    selectProviders(providers)
+
+    $('#price').mask("###0.00", { reverse: true });
 
     selectCars(cars)
 
@@ -47,7 +53,7 @@ cars.addEventListener('change', async (event) => {
 
         let item = `
         <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
-    
+
         if (maintenance.type === "Presupuesto") {
             item += `    <a data-toggle="popover" title="Visualizar Presupuestos"><i class="fas fa-shopping-cart" style="color:#32CD32;"><span style="
             display: inline-block;
@@ -62,12 +68,47 @@ cars.addEventListener('change', async (event) => {
             class="badge badge-success">0</span></i></a>`
         }
 
-        let line = [maintenance.date, maintenance.km, maintenance.name, maintenance.type, maintenance.description, a, item]
+        let line = [maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.type, maintenance.provider, maintenance.brand, maintenance.amount, maintenance.price, maintenance.description, a, item]
         items.push(line)
     })
 
     listMaintenances(items)
 });
+
+const modalInsert = document.querySelector('[data-modal-insert]')
+
+modalInsert.addEventListener('click', async (event) => {
+  event.preventDefault()
+
+  document.querySelector('[data-modal]').innerHTML = ""
+  document.querySelector('[data-modal]').appendChild(View.modalForm())
+  $('#register').modal('show')
+
+  const submit = document.querySelector('[data-input-provider]')
+  submit.addEventListener('submit', async (event) => {
+    event.preventDefault()
+
+    $('#register').modal('hide')
+
+    const provider = {
+      name: event.currentTarget.name.value,
+      ruc: event.currentTarget.ruc.value,
+      phone: event.currentTarget.phone.value,
+      salesman: event.currentTarget.salesman.value,
+      mail: event.currentTarget.mail.value,
+      address: event.currentTarget.address.value,
+    }
+
+    const obj = await Connection.body(`provider`, { provider }, 'POST')
+
+    const option = document.createElement('option')
+    option.value = obj.id
+    option.innerHTML = `${provider.name}</option>`
+    document.querySelector('[data-providers]').appendChild(option)
+
+    alert(obj.msg)
+  })
+})
 
 
 const listMaintenances = (maintenances) => {
@@ -86,11 +127,17 @@ const listMaintenances = (maintenances) => {
                 className: "finance-control"
             },
             { title: "KM" },
+            { title: "Cod Pieza" },
             { title: "Pieza" },
             { title: "Tipo de Troca" },
+            { title: "Proveedor" },
+            { title: "Marca" },
+            { title: "Cant" },
+            { title: "Precio" },
             { title: "Observación" },
             { title: "Opciones" },
-            { title: "Pieza" }
+            { title: "Visualizar" }
+
         ],
         responsive: true,
         paging: false,
@@ -133,6 +180,10 @@ submitItem.addEventListener('submit', async (event) => {
     const maintenance = {
         plate: plate,
         name: event.currentTarget.item.value,
+        provider: event.currentTarget.provider.value,
+        providerdesc: document.querySelector('#provider option:checked').innerHTML,
+        amount: event.currentTarget.amount.value,
+        price: event.currentTarget.price.value,
         type: event.currentTarget.type.value,
         code: event.currentTarget.code.value,
         brand: event.currentTarget.brand.value,
@@ -149,7 +200,7 @@ submitItem.addEventListener('submit', async (event) => {
 
     let a = `
     <a data-toggle="popover" title="Deletar pieza"><i class="fas fa-trash" style="color:#CC0000;"></i></a>
-    <a data-toggle="popover" title="Editar pieza"><i class="fas fa-edit" style="color:#000000;"></i></a>`
+    <a data-toggle="popover" title="Editar pieza"><i class="fas fa-edit" style="color:#32CD32;"></i></a>`
 
     let item = `
     <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
@@ -173,7 +224,11 @@ submitItem.addEventListener('submit', async (event) => {
         formData.append("file", file);
     }
 
+    formData.append("voucher", event.currentTarget.voucher.files[0]);
     formData.append("name", maintenance.name);
+    formData.append("price", maintenance.price);
+    formData.append("amount", maintenance.amount);
+    formData.append("provider", maintenance.provider);
     formData.append("code", maintenance.code);
     formData.append("km", maintenance.km);
     formData.append("brand", maintenance.brand);
@@ -182,22 +237,15 @@ submitItem.addEventListener('submit', async (event) => {
     formData.append("description", maintenance.description);
     formData.append("status", maintenance.status);
 
-    await Connection.bodyMultipart('item', formData, 'POST')
+    await Connection.bodyMultipart('item', formData, 'POST');
 
-    // {
-    //     a += `    <a data-toggle="popover" title="Visualizar Stock"><i class="fas fa-dolly-flatbed" style="color:#8B4513;"></i></a>`
-    // }
-
-    const rowNode = table.row.add([maintenance.date, maintenance.km, maintenance.name, maintenance.typedesc, maintenance.description, a, item])
+    const rowNode = table.row.add([maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.typedesc, maintenance.providerdesc, maintenance.brand, maintenance.amount, maintenance.price, maintenance.description, a, item])
         .draw()
         .node();
 
     $(rowNode)
         .css('color', 'black')
-        .animate({ color: '#4e73df' });
-
-    // listMaintenances(maintenances)
-
+        .animate({ color: '#CC0000' });
 
     document.querySelector('#item').value = ""
     document.querySelector('#item').placeholder = "Pieza a ser reemplazada *"
@@ -221,3 +269,14 @@ submitItem.addEventListener('submit', async (event) => {
     document.querySelector('#code').placeholder = "Codigo da Pieza "
 
 });
+
+const selectProviders = (providers) => {
+
+    providers.map(provider => {
+        const option = document.createElement('option')
+        option.value = provider.id
+        option.innerHTML = `${provider.name}</option>`
+        document.querySelector('[data-providers]').appendChild(option)
+    })
+
+}

@@ -1,5 +1,7 @@
 const RepositorieItem = require('../repositories/item')
 const RepositorieFile = require('../repositories/file')
+const RepositorieVoucher = require('../repositories/voucher')
+const RepositorieQuotation = require('../repositories/quotation')
 
 const { InvalidArgumentError, InternalServerError, NotFound } = require('./error')
 
@@ -9,10 +11,13 @@ class Item {
         try {
 
             const id_item = await RepositorieItem.insert(item)
+            const id_quotation = await RepositorieQuotation.insert(id_item, item)
 
-            for(const file of files){
+            for (const file of files.file) {
                 await RepositorieFile.insert(file, id_item, id_login)
             }
+
+            if(files.voucher.length > 0) await RepositorieVoucher.insert(files.voucher[0], id_quotation, id_login)
 
             return true
         } catch (error) {

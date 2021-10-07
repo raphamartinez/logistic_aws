@@ -2,10 +2,10 @@ const query = require('../infrastructure/database/queries')
 const { InvalidArgumentError, InternalServerError, NotFound } = require('../models/error')
 
 class Voucher {
-    async insert(file, id, id_login) {
+    async insert(file, id_quotation, id_login) {
         try {
             const sql = 'INSERT INTO api.voucher (filename, mimetype, path, size, id_quotation, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )'
-            await query(sql, [file.filename, file.mimetype, file.path, file.size, id, id_login])
+            await query(sql, [file.filename, file.mimetype, file.path, file.size, id_quotation, id_login])
 
             return true
         } catch (error) {

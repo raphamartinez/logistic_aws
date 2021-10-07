@@ -58,7 +58,7 @@ class Tables {
 
   createTableQuotation() {
     const sql = `CREATE TABLE IF NOT EXISTS quotation (id int NOT NULL AUTO_INCREMENT, 
-      id_item int NOT NULL, dateReg DATETIME,
+      id_item int NOT NULL, dateReg DATETIME, amount int,
       id_provider int, status int, price double,
       FOREIGN KEY (id_item) REFERENCES item (id),
       FOREIGN KEY (id_provider) REFERENCES provider (id),

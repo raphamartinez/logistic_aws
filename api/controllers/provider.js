@@ -25,11 +25,11 @@ module.exports = app => {
 
     app.post('/provider', [Middleware.bearer, Authorization('provider', 'create')], async ( req, res, next) => {
         try {
-            const result = await Provider.insert(req.body.provider)
+            const id = await Provider.insert(req.body.provider)
 
             cachelist.delPrefix('provider')
 
-            res.status(201).json(result)
+            res.status(201).json({id, msg: `Proveedor agregado con sucesso.`})
         } catch (err) {
             next(err)
         }

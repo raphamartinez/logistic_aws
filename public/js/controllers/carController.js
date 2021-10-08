@@ -3,9 +3,11 @@ import { Connection } from '../services/connection.js'
 window.onload = async function () {
   let loading = document.querySelector('[data-loading]')
   loading.innerHTML = `
-<div class="spinner-border text-danger" role="status">
-  <span class="sr-only">Loading...</span>
-</div>
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
 `
   const cars = await Connection.noBody('car/excel', 'GET')
   let user = JSON.parse(sessionStorage.getItem('user'))

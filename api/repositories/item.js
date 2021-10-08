@@ -18,8 +18,8 @@ class Item {
 
     async update(item) {
         try {
-            const sql = 'UPDATE api.item SET code = ? name = ? brand = ? status = ? type = ? km = ? description = ? WHERE id = ?'
-            const result = await query(sql, [item.code, item.name, item.brand, item.plate, item.status, item.type, item.km, item.description, item.id])
+            const sql = 'UPDATE api.item SET code = ?, name = ?, brand = ?, plate = ?, type = ?, km = ?, description = ? WHERE id = ?'
+            const result = await query(sql, [item.code, item.name, item.brand, item.plate, item.type, item.km, item.description, item.id])
 
             return result
         } catch (error) {
@@ -38,9 +38,11 @@ class Item {
             if (plate) {
                 sql += `
             WHERE it.plate = '${plate}'
+            AND qt.status <> 7
             ORDER BY it.code`
             } else {
-                sql += `
+            sql += `
+            WHERE qt.status <> 7
             ORDER BY it.code`
             }
 
@@ -50,11 +52,11 @@ class Item {
         }
     }
 
-    delete(item) {
+    delete(id) {
         try {
-            const sql = `DELETE FROM api.item WHERE id = ?`
+            const sql = `UPDATE api.item set status = ? WHERE id = ?`
 
-            return query(sql, item.id)
+            return query(sql, [7, id])
         } catch (error) {
             throw new InternalServerError('No se pudieron enumerar los login')
         }

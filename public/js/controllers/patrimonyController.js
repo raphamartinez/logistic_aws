@@ -1,22 +1,25 @@
 import { Connection } from '../services/connection.js'
+import { View } from '../views/patrimonyView.js'
 
 window.onload = async function () {
     let loading = document.querySelector('[data-loading]')
     loading.innerHTML = `
-<div class="spinner-border text-danger" role="status">
-  <span class="sr-only">Loading...</span>
-</div>
+    <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
 `
     const data = await Connection.noBody('patrimony', 'GET')
     let user = JSON.parse(sessionStorage.getItem('user'))
 
     let patrimonys = []
     data.forEach(obj => {
-        let a = `<a><i class="fas fa-eye" style="color:#000000;"></i></a>
-        <a><i class="fas fa-edit" style="color:#32CD32;"></i></a>
-    <a><i class="fas fa-trash" style="color:#CC0000;"></i></a>`
+        let a = `<a data-id="${obj.id}"><i class="btn-view fas fa-eye" ></i></a>
+                 <a data-id="${obj.id}"><i class="btn-edit fas fa-edit" ></i></a>
+                 <a data-id="${obj.id}"><i class="btn-delete fas fa-trash" ></i></a>`
 
-        let line = [obj.code, obj.name, obj.local, obj.date, a]
+        let line = [a, obj.code, obj.name, obj.local, obj.date]
         patrimonys.push(line)
     })
 
@@ -39,17 +42,14 @@ const listPatrimonys = (patrimonys) => {
     $("#dataTable").DataTable({
         data: patrimonys,
         columns: [
+            {
+                title: "Opciones",
+                className: "finance-control"
+            },
             { title: "Cod" },
             { title: "Nombre" },
             { title: "Local" },
-            {
-                title: "Fecha",
-                className: "finance-control"
-            },
-            {
-                title: "Visualizar",
-                className: "finance-control"
-            }
+            { title: "Fecha" }
         ],
         responsive: true,
         paging: false,
@@ -81,9 +81,11 @@ submit.addEventListener('submit', async (event) => {
 
     let loading = document.querySelector('[data-loading]')
     loading.innerHTML = `
-<div class="spinner-border text-danger" role="status">
-  <span class="sr-only">Loading...</span>
-</div>
+    <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
 `
 
     document.querySelector('[data-button]').disabled = true;
@@ -92,6 +94,7 @@ submit.addEventListener('submit', async (event) => {
 
     const patrimony = {
         local: event.currentTarget.local.value,
+        localdesc: document.querySelector('#local option:checked').innerHTML,
         code: event.currentTarget.code.value,
         name: event.currentTarget.name.value,
         date: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
@@ -100,8 +103,6 @@ submit.addEventListener('submit', async (event) => {
     const files = event.currentTarget.file.files
 
     const table = $('#dataTable').DataTable();
-
-    let a = `<a><i class="fas fa-eye" style="color:#000000;"></i></a>`
 
     const formData = new FormData()
 
@@ -113,9 +114,14 @@ submit.addEventListener('submit', async (event) => {
     formData.append("name", patrimony.name);
     formData.append("local", patrimony.local);
 
-    await Connection.bodyMultipart('patrimony', formData, 'POST');
+    const obj = await Connection.bodyMultipart('patrimony', formData, 'POST');
 
-    const rowNode = table.row.add([patrimony.code, patrimony.name, patrimony.local, patrimony.date,  a])
+    let a = `<a data-id="${obj.id}"><i class="fas fa-eye" style="color:#000000;"></i></a>
+    <a data-id="${obj.id}"><i class="btn-edit fas fa-edit" style="color:#32CD32;"></i></a>
+    <a data-id="${obj.id}"><i class="btn-delete fas fa-trash" style="color:#CC0000;"></i></a>`
+
+
+    const rowNode = table.row.add([a, patrimony.code, patrimony.name, patrimony.localdesc, patrimony.date])
         .draw()
         .node();
 
@@ -135,9 +141,121 @@ submit.addEventListener('submit', async (event) => {
 const select = document.querySelector('[data-select-local]')
 
 select.addEventListener('change', async (event) => {
-    
+
     const code = await Connection.noBody(`patrimony/route/${select.value}`, 'GET');
 
     document.querySelector('#code').value = code
 })
 
+
+
+const table = document.querySelector('[data-table]')
+
+table.addEventListener('click', async (event) => {
+
+    let btnDelete = event.target.classList[0] == 'btn-delete'
+
+    if (btnDelete) return deletePatrimony(event)
+
+    let btnEdit = event.target.classList[0] === 'btn-edit'
+
+    if (btnEdit) return editPatrimony(event)
+})
+
+const editPatrimony = (event) => {
+
+    const tr = event.path[3]
+
+    let patrimony = {
+        id: event.path[1].getAttribute('data-id'),
+        code: tr.children[1].innerHTML,
+        name: tr.children[2].innerHTML,
+        local: tr.children[3].innerHTML,
+    }
+
+    document.querySelector('[data-modal]').innerHTML = ``
+    document.querySelector('[data-modal]').appendChild(View.modalEdit(patrimony))
+
+    $("#edit").modal('show')
+
+    const modal = document.querySelector('[data-edit-patrimony]')
+    modal.addEventListener('submit', async (event2) => {
+        event2.preventDefault()
+
+        const date = new Date()
+
+        const newPatrimony = {
+            id: patrimony.id,
+            code: patrimony.code,
+            name: event2.currentTarget.name.value,
+            local: event2.currentTarget.local.innerHTML,
+            localdesc: document.querySelector('#localedit option:checked').innerHTML,
+            date: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+        }
+
+        const obj = await Connection.body(`patrimony/${newPatrimony.id}`, { newPatrimony }, 'PUT')
+
+        const table = $('#dataTable').DataTable()
+
+        table
+            .row(tr)
+            .remove()
+            .draw();
+
+        const rowNode = table
+            .row
+            .add(
+                [
+                    `<a data-id="${newPatrimony.id}"><i class="btn-view fas fa-eye" ></i></a>
+                     <a data-id="${newPatrimony.id}"><i class="btn-edit fas fa-edit" ></i></a>
+                     <a data-id="${newPatrimony.id}"><i class="btn-delete fas fa-trash" ></i></a>`,
+                    newPatrimony.code,
+                    newPatrimony.name,
+                    newPatrimony.localdesc,
+                    newPatrimony.date
+                ])
+            .draw()
+            .node();
+
+        $(rowNode)
+            .css('color', 'black')
+            .animate({ color: '#4e73df' });
+
+        $("#edit").modal('hide')
+
+        alert(obj.msg)
+    })
+}
+
+
+const deletePatrimony = (event) => {
+
+    const tr = event.path[3]
+
+    let patrimony = {
+        id: event.path[1].getAttribute('data-id'),
+        name: tr.children[2].innerHTML,
+        local: tr.children[3].innerHTML,
+    }
+
+    document.querySelector('[data-modal]').innerHTML = ``
+    document.querySelector('[data-modal]').appendChild(View.modalDelete(patrimony))
+
+    $("#delete").modal('show')
+
+    const modal = document.querySelector('[data-delete-patrimony]')
+    modal.addEventListener('submit', async (event2) => {
+        event2.preventDefault()
+
+        const obj = await Connection.noBody(`patrimony/${patrimony.id}`, 'DELETE')
+
+        $('#dataTable').DataTable()
+            .row(tr)
+            .remove()
+            .draw();
+
+        $("#delete").modal('hide')
+
+        alert(obj.msg)
+    })
+}

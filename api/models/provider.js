@@ -21,11 +21,11 @@ class Provider {
         }
     }
 
-    update(data, id) {
+    update(provider, id) {
         try {
-            return Repositorie.update(data, id)
+            return Repositorie.update(provider, id)
         } catch (error) {
-            throw new InternalServerError('Error.')
+            throw new InternalServerError('Error al actualizar el proveedor.')
         }
     }
 

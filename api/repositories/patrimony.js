@@ -16,10 +16,11 @@ class Patrimony {
         }
     }
 
-    async update(item) {
+    async update(patrimony) {
+
         try {
-            const sql = 'UPDATE api.item SET code = ? name = ? local = ? WHERE id = ?'
-            const result = await query(sql, [item.code, item.name, item.local, item.id])
+            const sql = 'UPDATE api.patrimony SET name = ?, local = ? WHERE id = ?'
+            const result = await query(sql, [patrimony.name, patrimony.local, patrimony.id])
 
             return result
         } catch (error) {
@@ -29,9 +30,8 @@ class Patrimony {
 
     list() {
         try {
-            let sql = `SELECT pi.filename, pa.code, pa.name, pa.local, pi.size, pi.location, pi.mimetype, pa.id_login, DATE_FORMAT(pa.datereg, '%H:%i %d/%m/%Y') as date 
-            FROM api.patrimony pa
-            LEFT JOIN api.patrimonyImage pi ON pa.id = pi.id_patrimony `
+            let sql = `SELECT  pa.id, pa.code, pa.name, pa.local, pa.id_login, DATE_FORMAT(pa.datereg, '%H:%i %d/%m/%Y') as date 
+            FROM api.patrimony pa`
 
            return query(sql)
         } catch (error) {
@@ -53,11 +53,11 @@ class Patrimony {
         }
     }
 
-    delete(item) {
+    delete(id) {
         try {
             const sql = `DELETE FROM api.patrimony WHERE id = ?`
 
-            return query(sql, item.id)
+            return query(sql, id)
         } catch (error) {
             throw new InternalServerError('No se pudieron enumerar los login')
         }

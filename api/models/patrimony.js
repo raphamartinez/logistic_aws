@@ -1,5 +1,5 @@
 const Repositorie = require('../repositories/patrimony')
-const RepositorieImage = require('../repositories/patrimonyImage')
+const File = require('./file')
 const { InvalidArgumentError, InternalServerError, NotFound } = require('./error')
 
 class Patrimony {
@@ -9,22 +9,42 @@ class Patrimony {
             const id_patrimony = await Repositorie.insert(details, id_login)
 
             for (const file of files) {
-                await RepositorieImage.insert(file, id_patrimony, id_login)
+                await File.save(file, { code: id_patrimony, name: 'id_patrimony' }, id_login)
             }
 
-            return true
+            return id_patrimony
         } catch (error) {
+            console.log(error);
             throw new InvalidArgumentError('No se pudo guardar el archivo.')
         }
     }
 
-    async delete(key) {
+    async delete(id) {
         try {
-            await RepositorieImage.delete(key)
+            const type = "id_patrimony"
+            const files = await File.list(type)
+
+            if (files) {
+                await files.forEach(async file => {
+                    await File.delete(file.filename)
+                })
+            }
+
+            await Repositorie.delete(id)
 
             return true
         } catch (error) {
+            console.log(error);
             throw new InvalidArgumentError('Se produjo un error al intentar eliminar el archivo.')
+        }
+    }
+
+    
+    update(patrimony) {
+        try {
+            return Repositorie.update(patrimony)
+        } catch (error) {
+            throw new InternalServerError('Error al actualizar el proveedor.')
         }
     }
 

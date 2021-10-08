@@ -51,7 +51,8 @@
                                         <li><a class="dropdown-item text-white-50" href="./vehiculos.html">Listado de
                                                 Vehículos</a>
                                         </li>
-                                        <li><a class="dropdown-item text-white-50" href="./patrimonio.html">Control de Patrimonio</a>
+                                        <li><a class="dropdown-item text-white-50" href="./patrimonio.html">Control de
+                                                Patrimonio</a>
                                         </li>
                                         <li><a class="dropdown-item text-white-50" href="./provider.html">Listado de
                                                 Proveedores</a>
@@ -92,6 +93,11 @@
                             </h1>
                         </div>
                     </div>
+
+                    <div class="row col-md-12 mb-2 align-items-center">
+                        <div class="d-flex justify-content-center align-items-center" data-loading></div>
+                    </div>
+
                     <div class="row justify-content-md-center">
                         <div class="col-lg-3">
                             <div class="card shadow mb-3">
@@ -110,7 +116,8 @@
                                         </div>
                                         <div class="form-group">
                                             <input id="item" name="item" placeholder="Pieza a ser reemplazada *"
-                                                type="text" class="form-control" style="text-transform:uppercase" required>
+                                                type="text" class="form-control" style="text-transform:uppercase"
+                                                required>
                                         </div>
                                         <div class="form-group">
                                             <div class="input-group">
@@ -146,14 +153,14 @@
                                         <div class="form-group">
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                <select data-currency id="currency" name="currency" type="text" class="btn btn-outline-success"
-                                                    data-providers required>
-                                                    <option value="1" selected>GS</option>
-                                                    <option value="2">USD</option>
-                                                </select>
-                                            </div>
-                                                <input id="price" name="price" placeholder="Precio" type="text" value="0000"
-                                                    class="form-control" required>
+                                                    <select data-currency id="currency" name="currency" type="text"
+                                                        class="btn btn-outline-success" data-providers required>
+                                                        <option value="1" selected>GS</option>
+                                                        <option value="2">USD</option>
+                                                    </select>
+                                                </div>
+                                                <input id="price" name="price" placeholder="Precio" type="text"
+                                                    value="0000" class="form-control" required>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -204,13 +211,11 @@
                                         </small>
                                     </div>
                                     <table class="table table-bordered text-center" id="dataTable" width="100%"
-                                        cellspacing="0"></table>
+                                        cellspacing="0" data-table></table>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="d-flex justify-content-center align-items-center" data-loading></div>
                 </div>
             </div>
 

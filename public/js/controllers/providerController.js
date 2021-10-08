@@ -4,17 +4,19 @@ import { View } from '../views/providerView.js'
 window.onload = async function () {
   let loading = document.querySelector('[data-loading]')
   loading.innerHTML = `
-<div class="spinner-border text-danger" role="status">
-  <span class="sr-only">Loading...</span>
-</div>
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
 `
   const providers = await Connection.noBody('provider', 'GET')
   let data = []
 
   providers.forEach(obj => {
     const line = [
-      `<a data-id="${obj.id}"><i class="fas fa-edit" style="color:#32CD32;"></i></a>
-      <a data-id="${obj.id}"><i class="fas fa-trash" style="color:#CC0000;"></i></a>`,
+      `<a data-id="${obj.id}"><i class="btn-edit fas fa-edit"></i></a>
+      <a data-id="${obj.id}"><i class="btn-delete fas fa-trash"></i></a>`,
       `${obj.name}`,
       `${obj.salesman}`,
       `${obj.mail}`,
@@ -80,10 +82,7 @@ const listProviders = (data) => {
       'copy', 'csv', 'excel', 'pdf', 'print'
     ]
   })
-
-
 }
-
 
 const modalInsert = document.querySelector('[data-modal-insert]')
 
@@ -116,8 +115,8 @@ modalInsert.addEventListener('click', async (event) => {
 
     const table = $('#dataTable').DataTable();
 
-    let a = `<a data-id="0"><i class="fas fa-edit" style="color:#32CD32;"></i></a>
-    <a data-id="0"><i class="fas fa-trash" style="color:#CC0000;"></i></a>`
+    let a = `<a><i class="btn-edit fas fa-edit"></i></a>
+             <a><i class="btn-delete fas fa-trash"></i></a>`
 
     const rowNode = table.row.add([a, provider.name, provider.salesman, provider.mail, provider.phone, provider.address, provider.ruc])
       .draw()
@@ -140,6 +139,119 @@ const selectProviders = (providers) => {
     document.querySelector('[data-providers]').appendChild(option)
   })
 
+}
+
+
+const table = document.querySelector('[data-table]')
+
+table.addEventListener('click', async (event) => {
+
+  let btnDelete = event.target.classList[0] == 'btn-delete'
+
+  if (btnDelete) return deleteProvider(event)
+
+  let btnEdit = event.target.classList[0] === 'btn-edit'
+
+  if (btnEdit) return editProvider(event)
+})
+
+const editProvider = (event) => {
+
+  const tr = event.path[3]
+
+  let provider = {
+    id: event.path[1].getAttribute('data-id'),
+    name: tr.children[1].innerHTML,
+    salesman: tr.children[2].innerHTML,
+    mail: tr.children[3].innerHTML,
+    phone: tr.children[4].innerHTML,
+    address: tr.children[5].innerHTML,
+    ruc: tr.children[6].innerHTML,
+  }
+
+  document.querySelector('[data-modal]').innerHTML = ``
+  document.querySelector('[data-modal]').appendChild(View.modalEdit(provider))
+
+  $("#edit").modal('show')
+
+  const modal = document.querySelector('[data-edit-provider]')
+  modal.addEventListener('submit', async (event2) => {
+    event2.preventDefault()
+
+    const newProvider = {
+      id: provider.id,
+      name: event2.currentTarget.name.value,
+      salesman: event2.currentTarget.salesman.value,
+      mail: event2.currentTarget.mail.value,
+      phone: event2.currentTarget.phone.value,
+      address: event2.currentTarget.address.value,
+      ruc: event2.currentTarget.ruc.value
+    }
+
+    const obj = await Connection.body(`provider/${newProvider.id}`, { newProvider }, 'PUT')
+
+    const table = $('#dataTable').DataTable()
+
+    table
+      .row(tr)
+      .remove()
+      .draw();
+
+    const rowNode = table
+      .row
+      .add(
+        [
+          `<a data-id="${newProvider.id}"><i class="btn-edit fas fa-edit"></i></a>
+           <a data-id="${newProvider.id}"><i class="btn-delete fas fa-trash"></i></a>`,
+           newProvider.name,
+           newProvider.salesman,
+           newProvider.mail,
+           newProvider.phone,
+           newProvider.address,
+           newProvider.ruc
+        ])
+      .draw()
+      .node();
+
+    $(rowNode)
+      .css('color', 'black')
+      .animate({ color: '#4e73df' });
+
+    $("#edit").modal('hide')
+
+    alert(obj.msg)
+  })
+}
+
+const deleteProvider = (event) => {
+
+  const tr = event.path[3]
+
+  let provider = {
+    id: event.path[1].getAttribute('data-id'),
+    name: tr.children[1].innerHTML,
+  }
+
+  document.querySelector('[data-modal]').innerHTML = ``
+  document.querySelector('[data-modal]').appendChild(View.modalDelete(provider))
+
+  $("#delete").modal('show')
+
+  const modal = document.querySelector('[data-delete-provider]')
+  modal.addEventListener('submit', async (event2) => {
+    event2.preventDefault()
+
+    const obj = await Connection.noBody(`provider/${provider.id}`, 'DELETE')
+
+    $('#dataTable').DataTable()
+      .row(tr)
+      .remove()
+      .draw();
+
+    $("#delete").modal('hide')
+
+    alert(obj.msg)
+  })
 }
 
 export const ControllerProvider = {

@@ -1,49 +1,125 @@
 
-const addItem = () => {
+
+const modalEdit = (maintenance) => {
     const div = document.createElement('div')
-    div.classList.add('card shadow mb-4')
-    div.innerHTML =
-        `
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-danger">Reemplazar nueva pieza</h6>
-        </div>
-        <div class="card-body">
-            <div class="form-group">
-                <input placeholder="Inserte el KM atual del vehiculo *" type="number"
-                    class="form-control" required>
+
+    div.innerHTML = `
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Patrimonio</h5>
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
             </div>
-            <div class="form-group">
-                <input placeholder="Pieza a ser reemplazada *" type="text" class="form-control"
-                    required>
-            </div>
-            <div class="form-group">
-                <input placeholder="Observación" type="text" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputGroupFile01">
-                        <label class="custom-file-label" for="inputGroupFile01">Foto de la
-                            Pieza</label>
-                    </div>
+            <form data-edit-maintenance>
+                <div class="modal-body">
+                <div class="form-group">
+                                            <input value="${maintenance.km}" id="km" name="km" placeholder="Inserte el KM atual del vehiculo *"
+                                                type="number" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input value="${maintenance.code}" id="code" name="code" placeholder="Codigo da Pieza " type="text"
+                                                class="form-control" style="text-transform:uppercase">
+                                        </div>
+                                        <div class="form-group">
+                                            <input value="${maintenance.name}" id="item" name="item" placeholder="Pieza a ser reemplazada *"
+                                                type="text" class="form-control" style="text-transform:uppercase"
+                                                required>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <button data-modal-insert class="btn btn-outline-success"
+                                                        type="button">Agregar nuevo</button>
+                                                </div>
+                                                <select id="provider" name="provider" type="text" class="form-control"
+                                                    data-providers required>
+                                                    <option value="" selected hidden>Proveedor *
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input value="${maintenance.brand}" id="brand" name="brand" placeholder="Marca de la pieza " type="text"
+                                                class="form-control" style="text-transform:uppercase" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <input value="${maintenance.amount}" id="amount" name="amount" placeholder="Cant" min="0" type="number"
+                                                class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <select data-currency id="currency" name="currency" type="text"
+                                                        class="btn btn-outline-success" data-providers required>
+                                                        <option value="1" selected>GS</option>
+                                                        <option value="2">USD</option>
+                                                    </select>
+                                                </div>
+                                                <input value="${maintenance.price}" id="price" name="price" placeholder="Precio" type="text"
+                                                    value="0000" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <input value="${maintenance.description}" id="obs" name="obs" placeholder="Observación" type="text"
+                                                class="form-control" style="text-transform:uppercase">
+                                        </div>
+                                        <div class="form-group">
+                                            <select id="type" name="type" type="text" class="form-control" required>
+                                                <option value="" selected hidden="hidden">Origen de la nueva pieza *
+                                                </option>
+                                                <option value="1">Presupuesto</option>
+                                                <option value="2">Stock</option>
+                                            </select>
+                                        </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <select  type="text" class="form-control">
-                    <option value="" selected disabled>Origen de la nueva pieza *</option>
-                    <option value="1">Presupuesto</option>
-                    <option value="2">Stock</option>
-                </select>
-            </div>
-            <div class="form-group text-right">
-                <button class="btn btn-success">Agregar</button>
-            </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-edit"> Editar</i></button>   
+                </div>
+            </form>
         </div>
-    `
+    </div>
+</div>`
 
     return div
 }
 
+const modalDelete = () => {
+    const div = document.createElement('div')
+
+    div.innerHTML = `
+<div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Eliminar Patrimonio</h5>
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <form data-delete-maintenance>
+                <div class="modal-body">
+                <div class="row col-md-12 text-center mb-2">
+                    <h6>Quieres eliminar el reemplazo de la pieza ?</h6>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"> Eliminar</i></button>   
+                </div>
+            </form>
+        </div>
+    </div>
+</div>`
+
+    return div
+}
+
+
+
 export const View = {
-    addItem
+    modalEdit,
+    modalDelete
 }

@@ -11003,6 +11003,17 @@ iframe {
   background-color: #e20e0e !important;
 }
 
+.btn-delete{
+  color:#CC0000;
+}
+
+.btn-edit{
+  color:#32CD32;
+}
+
+.btn-view{
+  color:#000000;
+}
 
 /* footer.sticky-footer {
   padding: 1rem 0;

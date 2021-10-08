@@ -1,12 +1,16 @@
 import { Connection } from '../services/connection.js'
 import { View } from '../views/providerView.js'
+import { View as ViewMaintenance } from '../views/maintenanceView.js'
+
 
 window.onload = async function () {
     let loading = document.querySelector('[data-loading]')
     loading.innerHTML = `
-<div class="spinner-border text-danger" role="status">
-  <span class="sr-only">Loading...</span>
-</div>
+    <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
 `
     const cars = await Connection.noBody('car/excel', 'GET')
     let user = JSON.parse(sessionStorage.getItem('user'))
@@ -47,11 +51,11 @@ cars.addEventListener('change', async (event) => {
     maintenances.forEach(maintenance => {
 
         let a = `
-        <a data-toggle="popover" title="Deletar pieza"><i class="fas fa-trash" style="color:#CC0000;"></i></a>
-        <a data-toggle="popover" title="Editar pieza"><i class="fas fa-edit" style="color:#32CD32;"></i></a>`
+        <a data-id="${maintenance.id}" data-toggle="popover" title="Deletar pieza"><i class="btn-delete fas fa-trash"></i></a>
+        <a data-id="${maintenance.id}" data-toggle="popover" title="Editar pieza"><i class="btn-edit fas fa-edit"></i></a>`
 
         let item = `
-        <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
+        <a data-id="${maintenance.id}" data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>`
 
         let line = [maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.type, maintenance.provider, maintenance.brand, maintenance.amount, maintenance.currency, maintenance.price, maintenance.description, a, item]
         items.push(line)
@@ -75,7 +79,7 @@ modalInsert.addEventListener('click', async (event) => {
 
         let loading = document.querySelector('[data-loading]')
         loading.innerHTML = `
-    <div class="spinner-border text-danger" role="status">
+    <div class="spinner-grow text-danger" role="status">
       <span class="sr-only">Loading...</span>
     </div>
     `
@@ -168,9 +172,11 @@ submitItem.addEventListener('submit', async (event) => {
 
     let loading = document.querySelector('[data-loading]')
     loading.innerHTML = `
-<div class="spinner-border text-danger" role="status">
-  <span class="sr-only">Loading...</span>
-</div>
+    <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
 `
 
 
@@ -205,13 +211,6 @@ submitItem.addEventListener('submit', async (event) => {
 
     const table = $('#dataTable').DataTable();
 
-    let a = `
-    <a data-toggle="popover" title="Deletar pieza"><i class="fas fa-trash" style="color:#CC0000;"></i></a>
-    <a data-toggle="popover" title="Editar pieza"><i class="fas fa-edit" style="color:#32CD32;"></i></a>`
-
-    let item = `
-    <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
-
     const formData = new FormData()
 
     for (const file of files) {
@@ -232,7 +231,14 @@ submitItem.addEventListener('submit', async (event) => {
     formData.append("description", maintenance.description);
     formData.append("status", maintenance.status);
 
-    await Connection.bodyMultipart('item', formData, 'POST');
+    const obj = await Connection.bodyMultipart('item', formData, 'POST');
+
+    let a = `
+    <a data-id="${obj.id}" data-toggle="popover" title="Deletar pieza"><i class="btn-delete fas fa-trash"></i></a>
+    <a data-id="${obj.id}" data-toggle="popover" title="Editar pieza"><i class="btn-edit fas fa-edit"></i></a>`
+
+    let item = `
+    <a data-id="${obj.id}" data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>`
 
     const rowNode = table.row.add([maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.typedesc, maintenance.providerdesc, maintenance.brand, maintenance.amount, maintenance.currency, maintenance.price, maintenance.description, a, item])
         .draw()
@@ -248,7 +254,7 @@ submitItem.addEventListener('submit', async (event) => {
     const file = document.querySelectorAll('.custom-file-label')
     file[0].innerHTML = `Foto de la Pieza`
     file[1].innerHTML = `Foto de lo Presupuesto`
-    
+
     loading.innerHTML = ``
 });
 
@@ -279,3 +285,122 @@ currency.addEventListener('change', async (event) => {
     }
 
 })
+
+const table = document.querySelector('[data-table]')
+
+table.addEventListener('click', async (event) => {
+
+    let btnDelete = event.target.classList[0] == 'btn-delete'
+
+    if (btnDelete) return deleteMaintenance(event)
+
+    let btnEdit = event.target.classList[0] === 'btn-edit'
+
+    if (btnEdit) return editMaintenance(event)
+})
+
+const editMaintenance = (event) => {
+
+    let tr = event.path[3]
+    let id = event.path[1].getAttribute('data-id')
+
+    const maintenance = await Connection.noBody(`item/${id}`, 'GET')
+
+    document.querySelector('[data-modal]').innerHTML = ``
+    document.querySelector('[data-modal]').appendChild(ViewMaintenance.modalEdit(maintenance))
+
+    $("#edit").modal('show')
+
+    const modal = document.querySelector('[data-edit-maintenance]')
+    modal.addEventListener('submit', async (event2) => {
+        event2.preventDefault()
+
+        const date = new Date()
+
+        const newMaintenance = {
+            id: id,
+            km: event2.currentTarget.km.value,
+            code: event2.currentTarget.code.value,
+            name: event2.currentTarget.name.value,
+            type: event2.currentTarget.type.value,
+            typedesc: event2.currentTarget.code.value,
+            provider: event2.currentTarget.provider.value,
+            providerdesc: event2.currentTarget.km.value,
+            brand: event2.currentTarget.brand.value,
+            amount: event2.currentTarget.amount.value,
+            currency: event2.currentTarget.currency.value,
+            price: event2.currentTarget.price.value,
+            description: event2.currentTarget.description.value,
+            date: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
+        }
+
+        const obj = await Connection.body(`item/${id}`, { newMaintenance }, 'PUT')
+
+        const table = $('#dataTable').DataTable()
+
+        if (tr.className === "child") tr = tr.previousElementSibling
+
+        table
+            .row(tr)
+            .remove()
+            .draw();
+
+        const rowNode = table.row.add([
+            newMaintenance.date,
+            newMaintenance.km,
+            newMaintenance.code,
+            newMaintenance.name,
+            newMaintenance.typedesc,
+            newMaintenance.providerdesc,
+            newMaintenance.brand,
+            newMaintenance.amount,
+            newMaintenance.currency,
+            newMaintenance.price,
+            newMaintenance.description,
+            `<a data-id="${id}" data-toggle="popover" title="Deletar pieza"><i class="btn-delete fas fa-trash"></i></a>
+             <a data-id="${id}" data-toggle="popover" title="Editar pieza"><i class="btn-edit fas fa-edit"></i></a>`,
+            `<a data-id="${id}" data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>`
+        ])
+            .draw()
+            .node();
+
+        $(rowNode)
+            .css('color', 'black')
+            .animate({ color: '#4e73df' });
+
+        $("#edit").modal('hide')
+        alert(obj.msg)
+    })
+}
+
+
+const deleteMaintenance = (event) => {
+
+    let tr = event.path[6]
+
+    let maintenance = {
+        id: event.path[1].getAttribute('data-id')
+    }
+
+    document.querySelector('[data-modal]').innerHTML = ``
+    document.querySelector('[data-modal]').appendChild(ViewMaintenance.modalDelete())
+
+    $("#delete").modal('show')
+
+    const modal = document.querySelector('[data-delete-maintenance]')
+    modal.addEventListener('submit', async (event2) => {
+        event2.preventDefault()
+
+        const obj = await Connection.noBody(`item/${maintenance.id}`, 'DELETE')
+
+        if (tr.className === "child") tr = tr.previousElementSibling
+        $('#dataTable').DataTable()
+            .row(tr)
+            .remove()
+            .draw();
+
+        $("#delete").modal('hide')
+
+        alert(obj.msg)
+    })
+}

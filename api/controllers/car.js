@@ -26,11 +26,11 @@ module.exports = app => {
     app.get('/dashboard', [Middleware.bearer, Authorization('car', 'read')], async ( req, res, next) => {
         try {
 
-            // const cached = await cachelist.searchValue(`car`)
+            const cached = await cachelist.searchValue(`dashboard`)
 
-            // if (cached) {
-            //     return res.json(JSON.parse(cached))
-            // }
+            if (cached) {
+                return res.json(JSON.parse(cached))
+            }
 
             const cars = await Car.dashboard()
             cachelist.addCache(`dashboard`, JSON.stringify(cars), 60 * 60 * 2)

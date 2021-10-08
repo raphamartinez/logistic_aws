@@ -10,9 +10,7 @@ class Tables {
     this.createTableItem()
     this.createTableFile()
     this.createTableQuotation()
-    this.createTableVoucher()
     this.createTablePatrimony()
-    this.createTablePatrimonyImage()
 
     return true
   } 
@@ -29,10 +27,15 @@ class Tables {
   }
 
   createTableFile(){
-    const sql = `CREATE TABLE IF NOT EXISTS file (id int NOT NULL AUTO_INCREMENT, filename VARCHAR (250), mimetype VARCHAR (10) NOT NULL,
-    path VARCHAR (250) NOT NULL, size int, id_login int, id_item int, datereg DATETIME, 
+    const sql = `CREATE TABLE IF NOT EXISTS api.file (id int NOT NULL AUTO_INCREMENT, filename VARCHAR (250) NOT NULL, mimetype VARCHAR (10) NOT NULL,
+    path VARCHAR (250) NOT NULL, size int, id_login int, datereg DATETIME, description VARCHAR (250),
+    id_item int, 
+    id_patrimony int,
+    id_quotation int, 
     FOREIGN KEY (id_login) REFERENCES login (id), 
     FOREIGN KEY (id_item) REFERENCES item (id), 
+    FOREIGN KEY (id_patrimony) REFERENCES patrimony (id), 
+    FOREIGN KEY (id_quotation) REFERENCES quotation (id), 
     PRIMARY KEY (id))`
 
     this.connection.query(sql, (error) => {
@@ -76,7 +79,7 @@ class Tables {
 
   createTableProvider() {
     const sql = `CREATE TABLE IF NOT EXISTS provider (id int NOT NULL AUTO_INCREMENT, RUC VARCHAR (100), name VARCHAR (100), 
-        phone VARCHAR (20), salesman VARCHAR (100), mail VARCHAR (100), address VARCHAR (100), 
+        phone VARCHAR (20), salesman VARCHAR (100), mail VARCHAR (100), address VARCHAR (100), status int,
         dateReg DATETIME NOT NULL, PRIMARY KEY (id))`
 
     this.connection.query(sql, (error) => {

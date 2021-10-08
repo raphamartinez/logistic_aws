@@ -20,29 +20,19 @@ module.exports = app => {
             const files = req.files
             const details = req.body
 
-            await Patrimony.insert(files, details, req.login.id_login)
+            const id = await Patrimony.insert(files, details, req.login.id_login)
             cachelist.delPrefix('patrimony')
 
-            res.json({ msg: `Patrimonio agregado con éxito.` })
+            res.json({ id, msg: `Patrimonio agregado con éxito.` })
         } catch (err) {
             console.log(err);
             next(err)
         }
     })
 
-    app.delete('/patrimony/:key', [Middleware.bearer, Authorization('patrimony', 'delete')], async (req, res, next) => {
+    app.delete('/patrimony/:id', [Middleware.bearer, Authorization('patrimony', 'delete')], async (req, res, next) => {
         try {
-
-            if (process.env.STORAGE_TYPE === 's3') {
-                s3.deleteObject({
-                    Bucket: 'logisticrepositorie',
-                    Key: req.params.key
-                }).promise()
-            } else {
-                return promisify(fs.unlink)(path.resolve(__dirname, "..", "..", "tmp", "uploads", req.params.key))
-            }
-
-            await Patrimony.delete(req.params.key)
+            await Patrimony.delete(req.params.id)
 
             cachelist.delPrefix('patrimony')
 
@@ -72,11 +62,35 @@ module.exports = app => {
 
     app.get('/patrimony/route/:id', [Middleware.bearer, Authorization('patrimony', 'read')], async (req, res, next) => {
         try {
-            console.log(req.params.id);
             const code = await Patrimony.last(req.params.id)
 
             res.json(code)
         } catch (err) {
+            next(err)
+        }
+    })
+
+    app.put('/patrimony/:id', [Middleware.bearer, Authorization('patrimony', 'update')], async ( req, res, next) => {
+        try {
+            const patrimony = req.body.newPatrimony
+
+            await Patrimony.update(patrimony)
+            cachelist.delPrefix('patrimony')
+
+            res.json({msg: `Patrimonio actualizado correctamente.`})
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.delete('/patrimony/:id', [Middleware.bearer, Authorization('patrimony', 'delete')], async ( req, res, next) => {
+        try {
+            await Patrimony.delete(req.params.id)
+            cachelist.delPrefix('patrimony')
+            
+            res.json({msg: `Patrimonio eliminado correctamente.`})
+        } catch (err) {
+            console.log(err);
             next(err)
         }
     })

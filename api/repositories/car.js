@@ -5,12 +5,10 @@ class Car {
 
     list() {
         try {
-            const sql = `SELECT it.plate, IF(qt.status = 1,COUNT(qt.id), 0) as quotations, IF(it.status = 0,COUNT(it.id),0) as mountPending, IF(it.status = 1,COUNT(it.id),0) as mountQuoted
-            , IF(it.status = 2,COUNT(it.id),0) as mountApproved, IF(it.status = 3,COUNT(it.id),0) as mountPurchased
+            const sql = `SELECT it.plate, IF(qt.status = 1,COUNT(qt.id), 0) as quotations, IF(it.status = 0,COUNT(it.id),0) as amountPending, IF(it.status = 1,COUNT(it.id),0) as amountQuoted
+            , IF(it.status = 2,COUNT(it.id),0) as amountApproved, IF(it.status = 3,COUNT(it.id),0) as amountPurchased, IF(it.status = 4,COUNT(it.id),0) as amountFinished
             FROM api.item it 
-            LEFT JOIN api.quotation qt ON it.id = qt.id_item
-            GROUP BY plate
-            ORDER BY plate`
+            LEFT JOIN api.quotation qt ON it.id = qt.id_item`
 
             return query(sql)
         } catch (error) {

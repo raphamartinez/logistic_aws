@@ -55,7 +55,7 @@ app.listen(80, () => {
 });
 
 app.use((err, req, res, next) => {
-
+console.log(err);
   let status = 500
   const body = {
     message: 'Hubo un problema al realizar la operación. Intenta más tarde'

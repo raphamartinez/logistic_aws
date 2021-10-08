@@ -60,9 +60,9 @@ module.exports = app => {
 
     app.put('/item/:id', [Middleware.bearer, Authorization('item', 'update')], async (req, res, next) => {
         try {
-            const data = req.body
+            const item = req.body.newMaintenance
 
-            await Item.update(data, req.params.id)
+            await Item.update(item, req.params.id)
             cachelist.delPrefix(`item`)
 
             res.json({ msg: `Pieza actualizada con éxito.` })

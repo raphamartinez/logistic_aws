@@ -1,7 +1,7 @@
 const RepositorieItem = require('../repositories/item')
-const RepositorieFile = require('../repositories/file')
-const RepositorieVoucher = require('../repositories/voucher')
 const RepositorieQuotation = require('../repositories/quotation')
+const File = require('./file')
+const Quotation = require('./quotation')
 const cachelist = require('../infrastructure/redis/cache')
 const xlsx = require('read-excel-file/node')
 
@@ -16,10 +16,10 @@ class Item {
             const id_quotation = await RepositorieQuotation.insert(id_item, item)
 
             for (const file of files.file) {
-                await RepositorieFile.insert(file, id_item, id_login)
+                await File.save(file, { code: id_item, name: 'id_item' }, id_login)
             }
 
-            if (files.voucher.length > 0) await RepositorieVoucher.insert(files.voucher[0], id_quotation, id_login)
+            if (files.voucher.length > 0) await File.save(files.voucher[0], { code: id_quotation, name: 'id_quotation' }, id_login)
 
             return true
         } catch (error) {
@@ -31,17 +31,24 @@ class Item {
         try {
             const data = await RepositorieItem.list(plate)
 
-            const filePath = `Vehiculos.xlsx`
+            let cars
 
-            let cars = await xlsx(filePath).then((rows) => {
-                return rows
-            })
+            const cached = await cachelist.searchValue(`car`)
 
-            cars.shift()
+            if (cached) {
+                cars = await JSON.parse(cached)
+            } else {
+                const filePath = `Vehiculos.xlsx`
+
+                cars = await xlsx(filePath).then((rows) => {
+                    return rows
+                })
+
+                cars.shift()
+            }
 
             data.forEach(obj => {
                 let car = cars.find(dt => dt[4] === obj.plate)
-                console.log(cars);
                 obj.car = `${car[4]} - ${car[1]} - ${car[2]} - ${car[3]} - ${car[6]}`
             })
 
@@ -53,21 +60,22 @@ class Item {
         }
     }
 
-    async update(data, id) {
+    async update(item, id) {
         try {
-            await RepositorieItem.update(data, id)
-            await RepositorieQuotation.update(data, id)
+            await RepositorieItem.update(item, id)
+            await RepositorieQuotation.update(item, id)
 
             return true
-
         } catch (error) {
             throw new InternalServerError('Error.')
         }
     }
 
-    delete(key) {
+    async delete(id) {
         try {
-            return RepositorieItem.delete(key)
+            await Quotation.delete(id)
+
+            return RepositorieItem.delete(id)
 
         } catch (error) {
             throw new InternalServerError('Error.')

@@ -18,8 +18,8 @@ class Quotation {
 
     async update(item) {
         try {
-            const sql = 'UPDATE api.quotation SET id_provider = ? status = ? price = ? amount = ? WHERE id_item = ?'
-            const result = await query(sql, [item.provider, item.status, item.price, item.amount, item.id])
+            const sql = 'UPDATE api.quotation SET id_provider = ?, price = ?, amount = ? WHERE id_item = ?'
+            const result = await query(sql, [item.provider, item.price, item.amount, item.id])
 
             return result
         } catch (error) {
@@ -43,11 +43,11 @@ class Quotation {
         }
     }
 
-    delete(quotation) {
+    delete(id) {
         try {
-            const sql = `DELETE FROM api.quotation WHERE id = ?`
+            const sql = `UPDATE api.quotation set status = ? WHERE id_item = ?`
 
-            return query(sql, quotation.id)
+            return query(sql, [7, id])
         } catch (error) {
             throw new InternalServerError('No se pudieron enumerar los login')
         }

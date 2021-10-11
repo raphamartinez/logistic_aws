@@ -13,15 +13,18 @@ class Item {
         try {
 
             const id_item = await RepositorieItem.insert(item)
-            const id_quotation = await RepositorieQuotation.insert(id_item, item)
 
             for (const file of files.file) {
                 await File.save(file, { code: id_item, name: 'id_item' }, id_login)
             }
 
-            if (files.voucher.length > 0) await File.save(files.voucher[0], { code: id_quotation, name: 'id_quotation' }, id_login)
+            if (item.provider) {
+                const id_quotation = await RepositorieQuotation.insert(id_item, item)
 
-            return true
+                if (files.voucher.length > 0) await File.save(files.voucher[0], { code: id_quotation, name: 'id_quotation' }, id_login)
+            }
+
+            return id_item
         } catch (error) {
             throw new InternalServerError('Error.')
         }
@@ -33,19 +36,13 @@ class Item {
 
             let cars
 
-            const cached = await cachelist.searchValue(`car`)
+            const filePath = `Vehiculos.xlsx`
 
-            if (cached) {
-                cars = await JSON.parse(cached)
-            } else {
-                const filePath = `Vehiculos.xlsx`
+            cars = await xlsx(filePath).then((rows) => {
+                return rows
+            })
 
-                cars = await xlsx(filePath).then((rows) => {
-                    return rows
-                })
-
-                cars.shift()
-            }
+            cars.shift()
 
             data.forEach(obj => {
                 let car = cars.find(dt => dt[4] === obj.plate)

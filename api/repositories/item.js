@@ -29,21 +29,21 @@ class Item {
 
     list(plate) {
         try {
-            let sql = `SELECT concat(pr.id, " - ", it.code) as idcode, it.code, it.id, it.name, it.brand, it.plate, DATE_FORMAT(qt.dateReg, '%H:%i %d/%m/%Y') as date, if(it.type = 1, "Presupuesto", "Stock") as type, it.km, it.description,
+            let sql = `SELECT concat(pr.id, " - ", it.code) as idcode, it.code, it.id, it.name, it.brand, it.plate, DATE_FORMAT(it.dateReg, '%H:%i %d/%m/%Y') as date, if(it.type = 1, "Presupuesto", if(it.type = 2,"Stock","No definido")) as type, it.km, it.description,
             qt.currency, qt.price, qt.amount, qt.status, pr.name as provider
             FROM api.item it 
-            INNER JOIN api.quotation qt ON it.id = qt.id_item
-            INNER JOIN api.provider pr ON qt.id_provider = pr.id `
+            LEFT JOIN api.quotation qt ON it.id = qt.id_item
+            LEFT JOIN api.provider pr ON qt.id_provider = pr.id `
 
             if (plate) {
                 sql += `
             WHERE it.plate = '${plate}'
-            AND qt.status <> 7
-            ORDER BY it.code`
+            AND it.status <> 7
+            ORDER BY it.id`
             } else {
             sql += `
-            WHERE qt.status <> 7
-            ORDER BY it.code`
+            WHERE it.status <> 7
+            ORDER BY it.id`
             }
 
             return query(sql)

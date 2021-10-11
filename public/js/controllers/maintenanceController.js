@@ -39,6 +39,26 @@ const selectCars = (cars) => {
 
 }
 
+const provider = document.querySelector('[data-providers]')
+
+provider.addEventListener('change', async (event) => {
+    if(event.target.value !== ""){
+        document.querySelector('#brand').disabled = false;
+        document.querySelector('#amount').disabled = false;
+        document.querySelector('#currency').disabled = false;
+        document.querySelector('#price').disabled = false;
+        document.querySelector('#voucher').disabled = false;
+        document.querySelector('#type').disabled = false;
+    }else{
+        document.querySelector('#brand').disabled = true;
+        document.querySelector('#amount').disabled = true;
+        document.querySelector('#currency').disabled = true;
+        document.querySelector('#price').disabled = true;
+        document.querySelector('#voucher').disabled = true;
+        document.querySelector('#type').disabled = true;
+    }
+})
+
 const cars = document.querySelector('[data-cars]')
 
 cars.addEventListener('change', async (event) => {
@@ -178,6 +198,10 @@ const submitItem = document.querySelector('[data-submit-item]')
 submitItem.addEventListener('submit', async (event) => {
     event.preventDefault()
 
+    const plate = document.querySelector('[data-cars]').value
+
+    if (plate === "") return alert('Seleccione una chapa')
+
     let loading = document.querySelector('[data-loading]')
     loading.innerHTML = `
     <div class="d-flex justify-content-center">
@@ -186,11 +210,6 @@ submitItem.addEventListener('submit', async (event) => {
     </div>
   </div>
 `
-
-
-    const plate = document.querySelector('[data-cars]').value
-
-    if (plate === "") return alert('Seleccione una chapa')
 
     document.querySelector('[data-button-submit]').disabled = true;
 
@@ -447,7 +466,7 @@ const viewMaintenance = async (event) => {
         let body = document.querySelector('[data-body]')
 
         files.forEach(file => {
-            body.appendChild(View.tableImage(file))
+            body.appendChild(ViewMaintenance.tableImage(file))
         })
 
         tr.classList.add('shown')

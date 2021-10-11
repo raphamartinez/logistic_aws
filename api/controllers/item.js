@@ -49,10 +49,10 @@ module.exports = app => {
                     const item = req.body
                     const id_login = req.login.id_login
 
-                    await Item.insert(files, item, id_login)
+                    const id = await Item.insert(files, item, id_login)
                     cachelist.delPrefix('item')
 
-                    res.status(201).json({ msg: `Pieza agregada con éxito.` })
+                    res.status(201).json({ id, msg: `Pieza agregada con éxito.` })
                 } catch (err) {
                     next(err)
                 }

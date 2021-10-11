@@ -35,7 +35,6 @@ window.onload = async function () {
   let dtview = []
   cars.forEach(car => {
     let line = [
-      `${car.quotations}`,
       `${car.amountPending}`,
       `${car.amountQuoted}`,
       `${car.amountApproved}`,
@@ -64,7 +63,6 @@ const listCars = (data) => {
   const table = $("#dataTable").DataTable({
     data: data,
     columns: [
-      { title: "Presupuestos Pendientes" },
       { title: "Pendiente" },
       { title: "Cotizado" },
       { title: "Autorizado compra" },

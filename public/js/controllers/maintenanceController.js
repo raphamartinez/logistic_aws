@@ -32,8 +32,8 @@ const selectCars = (cars) => {
 
     cars.map(car => {
         const option = document.createElement('option')
-        option.value = car[4]
-        option.innerHTML = `${car[4]} - ${car[1]} - ${car[2]} - ${car[3]} - ${car[6]}</option>`
+        option.value = car.plate
+        option.innerHTML = `${car.plate} - ${car.cartype} - ${car.brand} - ${car.model} - ${car.year}</option>`
         document.querySelector('[data-cars]').appendChild(option)
     })
 
@@ -44,14 +44,12 @@ const provider = document.querySelector('[data-providers]')
 provider.addEventListener('change', async (event) => {
     if(event.target.value !== ""){
         document.querySelector('#brand').disabled = false;
-        document.querySelector('#amount').disabled = false;
         document.querySelector('#currency').disabled = false;
         document.querySelector('#price').disabled = false;
         document.querySelector('#voucher').disabled = false;
         document.querySelector('#type').disabled = false;
     }else{
         document.querySelector('#brand').disabled = true;
-        document.querySelector('#amount').disabled = true;
         document.querySelector('#currency').disabled = true;
         document.querySelector('#price').disabled = true;
         document.querySelector('#voucher').disabled = true;

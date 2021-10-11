@@ -14,13 +14,19 @@ class Car {
 
     async list() {
         try {
-            const filePath = `Vehiculos.xlsx`
+            // const filePath = `Vehiculos.xlsx`
 
-            const data = await xlsx(filePath).then((rows) => {
-                return rows
-            })
+            // const data = await xlsx(filePath).then((rows) => {
+            //     return rows
+            // })
 
-            data.shift()
+            // data.shift()
+            // data.forEach(car => {
+            //     car[6] = `${car[6]}-01-01`
+            //     Repositorie.insert(car)
+            // })
+
+            const data = await Repositorie.cars()
             
             return data
 

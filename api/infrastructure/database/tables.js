@@ -11,6 +11,7 @@ class Tables {
     this.createTableFile()
     this.createTableQuotation()
     this.createTablePatrimony()
+    this.createTableCar() 
 
     return true
   } 
@@ -117,8 +118,9 @@ class Tables {
   }
 
   createTableCar() {
-    const sql = `CREATE TABLE IF NOT EXISTS car (id int NOT NULL AUTO_INCREMENT, plate VARCHAR (20) NOT NULL,
-       dateReg DATETIME NOT NULL, PRIMARY KEY (id))`
+    const sql = `CREATE TABLE IF NOT EXISTS api.car (id int NOT NULL AUTO_INCREMENT, plate VARCHAR (20) NOT NULL, brand VARCHAR (20), model VARCHAR (50), cartype  VARCHAR (50),
+    color VARCHAR (20), year DATE, chassis VARCHAR(100), fuel VARCHAR (50), departament VARCHAR (50),
+    dateReg DATETIME NOT NULL, status int, PRIMARY KEY (id))`
 
     this.connection.query(sql, (error) => {
       if (error) {

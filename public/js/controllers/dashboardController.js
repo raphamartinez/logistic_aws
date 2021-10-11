@@ -8,7 +8,7 @@ window.onload = async function () {
       <span class="sr-only">Loading...</span>
     </div>
   </div>`
-  
+
   let user = JSON.parse(sessionStorage.getItem('user'))
   let name = user.name.substring(0, (user.name + " ").indexOf(" "))
   let username = document.querySelector('[data-username]')
@@ -20,10 +20,37 @@ window.onload = async function () {
 
   items.forEach(item => {
 
-    let a = `
-      <a data-toggle="popover" title="Visualizar pieza"><i class="fas fa-image" style="color:#87CEFA;"></i></a>`
+    let option
+    switch (item.statusquotation) {
+      case "0": option = `
+      <a data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>
+      <a data-toggle="popover" title="Recusar"><i class="btn-delete fas fa-trash"></i></a>
+      <a data-toggle="popover" title="Aprovar"><i class="btn-edit fas fa-check"></i></a>`
+        break
+      case "1": option = `
+      <a data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>
+      <a data-toggle="popover" title="Recusar Cotizacion"><i class="btn-delete fas fa-trash"></i></a>
+      <a data-toggle="popover" title="Aprovar Cotizacion"><i class="btn-edit fas fa-check"></i></a>`
+        break
+      case 2: option = `
+      <a data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>
+      <a data-toggle="popover" title="Recusar Compra"><i class="btn-delete fas fa-trash"></i></a>
+      <a data-toggle="popover" title="Comprado"><i class="btn-edit fas fa-check"></i></a>`
+        break
+      case 3: option = `
+      <a data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>
+      <a data-toggle="popover" title="Instalado"><i class="btn-edit fas fa-check"></i></a>`
+        break
+      case 4: option = `
+      <a data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>`
+        break
+      default: option = `
+      <a data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>
+      <a data-toggle="popover" title="Recusar pieza"><i class="btn-delete fas fa-trash"></i></a>`
+        break
+    }
 
-    let line = [item.idcode, item.car, item.date, item.km, item.code, item.name, item.type, item.provider, item.brand, `${item.amount}`, `${item.currency}`, `${item.price}`, item.description, a]
+    let line = [item.idcode, item.car, item.date, item.km, item.code, item.name, item.type, item.provider, item.brand, `${item.amount}`, `${item.currency}`, `${item.price}`, item.description, option]
     itemsdt.push(line)
   })
 
@@ -109,7 +136,7 @@ const listMaintenances = (items) => {
       { title: "Precio" },
       { title: "Observación" },
       {
-        title: "Visualizar",
+        title: "Opciones",
         className: "finance-control"
       }
 

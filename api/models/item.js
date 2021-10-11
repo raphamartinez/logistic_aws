@@ -1,17 +1,19 @@
 const RepositorieItem = require('../repositories/item')
 const RepositorieQuotation = require('../repositories/quotation')
+const RepositorieCar =require('../repositories/car')
 const File = require('./file')
 const Quotation = require('./quotation')
 const cachelist = require('../infrastructure/redis/cache')
 const xlsx = require('read-excel-file/node')
 
 const { InvalidArgumentError, InternalServerError, NotFound } = require('./error')
+const { ImATeapot } = require('http-errors')
 
 class Item {
 
     async insert(files, item, id_login) {
         try {
-
+            if (item.type > 0) item.status = 1
             const id_item = await RepositorieItem.insert(item)
 
             for (const file of files.file) {
@@ -34,19 +36,11 @@ class Item {
         try {
             const data = await RepositorieItem.list(plate)
 
-            let cars
-
-            const filePath = `Vehiculos.xlsx`
-
-            cars = await xlsx(filePath).then((rows) => {
-                return rows
-            })
-
-            cars.shift()
+            const cars = await RepositorieCar.cars()
 
             data.forEach(obj => {
-                let car = cars.find(dt => dt[4] === obj.plate)
-                obj.car = `${car[4]} - ${car[1]} - ${car[2]} - ${car[3]} - ${car[6]}`
+                let car = cars.find(dt => dt.plate === obj.plate)
+                obj.car = `${car.plate} - ${car.cartype} - ${car.brand} - ${car.model} - ${car.year}`
             })
 
             return data

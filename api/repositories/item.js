@@ -30,7 +30,7 @@ class Item {
     list(plate) {
         try {
             let sql = `SELECT concat(pr.id, " - ", it.code) as idcode, it.code, it.id, it.name, it.brand, it.plate, DATE_FORMAT(it.dateReg, '%H:%i %d/%m/%Y') as date, if(it.type = 1, "Presupuesto", if(it.type = 2,"Stock","No definido")) as type, it.km, it.description,
-            qt.currency, qt.price, qt.amount, qt.status, pr.name as provider
+            qt.currency, qt.price, qt.amount, qt.status, pr.name as provider, qt.id as id_quotation, it.status as itemstatus, qt.status as statusquotation
             FROM api.item it 
             LEFT JOIN api.quotation qt ON it.id = qt.id_item
             LEFT JOIN api.provider pr ON qt.id_provider = pr.id `

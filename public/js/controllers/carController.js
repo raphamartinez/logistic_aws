@@ -9,22 +9,29 @@ window.onload = async function () {
     </div>
   </div>
 `
-  const cars = await Connection.noBody('car/excel', 'GET')
+  const cars = await Connection.noBody('cars', 'GET')
   let user = JSON.parse(sessionStorage.getItem('user'))
 
   let data = []
 
-  cars.forEach(obj => {
+  cars.forEach(car => {
+    let status
+    if (car.status === 1) {
+      status = `<button data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+    } else {
+      status = `<button data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    }
     const line = [
-      obj[4],
-      obj[1],
-      obj[2],
-      obj[3],
-      obj[5],
-      obj[6],
-      obj[7],
-      obj[8],
-      obj[9]
+      car.plate,
+      status,
+      car.cartype,
+      car.brand,
+      car.model,
+      car.color,
+      car.year,
+      car.chassis,
+      car.fuel,
+      car.departament
     ]
 
     data.push(line)
@@ -53,6 +60,10 @@ const listCars = (data) => {
     columns: [
       {
         title: "Chapa",
+        className: "finance-control"
+      },
+      {
+        title: "Status",
         className: "finance-control"
       },
       { title: "Vehiculo" },
@@ -89,10 +100,10 @@ const listCars = (data) => {
 const selectCars = (cars) => {
 
   cars.map(car => {
-      const option = document.createElement('option')
-      option.value = car[4]
-      option.innerHTML = `${car[4]} - ${car[1]}</option>`
-      document.querySelector('[data-cars]').appendChild(option)
+    const option = document.createElement('option')
+    option.value = car[4]
+    option.innerHTML = `${car[4]} - ${car[1]}</option>`
+    document.querySelector('[data-cars]').appendChild(option)
   })
 
 }

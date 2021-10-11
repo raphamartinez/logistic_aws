@@ -27,7 +27,7 @@ class Item {
         }
     }
 
-    list(plate) {
+    list(plate, status) {
         try {
             let sql = `SELECT concat(pr.id, " - ", it.code) as idcode, it.code, it.id, it.name, it.brand, it.plate, DATE_FORMAT(it.dateReg, '%H:%i %d/%m/%Y') as date, if(it.type = 1, "Presupuesto", if(it.type = 2,"Stock","No definido")) as type, it.km, it.description,
             qt.currency, qt.price, qt.amount, qt.status, pr.name as provider, qt.id as id_quotation, it.status as itemstatus, qt.status as statusquotation
@@ -41,9 +41,15 @@ class Item {
             AND it.status <> 7
             ORDER BY it.id`
             } else {
-            sql += `
-            WHERE it.status <> 7
-            ORDER BY it.id`
+                if (status){
+                    sql += `
+                    WHERE it.status = ${status}
+                    ORDER BY it.id`
+                }else{
+                    sql += `
+                    WHERE it.status <> 7
+                    ORDER BY it.id`
+                }
             }
 
             return query(sql)

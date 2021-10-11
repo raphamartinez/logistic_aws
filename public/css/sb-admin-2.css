@@ -10445,6 +10445,7 @@ iframe {
   font-size: 8px;
   text-align: center;
 }
+
 .btn-circle.btn-md {
   width: 50px;
   height: 50px;
@@ -10453,6 +10454,7 @@ iframe {
   font-size: 10px;
   text-align: center;
 }
+
 .btn-circle.btn-xl {
   width: 70px;
   height: 70px;
@@ -10460,6 +10462,12 @@ iframe {
   border-radius: 35px;
   font-size: 12px;
   text-align: center;
+}
+
+.cell-content {
+  text-align: right;
+  float: right;
+  color: #cbccce;
 }
 
 /* footer.sticky-footer {

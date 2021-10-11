@@ -32,9 +32,9 @@ class Item {
         }
     }
 
-    async list(plate) {
+    async list(plate, status) {
         try {
-            const data = await RepositorieItem.list(plate)
+            const data = await RepositorieItem.list(plate, status)
 
             const cars = await RepositorieCar.cars()
 

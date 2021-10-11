@@ -38,6 +38,18 @@ module.exports = app => {
         }
     })
 
+    app.get('/itemstatus/:status', [Middleware.bearer, Authorization('item', 'read')], async (req, res, next) => {
+        try {
+
+            const status = req.params.status
+
+            const items = await Item.list(0, status)
+
+            res.json(items)
+        } catch (err) {
+            next(err)
+        }
+    })
 
     app.post('/item',
         [Middleware.bearer, Authorization('item', 'create')],

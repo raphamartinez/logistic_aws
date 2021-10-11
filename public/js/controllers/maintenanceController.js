@@ -51,13 +51,11 @@ cars.addEventListener('change', async (event) => {
     maintenances.forEach(maintenance => {
 
         let a = `
-        <a data-id="${maintenance.id}" data-toggle="popover" title="Deletar pieza"><i class="btn-delete fas fa-trash"></i></a>
-        <a data-id="${maintenance.id}" data-toggle="popover" title="Editar pieza"><i class="btn-edit fas fa-edit"></i></a>`
+        <a data-action data-id="${maintenance.id}" data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>
+        <a data-action data-id="${maintenance.id}" data-toggle="popover" title="Deletar pieza"><i class="btn-delete fas fa-trash"></i></a>
+        <a data-action data-id="${maintenance.id}" data-toggle="popover" title="Editar pieza"><i class="btn-edit fas fa-edit"></i></a>`
 
-        let item = `
-        <a data-id="${maintenance.id}" data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>`
-
-        let line = [maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.type, maintenance.provider, maintenance.brand, maintenance.amount, maintenance.currency, maintenance.price, maintenance.description, a, item]
+        let line = [a, maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.type, maintenance.provider, maintenance.brand, maintenance.amount, maintenance.currency, maintenance.price, maintenance.description]
         items.push(line)
     })
 
@@ -120,9 +118,10 @@ const listMaintenances = (maintenances) => {
         data: maintenances,
         columns: [
             {
-                title: "Fecha",
+                title: "Opciones",
                 className: "finance-control"
             },
+            { title: "Fecha" },
             { title: "KM" },
             { title: "Cod Pieza" },
             { title: "Pieza" },
@@ -132,13 +131,7 @@ const listMaintenances = (maintenances) => {
             { title: "Cant" },
             { title: "Moneda" },
             { title: "Precio" },
-            { title: "Observación" },
-            { title: "Opciones" },
-            {
-                title: "Visualizar",
-                className: "finance-control"
-            }
-
+            { title: "Observación" }
         ],
         responsive: true,
         paging: false,
@@ -161,6 +154,21 @@ const listMaintenances = (maintenances) => {
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
+    })
+
+    const actions = document.querySelectorAll('[data-action]')
+    Array.from(actions).forEach(function (action) {
+        action.addEventListener('click', async (event) => {
+
+            let btnDelete = event.target.classList[0] == 'btn-delete'
+            if (btnDelete) return deleteMaintenance(event)
+
+            let btnEdit = event.target.classList[0] === 'btn-edit'
+            if (btnEdit) return editMaintenance(event)
+
+            let btnView = event.target.classList[0] === 'btn-view'
+            if (btnView) return viewMaintenance(event)
+        })
     })
 }
 
@@ -234,13 +242,11 @@ submitItem.addEventListener('submit', async (event) => {
     const obj = await Connection.bodyMultipart('item', formData, 'POST');
 
     let a = `
-    <a data-id="${obj.id}" data-toggle="popover" title="Deletar pieza"><i class="btn-delete fas fa-trash"></i></a>
-    <a data-id="${obj.id}" data-toggle="popover" title="Editar pieza"><i class="btn-edit fas fa-edit"></i></a>`
+    <a data-action data-id="${obj.id}" data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>
+    <a data-action data-id="${obj.id}" data-toggle="popover" title="Deletar pieza"><i class="btn-delete fas fa-trash"></i></a>
+    <a data-action data-id="${obj.id}" data-toggle="popover" title="Editar pieza"><i class="btn-edit fas fa-edit"></i></a>`
 
-    let item = `
-    <a data-id="${obj.id}" data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>`
-
-    const rowNode = table.row.add([maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.typedesc, maintenance.providerdesc, maintenance.brand, maintenance.amount, maintenance.currency, maintenance.price, maintenance.description, a, item])
+    const rowNode = table.row.add([a, maintenance.date, maintenance.km, maintenance.code, maintenance.name, maintenance.typedesc, maintenance.providerdesc, maintenance.brand, maintenance.amount, maintenance.currency, maintenance.price, maintenance.description])
         .draw()
         .node();
 
@@ -286,22 +292,13 @@ currency.addEventListener('change', async (event) => {
 
 })
 
-const table = document.querySelector('[data-table]')
 
-table.addEventListener('click', async (event) => {
 
-    let btnDelete = event.target.classList[0] == 'btn-delete'
-
-    if (btnDelete) return deleteMaintenance(event)
-
-    let btnEdit = event.target.classList[0] === 'btn-edit'
-
-    if (btnEdit) return editMaintenance(event)
-})
-
-const editMaintenance = (event) => {
+const editMaintenance = async (event) => {
 
     let tr = event.path[3]
+    if (tr.className === "child") tr = tr.previousElementSibling
+
     let id = event.path[1].getAttribute('data-id')
 
     const maintenance = await Connection.noBody(`item/${id}`, 'GET')
@@ -338,14 +335,15 @@ const editMaintenance = (event) => {
 
         const table = $('#dataTable').DataTable()
 
-        if (tr.className === "child") tr = tr.previousElementSibling
-
         table
             .row(tr)
             .remove()
             .draw();
 
         const rowNode = table.row.add([
+            `<a data-action data-id="${id}" data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>
+             <a data-action data-id="${id}" data-toggle="popover" title="Deletar pieza"><i class="btn-delete fas fa-trash"></i></a>
+             <a data-action data-id="${id}" data-toggle="popover" title="Editar pieza"><i class="btn-edit fas fa-edit"></i></a>`,
             newMaintenance.date,
             newMaintenance.km,
             newMaintenance.code,
@@ -356,10 +354,7 @@ const editMaintenance = (event) => {
             newMaintenance.amount,
             newMaintenance.currency,
             newMaintenance.price,
-            newMaintenance.description,
-            `<a data-id="${id}" data-toggle="popover" title="Deletar pieza"><i class="btn-delete fas fa-trash"></i></a>
-             <a data-id="${id}" data-toggle="popover" title="Editar pieza"><i class="btn-edit fas fa-edit"></i></a>`,
-            `<a data-id="${id}" data-toggle="popover" title="Visualizar pieza"><i class="btn-view fas fa-eye"></i></a>`
+            newMaintenance.description
         ])
             .draw()
             .node();
@@ -377,6 +372,7 @@ const editMaintenance = (event) => {
 const deleteMaintenance = (event) => {
 
     let tr = event.path[6]
+    if (tr.className === "child") tr = tr.previousElementSibling
 
     let maintenance = {
         id: event.path[1].getAttribute('data-id')
@@ -402,5 +398,208 @@ const deleteMaintenance = (event) => {
         $("#delete").modal('hide')
 
         alert(obj.msg)
+    })
+}
+
+
+const viewMaintenance = async (event) => {
+
+    let tr = event.path[3]
+    let i = event.target
+
+    if (tr.className === "child") tr = tr.previousElementSibling
+
+    let row = $('#dataTable').DataTable()
+        .row(tr)
+
+    if (row.child.isShown()) {
+        tr.classList.remove('bg-dark', 'text-white')
+        i.classList.remove('fas', 'fa-eye-slash', 'text-white')
+        i.classList.add('fas', 'fa-eye')
+
+        row.child.hide();
+        tr.classList.remove('shown')
+
+        adjustModalDatatable()
+    } else {
+
+        let id_item = event.path[1].getAttribute('data-id')
+
+        tr.classList.add('bg-dark', 'text-white')
+        i.classList.remove('fas', 'fa-eye')
+        i.classList.add('spinner-border', 'spinner-border-sm', 'text-light')
+
+        const files = await Connection.noBody(`file/id_item/${id_item}`, "GET")
+
+        if (files.length === 0) {
+            i.classList.remove('spinner-border', 'spinner-border-sm', 'text-light')
+            i.classList.add('fas', 'fa-eye-slash', 'text-white')
+            return alert('No hay imágenes vinculadas a esta pieza.')
+        }
+
+        const div = document.createElement('div')
+
+        div.classList.add('container-fluid')
+        div.innerHTML = `<div class="row col-md-12" data-body></div>`
+
+        row.child(div).show()
+
+        let body = document.querySelector('[data-body]')
+
+        files.forEach(file => {
+            body.appendChild(View.tableImage(file))
+        })
+
+        tr.classList.add('shown')
+        i.classList.remove('spinner-border', 'spinner-border-sm', 'text-light')
+        i.classList.add('fas', 'fa-eye-slash', 'text-white')
+
+        adjustModalDatatable()
+
+        const modal = document.createElement('div')
+
+        modal.innerHTML = `<div class="modal-image" modal-image>
+        <span class="close" data-span>&times;</span>
+        <img class="modal-image-content mb-2" data-image-content>
+        <div class="text-center text-white" data-image-description></div>
+        <div class="text-center text-white" data-image-size></div>
+        <div class="text-center text-white" data-image-date></div>
+        <div class="text-center text-white" data-image-actions>
+        <a data-key-edit><i class="btn-edit fas fa-edit" ></i></a>
+        <a data-key-delete><i class="btn-delete fas fa-trash" ></i></a>
+        </div>
+        <div class="text-center text-white" data-image-option></div>
+        </div>`
+
+        document.querySelector('[data-modal]').appendChild(modal)
+
+        const images = document.getElementsByClassName('full-view')
+
+        Array.from(images).forEach(function (image) {
+            image.addEventListener('click', async (event) => {
+
+                document.querySelector('[modal-image]').style.display = "block"
+                document.querySelector('[data-image-content]').src = event.target.currentSrc
+                document.querySelector('[data-image-description]').innerHTML = event.target.alt
+                document.querySelector('[data-image-size]').innerHTML = `${event.target.getAttribute("data-size")} Mb`
+                document.querySelector('[data-image-date]').innerHTML = event.target.getAttribute("data-date")
+                document.querySelector('[data-key-delete]').setAttribute("data-key-delete", event.target.getAttribute("data-id"))
+                document.querySelector('[data-key-edit]').setAttribute("data-key-edit", event.target.getAttribute("data-id"))
+                document.querySelector('[data-key-edit]').setAttribute("data-description", event.target.alt)
+
+
+                const span = document.querySelector('[data-span]')
+
+                span.addEventListener('click', async () => {
+                    document.querySelector('[modal-image]').style.display = "none"
+                    document.querySelector('[data-image-content]').src = ""
+                    document.querySelector('[data-image-description]').innerHTML = ""
+                })
+
+                const edit = document.querySelector('[data-key-edit]')
+
+                edit.addEventListener('click', async () => {
+                    document.querySelector('[data-image-size]').innerHTML = ""
+                    document.querySelector('[data-image-date]').innerHTML = ""
+                    document.querySelector('[data-image-description]').innerHTML = ""
+                    document.querySelector('[data-image-actions]').style.display = "none"
+                    document.querySelector('[data-image-option]').innerHTML = `
+                    <div class="row text-center">
+                    <label for="description" class="form-label">Editar descripción de imagen</label>
+                    </div>
+                    <div class="row offset-md-4 text-left">
+                    <div class="col-auto">
+                    <input data-new-description value="${event.target.alt}" type="text" class="form-control" aria-describedby="helpBlock">
+                    </div>
+                    <div class="col-auto">
+                    <button data-back class="btn btn-secondary" type="button">Cancelar</button>
+                    <button data-edit-submit class="btn btn-success" type="button" id="button-addon2">Guardar</button>
+                    </div>
+                    </div>
+                    `
+
+                    const back = document.querySelector('[data-back]')
+                    back.addEventListener('click', async () => {
+                        document.querySelector('[data-image-option]').innerHTML = ``
+                        document.querySelector('[data-image-actions]').style.display = "block"
+                        document.querySelector('[data-image-description]').innerHTML = event.target.alt
+                        document.querySelector('[data-image-size]').innerHTML = `${event.target.getAttribute("data-size")} Mb`
+                        document.querySelector('[data-image-date]').innerHTML = event.target.getAttribute("data-date")
+                        document.querySelector('[data-key-delete]').setAttribute("data-key-delete", event.target.getAttribute("data-id"))
+                        document.querySelector('[data-key-edit]').setAttribute("data-key-edit", event.target.getAttribute("data-id"))
+                        document.querySelector('[data-key-edit]').setAttribute("data-description", event.target.alt)
+                    })
+
+                    const editsubmit = document.querySelector('[data-edit-submit]')
+                    editsubmit.addEventListener('click', async () => {
+                        const file = {
+                            description: document.querySelector('[data-new-description]').value,
+                            id: event.target.getAttribute("data-id")
+                        }
+
+                        const obj = await Connection.body(`file/${event.target.getAttribute("data-id")}`, { file }, 'PUT')
+
+                        document.querySelector('[data-image-option]').innerHTML = ``
+                        document.querySelector('[data-image-actions]').style.display = "block"
+                        document.querySelector('[data-image-description]').innerHTML = file.description
+                        document.querySelector('[data-image-size]').innerHTML = `${event.target.getAttribute("data-size")} Mb`
+                        document.querySelector('[data-image-date]').innerHTML = event.target.getAttribute("data-date")
+                        document.querySelector('[data-key-delete]').setAttribute("data-key-delete", event.target.getAttribute("data-id"))
+                        document.querySelector('[data-key-edit]').setAttribute("data-key-edit", event.target.getAttribute("data-id"))
+                        document.querySelector('[data-key-edit]').setAttribute("data-description", event.target.alt)
+
+                        event.target.alt = file.description
+
+                        alert(obj.msg)
+                    })
+                })
+
+                const btnDelete = document.querySelector('[data-key-delete]')
+
+                btnDelete.addEventListener('click', async () => {
+                    document.querySelector('[data-image-size]').innerHTML = ""
+                    document.querySelector('[data-image-date]').innerHTML = ""
+                    document.querySelector('[data-image-description]').innerHTML = ""
+                    document.querySelector('[data-image-actions]').style.display = "none"
+                    document.querySelector('[data-image-option]').innerHTML = `<h6>¿Realmente quieres borrar esta imagen?</h6>
+                    <button data-back class="btn btn-secondary">Cancelar</button>
+                    <button data-erase class="btn btn-danger">Borrar</button>`
+
+                    const erase = document.querySelector('[data-erase]')
+                    erase.addEventListener('click', async () => {
+                        image.offsetParent.remove()
+
+                        document.querySelector('[modal-image]').style.display = "none"
+                        document.querySelector('[data-image-content]').src = ""
+                        document.querySelector('[data-image-description]').innerHTML = ""
+
+                        const obj = await Connection.noBody(`file/${event.target.getAttribute("data-key")}`, 'DELETE')
+
+                        document.querySelector('[data-image-option]').innerHTML = ``
+                        document.querySelector('[data-image-actions]').style.display = "block"
+
+                        alert(obj.msg)
+                    })
+
+                    const back = document.querySelector('[data-back]')
+                    back.addEventListener('click', async () => {
+                        document.querySelector('[data-image-option]').innerHTML = ``
+                        document.querySelector('[data-image-actions]').style.display = "block"
+                        document.querySelector('[data-image-description]').innerHTML = event.target.alt
+                        document.querySelector('[data-image-size]').innerHTML = `${event.target.getAttribute("data-size")} Mb`
+                        document.querySelector('[data-image-date]').innerHTML = event.target.getAttribute("data-date")
+                        document.querySelector('[data-key-delete]').setAttribute("data-key-delete", event.target.getAttribute("data-id"))
+                        document.querySelector('[data-key-edit]').setAttribute("data-key-edit", event.target.getAttribute("data-id"))
+                        document.querySelector('[data-key-edit]').setAttribute("data-description", event.target.alt)
+                    })
+                })
+            })
+        })
+    }
+}
+
+const adjustModalDatatable = () => {
+    $('#dataTable').on('shown.bs.modal', function () {
+        $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
     })
 }

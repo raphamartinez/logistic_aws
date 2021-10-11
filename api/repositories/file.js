@@ -7,6 +7,9 @@ class File {
             if (file.name) file.key = file.name
             if (!file.location) file.location = `${process.env.BASE_URL}/files/${file.key}`
 
+            file.size = file.size / 1024 / 1024
+            console.log(file.size);
+
             const sql = `INSERT INTO api.file (filename, mimetype, path, size, ${id.name}, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )`
             await query(sql, [file.key, file.mimetype, file.location, file.size, id.code, id_login])
 
@@ -17,11 +20,13 @@ class File {
         }
     }
 
-    list(type) {
+    list(type, id) {
         try {
-            let sql = `SELECT filename, path, mimetype, size, id_login, description, datereg from api.file `
+            let sql = `SELECT id, filename, path, mimetype, size, id_login, IFNULL(description, "No hay descripción") as description, DATE_FORMAT(datereg, '%H:%i %d/%m/%Y') as date from api.file `
 
-            if (type) sql += `WHERE (${type} <> 0 || null)`
+            if (type) sql += `WHERE (${type} <> 0 || null) `
+
+            if (id) sql += `AND ${type} = ${id}`
 
             return query(sql)
         } catch (error) {
@@ -34,6 +39,16 @@ class File {
             const sql = `DELETE from api.file WHERE filename = ?`
 
             return query(sql, key)
+        } catch (error) {
+            throw new InternalServerError('No se pudo borrar el archivo en la base de datos')
+        }
+    }
+
+    update(file, id) {
+        try {
+            const sql = `UPDATE api.file SET description = ? WHERE id = ?`
+
+            return query(sql, [file.description, id])
         } catch (error) {
             throw new InternalServerError('No se pudo borrar el archivo en la base de datos')
         }

@@ -49,4 +49,30 @@ module.exports = app => {
             next(err)
         }
     })
+
+    app.get('/file/:type/:id', [Middleware.bearer, Authorization('file', 'read')], async (req, res, next) => {
+        try {
+            const type = req.params.type
+            const id = req.params.id
+
+            const files = await File.list(type, id)
+
+            res.json(files)
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.put('/file/:id', [Middleware.bearer, Authorization('file', 'update')], async (req, res, next) => {
+        try {
+            const file = req.body.file
+            const id = req.params.id
+
+            await File.update(file, id)
+
+            res.json({msg: `Archivo actualizado con éxito.`})
+        } catch (err) {
+            next(err)
+        }
+    })
 }

@@ -30,7 +30,17 @@ class Patrimony {
 
     list() {
         try {
-            let sql = `SELECT  pa.id, pa.code, pa.name, pa.local, pa.id_login, DATE_FORMAT(pa.datereg, '%H:%i %d/%m/%Y') as date 
+            let sql = `SELECT  pa.id, pa.code, pa.name, pa.id_login, DATE_FORMAT(pa.datereg, '%H:%i %d/%m/%Y') as date ,
+            CASE
+                WHEN pa.local = 1 THEN "KM 1"
+                WHEN pa.local = 2 THEN "KM 28"
+                WHEN pa.local = 3 THEN "YPANÉ"
+                WHEN pa.local = 4 THEN "AC. KM 1"
+                WHEN pa.local = 5 THEN "LOG. HERRAMIENTAS"
+                WHEN pa.local = 6 THEN "LOG. VEHÍCULOS"
+                WHEN pa.local = 7 THEN "LOG. EQUIPOS"
+                ELSE "Ninguno local definido."
+            END as local, pa.local as localcode
             FROM api.patrimony pa`
 
            return query(sql)

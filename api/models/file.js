@@ -28,9 +28,17 @@ class File {
         }
     }
 
-    list(type){
+    list(type, id){
         try {
-            return Repositorie.list(type)
+            return Repositorie.list(type, id)
+        } catch (error) {
+            throw new NotFound('No és possible listar los archivos.')
+        }
+    }
+
+    async update(file, id){
+        try {
+            return Repositorie.update(file, id)
         } catch (error) {
             throw new NotFound('No és possible listar los archivos.')
         }

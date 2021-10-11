@@ -75,9 +75,18 @@ const modalDelete = (patrimony) => {
     return div
 }
 
+const tableImage = (file) => {
+    const div = document.createElement('div')
+    div.classList.add('col-md-2', 'mb-2')
+    div.innerHTML = `
+        <img data-key="${file.filename}" data-id="${file.id}" data-size="${file.size}" data-date="${file.date}" width="250" height="250" src="${file.path}" class="img-fluid full-view" alt="${file.description}">
+        `
 
+    return div
+}
 
 export const View = {
     modalEdit,
-    modalDelete
+    modalDelete,
+    tableImage
 }

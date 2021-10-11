@@ -157,7 +157,7 @@ table.addEventListener('click', async (event) => {
 
 const editProvider = (event) => {
 
-  const tr = event.path[3]
+  let tr = event.path[3]
 
   let provider = {
     id: event.path[1].getAttribute('data-id'),
@@ -191,6 +191,8 @@ const editProvider = (event) => {
     const obj = await Connection.body(`provider/${newProvider.id}`, { newProvider }, 'PUT')
 
     const table = $('#dataTable').DataTable()
+
+    if (tr.className === "child") tr = tr.previousElementSibling
 
     table
       .row(tr)

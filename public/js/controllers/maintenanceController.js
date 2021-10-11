@@ -12,7 +12,7 @@ window.onload = async function () {
     </div>
   </div>
 `
-    const cars = await Connection.noBody('car/excel', 'GET')
+    const cars = await Connection.noBody('cars', 'GET')
     let user = JSON.parse(sessionStorage.getItem('user'))
 
     const providers = await Connection.noBody('provider', 'GET')

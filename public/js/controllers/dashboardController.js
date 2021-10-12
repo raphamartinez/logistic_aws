@@ -359,7 +359,7 @@ const editMaintenance = async (event) => {
 
     const obj = await Connection.bodyMultipart(`item/${id}`, formData, 'PUT');
 
-    const table = $('#dataTable').DataTable()
+    const table = $('#dataItems').DataTable()
 
     table
       .row(tr)
@@ -418,7 +418,7 @@ const deleteMaintenance = (event) => {
     const obj = await Connection.noBody(`item/${maintenance.id}`, 'DELETE')
 
     if (tr.className === "child") tr = tr.previousElementSibling
-    $('#dataTable').DataTable()
+    $('#dataItems').DataTable()
       .row(tr)
       .remove()
       .draw();
@@ -437,7 +437,7 @@ const viewMaintenance = async (event) => {
 
   if (tr.className === "child") tr = tr.previousElementSibling
 
-  let row = $('#dataTable').DataTable()
+  let row = $('#dataItems').DataTable()
     .row(tr)
 
   if (row.child.isShown()) {
@@ -627,7 +627,7 @@ const viewMaintenance = async (event) => {
 }
 
 const adjustModalDatatable = () => {
-  $('#dataTable').on('shown.bs.modal', function () {
+  $('#dataItems').on('shown.bs.modal', function () {
     $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
   })
 }

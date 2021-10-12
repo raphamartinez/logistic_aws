@@ -8,7 +8,6 @@ class File {
             if (!file.location) file.location = `${process.env.BASE_URL}/files/${file.key}`
 
             file.size = file.size / 1024 / 1024
-            console.log(file.size);
 
             const sql = `INSERT INTO api.file (filename, mimetype, path, size, ${id.name}, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )`
             await query(sql, [file.key, file.mimetype, file.location, file.size, id.code, id_login])

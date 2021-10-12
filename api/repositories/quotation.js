@@ -16,13 +16,26 @@ class Quotation {
         }
     }
 
-    async update(item) {
+    async update(item, id) {
         try {
-            const sql = 'UPDATE api.quotation SET id_provider = ?, price = ?, amount = ? WHERE id_item = ?'
-            const result = await query(sql, [item.provider, item.price, item.amount, item.id])
+            const sql = 'UPDATE api.quotation SET id_provider = ?, price = ?, amount = ? WHERE id = ?'
+            const result = await query(sql, [item.provider, item.price, item.amount, id])
 
             return result
         } catch (error) {
+            console.log(error);
+            throw new InvalidArgumentError('Error')
+        }
+    }
+
+    async check(id) {
+        try {
+            const sql = 'SELECT id from api.quotation WHERE id_item = ?'
+            const result = await query(sql, id)
+
+            return result[0]
+        } catch (error) {
+            console.log(error);
             throw new InvalidArgumentError('Error')
         }
     }

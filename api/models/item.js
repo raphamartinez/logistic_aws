@@ -1,6 +1,6 @@
 const RepositorieItem = require('../repositories/item')
 const RepositorieQuotation = require('../repositories/quotation')
-const RepositorieCar =require('../repositories/car')
+const RepositorieCar = require('../repositories/car')
 const File = require('./file')
 const Quotation = require('./quotation')
 const cachelist = require('../infrastructure/redis/cache')
@@ -32,6 +32,17 @@ class Item {
         }
     }
 
+    async view(id) {
+        try {
+            const data = await RepositorieItem.view(id)
+
+            return data
+
+        } catch (error) {
+            throw new InternalServerError('Error.')
+        }
+    }
+
     async list(plate, status) {
         try {
             const data = await RepositorieItem.list(plate, status)
@@ -46,19 +57,37 @@ class Item {
             return data
 
         } catch (error) {
-            console.log(error);
             throw new InternalServerError('Error.')
         }
     }
 
-    async update(item, id) {
+    async update(files, item, id_login) {
         try {
-            await RepositorieItem.update(item, id)
-            await RepositorieQuotation.update(item, id)
+            if (item.type === '1') item.status = 1
+            await RepositorieItem.update(item)
+
+            if (files.file !== undefined) {
+                for (const file of files.file) {
+                    await File.save(file, { code: item.id, name: 'id_item' }, id_login)
+                }
+            }
+
+            if (item.provider) {
+                const obj = await RepositorieQuotation.check(item.id)
+                if (obj) {
+                    await RepositorieQuotation.update(item, obj.id)
+                    item.id_quotation = obj.id
+                } else {
+                    const newid = await RepositorieQuotation.insert(item.id, item)
+                    item.id_quotation = newid
+                }
+
+                if (files.voucher.length > 0) await File.save(files.voucher[0], { code: item.id_quotation, name: 'id_quotation' }, id_login)
+            }
 
             return true
         } catch (error) {
-            throw new InternalServerError('Error.')
+            throw new InternalServerError(error)
         }
     }
 

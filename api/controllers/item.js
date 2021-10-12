@@ -38,6 +38,19 @@ module.exports = app => {
         }
     })
 
+    app.get('/itemview/:id', [Middleware.bearer, Authorization('item', 'read')], async (req, res, next) => {
+        try {
+
+            const id = req.params.id
+
+            const item = await Item.view(id)
+
+            res.json(item)
+        } catch (err) {
+            next(err)
+        }
+    })
+
     app.get('/itemstatus/:status', [Middleware.bearer, Authorization('item', 'read')], async (req, res, next) => {
         try {
 
@@ -70,18 +83,23 @@ module.exports = app => {
                 }
             })
 
-    app.put('/item/:id', [Middleware.bearer, Authorization('item', 'update')], async (req, res, next) => {
-        try {
-            const item = req.body.newMaintenance
+    app.put('/item/:id',
+        [Middleware.bearer, Authorization('item', 'update')],
+        multer(multerConfig)
+            .fields([{ name: 'file', maxCount: 10 }, { name: 'voucher', maxCount: 1 }]), async (req, res, next) => {
+                try {
+                    const item = req.body
+                    const files = req.files
+                    const id_login = req.login.id_login
 
-            await Item.update(item, req.params.id)
-            cachelist.delPrefix(`item`)
+                    await Item.update(files, item, id_login)
+                    cachelist.delPrefix(`item`)
 
-            res.json({ msg: `Pieza actualizada con éxito.` })
-        } catch (err) {
-            next(err)
-        }
-    })
+                    res.json({ msg: `Pieza actualizada con éxito.` })
+                } catch (err) {
+                    next(err)
+                }
+            })
 
     app.delete('/item/:id', [Middleware.bearer, Authorization('item', 'delete')], async (req, res, next) => {
         try {

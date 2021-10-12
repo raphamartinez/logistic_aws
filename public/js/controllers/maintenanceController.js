@@ -42,18 +42,20 @@ const selectCars = (cars) => {
 const provider = document.querySelector('[data-providers]')
 
 provider.addEventListener('change', async (event) => {
-    if(event.target.value !== ""){
+    if (event.target.value !== "") {
         document.querySelector('#brand').disabled = false;
         document.querySelector('#currency').disabled = false;
         document.querySelector('#price').disabled = false;
         document.querySelector('#voucher').disabled = false;
         document.querySelector('#type').disabled = false;
-    }else{
+        document.querySelector('#amount').disabled = false;
+    } else {
         document.querySelector('#brand').disabled = true;
         document.querySelector('#currency').disabled = true;
         document.querySelector('#price').disabled = true;
         document.querySelector('#voucher').disabled = true;
         document.querySelector('#type').disabled = true;
+        document.querySelector('#amount').disabled = true;
     }
 })
 
@@ -318,37 +320,103 @@ const editMaintenance = async (event) => {
 
     let id = event.path[1].getAttribute('data-id')
 
-    const maintenance = await Connection.noBody(`item/${id}`, 'GET')
+    const maintenance = await Connection.noBody(`itemview/${id}`, 'GET')
+    const providers = await Connection.noBody('provider', 'GET')
 
     document.querySelector('[data-modal]').innerHTML = ``
     document.querySelector('[data-modal]').appendChild(ViewMaintenance.modalEdit(maintenance))
 
+    document.getElementById("provideredit").selectedIndex = maintenance.provider;
+    document.getElementById("typeedit").selectedIndex = maintenance.type;
+    document.getElementById("currencyedit").selectedIndex = maintenance.currency;
+
+    providers.map(provider => {
+        const option = document.createElement('option')
+        option.value = provider.id
+        option.innerHTML = `${provider.name}</option>`
+        document.querySelector('[data-providers-edit]').appendChild(option)
+    })
+
     $("#edit").modal('show')
+
+    const provider = document.querySelector('[data-providers-edit]')
+
+    provider.addEventListener('change', async (event) => {
+        if (event.target.value !== "") {
+            document.querySelector('#brandedit').disabled = false;
+            document.querySelector('#currencyedit').disabled = false;
+            document.querySelector('#priceedit').disabled = false;
+            document.querySelector('#voucheredit').disabled = false;
+            document.querySelector('#typeedit').disabled = false;
+            document.querySelector('#amountedit').disabled = false;
+
+        } else {
+            document.querySelector('#brandedit').disabled = true;
+            document.querySelector('#currencyedit').disabled = true;
+            document.querySelector('#priceedit').disabled = true;
+            document.querySelector('#voucheredit').disabled = true;
+            document.querySelector('#typeedit').disabled = true;
+            document.querySelector('#amountedit').disabled = false;
+            document.querySelector('#brandedit').required = true;
+            document.querySelector('#currencyedit').required = true;
+            document.querySelector('#priceedit').required = true;
+            document.querySelector('#voucheredit').required = true;
+            document.querySelector('#typeedit').required = true;
+            document.querySelector('#amountedit').required = false;
+
+        }
+    })
 
     const modal = document.querySelector('[data-edit-maintenance]')
     modal.addEventListener('submit', async (event2) => {
         event2.preventDefault()
 
+        const plate = document.querySelector('[data-cars]').value
+
+
         const date = new Date()
 
         const newMaintenance = {
             id: id,
-            km: event2.currentTarget.km.value,
-            code: event2.currentTarget.code.value,
-            name: event2.currentTarget.name.value,
-            type: event2.currentTarget.type.value,
-            typedesc: event2.currentTarget.code.value,
+            plate: plate,
+            name: event2.currentTarget.item.value,
             provider: event2.currentTarget.provider.value,
-            providerdesc: event2.currentTarget.km.value,
-            brand: event2.currentTarget.brand.value,
+            providerdesc: document.querySelector('#provideredit option:checked').innerHTML,
             amount: event2.currentTarget.amount.value,
-            currency: event2.currentTarget.currency.value,
             price: event2.currentTarget.price.value,
-            description: event2.currentTarget.description.value,
+            type: event2.currentTarget.type.value,
+            currency: event2.currentTarget.currency.value,
+            code: event2.currentTarget.code.value,
+            brand: event2.currentTarget.brand.value,
+            typedesc: document.querySelector('#typeedit option:checked').innerHTML,
+            description: event2.currentTarget.obs.value,
+            km: event2.currentTarget.km.value,
             date: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
         }
 
-        const obj = await Connection.body(`item/${id}`, { newMaintenance }, 'PUT')
+        const files = event2.currentTarget.file.files
+
+        const formData = new FormData()
+
+        for (const file of files) {
+            formData.append("file", file);
+        }
+
+        formData.append("id", newMaintenance.id);
+        formData.append("voucher", event2.currentTarget.voucher.files[0]);
+        formData.append("name", newMaintenance.name);
+        formData.append("price", newMaintenance.price);
+        formData.append("amount", newMaintenance.amount);
+        formData.append("provider", newMaintenance.provider);
+        formData.append("code", newMaintenance.code);
+        formData.append("km", newMaintenance.km);
+        formData.append("brand", newMaintenance.brand);
+        formData.append("currency", newMaintenance.currency);
+        formData.append("type", newMaintenance.type);
+        formData.append("plate", newMaintenance.plate);
+        formData.append("description", newMaintenance.description);
+
+        const obj = await Connection.bodyMultipart(`item/${id}`, formData, 'PUT');
 
         const table = $('#dataTable').DataTable()
 

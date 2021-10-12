@@ -58,6 +58,24 @@ class Item {
         }
     }
 
+    async view(id) {
+        try {
+            const sql = `SELECT concat(ca.plate, ' - ', ca.cartype, ' - ', ca.brand, ' - ', ca.model, ' - ', DATE_FORMAT(ca.year, '%Y')) as concatcar ,concat(pr.id, " - ", it.code) as idcode, it.code, it.id, it.name, it.brand, it.plate, DATE_FORMAT(it.dateReg, '%H:%i %d/%m/%Y') as date, if(it.type = 1, "Presupuesto", if(it.type = 2,"Stock","No definido")) as type, it.km, it.description,
+            qt.currency, qt.price, qt.amount, qt.status, pr.name as provider, qt.id as id_quotation, it.status as itemstatus, qt.status as statusquotation
+            FROM api.item it 
+            INNER JOIN api.car ca ON it.plate = ca.plate
+            LEFT JOIN api.quotation qt ON it.id = qt.id_item
+            LEFT JOIN api.provider pr ON qt.id_provider = pr.id
+            WHERE it.id = ?`
+
+            const result = await query(sql, id)
+
+            return result[0]
+        } catch (error) {
+            throw new InvalidArgumentError('No se pudo ingresar el login en la base de datos')
+        }
+    }
+
     delete(id) {
         try {
             const sql = `UPDATE api.item set status = ? WHERE id = ?`

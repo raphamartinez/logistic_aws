@@ -5,7 +5,7 @@ const cachelist = require('../infrastructure/redis/cache')
 
 module.exports = app => {
 
-    app.get('/cars', [Middleware.bearer, Authorization('car', 'read')], async ( req, res, next) => {
+    app.get('/cars/:date', [Middleware.bearer, Authorization('car', 'read')], async ( req, res, next) => {
         try {
 
             // const cached = await cachelist.searchValue(`car`)
@@ -14,7 +14,7 @@ module.exports = app => {
             //     return res.json(JSON.parse(cached))
             // }
 
-            const cars = await Car.list()
+            const cars = await Car.list(req.params.date)
             cachelist.addCache(`car`, JSON.stringify(cars), 60 * 60 * 2)
 
             res.json(cars)

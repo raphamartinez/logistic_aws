@@ -27,13 +27,22 @@ class Car {
         }
     }
 
-    cars(car){
+    cars(date){
+
         try {
-            let sql = `SELECT *, DATE_FORMAT(year, '%Y') as year, DATE_FORMAT(dateReg, '%H:%i %d/%m/%Y') as date FROM api.car `
+            if(date){
+                let sql = `SELECT ca.id as id_car, ca.plate, dr.name as driver, tr.route, ca.brand, ca.model, ca.cartype, ca.color, ca.fuel, ca.departament, ca.chassis, ca.status as statuscar, DATE_FORMAT(ca.year, '%Y') as year, DATE_FORMAT(ca.dateReg, '%H:%i %d/%m/%Y') as date 
+                FROM api.car ca
+                LEFT JOIN api.travelcar tc ON ca.id = tc.id_car
+                LEFT JOIN api.travel tr ON tc.id_travel = tr.id 
+                LEFT JOIN api.driver dr ON tr.id_driver = dr.id `
+                return query(sql)
 
-            if(car) sql =+ `WHERE plate = '${car}'`
+            }else{
+                let sql = `SELECT *, DATE_FORMAT(year, '%Y') as year, DATE_FORMAT(dateReg, '%H:%i %d/%m/%Y') as date FROM api.car `
+                return query(sql)
+            }
 
-            return query(sql)
         } catch (error) {
             throw new InternalServerError('No se pudieron enumerar los login')
         }

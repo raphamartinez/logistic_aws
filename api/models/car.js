@@ -12,7 +12,7 @@ class Car {
         }
     }
 
-    async list() {
+    async list(date) {
         try {
             // const filePath = `Vehiculos.xlsx`
 
@@ -26,7 +26,7 @@ class Car {
             //     Repositorie.insert(car)
             // })
 
-            const data = await Repositorie.cars()
+            const data = await Repositorie.cars(date)
             
             return data
 

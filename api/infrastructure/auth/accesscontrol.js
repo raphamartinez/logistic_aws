@@ -6,6 +6,7 @@ const controll = new AccessControl()
 
 controll
     .grant('1')
+    .readAny('driver')
     .readAny('car')
     .createAny('car')
     .deleteAny('car')
@@ -34,6 +35,10 @@ controll
     .createAny('patrimony')
     .deleteAny('patrimony')
     .updateAny('patrimony')
+    .readAny('travel')
+    .createAny('travel')
+    .deleteAny('travel')
+    .updateAny('travel')
 
 
 module.exports = controll

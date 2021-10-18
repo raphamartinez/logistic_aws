@@ -98,12 +98,81 @@
                     <div class="row col-md-12 mb-2 align-items-center">
                         <div class="d-flex justify-content-center align-items-center" data-loading></div>
                     </div>
-                    
+
                     <div class="row justify-content-md-center">
                         <div class="col-lg-10">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-danger">Todos os vehiculos de la flota</h6>
+                                    <h6 class="m-0 font-weight-bold text-danger">Nueva viaje</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form data-form-travel>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-2">
+                                                <input data-date type="date" name="date" id="date" class="form-control"
+                                                    required>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <select class="form-select" id="driver" name="driver" required
+                                                    data-driver>
+                                                    <option value="" selected disabled>Chofér</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <select data-truck class="form-select" id="car" name="car" required>
+                                                    <option value="" selected disabled>Camion</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <select data-chest class="form-select" id="chest" name="chest">
+                                                    <option value="" selected disabled>Furgon</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <select class="form-select" id="period" name="period" required
+                                                    data-period>
+                                                    <option value="" selected disabled>Tiempo</option>
+                                                    <option value="1">Mañana</option>
+                                                    <option value="2">Noche</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <select data-route id="route" name="route" class="form-select" required>
+                                                    <option value="" selected disabled>Ruta</option>
+                                                    <option value="1">KM 1</option>
+                                                    <option value="2">KM 28</option>
+                                                    <option value="3">YPANÉ</option>
+                                                    <option value="4">AC. KM 1</option>
+                                                    <option value="5">LOG. HERRAMIENTAS</option>
+                                                    <option value="6">LOG. VEHÍCULOS</option>
+                                                    <option value="7">LOG. EQUIPOS</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group text-center col-md-12">
+                                                <button class="btn btn-success" type="submit">Agregar</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-md-center">
+                        <div class="col-lg-10">
+                            <div class="card shadow mb-4">
+                                <div class="card-header">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-2">
+                                            <h6 class="m-0 font-weight-bold text-danger">Listado de viajes</h6>
+                                        </div>
+                                        <div class="form-group col-md-2 offset-md-8">
+                                            <input class="form-control" type="date" data-search-date>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body" data-row-travel>
+
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-bordered text-center" id="dataTable" width="100%"

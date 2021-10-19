@@ -43,4 +43,18 @@ module.exports = app => {
             next(err)
         }
     })
+
+    app.get('/travelperiod/:date/:period', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
+        try {
+            const date = req.params.date
+            const period = req.params.period
+
+            const travels = await Travel.list(date, period)
+
+            res.json(travels)
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
 }

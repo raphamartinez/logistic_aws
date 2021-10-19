@@ -4,7 +4,7 @@ const newTravel = (travel) => {
 
     div.innerHTML = `
     <div class="form-group col-md-3" data-date>
-                                            <input type="text" value="${travel.datedesc} - ${travel.perioddesc}"  class="form-control" disabled>
+                                            <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
                                             <a><span data-id="${travel.id}" data-btn-delete="${travel.platedesc}"
                                                     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
                                                     X
@@ -31,15 +31,15 @@ const travel = (travel, plate, chest) => {
     div.classList.add('form-row', 'mb-2')
 
     div.innerHTML = `
-    <div class="form-group col-md-3" data-date>
-                                            <input type="text" value="${travel.datedesc} - ${travel.perioddesc}"  class="form-control" disabled>
+    <div class="form-group col-md-2" data-date>
+                                            <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
                                             <a><span data-id="${travel.id}" data-btn-delete data-car="${plate}" data-chest="${chest}"
                                                     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
                                                     X
                                                     <span class="visually-hidden"></span>
                                                 </span></a>
                                         </div>
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-4">
                                             <input value="${travel.driverdesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-2">

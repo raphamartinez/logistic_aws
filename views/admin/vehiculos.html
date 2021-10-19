@@ -113,31 +113,34 @@
                                                     required>
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <select class="form-select" id="driver" name="driver" required
+                                                <select class="form-select" id="period" name="period" required
+                                                    data-period>
+                                                    <option value="" selected disabled>Tiempo</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <select class="form-select" id="driver" name="driver" required disabled
                                                     data-driver>
                                                     <option value="" selected disabled>Chofér</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <select data-truck class="form-select" id="car" name="car" required>
+                                                <select data-truck class="form-select" id="car" name="car" required
+                                                    disabled>
                                                     <option value="" selected disabled>Camion</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <select data-chest class="form-select" id="chest" name="chest">
+                                                <select data-chest class="form-select" id="chest" name="chest" disabled>
                                                     <option value="" selected disabled>Furgon</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <select class="form-select" id="period" name="period" required
-                                                    data-period>
-                                                    <option value="" selected disabled>Tiempo</option>
-                                                    <option value="1">Mañana</option>
-                                                    <option value="2">Noche</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-md-2">
-                                                <select data-route id="route" name="route" class="form-select" required>
+                                                <select data-route id="route" name="route" class="form-select" required
+                                                    disabled>
                                                     <option value="" selected disabled>Ruta</option>
                                                     <option value="1">KM 1</option>
                                                     <option value="2">KM 28</option>
@@ -146,6 +149,29 @@
                                                     <option value="5">LOG. HERRAMIENTAS</option>
                                                     <option value="6">LOG. VEHÍCULOS</option>
                                                     <option value="7">LOG. EQUIPOS</option>
+                                                    <option value="8">P. Seguro</option>
+                                                    <option value="9">P. Terport</option>
+                                                    <option value="10">P. Fenix</option>
+                                                    <option value="11">PJC</option>
+                                                    <option value="12">Itapua</option>
+                                                    <option value="13">Santo</option>
+                                                    <option value="14">Pindoty</option>
+                                                    <option value="15">Santa Rita</option>
+                                                    <option value="16">Fernando de la Mora</option>
+                                                    <option value="17">MRA</option>
+                                                    <option value="18">San Lorenzo</option>
+                                                    <option value="19">Ñemby</option>
+                                                    <option value="20">Chacoi</option>
+                                                    <option value="21">Sobre ruta 2</option>
+                                                    <option value="22">Caaguacu</option>
+                                                    <option value="23">Campo 9</option>
+                                                    <option value="24">Campo 8</option>
+                                                    <option value="25">Villa Rica</option>
+                                                    <option value="26">Chaco</option>
+                                                    <option value="27">Villeta</option>
+                                                    <option value="28">Eusebio Ayala</option>
+                                                    <option value="29">CaacupeMi</option>
+                                                    <option value="30">Pillar</option>
                                                 </select>
                                             </div>
                                             <div class="form-group text-center col-md-12">
@@ -181,8 +207,28 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="row justify-content-md-center">
+                        <div class="col-lg-10">
+                            <div class="card shadow mb-4">
+                                <div class="card-header">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-2">
+                                            <h6 class="m-0 font-weight-bold text-danger">Listado de Chofér</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered text-center" id="dataDriver" width="100%"
+                                        cellspacing="0"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
 
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">

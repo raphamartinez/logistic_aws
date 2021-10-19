@@ -3,9 +3,9 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 
 class Travel {
 
-    async list(date) {
+    async list(date, period) {
         try {
-            const sql = `SELECT tr.id, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%d/%m/%Y') as datedesc, dr.name as driverdesc ,
+            let sql = `SELECT tr.id, tr.period, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%d/%m/%Y') as datedesc, dr.id as id_driver, dr.name as driverdesc ,
             CASE
             WHEN tr.route = 1 THEN "KM 1"
             WHEN tr.route = 2 THEN "KM 28"
@@ -18,10 +18,11 @@ class Travel {
         END as routedesc
             FROM api.travel tr
             INNER JOIN api.driver dr ON dr.id = tr.id_driver
-            WHERE tr.date = ?`
+            WHERE tr.date = ? `
+
+            if(period) sql += `AND tr.period = '${period}'`
 
             const data = await query(sql, date)
-
             return data
         } catch (error) {
             throw new InternalServerError('No se pudieron enumerar los login')

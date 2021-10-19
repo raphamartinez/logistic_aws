@@ -4,9 +4,9 @@ const Repositorie = require('../repositories/travel')
 class Travel {
 
 
-    async list(date) {
+    async list(date, period) {
         try {
-            let travels = await Repositorie.list(date)
+            let travels = await Repositorie.list(date, period)
 
             let data = []
             for(let travel of travels){

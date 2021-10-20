@@ -84,7 +84,8 @@ window.onload = async function () {
       status,
       driver.idcard,
       driver.phone,
-      driver.classification
+      driver.classification,
+      driver.thirst
     ]
     driverdt.push(line)
   })
@@ -123,6 +124,7 @@ const listDrivers = (data) => {
       },
       { title: "CI" },
       { title: "Telefono" },
+      { title: "Tipo" },
       { title: "SEDE" }
     ],
     responsive: true,

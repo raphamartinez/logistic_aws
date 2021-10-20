@@ -12,6 +12,23 @@ class Car {
         }
     }
 
+    update(plate, status) {
+        try {
+            return Repositorie.update(plate, status)
+        } catch (error) {
+            throw new InternalServerError('Error.')
+        }
+    } 
+
+    liststatus() {
+        try {
+            return Repositorie.liststatus()
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
     async list(date) {
         try {
             // const filePath = `Vehiculos.xlsx`
@@ -27,7 +44,7 @@ class Car {
             // })
 
             const data = await Repositorie.cars(date)
-            
+
             return data
 
         } catch (error) {

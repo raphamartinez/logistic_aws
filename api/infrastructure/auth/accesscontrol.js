@@ -7,6 +7,7 @@ const controll = new AccessControl()
 controll
     .grant('1')
     .readAny('driver')
+    .updateAny('driver')
     .readAny('car')
     .createAny('car')
     .deleteAny('car')

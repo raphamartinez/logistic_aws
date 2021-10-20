@@ -19,7 +19,7 @@ module.exports = app => {
             const token = await Login.generateTokens(id_login)
             const login = await Login.viewLogin(id_login)
 
-            res.json({ refreshToken: token.refreshToken, accessToken: token.accessToken, url: '../admin/dashboard.html', user: login })
+            res.json({ refreshToken: token.refreshToken, accessToken: token.accessToken, url: '../admin/vehiculos.html', user: login })
         } catch (err) {
             next(err)
         }

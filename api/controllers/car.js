@@ -23,6 +23,27 @@ module.exports = app => {
         }
     })
 
+    app.get('/carstatus', [Middleware.bearer, Authorization('car', 'read')], async ( req, res, next) => {
+        try {
+            const cars = await Car.liststatus()
+            res.json(cars)
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.put('/car/:plate', [Middleware.bearer, Authorization('car', 'update')], async ( req, res, next) => {
+        try {
+
+            await Car.update(req.params.plate, req.body.status)
+
+            res.json({msg: `Camion actualizado con éxito.`})
+        } catch (err) {
+            next(err)
+        }
+    })
+
+
     app.get('/dashboard', [Middleware.bearer, Authorization('car', 'read')], async ( req, res, next) => {
         try {
 

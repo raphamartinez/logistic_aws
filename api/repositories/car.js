@@ -1,7 +1,16 @@
 const query = require('../infrastructure/database/queries')
 const { InvalidArgumentError, InternalServerError, NotFound } = require('../models/error')
 
-class Car {
+class Car { 
+
+    liststatus() {
+        try {
+            const sql = `SELECT *, DATE_FORMAT(year, '%Y') as year, DATE_FORMAT(dateReg, '%H:%i %d/%m/%Y') as date FROM api.car WHERE status = 2 `
+            return query(sql)
+        } catch (error) {
+            throw new InternalServerError('No se pudieron enumerar los login')
+        }
+    }
 
     list() {
         try {
@@ -27,10 +36,21 @@ class Car {
         }
     }
 
-    cars(date){
+    async update(plate, status) {
+        try {
+            const sql = `UPDATE api.car SET status = ? where plate = ?`
+            const data = await query(sql, [status, plate])
+
+            return data
+        } catch (error) {
+            throw new InternalServerError('No se pudieron enumerar los login')
+        }
+    }
+
+    cars(date) {
 
         try {
-            if(date){
+            if (date) {
                 let sql = `SELECT ca.id as id_car, ca.plate, dr.name as driver, tr.route, ca.brand, ca.model, ca.cartype, ca.color, ca.fuel, ca.departament, ca.chassis, ca.status as statuscar, DATE_FORMAT(ca.year, '%Y') as year, DATE_FORMAT(ca.dateReg, '%H:%i %d/%m/%Y') as date , tr.dateReg
                 FROM api.car ca
                 LEFT JOIN api.travelcar tc ON ca.id = tc.id_car
@@ -40,7 +60,7 @@ class Car {
                 ORDER BY tr.dateReg`
                 return query(sql)
 
-            }else{
+            } else {
                 let sql = `SELECT *, DATE_FORMAT(year, '%Y') as year, DATE_FORMAT(dateReg, '%H:%i %d/%m/%Y') as date FROM api.car `
                 return query(sql)
             }

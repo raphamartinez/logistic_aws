@@ -17,8 +17,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../img/touch-icon-iphone.png">
     <link href="../css/sb-admin-2.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <link href="../css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" rel="stylesheet">
@@ -184,7 +183,7 @@
                         </div>
                     </div>
 
-                    <div class="row justify-content-md-center">
+                    <div data-div-travels class="print row justify-content-md-center">
                         <div class="col-lg-10">
                             <div class="card shadow mb-4">
                                 <div class="card-header">
@@ -192,7 +191,10 @@
                                         <div class="form-group col-md-2">
                                             <h6 class="m-0 font-weight-bold text-danger">Listado de viajes</h6>
                                         </div>
-                                        <div class="form-group col-md-2 offset-md-8">
+                                        <div class="form-group col-md-1 offset-lg-7">
+                                            <button type="button" class="btn btn-secondary" data-print>Print</button>
+                                        </div>
+                                        <div class="form-group col-md-2">
                                             <input class="form-control" type="date" data-search-date>
                                         </div>
                                     </div>
@@ -286,6 +288,7 @@
     <script src="../js/libs/buttons.html5.min.js"></script>
     <script src="../js/libs/buttons.print.min.js"></script>
     <script src="../js/libs/geradorarquivo.min.js"></script>
+    <script src="../js/libs/printThis.js"></script>
 
     <div data-modal></div>
 

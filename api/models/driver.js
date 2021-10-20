@@ -13,6 +13,14 @@ class Driver {
         }
     }
 
+    update(id, status) {
+        try {
+            return Repositorie.update(id, status)
+        } catch (error) {
+            throw new InternalServerError('Error.')
+        }
+    } 
+
     // async list() {
     //     try {
     //         const filePath = `Choferes.xlsx`

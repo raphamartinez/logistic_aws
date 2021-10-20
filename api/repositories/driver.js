@@ -22,6 +22,18 @@ class Driver {
             throw new InternalServerError('No se pudieron enumerar los login')
         }
     }
+
+    async update(id, status) {
+        try {
+            const sql = `UPDATE api.driver SET status = ? where id = ?`
+            const data = await query(sql, [status, id])
+
+            return data
+        } catch (error) {
+            throw new InternalServerError('No se pudieron enumerar los login')
+        }
+    }
+
 }
 
 module.exports = new Driver()

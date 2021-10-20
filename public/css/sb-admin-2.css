@@ -10329,6 +10329,12 @@ iframe {
   padding-right: 3px;
 }
 
+.btn-gold {
+  color: #FFDF00;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
 .table-image td, th {
   vertical-align: middle;
 }

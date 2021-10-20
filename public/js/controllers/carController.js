@@ -18,19 +18,29 @@ window.onload = async function () {
 
   const drivers = await Connection.noBody('drivers', 'GET')
 
-  travel(travels, cars, drivers)
-
   let user = JSON.parse(sessionStorage.getItem('user'))
 
   let data = []
 
   cars.forEach(car => {
+    let a
     let status
-    if (car.statuscar === 1) {
-      status = `<button data-div-car data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
-    } else {
-      status = `<button data-div-car data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+
+    switch (car.statuscar) {
+      case 2:
+        status = `&nbsp;<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion en mantenimiento" type="button" class="btn btn-warning btn-circle btn-sm"></button>`
+        break
+      case 1:
+        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+        break
+      case 0:
+        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+        break
+      default:
+        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+        break
     }
+
     const line = [
       car.plate,
       status,
@@ -42,7 +52,8 @@ window.onload = async function () {
       car.driver,
       car.chassis,
       car.fuel,
-      car.departament
+      car.departament,
+      a
     ]
 
     data.push(line)
@@ -53,10 +64,19 @@ window.onload = async function () {
   let driverdt = []
   drivers.forEach(driver => {
     let status
-    if (driver.status == 1) {
-      status = `<button data-div-driver data-status-driver-${driver.id} data-toggle="popover" title="Chofér disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
-    } else {
-      status = `<button data-div-driver data-status-driver-${driver.id} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    switch (driver.status) {
+      case 1:
+        status = `<button data-div-driver="${driver.id}" data-status-driver-${driver.id} data-toggle="popover" title="Chofér disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+
+        break
+      case 2:
+        status = `<button data-div-driver="${driver.id}" data-status-driver-${driver.id} data-toggle="popover" title="Chófer temporalmente no disponible" type="button" class="btn btn-warning btn-circle btn-sm"></button>`
+
+        break
+      default:
+        status = `<button data-div-driver="${driver.id}" data-status-driver-${driver.id} data-toggle="popover" title="Chofér disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+
+        break
     }
 
     const line = [
@@ -70,6 +90,8 @@ window.onload = async function () {
   })
 
   listDrivers(driverdt)
+
+  travel(travels, cars, drivers)
 
   let name = user.name.substring(0, (user.name + " ").indexOf(" "))
   let username = document.querySelector('[data-username]')
@@ -101,7 +123,7 @@ const listDrivers = (data) => {
       },
       { title: "CI" },
       { title: "Telefono" },
-      { title: "Tipo" }
+      { title: "SEDE" }
     ],
     responsive: true,
     paging: false,
@@ -182,6 +204,9 @@ const selectCars = (cars) => {
 
   cars.map(car => {
     const option = document.createElement('option')
+
+    if (car.statuscar == 2) option.disabled = true
+
     option.value = car.plate
     option.innerHTML = `${car.plate} - ${car.cartype}</option>`
     document.querySelector('[data-cars]').appendChild(option)
@@ -215,6 +240,18 @@ const travel = (travels, cars, drivers) => {
     let plate = travel.cars[0].plate
     let chest = ""
     if (travel.cars[1]) chest = travel.cars[1].plate
+
+    document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
+    <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+
+    if (chest !== "") {
+      document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
+      <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    }
+
+    document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
+    <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+
 
     document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest))
   })
@@ -269,18 +306,20 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
 
     document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest))
     document.querySelector(`[data-status-${travel.platedesc.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car data-status-${travel.platedesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    <button data-div-car="${travel.platedesc}" data-status-${travel.platedesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+
+    document.querySelector(`[data-status-driver-${travel.driver}]`).parentNode.innerHTML = `
+    <button data-div-driver="${travel.driver}" data-status-driver-${travel.driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
     if (travel.chestdesc !== "Furgon") {
       document.querySelector(`[data-status-${travel.chestdesc.toLowerCase()}]`).parentNode.innerHTML = `
-      <button data-div-car data-status-${travel.chestdesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      <button data-div-car="${travel.chestdesc}" data-status-${travel.chestdesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
     }
   }
 
   loading.innerHTML = " "
   alert(obj.msg)
 })
-
 
 document.querySelector('[data-row-travel]').addEventListener('click', async (event) => {
   if (event.target && event.target.matches("[data-btn-delete]")) {
@@ -291,15 +330,17 @@ document.querySelector('[data-row-travel]').addEventListener('click', async (eve
     event.path[3].remove()
 
     const plate = event.target.getAttribute('data-car')
-    const btn = document.querySelector(`[data-status-${plate.toLowerCase()}]`)
-    btn.parentNode.innerHTML = `
-    <button data-div-car data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+    const id_driver = event.target.getAttribute('data-iddriver')
+    document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
+    <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+
+    document.querySelector(`[data-status-driver-${id_driver}]`).parentNode.innerHTML = `
+    <button data-div-car data-status-driver-${id_driver} data-toggle="popover" title="Chofér disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
 
     const chest = event.target.getAttribute('data-chest')
     if (chest) {
-      const btnchest = document.querySelector(`[data-status-${chest.toLowerCase()}]`)
-      btnchest.parentNode.innerHTML = `
-      <button data-div-car data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+      document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
+      <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
     }
 
     alert(obj.msg)
@@ -311,6 +352,8 @@ const enable = async () => {
   const period = document.querySelector('[data-period]').value
 
   const travels = await Connection.noBody(`travelperiod/${date}/${period}`, 'GET')
+  const maintenacecars = await Connection.noBody(`carstatus`, 'GET')
+
   const drivers = document.querySelectorAll('[data-driver] option')
   const trucks = document.querySelectorAll('[data-truck] option')
   const chests = document.querySelectorAll('[data-chest] option')
@@ -330,6 +373,7 @@ const enable = async () => {
       travel.cars.forEach(car => {
         cars.push(car)
       })
+      cars.concat(maintenacecars)
 
       Array.from(trucks).forEach(truck => {
         let car = cars.find(car => truck.value == car.id_car)
@@ -360,12 +404,24 @@ const enable = async () => {
 
     const trucks = document.querySelectorAll('[data-truck] option')
     Array.from(trucks).forEach(truck => {
-      truck.disabled = false
+      let car = maintenacecars.find(car => truck.value == car.id)
+
+      if (car) {
+        truck.disabled = true
+      } else {
+        truck.disabled = false
+      }
     })
 
     const chests = document.querySelectorAll('[data-chest] option')
     Array.from(chests).forEach(chest => {
-      chest.disabled = false
+      let car = maintenacecars.find(car => chest.value == car.id)
+
+      if (car) {
+        chest.disabled = true
+      } else {
+        chest.disabled = false
+      }
     })
   }
 
@@ -455,15 +511,15 @@ const listTravels = (travels) => {
     if (travel.cars[1]) chest = travel.cars[1].plate
 
     document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car data-status-${plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
     if (chest !== "") {
       document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
-      <button data-div-car data-status-${chest} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
     }
 
     document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
-    <button data-div-driver data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
     document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest))
   })
@@ -551,8 +607,64 @@ const changeCar = (event) => {
   }
 }
 
+document.querySelector('#dataTable').addEventListener('click', async (event) => {
+  if (event.target && event.target.matches("[data-div-car]")) {
+    console.log(event.target.title);
+
+    const plate = event.target.attributes[0].value.toUpperCase()
+
+    let status
+    if (event.target.title === 'Camion disponible') {
+      status = 2
+      event.target.title = `Camion en mantenimiento`
+      event.target.classList.remove('btn-success')
+      event.target.classList.add('btn-warning')
+
+    } else {
+      status = 1
+      event.target.title = `Camion disponible`
+      event.target.classList.remove('btn-warning')
+      event.target.classList.add('btn-success')
+    }
+
+    const obj = await Connection.body(`car/${plate}`, { status }, 'PUT')
+
+    console.log(obj.msg);
+  }
+})
+
+document.querySelector('#dataDriver').addEventListener('click', async (event) => {
+  if (event.target && event.target.matches("[data-div-driver]")) {
+    console.log(event.target.title);
+
+    const id = event.target.attributes[0].value.toUpperCase()
+
+    let status
+    if (event.target.title === 'Chofér disponible') {
+      status = 2
+      event.target.title = `Chófer temporalmente no disponible`
+      event.target.classList.remove('btn-success')
+      event.target.classList.add('btn-warning')
+
+    } else {
+      status = 1
+      event.target.title = `Chofér disponible`
+      event.target.classList.remove('btn-warning')
+      event.target.classList.add('btn-success')
+    }
+
+    const obj = await Connection.body(`driver/${id}`, { status }, 'PUT')
+
+    console.log(obj.msg);
+  }
+})
+
 document.querySelector('[data-driver]').addEventListener('change', changeDriver, false)
 document.querySelector('[data-truck]').addEventListener('change', changeCar, false)
+
+document.querySelector('[data-print]').addEventListener('click', () => {
+  $("#dataTable").printThis()
+})
 
 export const ControllerCar = {
   selectCars

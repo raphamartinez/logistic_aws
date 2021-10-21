@@ -532,6 +532,7 @@ const changeDriver = (event) => {
     { id_driver: "19", plate: 'CFP306', except: ['CAX732', 'CEY202', 'CEY203', 'CEY204'] },
     { id_driver: "10", plate: 'CFP302', except: ['CEY202', 'CEY203', 'CEY204'] },
     { id_driver: "11", plate: 'CFP305', except: ['CEY202', 'CEY203', 'CEY204'] },
+    { id_driver: "99", plate: 'CFP304', except: ['CAE070', 'CAX384'] },
     { id_driver: "16", plate: 'XBRI004', except: [] },
     { id_driver: "14", plate: 'XBRI002', except: [] },
     { id_driver: "13", plate: 'XBRI001', except: [] },
@@ -559,9 +560,9 @@ const changeDriver = (event) => {
         let obj = favorite.except.find(plate => plate == chest.label)
 
         if (obj) {
-          chest.disabled = true
-        } else {
           chest.disabled = false
+        } else {
+          chest.disabled = true
         }
       })
     })
@@ -597,9 +598,9 @@ const changeCar = (event) => {
       let obj = favorite.except.find(plate => plate == chest.label)
 
       if (obj) {
-        chest.disabled = true
-      } else {
         chest.disabled = false
+      } else {
+        chest.disabled = true
       }
     })
 

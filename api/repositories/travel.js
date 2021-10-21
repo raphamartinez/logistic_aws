@@ -20,7 +20,7 @@ class Travel {
             WHEN tr.route = 10 THEN "P. Fenix"
             WHEN tr.route = 11 THEN "PJC"
             WHEN tr.route = 12 THEN "Itapua"
-            WHEN tr.route = 13 THEN "Santo"
+            WHEN tr.route = 13 THEN "Salto"
             WHEN tr.route = 14 THEN "Pindoty"
             WHEN tr.route = 15 THEN "Santa Rita"
             WHEN tr.route = 16 THEN "Fernando de la Mora"

@@ -527,7 +527,7 @@ const listTravels = (travels) => {
   })
 }
 
-const changeDriver = (event) => {
+const changeDriver = async (event) => {
   const drivers = [
     { id_driver: "19", plate: 'CFP306', except: ['CAX732', 'CEY202', 'CEY203', 'CEY204'] },
     { id_driver: "10", plate: 'CFP302', except: ['CEY202', 'CEY203', 'CEY204'] },
@@ -553,23 +553,54 @@ const changeDriver = (event) => {
   chestselect[0].disabled = false
 
   if (favorite) {
-    cars.forEach(car => {
+    cars.forEach(async car => {
       if (favorite.plate == car.label) car.selected = true
 
-      chests.forEach(chest => {
+      chests.forEach(async chest => {
         let obj = favorite.except.find(plate => plate == chest.label)
 
-        if (obj) {
-          chest.disabled = false
+        if (favorite.except.length > 0) {
+          if (obj) {
+            chest.disabled = false
+          } else {
+            chest.disabled = true
+          }
+
         } else {
-          chest.disabled = true
+          const maintenacecars = await Connection.noBody(`carstatus`, 'GET')
+
+          const chests = document.querySelectorAll('[data-chest] option')
+
+          Array.from(chests).forEach(chest => {
+            let maintenance = maintenacecars.find(car => chest.value == car.id_car)
+
+            if (maintenance) {
+              chest.disabled = true
+            } else {
+              chest.disabled = false
+            }
+          })
         }
       })
+    })
+  } else {
+    const maintenacecars = await Connection.noBody(`carstatus`, 'GET')
+
+    const chests = document.querySelectorAll('[data-chest] option')
+
+    Array.from(chests).forEach(chest => {
+      let maintenance = maintenacecars.find(car => chest.value == car.id_car)
+
+      if (maintenance) {
+        chest.disabled = true
+      } else {
+        chest.disabled = false
+      }
     })
   }
 }
 
-const changeCar = (event) => {
+const changeCar = async (event) => {
   const cars = [
     { id_driver: "19", id_car: "59", plate: 'CFP306', except: ['CAX732', 'CEY202', 'CEY203', 'CEY204'] },
     { id_driver: "10", id_car: "61", plate: 'CFP302', except: ['CEY202', 'CEY203', 'CEY204'] },
@@ -594,19 +625,50 @@ const changeCar = (event) => {
   const driver = document.querySelectorAll('[data-driver] option:checked')
 
   if (favorite) {
-    chests.forEach(chest => {
+    chests.forEach(async chest => {
       let obj = favorite.except.find(plate => plate == chest.label)
 
-      if (obj) {
-        chest.disabled = false
+      if (favorite.except.length > 0) {
+        if (obj) {
+          chest.disabled = false
+        } else {
+          chest.disabled = true
+        }
       } else {
-        chest.disabled = true
+        const maintenacecars = await Connection.noBody(`carstatus`, 'GET')
+
+        const chests = document.querySelectorAll('[data-chest] option')
+
+        Array.from(chests).forEach(chest => {
+          let maintenance = maintenacecars.find(car => chest.value == car.id_car)
+
+          if (maintenance) {
+            chest.disabled = true
+          } else {
+            chest.disabled = false
+          }
+        })
       }
+
     })
 
     if (driver[0].text === "Chofér") {
       $("#driver").val(favorite.id_driver);
     }
+  } else {
+    const maintenacecars = await Connection.noBody(`carstatus`, 'GET')
+
+    const chests = document.querySelectorAll('[data-chest] option')
+
+    Array.from(chests).forEach(chest => {
+      let maintenance = maintenacecars.find(car => chest.value == car.id_car)
+
+      if (maintenance) {
+        chest.disabled = true
+      } else {
+        chest.disabled = false
+      }
+    })
   }
 }
 

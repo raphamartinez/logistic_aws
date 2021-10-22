@@ -55,7 +55,7 @@ class Travel {
 
     async listPlates (id) {
         try {
-            const sql = `SELECT tc.id, tc.id_car, tc.type, ca.plate
+            const sql = `SELECT tc.id, tc.id_car, tc.type, ca.plate, ca.cartype, ca.brand, ca.model, DATE_FORMAT(ca.year, '%Y') as year
             FROM api.travelcar tc
             INNER JOIN api.car ca ON tc.id_car = ca.id
             WHERE tc.id_travel = ?`

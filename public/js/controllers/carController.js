@@ -175,7 +175,7 @@ const listCars = (data) => {
       { title: "Modelo" },
       { title: "Color" },
       { title: "Año" },
-      { title: "Chofer" },
+      { title: "Ultimo Chofer" },
       { title: "Chassi" },
       { title: "Combustible" },
       { title: "Departamento" }
@@ -210,7 +210,7 @@ const selectCars = (cars) => {
     if (car.statuscar == 2) option.disabled = true
 
     option.value = car.plate
-    option.innerHTML = `${car.plate} - ${car.cartype}</option>`
+    option.innerHTML = `${car.plate} - ${car.cartype} - ${car.brand} - ${car.model} - ${car.year}</option>`
     document.querySelector('[data-cars]').appendChild(option)
   })
 
@@ -222,7 +222,8 @@ const travel = (travels, cars, drivers) => {
   cars.forEach(car => {
     const option = document.createElement('option')
     option.value = car.id_car
-    option.innerHTML = `${car.plate}</option>`
+    option.dataset.plate = car.plate
+    option.innerHTML = `${car.plate} - ${car.cartype} - ${car.brand} - ${car.model} - ${car.year}</option>`
 
     if (car.cartype === "FURGON" || car.cartype === "SEMI REMOLQUE") {
       document.querySelector('[data-chest]').appendChild(option)
@@ -239,16 +240,16 @@ const travel = (travels, cars, drivers) => {
   })
 
   travels.forEach(travel => {
-    let plate = travel.cars[0].plate
+    let plate = `${travel.cars[0].plate} - ${travel.cars[0].cartype} - ${travel.cars[0].brand} - ${travel.cars[0].model} - ${travel.cars[0].year}`
     let chest = ""
-    if (travel.cars[1]) chest = travel.cars[1].plate
+    if (travel.cars[1]) chest = `${travel.cars[1].plate} - ${travel.cars[1].cartype} - ${travel.cars[1].brand} - ${travel.cars[1].model} - ${travel.cars[1].year}`
 
-    document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
+    <button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
     if (chest !== "") {
-      document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
-      <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      document.querySelector(`[data-status-${travel.cars[1].plate.toLowerCase()}]`).parentNode.innerHTML = `
+      <button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
     }
 
     document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
@@ -280,9 +281,11 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
 
   let travel = {
     plate: event.currentTarget.car.value,
-    platedesc: document.querySelector('[data-truck] option:checked').innerHTML,
+    cardesc: document.querySelector('[data-truck] option:checked').innerHTML,
+    platedesc: document.querySelector('[data-truck] option:checked').getAttribute('data-plate'),
     chest: event.currentTarget.chest.value,
-    chestdesc: document.querySelector('[data-chest] option:checked').innerHTML,
+    carchestdesc: document.querySelector('[data-chest] option:checked').innerHTML,
+    chestdesc: document.querySelector('[data-chest] option:checked').getAttribute('data-plate'),
     date: event.currentTarget.date.value,
     datedesc: `${date.getDate() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
     period: event.currentTarget.period.value,
@@ -302,11 +305,11 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
   const date2 = new Date(viewDate)
 
   if (date.getTime() === date2.getTime()) {
-    let plate = travel.platedesc
+    let plate = travel.cardesc
     let chest = ""
-    if (travel.chest) chest = travel.chestdesc
+    if (travel.chest) chest = travel.carchestdesc
 
-    document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest))
+    document.querySelector('[data-row-travel]').appendChild(View.addtravel(travel, plate, chest, travel.platedesc, travel.chestdesc))
     document.querySelector(`[data-status-${travel.platedesc.toLowerCase()}]`).parentNode.innerHTML = `
     <button data-div-car="${travel.platedesc}" data-status-${travel.platedesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
@@ -507,22 +510,26 @@ const listTravels = (travels) => {
   document.querySelector('[data-row-travel]').innerHTML = ""
 
   travels.forEach(travel => {
-    let plate = travel.cars[0].plate
+    let plate = `${travel.cars[0].plate} - ${travel.cars[0].cartype} - ${travel.cars[0].brand} - ${travel.cars[0].model} - ${travel.cars[0].year}`
     let chest = ""
-    if (travel.cars[1]) chest = travel.cars[1].plate
+    if (travel.cars[1]) chest = `${travel.cars[1].plate} - ${travel.cars[1].cartype} - ${travel.cars[1].brand} - ${travel.cars[1].model} - ${travel.cars[1].year}`
 
-    document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    let platedesc = travel.cars[0].plate
+    let chestdesc = ""
+    if(travel.cars[1]) chestdesc = travel.cars[1].plate
+
+    document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
+    <button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
     if (chest !== "") {
-      document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
-      <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      document.querySelector(`[data-status-${travel.cars[1].plate.toLowerCase()}]`).parentNode.innerHTML = `
+      <button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
     }
 
     document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
     <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
-    document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest))
+    document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, chestdesc))
   })
 }
 

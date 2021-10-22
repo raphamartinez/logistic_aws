@@ -111,13 +111,21 @@
                                                 <input data-date type="date" name="date" id="date" class="form-control"
                                                     required>
                                             </div>
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-md-1">
                                                 <select class="form-select" id="period" name="period" required
                                                     data-period>
                                                     <option value="" selected disabled>Tiempo</option>
                                                     <option value="1">1</option>
                                                     <option value="2">2</option>
                                                     <option value="3">3</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-2">
+                                                <select class="form-select" id="type" name="type" required
+                                                    data-period>
+                                                    <option value="" selected disabled>Tipo</option>
+                                                    <option value="1">Viatico Nacional</option>
+                                                    <option value="2">Retiro Contenedor</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-2">
@@ -137,7 +145,7 @@
                                                     <option value="" selected disabled>Furgon</option>
                                                 </select>
                                             </div>
-                                            <div class="form-group col-md-2">
+                                            <div class="form-group col-md-1">
                                                 <select data-route id="route" name="route" class="form-select" required
                                                     disabled>
                                                     <option value="" selected disabled>Ruta</option>
@@ -204,7 +212,8 @@
                                         <div class="col-1 text-center"><h6>Ruta</h6></div>
                                         <div class="col-3 text-center"><h6>Chofér</h6></div>
                                         <div class="col-3 text-center"><h6>Camion</h6></div>
-                                        <div class="col-3 text-center"><h6>Furgon</h6></div>
+                                        <div class="col-1 text-center"><h6>Furgon</h6></div>
+                                        <div class="col-2 text-center"><h6>Tipo</h6></div>
                                         <div class="col-2 text-center"><h6>Fecha</h6></div>
                                     </div>
                                     <div class="row" data-row-travel>

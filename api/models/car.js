@@ -20,6 +20,14 @@ class Car {
         }
     } 
 
+    updateObs(id, obs){
+        try {
+            return Repositorie.updateObs(id, obs)
+        } catch (error) {
+            throw new InternalServerError('Error.')
+        }
+    }
+
     liststatus() {
         try {
             return Repositorie.liststatus()

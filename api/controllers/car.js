@@ -43,6 +43,18 @@ module.exports = app => {
         }
     })
 
+    app.put('/car/obs/:id', [Middleware.bearer, Authorization('car', 'update')], async ( req, res, next) => {
+        try {
+
+            await Car.updateObs(req.params.id, req.body.car.obs)
+
+            res.json({msg: `Camion actualizado con éxito.`})
+        } catch (err) {
+            next(err)
+        }
+    })
+
+
 
     app.get('/dashboard', [Middleware.bearer, Authorization('car', 'read')], async ( req, res, next) => {
         try {

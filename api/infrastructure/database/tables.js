@@ -35,7 +35,7 @@ class Tables {
 
   createTableTravel(){
     const sql = `CREATE TABLE IF NOT EXISTS api.travel (id int NOT NULL AUTO_INCREMENT, date DATE NOT NULL, period int NOT NULL,
-      id_driver int, route int, id_login int, datereg DATETIME,
+      id_driver int, route int, id_login int, datereg DATETIME, type int,
       FOREIGN KEY (id_login) REFERENCES login (id), 
       FOREIGN KEY (id_driver) REFERENCES driver (id), 
       PRIMARY KEY (id))`
@@ -165,7 +165,7 @@ class Tables {
 
   createTableCar() {
     const sql = `CREATE TABLE IF NOT EXISTS api.car (id int NOT NULL AUTO_INCREMENT, plate VARCHAR (20) NOT NULL, brand VARCHAR (20), model VARCHAR (50), cartype  VARCHAR (50),
-    color VARCHAR (20), year DATE, chassis VARCHAR(100), fuel VARCHAR (50), departament VARCHAR (50),
+    color VARCHAR (20), year DATE, chassis VARCHAR(100), fuel VARCHAR (50), departament VARCHAR (50), obs VARCHAR (250),
     dateReg DATETIME NOT NULL, status int, PRIMARY KEY (id))`
 
     this.connection.query(sql, (error) => {

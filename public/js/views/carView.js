@@ -46,8 +46,11 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
                                         <div class="form-group text-center col-3">
                                             <input value="${plate}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-3">
-                                            <input value="${chest}" type="text" class="form-control" disabled>
+                                        <div class="form-group text-center col-1">
+                                            <input value="${chestdesc}" type="text" class="form-control" disabled>
+                                        </div>
+                                        <div class="form-group text-center col-2">
+                                        <input value="${travel.type}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group text-center col-2">
                                         <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
@@ -74,8 +77,11 @@ const addtravel = (travel, plate, chest, platedesc, chestdesc) => {
                                         <div class="form-group text-center col-3">
                                             <input value="${plate}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-3">
-                                            <input value="${chest}" type="text" class="form-control" disabled>
+                                        <div class="form-group text-center col-1">
+                                            <input value="${chestdesc}" type="text" class="form-control" disabled>
+                                        </div>
+                                        <div class="form-group text-center col-2">
+                                        <input value="${travel.typedesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group text-center col-2">
                                         <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>

@@ -23,12 +23,11 @@ window.onload = async function () {
   let data = []
 
   cars.forEach(car => {
-    let a
     let status
 
     switch (car.statuscar) {
       case 2:
-        status = `&nbsp;<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion en mantenimiento" type="button" class="btn btn-warning btn-circle btn-sm"></button>`
+        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion en mantenimiento" type="button" class="btn btn-warning btn-circle btn-sm"></button>`
         break
       case 1:
         status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
@@ -53,7 +52,7 @@ window.onload = async function () {
       car.chassis,
       car.fuel,
       car.departament,
-      a
+      `<form data-obs="${car.id_car}"><div class="input-group mb-3"><textarea data-id="${car.id_car}" class="form-control" id="obs" name="obs" value="${car.obs}">${car.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`
     ]
 
     data.push(line)
@@ -100,6 +99,23 @@ window.onload = async function () {
   loading.innerHTML = " "
 
   document.querySelector('[data-search-date]').value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+
+  const buttonObs = document.querySelector('#dataTable')
+
+  buttonObs.addEventListener('submit', async (event) => {
+    if (event.target && event.target[0].matches("[data-id]")) {
+      event.preventDefault()
+
+      const car = {
+        obs: event.target[0].value,
+        id: event.target[0].getAttribute('data-id')
+      }
+
+     const obj = await Connection.body(`car/obs/${car.id}`, { car }, 'PUT')
+
+     alert(obj.msg)
+    }
+  })
 }
 
 
@@ -178,11 +194,12 @@ const listCars = (data) => {
       { title: "Ultimo Chofer" },
       { title: "Chassi" },
       { title: "Combustible" },
-      { title: "Departamento" }
+      { title: "Departamento" },
+      { title: "Observación" }
     ],
     responsive: true,
     paging: false,
-    ordering: true,
+    ordering: false,
     info: true,
     scrollY: false,
     scrollCollapse: true,
@@ -241,7 +258,10 @@ const travel = (travels, cars, drivers) => {
 
   travels.forEach(travel => {
     let plate = `${travel.cars[0].plate} - ${travel.cars[0].cartype} - ${travel.cars[0].brand} - ${travel.cars[0].model} - ${travel.cars[0].year}`
+    let platedesc = travel.cars[0].plate
     let chest = ""
+    let carchestdesc = ""
+    if (travel.cars[1]) carchestdesc = travel.cars[1].plate
     if (travel.cars[1]) chest = `${travel.cars[1].plate} - ${travel.cars[1].cartype} - ${travel.cars[1].brand} - ${travel.cars[1].model} - ${travel.cars[1].year}`
 
     document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
@@ -256,7 +276,7 @@ const travel = (travels, cars, drivers) => {
     <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
 
-    document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest))
+    document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, carchestdesc))
   })
 
   document.querySelector('[data-period]')
@@ -293,6 +313,8 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
     route: Number(event.currentTarget.route.value),
     routedesc: document.querySelector('[data-route] option:checked').innerHTML,
     driver: event.currentTarget.driver.value,
+    type: event.currentTarget.type.value,
+    typedesc: document.querySelector('#type option:checked').innerHTML,
     driverdesc: document.querySelector('[data-driver] option:checked').innerHTML,
   }
 
@@ -516,7 +538,7 @@ const listTravels = (travels) => {
 
     let platedesc = travel.cars[0].plate
     let chestdesc = ""
-    if(travel.cars[1]) chestdesc = travel.cars[1].plate
+    if (travel.cars[1]) chestdesc = travel.cars[1].plate
 
     document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
     <button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
@@ -741,15 +763,15 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
   let input = document.createElement("textarea");
   let now = new Date()
 
-  input.value = `Listado de Viajes - ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} \n`
+  input.value = `Listado de Viajes - ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} \n`
 
   const travels = document.querySelector('[data-row-travel]')
   Array.from(travels.children).forEach(travel => {
-    input.value +=  `Ruta: ${travel.children[0].children[0].value} - `
-    input.value +=  `Chofer: ${travel.children[1].children[0].value} - `
-    input.value +=  `Caballito: ${travel.children[2].children[0].value} - `
-    if(travel.children[3].children[0].value) input.value +=  `Furgon: ${travel.children[3].children[0].value} - `
-    input.value +=  `Fecha: ${travel.children[4].children[0].value} \n`
+    input.value += `Ruta: ${travel.children[0].children[0].value} - `
+    input.value += `Chofer: ${travel.children[1].children[0].value} - `
+    input.value += `Caballito: ${travel.children[2].children[0].value} - `
+    if (travel.children[3].children[0].value) input.value += `Furgon: ${travel.children[3].children[0].value} - `
+    input.value += `Fecha: ${travel.children[4].children[0].value} \n`
   })
 
   document.body.appendChild(input);

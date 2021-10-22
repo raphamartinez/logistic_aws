@@ -5,7 +5,7 @@ class Travel {
 
     async list(date, period) {
         try {
-            let sql = `SELECT tr.id, tr.period, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%d/%m/%Y') as datedesc, dr.id as id_driver, dr.name as driverdesc ,
+            let sql = `SELECT tr.id, tr.period, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, IF(tr.type = 1, "Viatico Nacional", IF(tr.type = 2, "Retiro Contenedor", "")) as type, DATE_FORMAT(tr.date, '%d/%m/%Y') as datedesc, dr.id as id_driver, dr.name as driverdesc ,
             CASE
             WHEN tr.route = 1 THEN "KM 1"
             WHEN tr.route = 2 THEN "KM 28"
@@ -69,9 +69,9 @@ class Travel {
 
    async insert(car, id_login) {
         try {
-            const sql = `INSERT INTO travel (date, period, route, id_driver, id_login, datereg)  VALUES (?, ?, ?, ?, ?, now() - interval 4 hour  )`
+            const sql = `INSERT INTO travel (date, period, route, id_driver, id_login, type, datereg)  VALUES (?, ?, ?, ?, ?, ?, now() - interval 4 hour  )`
 
-            await query(sql, [car.date, car.period, car.route, car.driver, id_login])
+            await query(sql, [car.date, car.period, car.route, car.driver, id_login, car.type])
 
             const sqlId = 'select LAST_INSERT_ID() as id from api.travel LIMIT 1'
             const obj = await query(sqlId)

@@ -320,7 +320,6 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
   }
 
   loading.innerHTML = " "
-  alert(obj.msg)
 })
 
 document.querySelector('[data-row-travel]').addEventListener('click', async (event) => {
@@ -729,6 +728,29 @@ document.querySelector('[data-truck]').addEventListener('change', changeCar, fal
 
 document.querySelector('[data-print]').addEventListener('click', () => {
   $("#dataTable").printThis()
+})
+
+document.querySelector('[data-print-travel]').addEventListener('click', () => {
+  let input = document.createElement("textarea");
+  let now = new Date()
+
+  input.value = `Listado de Viajes - ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} \n`
+
+  const travels = document.querySelector('[data-row-travel]')
+  Array.from(travels.children).forEach(travel => {
+    input.value +=  `Ruta: ${travel.children[0].children[0].value} - `
+    input.value +=  `Chofer: ${travel.children[1].children[0].value} - `
+    input.value +=  `Caballito: ${travel.children[2].children[0].value} - `
+    if(travel.children[3].children[0].value) input.value +=  `Furgon: ${travel.children[3].children[0].value} - `
+    input.value +=  `Fecha: ${travel.children[4].children[0].value} \n`
+  })
+
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand("copy");
+  input.remove();
+
+  alert("¡Contenido copiado con éxito!")
 })
 
 export const ControllerCar = {

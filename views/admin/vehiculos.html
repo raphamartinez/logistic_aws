@@ -191,20 +191,32 @@
                                         <div class="form-group col-md-2">
                                             <h6 class="m-0 font-weight-bold text-danger">Listado de viajes</h6>
                                         </div>
-                                        <div class="form-group col-md-1 offset-lg-7">
-                                            <button type="button" class="btn btn-secondary" data-print>Print</button>
+                                        <div class="form-group col-md-2 offset-6">
+                                            <button type="button" class="btn btn-secondary" style="cursor:cell;" data-print-travel>Copiar Viajes</button>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <input class="form-control" type="date" data-search-date>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-body" data-row-travel>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-2 text-center"><h6>Ruta</h6></div>
+                                        <div class="col-4 text-center"><h6>Chofér</h6></div>
+                                        <div class="col-2 text-center"><h6>Camion</h6></div>
+                                        <div class="col-2 text-center"><h6>Furgon</h6></div>
+                                        <div class="col-2 text-center"><h6>Fecha</h6></div>
+                                    </div>
+                                    <div class="row" data-row-travel>
 
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-bordered text-center" id="dataTable" width="100%"
                                         cellspacing="0"></table>
+                                        <div class="form-group text-left pt-2">
+                                            <button type="button" class="btn btn-secondary" data-print>Print con Status</button>
+                                        </div>
                                 </div>
                             </div>
                         </div>

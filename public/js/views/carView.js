@@ -4,8 +4,8 @@ const newTravel = (travel) => {
 
     div.innerHTML = `
     <div class="form-group col-md-3 text-center" data-date>
-Fecha 
-                                            <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
+<input value="${travel.routedesc}" type="text" class="form-control" disabled>
+
                                             <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete="${travel.platedesc}"
                                                     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
                                                     X
@@ -13,20 +13,16 @@ Fecha
                                                 </span></a>
                                         </div>
                                         <div class="form-group col-md-3">
-                                        Chofer
                                             <input value="${travel.driverdesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-2">
-                                        Camion
                                             <input value="${travel.platedesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-2">
-                                        Furgon
                                             <input value="${travel.chestdesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-2">
-                                        Ruta
-                                            <input value="${travel.routedesc}" type="text" class="form-control" disabled>
+                                        <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
                                         </div>`
     return div
 }
@@ -37,8 +33,7 @@ const travel = (travel, plate, chest) => {
 
     div.innerHTML = `
     <div class="form-group col-md-2" data-date>
-    Fecha
-                                            <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
+        <input value="${travel.routedesc}" type="text" class="form-control" disabled>
                                             <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete data-car="${plate}" data-chest="${chest}"
                                                     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
                                                     X
@@ -46,20 +41,16 @@ const travel = (travel, plate, chest) => {
                                                 </span></a>
                                         </div>
                                         <div class="form-group col-md-4">
-                                        Chofér
                                             <input value="${travel.driverdesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group col-md-2">
-                                        Camion
+                                        <div class="form-group text-center col-md-2">
                                             <input value="${plate}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group col-md-2">
-                                        Furgon
+                                        <div class="form-group text-center col-md-2">
                                             <input value="${chest}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-2">
-                                        Ruta
-                                            <input value="${travel.routedesc}" type="text" class="form-control" disabled>
+                                        <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
                                         </div>`
     return div
 }

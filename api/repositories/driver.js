@@ -34,6 +34,14 @@ class Driver {
         }
     }
 
+    updateObs(id, obs) {
+        try {
+            const sql = `UPDATE api.driver SET obs = ? where id = ?`
+            return query(sql, [obs, id])
+        } catch (error) {
+            throw new InternalServerError('No se pudieron enumerar los login')
+        }
+    }
 }
 
 module.exports = new Driver()

@@ -21,6 +21,14 @@ class Driver {
         }
     } 
 
+    updateObs(id, obs){
+        try {
+            return Repositorie.updateObs(id, obs)
+        } catch (error) {
+            throw new InternalServerError('Error.')
+        }
+    }
+
     // async list() {
     //     try {
     //         const filePath = `Choferes.xlsx`

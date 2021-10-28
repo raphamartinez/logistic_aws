@@ -32,4 +32,14 @@ module.exports = app => {
         }
     })
 
+    app.put('/driver/obs/:id', [Middleware.bearer, Authorization('driver', 'update')], async ( req, res, next) => {
+        try {
+
+            await Driver.updateObs(req.params.id, req.body.driver.obs)
+
+            res.json({msg: `Chofér actualizado con éxito.`})
+        } catch (err) {
+            next(err)
+        }
+    })
 }

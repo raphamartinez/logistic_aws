@@ -25,6 +25,8 @@ window.onload = async function () {
   cars.forEach(car => {
     let status
 
+    if(car.obs == null) car.obs = ""
+
     switch (car.statuscar) {
       case 2:
         status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion en mantenimiento" type="button" class="btn btn-warning btn-circle btn-sm"></button>`
@@ -46,13 +48,14 @@ window.onload = async function () {
       car.cartype,
       car.brand,
       car.model,
+      car.thirst,
       car.color,
       car.year,
-      car.driver,
+      `<form data-obs="${car.id_car}"><div class="input-group mb-3"><textarea data-id="${car.id_car}" class="form-control" id="obs" name="obs" value="${car.obs}">${car.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`,
       car.chassis,
       car.fuel,
       car.departament,
-      `<form data-obs="${car.id_car}"><div class="input-group mb-3"><textarea data-id="${car.id_car}" class="form-control" id="obs" name="obs" value="${car.obs}">${car.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`
+      car.driver
     ]
 
     data.push(line)
@@ -78,13 +81,16 @@ window.onload = async function () {
         break
     }
 
+    if(driver.obs == null) driver.obs = ""
+
     const line = [
       driver.name,
       status,
       driver.idcard,
       driver.phone,
       driver.classification,
-      driver.thirst
+      driver.thirst,
+      `<form data-obs-driver="${driver.id}"><div class="input-group mb-3"><textarea data-id="${driver.id}" class="form-control" id="obs" name="obs" value="${driver.obs}">${driver.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`
     ]
     driverdt.push(line)
   })
@@ -116,6 +122,23 @@ window.onload = async function () {
      alert(obj.msg)
     }
   })
+
+  const buttonDriver = document.querySelector('#dataDriver')
+
+  buttonDriver.addEventListener('submit', async (event) => {
+    if (event.target && event.target[0].matches("[data-id]")) {
+      event.preventDefault()
+
+      const driver = {
+        obs: event.target[0].value,
+        id: event.target[0].getAttribute('data-id')
+      }
+
+     const obj = await Connection.body(`driver/obs/${driver.id}`, { driver }, 'PUT')
+
+     alert(obj.msg)
+    }
+  })
 }
 
 
@@ -127,7 +150,7 @@ const listDrivers = (data) => {
     $('#dataDriver').empty();
   }
 
-  const table = $("#dataDriver").DataTable({
+  $("#dataDriver").DataTable({
     data: data,
     columns: [
       {
@@ -141,7 +164,8 @@ const listDrivers = (data) => {
       { title: "CI" },
       { title: "Telefono" },
       { title: "Tipo" },
-      { title: "SEDE" }
+      { title: "SEDE" },
+      { title: "Observación" }
     ],
     responsive: true,
     paging: false,
@@ -189,13 +213,14 @@ const listCars = (data) => {
       { title: "Vehiculo" },
       { title: "Marca" },
       { title: "Modelo" },
+      { title: "SEDE" },
       { title: "Color" },
       { title: "Año" },
-      { title: "Ultimo Chofer" },
+      { title: "Observación" },
       { title: "Chassi" },
       { title: "Combustible" },
       { title: "Departamento" },
-      { title: "Observación" }
+      { title: "Ultimo Chofer" }
     ],
     responsive: true,
     paging: false,
@@ -557,19 +582,19 @@ const listTravels = (travels) => {
 
 const changeDriver = async (event) => {
   const drivers = [
-    { id_driver: "19", plate: 'CFP306', except: ['CAX732', 'CEY202', 'CEY203', 'CEY204'] },
-    { id_driver: "10", plate: 'CFP302', except: ['CEY202', 'CEY203', 'CEY204'] },
-    { id_driver: "11", plate: 'CFP305', except: ['CEY202', 'CEY203', 'CEY204'] },
-    { id_driver: "99", plate: 'CFP304', except: ['CAE070', 'CAX384'] },
+    { id_driver: "19", plate: 'CFP306', except: ['32', '34', '47', '46'] },
+    { id_driver: "10", plate: 'CFP302', except: ['34', '47', '46'] },
+    { id_driver: "11", plate: 'CFP305', except: ['34', '47', '46'] },
+    { id_driver: "99", plate: 'CFP304', except: ['33', '31'] },
     { id_driver: "16", plate: 'XBRI004', except: [] },
     { id_driver: "14", plate: 'XBRI002', except: [] },
     { id_driver: "13", plate: 'XBRI001', except: [] },
-    { id_driver: "18", plate: 'XBRI001', except: ['XBRI102'] },
+    { id_driver: "18", plate: 'XBRI001', except: ['48'] },
     { id_driver: "15", plate: 'XBRI003', except: [] },
-    { id_driver: "17", plate: 'CFC349', except: ['CAE070', 'CAX384'] },
+    { id_driver: "17", plate: 'CFC349', except: ['33', '31'] },
     { id_driver: "5", plate: 'CFE129', except: [] },
     { id_driver: "6", plate: 'CFE131', except: [] },
-    { id_driver: "2", plate: 'CEV933', except: ['CFZ623', 'CFZ624', 'CFZ626', 'CFZ625', 'CFZ622', 'CFE270', 'CFE286', 'CFF619', 'CFF621', 'CFF623', 'CFF622', 'CFN840', 'CFN841', 'CFN842', 'CFN843', 'XBRI109'] }
+    { id_driver: "2", plate: 'CEV933', except: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '50', '52', '53', '51', '78'] }
   ]
 
   let favorite = drivers.find(driver => driver.id_driver == event.target.value)
@@ -585,7 +610,7 @@ const changeDriver = async (event) => {
       if (favorite.plate == car.label) car.selected = true
 
       chests.forEach(async chest => {
-        let obj = favorite.except.find(plate => plate == chest.label)
+        let obj = favorite.except.find(plate => plate == chest.value)
 
         if (favorite.except.length > 0) {
           if (obj) {
@@ -630,17 +655,17 @@ const changeDriver = async (event) => {
 
 const changeCar = async (event) => {
   const cars = [
-    { id_driver: "19", id_car: "59", plate: 'CFP306', except: ['CAX732', 'CEY202', 'CEY203', 'CEY204'] },
-    { id_driver: "10", id_car: "61", plate: 'CFP302', except: ['CEY202', 'CEY203', 'CEY204'] },
-    { id_driver: "11", id_car: "62", plate: 'CFP305', except: ['CEY202', 'CEY203', 'CEY204'] },
+    { id_driver: "19", id_car: "59", plate: 'CFP306', except: ['32', '34', '47', '46'] },
+    { id_driver: "10", id_car: "61", plate: 'CFP302', except: ['34', '47', '46'] },
+    { id_driver: "11", id_car: "62", plate: 'CFP305', except: ['34', '47', '46'] },
     { id_driver: "16", id_car: "64", plate: 'XBRI004', except: [] },
     { id_driver: "14", id_car: "69", plate: 'XBRI002', except: [] },
-    { id_driver: "18", id_car: "70", plate: 'XBRI001', except: ['XBRI102'] },
+    { id_driver: "18", id_car: "70", plate: 'XBRI001', except: ['48'] },
     { id_driver: "15", id_car: "71", plate: 'XBRI003', except: [] },
-    { id_driver: "17", id_car: "57", plate: 'CFC349', except: ['CAE070', 'CAX384'] },
+    { id_driver: "17", id_car: "57", plate: 'CFC349', except: ['33', '31'] },
     { id_driver: "5", id_car: "68", plate: 'CFE129', except: [] },
     { id_driver: "6", id_car: "67", plate: 'CFE131', except: [] },
-    { id_driver: "2", id_car: "20", plate: 'CEV933', except: ['CFZ623', 'CFZ624', 'CFZ626', 'CFZ625', 'CFZ622', 'CFE270', 'CFE286', 'CFF619', 'CFF621', 'CFF623', 'CFF622', 'CFN840', 'CFN841', 'CFN842', 'CFN843', 'XBRI109'] }
+    { id_driver: "2", id_car: "20", plate: 'CEV933', except: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '50', '52', '53', '51', '78'] }
   ]
 
   let favorite = cars.find(car => car.id_car == event.target.value)
@@ -654,7 +679,7 @@ const changeCar = async (event) => {
 
   if (favorite) {
     chests.forEach(async chest => {
-      let obj = favorite.except.find(plate => plate == chest.label)
+      let obj = favorite.except.find(plate => plate == chest.value)
 
       if (favorite.except.length > 0) {
         if (obj) {

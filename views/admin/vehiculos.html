@@ -121,11 +121,11 @@
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-2">
-                                                <select class="form-select" id="type" name="type" required
-                                                    data-period>
+                                                <select class="form-select" id="type" name="type" required data-type>
                                                     <option value="" selected disabled>Tipo</option>
                                                     <option value="1">Viatico Nacional</option>
                                                     <option value="2">Retiro Contenedor</option>
+                                                    <option value="3">Mantenimiento</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-2">
@@ -179,7 +179,13 @@
                                                     <option value="28">Eusebio Ayala</option>
                                                     <option value="29">CaacupeMi</option>
                                                     <option value="30">Pillar</option>
+                                                    <option value="31">Villalisa</option>
+                                                    <option value="32">Nasser</option>
+                                                    <option value="33">Centrales Ypané</option>
                                                 </select>
+                                                <textarea class="form-control"
+                                                    placeholder="Observación del Mantenimiento" style="display: none;"
+                                                    type="text" name="obs" id="obs" data-obs required></textarea>
                                             </div>
                                             <div class="form-group text-center col-md-12">
                                                 <button class="btn btn-success" type="submit">Agregar</button>
@@ -200,7 +206,8 @@
                                             <h6 class="m-0 font-weight-bold text-danger">Listado de viajes</h6>
                                         </div>
                                         <div class="form-group col-md-2 offset-6">
-                                            <button type="button" class="btn btn-secondary" style="cursor:cell;" data-print-travel>Copiar Viajes</button>
+                                            <button type="button" class="btn btn-secondary" style="cursor:cell;"
+                                                data-print-travel>Copiar Viajes</button>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <input class="form-control" type="date" data-search-date>
@@ -209,23 +216,68 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-2 text-center"><h6>Tipo</h6></div>
-                                        <div class="col-1 text-center"><h6>Destino</h6></div>
-                                        <div class="col-3 text-center"><h6>Chofér</h6></div>
-                                        <div class="col-3 text-center"><h6>Camion</h6></div>
-                                        <div class="col-1 text-center"><h6>Furgon</h6></div>
-                                        <div class="col-2 text-center"><h6>Fecha</h6></div>
+                                        <div class="col-2 text-center">
+                                            <h6>Tipo</h6>
+                                        </div>
+                                        <div class="col-1 text-center">
+                                            <h6>Destino/Obs</h6>
+                                        </div>
+                                        <div class="col-3 text-center">
+                                            <h6>Chofér</h6>
+                                        </div>
+                                        <div class="col-3 text-center">
+                                            <h6>Camion</h6>
+                                        </div>
+                                        <div class="col-1 text-center">
+                                            <h6>Furgon</h6>
+                                        </div>
+                                        <div class="col-2 text-center">
+                                            <h6>Fecha</h6>
+                                        </div>
                                     </div>
                                     <div class="row" data-row-travel>
 
                                     </div>
                                 </div>
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="form-group col-2 text-center">
+                                            <h6>Tipo del Vehiculo</h6>
+                                            <select class="form-select" data-filter-truck-type required>
+                                                <option value="" selected disabled>Filtrar</option>
+                                                <option value="TODOS">TODOS</option>
+                                                <option value="AUTOMOVIL">AUTOMOVIL</option>
+                                                <option value="CAMION">CAMION</option>
+                                                <option value="TRACTO CAMION">TRACTO CAMION</option>
+                                                <option value="CAMION DOBLE EJE">CAMION DOBLE EJE</option>
+                                                <option value="CAMIONETA">CAMIONETA</option>
+                                                <option value="PORTER">PORTER</option>
+                                                <option value="FURGON">FURGON</option>
+                                                <option value="SEMI REMOLQUE">SEMI REMOLQUE</option>
+                                            </select>
+                                        </div>
+                                        <!-- <div data-amount-cars class="form-group col-10 text-center">
+                                            
+                                        </div> -->
+                                        <div class="form-group col-2 text-center">
+                                            <h6>Status</h6>
+                                            <select class="form-select" data-filter-truck-status>
+                                                <option value="" selected disabled>Filtrar</option>
+                                                <option value="TODOS">TODOS</option>
+                                                <option value="1">DISPONIBLE</option>
+                                                <option value="2">NO DISPONIBLE</option>
+                                                <option value="3">MANTENIMIENTO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="card-body">
                                     <table class="table table-bordered text-center" id="dataTable" width="100%"
                                         cellspacing="0"></table>
-                                        <div class="form-group text-left pt-2">
-                                            <button type="button" class="btn btn-secondary" data-print>Print con Status</button>
-                                        </div>
+                                    <div class="form-group text-left pt-2">
+                                        <button type="button" class="btn btn-secondary" data-print>Print con
+                                            Status</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

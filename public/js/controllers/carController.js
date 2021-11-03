@@ -11,7 +11,12 @@ window.onload = async function () {
   </div>
 `
   const date = new Date()
-  const now = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+
+  let day = date.getDate()
+
+  if (day < 10) day = `0${day}`
+
+  const now = `${date.getFullYear()}-${date.getMonth() + 1}-${day}`
 
   const cars = await Connection.noBody(`cars/${now}`, 'GET')
   const travels = await Connection.noBody(`travel/${now}`, 'GET')
@@ -25,20 +30,20 @@ window.onload = async function () {
   cars.forEach(car => {
     let status
 
-    if(car.obs == null) car.obs = ""
+    if (car.obs == null) car.obs = ""
 
     switch (car.statuscar) {
       case 2:
-        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion en mantenimiento" type="button" class="btn btn-warning btn-circle btn-sm"></button>`
+        status = `3<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion en mantenimiento" type="button" class="btn btn-warning btn-circle btn-sm"></button>`
         break
       case 1:
-        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+        status = `1<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
         break
       case 0:
-        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+        status = `2<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
         break
       default:
-        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+        status = `2<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
         break
     }
 
@@ -81,7 +86,7 @@ window.onload = async function () {
         break
     }
 
-    if(driver.obs == null) driver.obs = ""
+    if (driver.obs == null) driver.obs = ""
 
     const line = [
       driver.name,
@@ -104,7 +109,16 @@ window.onload = async function () {
   username.innerHTML = name
   loading.innerHTML = " "
 
-  document.querySelector('[data-search-date]').value = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+  // $.fn.dataTable.ext.search.push(
+  //   function (settings, data, dataIndex) {
+  //     var filter = $('[data-filter-truck-status]').val()
+  //     var truck = data[1]
+
+  //     return false;
+  //   }
+  // );
+
+  document.querySelector('[data-search-date]').value = now
 
   const buttonObs = document.querySelector('#dataTable')
 
@@ -117,9 +131,9 @@ window.onload = async function () {
         id: event.target[0].getAttribute('data-id')
       }
 
-     const obj = await Connection.body(`car/obs/${car.id}`, { car }, 'PUT')
+      const obj = await Connection.body(`car/obs/${car.id}`, { car }, 'PUT')
 
-     alert(obj.msg)
+      alert(obj.msg)
     }
   })
 
@@ -134,15 +148,15 @@ window.onload = async function () {
         id: event.target[0].getAttribute('data-id')
       }
 
-     const obj = await Connection.body(`driver/obs/${driver.id}`, { driver }, 'PUT')
+      const obj = await Connection.body(`driver/obs/${driver.id}`, { driver }, 'PUT')
 
-     alert(obj.msg)
+      alert(obj.msg)
     }
   })
 }
 
 
-const listDrivers = (data) => {
+const listDrivers = (driverdt) => {
 
   if ($.fn.DataTable.isDataTable('#dataDriver')) {
     $('#dataDriver').dataTable().fnClearTable();
@@ -150,8 +164,8 @@ const listDrivers = (data) => {
     $('#dataDriver').empty();
   }
 
-  $("#dataDriver").DataTable({
-    data: data,
+  const table = $("#dataDriver").DataTable({
+    data: driverdt,
     columns: [
       {
         title: "Nombre",
@@ -239,8 +253,40 @@ const listCars = (data) => {
       "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>" +
       "<'row'<'col-sm-12'B>>",
     buttons: [
-      'copy', 'csv', 'excel', 'pdf', 'print'
+      'copy', 'csv', 'excel', 'pdf'
     ]
+  })
+
+  document.querySelector('[data-filter-truck-type]').addEventListener('change', (event) => {
+
+    $.fn.dataTable.ext.search.push(
+      function (settings, data, dataIndex) {
+        var filter = $('[data-filter-truck-type]').val()
+        var truck = data[2]
+
+        if (filter == 'TODOS') return true
+        if (filter == truck) return true
+        return false;
+      }
+    );
+
+    table.draw();
+  })
+
+  document.querySelector('[data-filter-truck-status]').addEventListener('change', (event) => {
+
+    $.fn.dataTable.ext.search.push(
+      function (settings, data, dataIndex) {
+        let filter = $('[data-filter-truck-status]').val()
+        let status = data[1]
+
+        if (filter == 'TODOS') return true
+        if (filter == status) return true
+        return false;
+      }
+    );
+
+    table.draw();
   })
 }
 
@@ -289,19 +335,35 @@ const travel = (travels, cars, drivers) => {
     if (travel.cars[1]) carchestdesc = travel.cars[1].plate
     if (travel.cars[1]) chest = `${travel.cars[1].plate} - ${travel.cars[1].cartype} - ${travel.cars[1].brand} - ${travel.cars[1].model} - ${travel.cars[1].year}`
 
-    document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    if (travel.type === "Mantenimiento") {
+      document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
+  3<button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion en Mantenimiento Programado" type="button" style="border-color: #ff9855; background-color: #ff8c00" class="btn btn-warning btn-circle btn-sm"></button>`
 
-    if (chest !== "") {
-      document.querySelector(`[data-status-${travel.cars[1].plate.toLowerCase()}]`).parentNode.innerHTML = `
-      <button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      if (chest !== "") {
+        document.querySelector(`[data-status-${travel.cars[1].plate.toLowerCase()}]`).parentNode.innerHTML = `
+    3<button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion en Mantenimiento Programado" type="button" style="border-color: #ff9855; background-color: #ff8c00" class="btn btn-warning btn-circle btn-sm"></button>`
+      }
+
+      document.querySelector('[data-row-travel]').appendChild(View.maintenance(travel, plate, chest, platedesc, carchestdesc))
+
+    } else {
+      document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
+  2<button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+
+      if (chest !== "") {
+        document.querySelector(`[data-status-${travel.cars[1].plate.toLowerCase()}]`).parentNode.innerHTML = `
+    2<button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      }
+
+      document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, carchestdesc))
+
     }
 
-    document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
-    <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    if (travel.driverdesc !== "") {
+      document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
+      <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    }
 
-
-    document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, carchestdesc))
   })
 
   document.querySelector('[data-period]')
@@ -341,6 +403,21 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
     type: event.currentTarget.type.value,
     typedesc: document.querySelector('#type option:checked').innerHTML,
     driverdesc: document.querySelector('[data-driver] option:checked').innerHTML,
+    obs: event.currentTarget.obs.value
+  }
+
+  if (travel.driverdesc === "Chofér") {
+    travel.driverdesc = ""
+    travel.driver = null
+  }
+
+  if (travel.routedesc === "Destino") {
+    travel.routedesc = ""
+    travel.route = null
+  }
+
+  if (travel.chestdesc == "Furgon" || travel.chestdesc == null) {
+    travel.chestdesc = ""
   }
 
   document.querySelector('[data-form-travel]').reset();
@@ -356,16 +433,24 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
     let chest = ""
     if (travel.chest) chest = travel.carchestdesc
 
-    document.querySelector('[data-row-travel]').appendChild(View.addtravel(travel, plate, chest, travel.platedesc, travel.chestdesc))
+    if (travel.type == 3) {
+      travel.type = travel.typedesc
+      document.querySelector('[data-row-travel]').appendChild(View.maintenance(travel, plate, chest, travel.platedesc, travel.chestdesc))
+    } else {
+      document.querySelector('[data-row-travel]').appendChild(View.addtravel(travel, plate, chest, travel.platedesc, travel.chestdesc))
+    }
     document.querySelector(`[data-status-${travel.platedesc.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car="${travel.platedesc}" data-status-${travel.platedesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    2<button data-div-car="${travel.platedesc}" data-status-${travel.platedesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
-    document.querySelector(`[data-status-driver-${travel.driver}]`).parentNode.innerHTML = `
-    <button data-div-driver="${travel.driver}" data-status-driver-${travel.driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
-    if (travel.chestdesc !== "Furgon") {
+    if (travel.driverdesc !== "" && travel.driverdesc !== "Chofér") {
+      document.querySelector(`[data-status-driver-${travel.driver}]`).parentNode.innerHTML = `
+      2<button data-div-driver="${travel.driver}" data-status-driver-${travel.driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    }
+
+    if (travel.chestdesc !== "" && travel.chestdesc !== null) {
       document.querySelector(`[data-status-${travel.chestdesc.toLowerCase()}]`).parentNode.innerHTML = `
-      <button data-div-car="${travel.chestdesc}" data-status-${travel.chestdesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      2<button data-div-car="${travel.chestdesc}" data-status-${travel.chestdesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
     }
   }
 
@@ -383,15 +468,17 @@ document.querySelector('[data-row-travel]').addEventListener('click', async (eve
     const plate = event.target.getAttribute('data-car')
     const id_driver = event.target.getAttribute('data-iddriver')
     document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+    1<button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
 
-    document.querySelector(`[data-status-driver-${id_driver}]`).parentNode.innerHTML = `
-    <button data-div-car data-status-driver-${id_driver} data-toggle="popover" title="Chofér disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+    if (id_driver != "null" && id_driver != null) {
+      document.querySelector(`[data-status-driver-${id_driver}]`).parentNode.innerHTML = `
+      1<button data-div-car data-status-driver-${id_driver} data-toggle="popover" title="Chofér disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+    }
 
     const chest = event.target.getAttribute('data-chest')
-    if (chest) {
+    if (chest !== "null" && chest !== "") {
       document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
-      <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+      1<button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
     }
 
     alert(obj.msg)
@@ -399,8 +486,29 @@ document.querySelector('[data-row-travel]').addEventListener('click', async (eve
 })
 
 const enable = async () => {
+
+  document.querySelector('[data-driver]').disabled = true
+  document.querySelector('[data-truck]').disabled = true
+  document.querySelector('[data-chest]').disabled = true
+  document.querySelector('[data-route]').disabled = true
+
   const date = document.querySelector('[data-date]').value
   const period = document.querySelector('[data-period]').value
+  const type = document.querySelector('[data-type]').value
+
+
+  if (!date && type) return alert("¡Seleccione una fecha valida!")
+  if (!period && type) return alert("¡Seleccione un período válido!")
+  if (!type) return false
+
+  let loading = document.querySelector('[data-loading]')
+  loading.innerHTML = `
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+`
 
   const travels = await Connection.noBody(`travelperiod/${date}/${period}`, 'GET')
   const maintenacecars = await Connection.noBody(`carstatus`, 'GET')
@@ -476,14 +584,30 @@ const enable = async () => {
     })
   }
 
-  document.querySelector('[data-driver]').disabled = false
+  if (document.querySelector('[data-type]').value == 3) {
+    document.querySelector('[data-route]').required = false
+    document.querySelector('[data-obs]').required = true
+
+    document.querySelector('[data-route]').style.display = 'none'
+    document.querySelector('[data-obs]').style.display = 'block'
+  } else {
+    document.querySelector('[data-route]').required = true
+    document.querySelector('[data-obs]').required = false
+
+    document.querySelector('[data-route]').style.display = 'block'
+    document.querySelector('[data-route]').disabled = false
+    document.querySelector('[data-obs]').style.display = 'none'
+  }
+
   document.querySelector('[data-truck]').disabled = false
   document.querySelector('[data-chest]').disabled = false
   document.querySelector('[data-route]').disabled = false
-
+  loading.innerHTML = " "
 }
 
+document.querySelector('[data-type]').addEventListener('change', enable, false)
 document.querySelector('[data-period]').addEventListener('change', enable, false)
+document.querySelector('[data-date]').addEventListener('change', enable, false)
 
 
 document.querySelector('[data-search-date]').addEventListener('change', async (event) => {
@@ -566,15 +690,15 @@ const listTravels = (travels) => {
     if (travel.cars[1]) chestdesc = travel.cars[1].plate
 
     document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    2<button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
     if (chest !== "") {
       document.querySelector(`[data-status-${travel.cars[1].plate.toLowerCase()}]`).parentNode.innerHTML = `
-      <button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      2<button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
     }
 
     document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
-    <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    2<button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
 
     document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, chestdesc))
   })
@@ -788,15 +912,16 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
   let input = document.createElement("textarea");
   let now = new Date()
 
-  input.value = `Listado de Viajes - ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} \n`
+  input.value = `𝐋𝐢𝐬𝐭𝐚𝐝𝐨 𝐝𝐞 𝐕𝐢𝐚𝐣𝐞𝐬 - ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} \n\n`
 
   const travels = document.querySelector('[data-row-travel]')
   Array.from(travels.children).forEach(travel => {
-    input.value += `Ruta: ${travel.children[0].children[0].value} - `
-    input.value += `Chofer: ${travel.children[1].children[0].value} - `
-    input.value += `Caballito: ${travel.children[2].children[0].value} - `
-    if (travel.children[3].children[0].value) input.value += `Furgon: ${travel.children[3].children[0].value} - `
-    input.value += `Fecha: ${travel.children[4].children[0].value} \n`
+    input.value += `𝐓𝐢𝐩𝐨: ${travel.children[0].children[0].value} - `
+    if (travel.children[1].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[1].children[0].value} - `
+    if (travel.children[2].children[0].value) input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[2].children[0].value} - `
+    input.value += `𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${travel.children[3].children[0].value} - `
+    if (travel.children[4].children[0].value) input.value += `𝐅𝐮𝐫𝐠𝐨𝐧: ${travel.children[4].children[0].value} - `
+    input.value += `𝐅𝐞𝐜𝐡𝐚: ${travel.children[5].children[0].value} \n\n`
   })
 
   document.body.appendChild(input);

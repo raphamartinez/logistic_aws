@@ -591,6 +591,7 @@ const enable = async () => {
     document.querySelector('[data-route]').style.display = 'none'
     document.querySelector('[data-obs]').style.display = 'block'
   } else {
+    document.querySelector('[data-driver]').disabled = false
     document.querySelector('[data-route]').required = true
     document.querySelector('[data-obs]').required = false
 

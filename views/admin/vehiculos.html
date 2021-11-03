@@ -205,7 +205,67 @@
                                         <div class="form-group col-md-2">
                                             <h6 class="m-0 font-weight-bold text-danger">Listado de viajes</h6>
                                         </div>
-                                        <div class="form-group col-md-2 offset-6">
+                                        <div class="form-group col-md-2">
+                                            <select class="form-select" data-filter-travel-type >
+                                                <option value="" selected disabled>Tipo</option>
+                                                <option value="1">Viatico Nacional</option>
+                                                <option value="2">Retiro Contenedor</option>
+                                                <option value="3">Mantenimiento</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <select class="form-select" data-filter-travel-route >
+                                                    <option value="" selected disabled>Destino</option>
+                                                    <option value="1">KM 1</option>
+                                                    <option value="2">KM 28</option>
+                                                    <option value="3">YPANÉ</option>
+                                                    <option value="4">AC. KM 1</option>
+                                                    <option value="5">LOG. HERRAMIENTAS</option>
+                                                    <option value="6">LOG. VEHÍCULOS</option>
+                                                    <option value="7">LOG. EQUIPOS</option>
+                                                    <option value="8">P. Seguro</option>
+                                                    <option value="9">P. Terport</option>
+                                                    <option value="10">P. Fenix</option>
+                                                    <option value="11">PJC</option>
+                                                    <option value="12">Itapua</option>
+                                                    <option value="13">Salto</option>
+                                                    <option value="14">Pindoty</option>
+                                                    <option value="15">Santa Rita</option>
+                                                    <option value="16">Fernando de la Mora</option>
+                                                    <option value="17">MRA</option>
+                                                    <option value="18">San Lorenzo</option>
+                                                    <option value="19">Ñemby</option>
+                                                    <option value="20">Chacoi</option>
+                                                    <option value="21">Sobre ruta 2</option>
+                                                    <option value="22">Caaguacu</option>
+                                                    <option value="23">Campo 9</option>
+                                                    <option value="24">Campo 8</option>
+                                                    <option value="25">Villa Rica</option>
+                                                    <option value="26">Chaco</option>
+                                                    <option value="27">Villeta</option>
+                                                    <option value="28">Eusebio Ayala</option>
+                                                    <option value="29">CaacupeMi</option>
+                                                    <option value="30">Pillar</option>
+                                                    <option value="31">Villalisa</option>
+                                                    <option value="32">Nasser</option>
+                                                    <option value="33">Centrales Ypané</option>
+                                                </select>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <select class="form-select" data-filter-travel-trucktype>
+                                                <option value="" selected disabled>Filtrar</option>
+                                                <option value="TODOS">TODOS</option>
+                                                <option value="AUTOMOVIL">AUTOMOVIL</option>
+                                                <option value="CAMION">CAMION</option>
+                                                <option value="TRACTO CAMION">TRACTO CAMION</option>
+                                                <option value="CAMION DOBLE EJE">CAMION DOBLE EJE</option>
+                                                <option value="CAMIONETA">CAMIONETA</option>
+                                                <option value="PORTER">PORTER</option>
+                                                <option value="FURGON">FURGON</option>
+                                                <option value="SEMI REMOLQUE">SEMI REMOLQUE</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-2 text-right">
                                             <button type="button" class="btn btn-secondary" style="cursor:cell;"
                                                 data-print-travel>Copiar Viajes</button>
                                         </div>

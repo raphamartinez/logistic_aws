@@ -34,16 +34,16 @@ window.onload = async function () {
 
     switch (car.statuscar) {
       case 2:
-        status = `3<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion en mantenimiento" type="button" class="btn btn-warning btn-circle btn-sm"></button>`
+        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion en mantenimiento" type="button" style="color:#ffc107" class="btn btn-warning btn-circle btn-sm">3</button>`
         break
       case 1:
-        status = `1<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
         break
       case 0:
-        status = `2<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" style="color:#e02d1b" class="btn btn-danger btn-circle btn-sm">2</button>`
         break
       default:
-        status = `2<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+        status = `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion no disponible" type="button" style="color:#e02d1b" class="btn btn-danger btn-circle btn-sm">2</button>`
         break
     }
 
@@ -253,7 +253,7 @@ const listCars = (data) => {
       "<'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6'p>>" +
       "<'row'<'col-sm-12'B>>",
     buttons: [
-      'copy', 'csv', 'excel', 'pdf'
+      'excel'
     ]
   })
 
@@ -275,16 +275,20 @@ const listCars = (data) => {
 
   document.querySelector('[data-filter-truck-status]').addEventListener('change', (event) => {
 
-    $.fn.dataTable.ext.search.push(
-      function (settings, data, dataIndex) {
-        let filter = $('[data-filter-truck-status]').val()
-        let status = data[1]
+    table.rows().every(function (index, element) {
+      let row = $(this.node());
 
-        if (filter == 'TODOS') return true
-        if (filter == status) return true
-        return false;
+
+      if (row[0].children[1].children[0].innerText != event.target.value) {
+        row[0].style.display = 'none'
+      } else {
+        row[0].style.display = ''
       }
-    );
+
+      if (event.target.value == "TODOS") row[0].style.display = ''
+
+    });
+
 
     table.draw();
   })
@@ -337,22 +341,22 @@ const travel = (travels, cars, drivers) => {
 
     if (travel.type === "Mantenimiento") {
       document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
-  3<button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion en Mantenimiento Programado" type="button" style="border-color: #ff9855; background-color: #ff8c00" class="btn btn-warning btn-circle btn-sm"></button>`
+  <button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion en Mantenimiento Programado" type="button" style="border-color: #ff9855; background-color: #ff8c00; color: #ff8c00" class="btn btn-warning btn-circle btn-sm">3</button>`
 
       if (chest !== "") {
         document.querySelector(`[data-status-${travel.cars[1].plate.toLowerCase()}]`).parentNode.innerHTML = `
-    3<button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion en Mantenimiento Programado" type="button" style="border-color: #ff9855; background-color: #ff8c00" class="btn btn-warning btn-circle btn-sm"></button>`
+    <button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion en Mantenimiento Programado" type="button" style="border-color: #ff9855; background-color: #ff8c00; color: #ff8c00" class="btn btn-warning btn-circle btn-sm">3</button>`
       }
 
       document.querySelector('[data-row-travel]').appendChild(View.maintenance(travel, plate, chest, platedesc, carchestdesc))
 
     } else {
       document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
-  2<button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+  <button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" style="color:#e02d1b" class="btn btn-danger btn-circle btn-sm">2</button>`
 
       if (chest !== "") {
         document.querySelector(`[data-status-${travel.cars[1].plate.toLowerCase()}]`).parentNode.innerHTML = `
-    2<button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    <button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" style="color:#e02d1b" class="btn btn-danger btn-circle btn-sm">2</button>`
       }
 
       document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, carchestdesc))
@@ -440,17 +444,17 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
       document.querySelector('[data-row-travel]').appendChild(View.addtravel(travel, plate, chest, travel.platedesc, travel.chestdesc))
     }
     document.querySelector(`[data-status-${travel.platedesc.toLowerCase()}]`).parentNode.innerHTML = `
-    2<button data-div-car="${travel.platedesc}" data-status-${travel.platedesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    <button data-div-car="${travel.platedesc}" data-status-${travel.platedesc} data-toggle="popover" title="Camion no disponible" type="button" style="color:#e02d1b" class="btn btn-danger btn-circle btn-sm">2</button>`
 
 
     if (travel.driverdesc !== "" && travel.driverdesc !== "Chofér") {
       document.querySelector(`[data-status-driver-${travel.driver}]`).parentNode.innerHTML = `
-      2<button data-div-driver="${travel.driver}" data-status-driver-${travel.driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      <button data-div-driver="${travel.driver}" data-status-driver-${travel.driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm">2</button>`
     }
 
     if (travel.chestdesc !== "" && travel.chestdesc !== null) {
       document.querySelector(`[data-status-${travel.chestdesc.toLowerCase()}]`).parentNode.innerHTML = `
-      2<button data-div-car="${travel.chestdesc}" data-status-${travel.chestdesc} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      <button data-div-car="${travel.chestdesc}" data-status-${travel.chestdesc} data-toggle="popover" title="Camion no disponible" type="button" style="color:#e02d1b" class="btn btn-danger btn-circle btn-sm">2</button>`
     }
   }
 
@@ -468,17 +472,17 @@ document.querySelector('[data-row-travel]').addEventListener('click', async (eve
     const plate = event.target.getAttribute('data-car')
     const id_driver = event.target.getAttribute('data-iddriver')
     document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
-    1<button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+    <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
 
     if (id_driver != "null" && id_driver != null) {
       document.querySelector(`[data-status-driver-${id_driver}]`).parentNode.innerHTML = `
-      1<button data-div-car data-status-driver-${id_driver} data-toggle="popover" title="Chofér disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+      <button data-div-car data-status-driver-${id_driver} data-toggle="popover" title="Chofér disponible" type="button" class="btn btn-success btn-circle btn-sm">1</button>`
     }
 
     const chest = event.target.getAttribute('data-chest')
     if (chest !== "null" && chest !== "") {
       document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
-      1<button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" class="btn btn-success btn-circle btn-sm"></button>`
+      <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
     }
 
     alert(obj.msg)
@@ -691,15 +695,15 @@ const listTravels = (travels) => {
     if (travel.cars[1]) chestdesc = travel.cars[1].plate
 
     document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
-    2<button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    <button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion no disponible" style="color:#e02d1b" type="button" class="btn btn-danger btn-circle btn-sm">2</button>`
 
     if (chest !== "") {
       document.querySelector(`[data-status-${travel.cars[1].plate.toLowerCase()}]`).parentNode.innerHTML = `
-      2<button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+      <button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" type="button" class="btn btn-danger btn-circle btn-sm">2</button>`
     }
 
     document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
-    2<button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" class="btn btn-danger btn-circle btn-sm"></button>`
+    <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" style="color:#e02d1b" type="button" class="btn btn-danger btn-circle btn-sm">2</button>`
 
     document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, chestdesc))
   })
@@ -913,16 +917,30 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
   let input = document.createElement("textarea");
   let now = new Date()
 
-  input.value = `𝐋𝐢𝐬𝐭𝐚𝐝𝐨 𝐝𝐞 𝐕𝐢𝐚𝐣𝐞𝐬 - ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} \n\n`
+  input.value = `𝐈𝐧𝐟𝐨𝐫𝐦𝐞 𝐋𝐨𝐠í𝐬𝐭𝐢𝐜𝐚 \n 𝐋𝐢𝐬𝐭𝐚𝐝𝐨 𝐝𝐞 𝐕𝐢𝐚𝐣𝐞𝐬 - ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} \n\n`
+
+
+  if (document.querySelector('[data-filter-travel-type] :checked').value != 'Todos' || document.querySelector('[data-filter-travel-route] :checked').value != 'Todos' || document.querySelector('[data-filter-travel-trucktype] :checked').value != 'Todos') {
+    input.value += '𝐅𝐢𝐥𝐭𝐫𝐨𝐬\n'
+    if (document.querySelector('[data-filter-travel-type] :checked').value != 'Todos') input.value += `𝐓𝐢𝐩𝐨 𝐝𝐞𝐥 𝐕𝐢𝐚𝐣𝐞: ${document.querySelector('[data-filter-travel-type] :checked').innerText}\n`
+    if (document.querySelector('[data-filter-travel-route] :checked').value != 'Todos') input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨: ${document.querySelector('[data-filter-travel-route] :checked').innerText}\n`
+    if (document.querySelector('[data-filter-travel-trucktype] :checked').value != 'Todos') input.value += `𝐓𝐢𝐩𝐨 𝐝𝐞𝐥 𝐂𝐚𝐦𝐢𝐨𝐧: ${document.querySelector('[data-filter-travel-trucktype] :checked').innerText}\n`
+
+    input.value += '\n\n'
+  } else {
+    input.value += '\n'
+  }
 
   const travels = document.querySelector('[data-row-travel]')
   Array.from(travels.children).forEach(travel => {
-    input.value += `𝐓𝐢𝐩𝐨: ${travel.children[0].children[0].value} - `
-    if (travel.children[1].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[1].children[0].value} - `
-    if (travel.children[2].children[0].value) input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[2].children[0].value} - `
-    input.value += `𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${travel.children[3].children[0].value} - `
-    if (travel.children[4].children[0].value) input.value += `𝐅𝐮𝐫𝐠𝐨𝐧: ${travel.children[4].children[0].value} - `
-    input.value += `𝐅𝐞𝐜𝐡𝐚: ${travel.children[5].children[0].value} \n\n`
+    if (travel.style.display == 'flex' || travel.style.display == '') {
+      input.value += `𝐓𝐢𝐩𝐨: ${travel.children[0].children[0].value} - `
+      if (travel.children[1].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[1].children[0].value} - `
+      if (travel.children[2].children[0].value) input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[2].children[0].value} - `
+      input.value += `𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${travel.children[3].children[0].value} - `
+      if (travel.children[4].children[0].value) input.value += `𝐅𝐮𝐫𝐠𝐨𝐧: ${travel.children[4].children[0].value} - `
+      input.value += `𝐅𝐞𝐜𝐡𝐚: ${travel.children[5].children[0].value} \n\n`
+    }
   })
 
   document.body.appendChild(input);
@@ -932,6 +950,89 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
 
   alert("¡Contenido copiado con éxito!")
 })
+
+
+document.querySelector('[data-copy-travel]').addEventListener('click', () => {
+  let input = document.createElement("textarea");
+  let now = new Date()
+  let status
+
+  input.value = `𝐈𝐧𝐟𝐨𝐫𝐦𝐞 𝐋𝐨𝐠í𝐬𝐭𝐢𝐜𝐚 \n 𝐋𝐢𝐬𝐭𝐚𝐝𝐨 𝐝𝐞 𝐕𝐞𝐡𝐢𝐜𝐮𝐥𝐨𝐬 - ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} \n\n`
+
+
+  if (document.querySelector('[data-filter-truck-type] :checked').value != 'TODOS' || document.querySelector('[data-filter-truck-status] :checked').value != 'TODOS') {
+    input.value += '𝐅𝐢𝐥𝐭𝐫𝐨𝐬\n'
+    if (document.querySelector('[data-filter-truck-type] :checked').value != 'TODOS') input.value += `𝐓𝐢𝐩𝐨 𝐝𝐞𝐥 𝐕𝐞𝐡𝐢𝐜𝐮𝐥𝐨: ${document.querySelector('[data-filter-truck-type] :checked').innerText}\n`
+    if (document.querySelector('[data-filter-truck-status] :checked').value != 'TODOS') input.value += `𝐒𝐭𝐚𝐭𝐮𝐬: ${document.querySelector('[data-filter-truck-status] :checked').innerText}\n`
+    input.value += '\n\n'
+  } else {
+    input.value += '\n'
+  }
+
+  const cars = document.querySelector('#dataTable')
+  Array.from(cars.children[1].children).forEach(car => {
+    if (car.style.display == '') {
+      input.value += `𝐂𝐡𝐚𝐩𝐚: ${car.children[0].innerText} - `
+      input.value += `𝐕𝐞𝐡𝐢𝐜𝐮𝐥𝐨: ${car.children[2].innerText} - `
+      input.value += `𝐌𝐚𝐫𝐜𝐚: ${car.children[3].innerText} - `
+      input.value += `𝐌𝐨𝐝𝐞𝐥𝐨: ${car.children[4].innerText} - `
+      input.value += `𝐒𝐞𝐝𝐞: ${car.children[5].innerText} - `
+      input.value += `𝐂𝐨𝐥𝐨𝐫: ${car.children[6].innerText} - `
+      input.value += `𝐀ñ𝐨: ${car.children[7].innerText} - `
+      input.value += `𝐎𝐛𝐬𝐞𝐫𝐯𝐚𝐜𝐢ó𝐧: ${car.children[8].children[0][0].value} - `
+
+      switch (car.children[1].children[0].innerText) {
+        case "1":
+          status = 'Disponible'
+          break
+        case "2":
+          status = 'No disponible'
+          break
+        case "3":
+          status = 'Mantenimiento'
+          break
+        default:
+          status = 'No definido'
+          break
+      }
+
+      input.value += `𝐒𝐭𝐚𝐭𝐮𝐬: ${status} \n\n`
+    }
+  })
+
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand("copy");
+  input.remove();
+
+  alert("¡Contenido copiado con éxito!")
+})
+
+
+const viewTravel = (event) => {
+  const divs = document.querySelector('[data-row-travel]')
+  let index
+
+  if (event.target && event.target.matches('[data-filter-travel-type]')) index = 0
+  if (event.target && event.target.matches('[data-filter-travel-route]')) index = 1
+  if (event.target && event.target.matches('[data-filter-travel-trucktype]')) index = 3
+
+  Array.from(divs.children).forEach(row => {
+    let content = row.children[index].children[0].value
+    if (content.indexOf(event.target.value) == -1 && event.target.value != "Todos") {
+      row.style.display = 'none'
+    } else {
+      if (document.querySelector('[data-filter-travel-type] :checked').value == row.children[0].children[0].value || document.querySelector('[data-filter-travel-type] :checked').value == 'Todos') row.style.display = 'flex'
+      if (document.querySelector('[data-filter-travel-route] :checked').value == row.children[1].children[0].value || document.querySelector('[data-filter-travel-route] :checked').value == 'Todos') row.style.display = 'flex'
+      if (document.querySelector('[data-filter-travel-trucktype] :checked').value == row.children[3].children[0].value || document.querySelector('[data-filter-travel-trucktype] :checked').value == 'Todos') row.style.display = 'flex'
+    }
+  })
+}
+
+
+document.querySelector('[data-filter-travel-type]').addEventListener('change', viewTravel, false)
+document.querySelector('[data-filter-travel-route]').addEventListener('change', viewTravel, false)
+document.querySelector('[data-filter-travel-trucktype]').addEventListener('change', viewTravel, false)
 
 export const ControllerCar = {
   selectCars

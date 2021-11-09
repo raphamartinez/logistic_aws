@@ -23,6 +23,22 @@ class Driver {
         }
     }
 
+    listPeriodDriver(date, period) {
+        let sql = `SELECT dr.name, dr.id, dr.status as status_driver FROM api.driver dr
+        WHERE dr.id NOT IN (
+        SELECT tr.id_driver
+        FROM api.travel tr
+        INNER JOIN api.driver dr ON dr.id = tr.id_driver
+        WHERE tr.date = ? AND tr.period = ?
+        GROUP BY id_driver
+        ORDER BY id_driver
+        ) AND dr.status != 2
+        GROUP BY dr.id
+        ORDER BY dr.name`
+
+        return query(sql, [date, period])
+    }
+
     async update(id, status) {
         try {
             const sql = `UPDATE api.driver SET status = ? where id = ?`

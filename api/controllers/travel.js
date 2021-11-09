@@ -44,6 +44,20 @@ module.exports = app => {
         }
     })
 
+    app.get('/cars/enable/:date/:period', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
+        try {
+            const date = req.params.date
+            const period = req.params.period
+
+            const cars = await Travel.listPeriodCar(date, period)
+
+            res.json(cars)
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
     app.get('/travelperiod/:date/:period', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
         try {
             const date = req.params.date

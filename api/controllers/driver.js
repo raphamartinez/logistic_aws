@@ -32,6 +32,20 @@ module.exports = app => {
         }
     })
 
+    app.get('/drivers/enable/:date/:period', [Middleware.bearer, Authorization('driver', 'read')], async (req, res, next) => {
+        try {
+            const date = req.params.date
+            const period = req.params.period
+
+            const drivers = await Driver.listPeriodDriver(date, period)
+
+            res.json(drivers)
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
     app.put('/driver/obs/:id', [Middleware.bearer, Authorization('driver', 'update')], async ( req, res, next) => {
         try {
 

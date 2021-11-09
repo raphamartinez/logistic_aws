@@ -9,14 +9,30 @@ class Travel {
             let travels = await Repositorie.list(date, period)
 
             let data = []
-            for(let travel of travels){
+            for (let travel of travels) {
                 let cars = await Repositorie.listPlates(travel.id)
                 travel.cars = cars
+
+                if (travel.cars && travel.cars.length == 2) {
+                    travel.capacity = travel.cars[1].capacity
+                } else {
+                    travel.capacity = travel.cars[0].capacity
+                }
 
                 data.push(travel)
             }
 
             return data
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
+    async listPeriodCar(date, period) {
+        try {
+            return Repositorie.listPeriodCar(date, period)
+
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')

@@ -13,6 +13,15 @@ class Driver {
         }
     }
 
+    listPeriodDriver(date, period) {
+        try {
+            return Repositorie.listPeriodDriver(date, period)
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
     update(id, status) {
         try {
             return Repositorie.update(id, status)

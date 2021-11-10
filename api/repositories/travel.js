@@ -102,7 +102,7 @@ class Travel {
 
     listPeriodCar(date, period) {
         let sql = `SELECT ca.id as id_car, ca.plate, ca.brand, ca.model, ca.cartype, DATE_FORMAT(ca.year, '%Y') as year, ca.color, ca.obs, ca.capacity, ca.status as status_car FROM api.car ca
-        INNER JOIN api.travelcar tc ON ca.id = tc.id_car
+        LEFT JOIN api.travelcar tc ON ca.id = tc.id_car
         LEFT JOIN api.travel tr ON tc.id_travel = tr.id
         WHERE ca.id NOT IN (
         SELECT ca.id

@@ -700,7 +700,6 @@ const changeDriver = async (event) => {
     { id_driver: "13", plate: 'XBRI001', except: [] },
     { id_driver: "18", plate: 'XBRI001', except: ['48'] },
     { id_driver: "15", plate: 'XBRI003', except: [] },
-    { id_driver: "17", plate: 'CFC349', except: ['33', '31'] },
     { id_driver: "5", plate: 'CFE129', except: [] },
     { id_driver: "6", plate: 'CFE131', except: [] },
     { id_driver: "2", plate: 'CEV933', except: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '50', '52', '53', '51', '78'] }
@@ -740,7 +739,6 @@ const changeCar = async (event) => {
     { id_driver: "14", id_car: "69", plate: 'XBRI002', except: [] },
     { id_driver: "18", id_car: "70", plate: 'XBRI001', except: ['48'] },
     { id_driver: "15", id_car: "71", plate: 'XBRI003', except: [] },
-    { id_driver: "17", id_car: "57", plate: 'CFC349', except: ['33', '31'] },
     { id_driver: "5", id_car: "68", plate: 'CFE129', except: [] },
     { id_driver: "6", id_car: "67", plate: 'CFE131', except: [] },
     { id_driver: "2", id_car: "20", plate: 'CEV933', except: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '50', '52', '53', '51', '78'] }

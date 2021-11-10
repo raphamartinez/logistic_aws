@@ -691,18 +691,18 @@ const listTravels = (travels) => {
 
 const changeDriver = async (event) => {
   const drivers = [
-    { id_driver: "19", plate: 'CFP306', except: ['32', '34', '47', '46'] },
-    { id_driver: "10", plate: 'CFP302', except: ['34', '47', '46'] },
-    { id_driver: "11", plate: 'CFP305', except: ['34', '47', '46'] },
-    { id_driver: "99", plate: 'CFP304', except: ['33', '31'] },
+    // { id_driver: "19", plate: 'CFP306', except: ['32', '34', '47', '46'] },
+    // { id_driver: "10", plate: 'CFP302', except: ['34', '47', '46'] },
+    // { id_driver: "11", plate: 'CFP305', except: ['34', '47', '46'] },
+    // { id_driver: "99", plate: 'CFP304', except: ['33', '31'] },
     // { id_driver: "16", plate: 'XBRI004', except: [] },
     // { id_driver: "14", plate: 'XBRI002', except: [] },
     // { id_driver: "13", plate: 'XBRI001', except: [] },
-    { id_driver: "18", plate: 'XBRI001', except: ['48'] },
+    // { id_driver: "18", plate: 'XBRI001', except: ['48'] },
     // { id_driver: "15", plate: 'XBRI003', except: [] },
     // { id_driver: "5", plate: 'CFE129', except: [] },
     // { id_driver: "6", plate: 'CFE131', except: [] },
-    { id_driver: "2", plate: 'CEV933', except: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '50', '52', '53', '51', '78'] }
+    // { id_driver: "2", plate: 'CEV933', except: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '50', '52', '53', '51', '78'] }
   ]
 
   let favorite = drivers.find(driver => driver.id_driver == event.target.value)
@@ -732,16 +732,16 @@ const changeDriver = async (event) => {
 
 const changeCar = async (event) => {
   const cars = [
-    { id_driver: "19", id_car: "59", plate: 'CFP306', except: ['32', '34', '47', '46'] },
-    { id_driver: "10", id_car: "61", plate: 'CFP302', except: ['34', '47', '46'] },
-    { id_driver: "11", id_car: "62", plate: 'CFP305', except: ['34', '47', '46'] },
+    // { id_driver: "19", id_car: "59", plate: 'CFP306', except: ['32', '34', '47', '46'] },
+    // { id_driver: "10", id_car: "61", plate: 'CFP302', except: ['34', '47', '46'] },
+    // { id_driver: "11", id_car: "62", plate: 'CFP305', except: ['34', '47', '46'] },
     // { id_driver: "16", id_car: "64", plate: 'XBRI004', except: [] },
     // { id_driver: "14", id_car: "69", plate: 'XBRI002', except: [] },
-    { id_driver: "18", id_car: "70", plate: 'XBRI001', except: ['48'] },
+    // { id_driver: "18", id_car: "70", plate: 'XBRI001', except: ['48'] },
     // { id_driver: "15", id_car: "71", plate: 'XBRI003', except: [] },
     // { id_driver: "5", id_car: "68", plate: 'CFE129', except: [] },
     // { id_driver: "6", id_car: "67", plate: 'CFE131', except: [] },
-    { id_driver: "2", id_car: "20", plate: 'CEV933', except: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '50', '52', '53', '51', '78'] }
+    // { id_driver: "2", id_car: "20", plate: 'CEV933', except: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '50', '52', '53', '51', '78'] }
   ]
 
   let favorite = cars.find(car => car.id_car == event.target.value)

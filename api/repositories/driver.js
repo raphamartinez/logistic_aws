@@ -15,7 +15,7 @@ class Driver {
 
     list() {
         try {
-            const sql = `SELECT * FROM api.driver `
+            const sql = `SELECT * FROM api.driver where status > 0`
 
             return query(sql)
         } catch (error) {
@@ -32,7 +32,7 @@ class Driver {
         WHERE tr.date = ? AND tr.period = ?
         GROUP BY id_driver
         ORDER BY id_driver
-        ) AND dr.status != 2
+        ) AND dr.status  = 1
         GROUP BY dr.id
         ORDER BY dr.name`
 

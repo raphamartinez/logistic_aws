@@ -112,7 +112,7 @@ class Travel {
         WHERE tr.date = ? AND tr.period = ?
         GROUP BY id
         ORDER BY id
-        ) AND ca.status != 2
+        ) AND ca.status = 1
         GROUP BY ca.plate
         ORDER BY ca.plate`
 

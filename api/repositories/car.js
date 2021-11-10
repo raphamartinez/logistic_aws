@@ -65,6 +65,7 @@ class Car {
                 LEFT JOIN api.travelcar tc ON ca.id = tc.id_car
                 LEFT JOIN api.travel tr ON tc.id_travel = tr.id 
                 LEFT JOIN api.driver dr ON tr.id_driver = dr.id
+                WHERE ca.status > 0
                 GROUP BY ca.plate
                 ORDER BY ca.status DESC`
                 return query(sql)

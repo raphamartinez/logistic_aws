@@ -3,9 +3,10 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 
 class Travel {
 
-    async list(date, period) {
+    async list(date, lastdate, period) {
+
         try {
-            let sql = `SELECT tr.id, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%d/%m/%Y') as datedesc, dr.id as id_driver,
+            let sql = `SELECT tr.id, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
             IF(dr.name is null, "", dr.name) as driverdesc, tr.origin,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
@@ -48,6 +49,7 @@ class Travel {
                         WHEN tr.route = 31 THEN "Villalisa"
                         WHEN tr.route = 32 THEN "Nasser"
                         WHEN tr.route = 33 THEN "Centrales Ypané"
+                        WHEN tr.route = 34 THEN "Canindeyu"
                         ELSE ""
                     END as routedesc,
                         CASE
@@ -85,17 +87,19 @@ class Travel {
                         WHEN tr.origin = 31 THEN "Villalisa"
                         WHEN tr.origin = 32 THEN "Nasser"
                         WHEN tr.origin = 33 THEN "Centrales Ypané"
+                        WHEN tr.route = 34 THEN "Canindeyu"
                         ELSE ""
 						END as origindesc
                         FROM api.travel tr
                         LEFT JOIN api.driver dr ON tr.id_driver = dr.id 
-                        WHERE tr.date = ? `
+                        WHERE tr.date between ? and ? `
 
             if (period) sql += `AND tr.period = '${period}'`
 
-            const data = await query(sql, date)
+            const data = await query(sql, [date, lastdate])
             return data
         } catch (error) {
+            console.log(error);
             throw new InternalServerError('No se pudieron enumerar los login')
         }
     }

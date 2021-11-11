@@ -6,7 +6,8 @@ class Travel {
 
     async list(date, period) {
         try {
-            let travels = await Repositorie.list(date, period)
+            let lastdate = `${date} 23:59:59`
+            let travels = await Repositorie.list(date, lastdate, period)
 
             let data = []
             for (let travel of travels) {

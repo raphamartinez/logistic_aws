@@ -856,7 +856,7 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
       if (travel.children[3].children[0].value) input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[3].children[0].value} - `
       input.value += `𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${travel.children[4].children[0].value} - `
       if (travel.children[5].children[0].value) input.value += `𝐅𝐮𝐫𝐠𝐨𝐧: ${travel.children[5].children[0].value} - `
-      input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${travel.children[6].children[0].value} cubiertas\n\n`
+      input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${travel.children[6].children[0].value} cubiertas - `
       input.value += `𝐅𝐞𝐜𝐡𝐚: ${travel.children[7].children[0].value} \n\n`
     }
   })

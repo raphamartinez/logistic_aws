@@ -10,171 +10,80 @@ class User {
         return bcrypt.hash(password, costHash)
     }
 
-    async insertUser(data) {
+    async insert(user) {
         try {
-            const password = await User.generatePasswordHash(data.user.login.password)
-            const verifyMail = await RepositorieLogin.checkMail(data.user.login.mail)
+            const costHash = 12
+            const password = await bcrypt.hash(user.pass, costHash)
+            
+            const check = await RepositorieLogin.checkAccess(user.access)
+            let result = {}
 
-            if (verifyMail === true) {
+            if (!check) {
                 const login = {
-                    access: data.user.login.access,
+                    access: user.access,
                     password: password,
                     mailVerify: 1,
                     status: 1
                 }
 
-                const obj = await RepositorieLogin.insert(login)
+                let id_login = await RepositorieLogin.insert(login)
+                console.log(id_login);
 
-                const user = {
-                    name: data.user.name,
-                    perfil: data.user.perfil,
-                    status: 1,
+                const obj = {
+                    name: user.name,
+                    profile: user.profile,
+                    mail: user.mail,
                     login: {
-                        id_login: obj.id_login
+                        id_login: id_login
                     }
                 }
 
-                const result = await Repositorie.insert(user)
+                let id_user = await Repositorie.insert(obj)
+
+                result.id_user = id_user
+                result.id_login = id_login
 
                 return result
             } else {
                 throw new InvalidArgumentError('Ya existe un usuario con este acceso, cámbielo.')
             }
         } catch (error) {
+            console.log(error);
             throw new InvalidArgumentError('No se pudo registrar un nuevo usuario.')
         }
     }
 
-    async deleteStatus(id_user) {
+    async delete(id) {
         try {
+            console.log(id);
             const status = 0
-            const result = await Repositorie.deleteStatus(status, id_user)
-            return result
+            await Repositorie.delete(status, id)
+
+            return true
         } catch (error) {
             throw new InternalServerError('No se pudo borrar el usuario.')
         }
     }
 
-    async updateUser(data, id_user) {
-
+    async update(user, id) {
         try {
-            const verifyMail = await RepositorieLogin.checkMail(data.user.mail)
+            console.log(user);
+            console.log(id);
+            await Repositorie.update(user, id)
+            await RepositorieLogin.update(user, id)
 
-            if (verifyMail !== true) {
-                const user = {
-                    id_user: id_user,
-                    name: data.user.name,
-                    mailenterprise: data.user.mailenterprise,
-                    perfil: data.user.perfil,
-                    dateBirthday: data.user.dateBirthday,
-                    office: {
-                        id_office: data.user.id_office
-                    }
-                }
-
-                const login = {
-                    id_login: data.user.id_login,
-                    mail: data.user.mail
-                }
-
-                await Repositorie.update(user)
-                await RepositorieLogin.update(login)
-                return true
-            } else {
-                throw new InvalidArgumentError('Ya existe un usuario con este acceso, cámbielo.')
-            }
+            return true
         } catch (error) {
             throw new InvalidArgumentError('No se pudo actualizar el usuario.')
         }
     }
 
-    async listUsers() {
+    async list() {
         try {
-            let data = await Repositorie.list()
-
-            data.forEach(obj => {
-                switch (obj.perfil) {
-                    case 1: obj.perfilDesc = "Admin"
-                        break
-
-                    case 2: obj.perfilDesc = "Vendedor"
-                        break
-
-                    case 3: obj.perfilDesc = "Depositero"
-                        break
-
-                    case 4: obj.perfilDesc = "Gerente"
-                        break
-
-                    case 5: obj.perfilDesc = "Personal administrativo"
-                        break
-
-                    default: obj.perfilDesc = "Usuario"
-                        break
-                }
-
-                if (!obj.mailenterprise) obj.mailenterprise = "" 
-                if(obj.dateBirthday === '00/00/0000') obj.dateBirthday = ""
-            })
-
-            return data
-
+            let status = 1
+            return Repositorie.list(status)
         } catch (error) {
             throw new InternalServerError('No se pudieron enumerar los usuarios.')
-        }
-    }
-
-    async viewUser(id_user) {
-        try {
-            const user = await Repositorie.view(id_user)
-
-            return user
-        } catch (error) {
-            throw new NotFound('Usuario.')
-        }
-    }
-
-    async viewUserAdm(id_login) {
-        try {
-            const user = await Repositorie.viewAdm(id_login)
-
-            switch (user.perfil) {
-                case 1: user.perfilDesc = "Admin"
-                    break
-
-                case 2: user.perfilDesc = "Vendedor"
-                    break
-
-                case 3: user.perfilDesc = "Depositero"
-                    break
-
-                case 4: user.perfilDesc = "Gerente"
-                    break
-
-                case 5: user.perfilDesc = "Personal administrativo"
-                    break
-
-                default: user.perfilDesc = "Usuario"
-                    break
-            }
-
-            if (!user.mailenterprise) {
-                user.mailenterpriseDesc = "No informado" 
-                user.mailenterprise = " "
-            } else{
-                user.mailenterpriseDesc = user.mailenterprise
-            }
-            if(user.dateBirthday === '00/00/0000'){
-                user.dateBirthdayDesc = "No informado"
-                user.dateBirthday = " "
-            } else{
-                user.dateBirthdayDesc = user.dateBirthday
-            }
-
-            
-            return user
-        } catch (error) {
-            throw new NotFound('Usuario.')
         }
     }
 }

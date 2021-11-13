@@ -19,7 +19,7 @@ window.onload = async function () {
                  <a data-action data-id="${obj.id}"><i class="btn-edit fas fa-edit" ></i></a>
                  <a data-action data-id="${obj.id}"><i class="btn-delete fas fa-trash" ></i></a>`
 
-        let line = [a, obj.code, obj.name, obj.local, obj.date]
+        let line = [a, obj.code, obj.name, obj.brand, obj.amount, obj.local, obj.date]
         patrimonys.push(line)
     })
 
@@ -48,6 +48,8 @@ const listPatrimonys = (patrimonys) => {
             },
             { title: "Cod" },
             { title: "Nombre" },
+            { title: "Marca" },
+            { title: "Cantidad" },
             { title: "Local" },
             { title: "Fecha" },
         ],
@@ -112,6 +114,8 @@ submit.addEventListener('submit', async (event) => {
         localdesc: document.querySelector('#local option:checked').innerHTML,
         code: event.currentTarget.code.value,
         name: event.currentTarget.name.value,
+        brand: event.currentTarget.brand.value,
+        amount: event.currentTarget.amount.value,
         date: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     }
 
@@ -171,7 +175,9 @@ const editPatrimony = (event) => {
         id: event.path[1].getAttribute('data-id'),
         code: tr.children[1].innerHTML,
         name: tr.children[2].innerHTML,
-        local: tr.children[3].innerHTML,
+        brand: tr.children[3].innerHTML,
+        amount: tr.children[4].innerHTML,
+        local: tr.children[5].innerHTML,
     }
 
     document.querySelector('[data-modal]').innerHTML = ``
@@ -189,6 +195,8 @@ const editPatrimony = (event) => {
             id: patrimony.id,
             code: patrimony.code,
             name: event2.currentTarget.name.value,
+            brand: event2.currentTarget.brand.value,
+            amount: event2.currentTarget.amount.value,
             local: event2.currentTarget.local.innerHTML,
             localdesc: document.querySelector('#localedit option:checked').innerHTML,
             date: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`
@@ -277,10 +285,23 @@ const deletePatrimony = (event) => {
 
 const viewPatrimony = async (event) => {
 
+    let loading = document.querySelector('[data-loading]')
     let tr = event.path[3]
     let i = event.target
+    let id_patrimony = event.path[1].getAttribute('data-id')
 
     if (tr.className === "child") tr = tr.previousElementSibling
+
+    const files = await Connection.noBody(`file/id_patrimony/${id_patrimony}`, "GET")
+    if (files.length === 0) return alert('No hay imágenes vinculadas a este patrimonio.')
+
+    loading.innerHTML = `
+    <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+`
 
     let row = $('#dataTable').DataTable()
         .row(tr)
@@ -292,32 +313,22 @@ const viewPatrimony = async (event) => {
 
         row.child.hide();
         tr.classList.remove('shown')
+        loading.innerHTML = ``
 
         adjustModalDatatable()
     } else {
 
-        let id_patrimony = event.path[1].getAttribute('data-id')
-
         tr.classList.add('bg-dark', 'text-white')
-        i.classList.remove('fas', 'fa-eye')
-        i.classList.add('spinner-border', 'spinner-border-sm', 'text-light')
-
-        const files = await Connection.noBody(`file/id_patrimony/${id_patrimony}`, "GET")
-
-        if (files.length === 0) {
-            i.classList.remove('spinner-border', 'spinner-border-sm', 'text-light')
-            i.classList.add('fas', 'fa-eye-slash', 'text-white')
-            return alert('No hay imágenes vinculadas a este patrimonio.')
-        }
+        i.classList.add('fas', 'fa-eye-slash', 'text-white')
 
         const div = document.createElement('div')
 
         div.classList.add('container-fluid')
-        div.innerHTML = `<div class="row col-md-12" data-body></div>`
+        div.innerHTML = `<div class="row col-md-12" data-body-${id_patrimony}></div>`
 
         row.child(div).show()
 
-        let body = document.querySelector('[data-body]')
+        let body = document.querySelector(`[data-body-${id_patrimony}]`)
 
         files.forEach(file => {
             body.appendChild(View.tableImage(file))
@@ -326,7 +337,7 @@ const viewPatrimony = async (event) => {
         tr.classList.add('shown')
         i.classList.remove('spinner-border', 'spinner-border-sm', 'text-light')
         i.classList.add('fas', 'fa-eye-slash', 'text-white')
-
+        loading.innerHTML = ``
         adjustModalDatatable()
 
         const modal = document.createElement('div')

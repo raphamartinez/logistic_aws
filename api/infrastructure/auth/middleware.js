@@ -51,12 +51,12 @@ module.exports = {
     next()
   },
 
-  perfil(req, res, next) {
+  profile(req, res, next) {
 
-    const permissionsPerfil = Controll.can(req.user.perfil)
+    const permissionsProfile = Controll.can(req.user.profile)
     const actions = method[action]
-    const permissionAll = permissionsPerfil[actions.all](perfil)
-    const permissionOnly = permissionsPerfil[actions.only](perfil)
+    const permissionAll = permissionsProfile[actions.all](profile)
+    const permissionOnly = permissionsProfile[actions.only](profile)
 
     if (permissionAll.granted === false && permissionOnly.granted === false) {
       res.status(403)

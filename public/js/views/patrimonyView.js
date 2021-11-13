@@ -32,6 +32,12 @@ const modalEdit = (patrimony) => {
                     <option value="7">LOG. EQUIPOS</option>
                 </select>
                     </div>
+                    <div class="form-group col-md-6">
+                        <input value="${patrimony.brand}" name="brand" placeholder="Marca" style="text-transform:uppercase" type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input value="${patrimony.amount}" name="amount" placeholder="Cantidad" style="text-transform:uppercase" type="text" class="form-control" required>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>

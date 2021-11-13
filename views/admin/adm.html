@@ -89,7 +89,8 @@
                 <div class="container-fluid">
                     <div class="col-lg-12 text-center">
                         <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
-                            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                            <h1 class="h3 mb-0 text-gray-800">Administración
+                            </h1>
                         </div>
                     </div>
 
@@ -98,27 +99,69 @@
                     </div>
 
                     <div class="row justify-content-md-center">
-                        <div class="col-lg-10">
+                        <div class="col-8">
+                            <div class="card shadow mb-3">
+                                <form data-form-add enctype="multipart/form-data">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-danger">Nuevo usuario</h6>
+                                    </div>
+                                    <div class="card-body form-row">
+                                        <div class="form-group col-3">
+                                            <input id="name" name="name" placeholder="Nombre" type="text"
+                                                class="form-control" required>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <input id="access" name="access" placeholder="Acceso a lo sistema"
+                                                type="text" class="form-control" required>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <input id="mail" name="mail" placeholder="E-mail Organizacional" type="mail"
+                                                class="form-control">
+                                        </div>
+                                        <div class="form-group col-3"">
+                                            <select name="profile" id="profile" class="form-control" required>
+                                            <option value="" selected disabled>Perfil</option>
+                                            <option value="1">Mantenimiento</option>
+                                            <option value="2">Patrimonio</option>
+                                            <option value="3">Vehículo</option>
+                                            <option value="4">Admin</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <input id="pass" name="pass" placeholder="Contraseña" type="password"
+                                                class="form-control" required>
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <input id="passconf" name="passconf"
+                                                placeholder="Confirmación de Contraseña" type="password"
+                                                class="form-control" required>
+                                        </div>
+                                        <div class="form-group col-12 text-center">
+                                            <p>Ingrese una contraseña segura que contenga.</p>
+                                            <p><small>Al menos 1 letra mayúscula.</small></p>
+                                            <p><small>Al menos 1 número.</small></p>
+                                            <p><small>Al menos 1 personaje especial.</small></p>
+                                        </div>
+                                        <div class="form-group col-12 text-center">
+                                            <button data-btn-add type="submit" class="btn btn-success"
+                                                disabled>Agregar</button>
+                                            <p><small>Para desbloquear el botón de registro, la contraseña debe ser la
+                                                    misma que el campo de confirmación de contraseña.</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-8">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-danger">Listado de Mantenimiento</h6>
+                                    <h6 class="m-0 font-weight-bold text-danger">Tabla del Usuarios</h6>
                                 </div>
                                 <div class="card-body">
                                     <table class="table table-bordered text-center" id="dataTable" width="100%"
-                                        cellspacing="0"></table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row justify-content-md-center">
-                        <div class="col-lg-10">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-danger">Listado de Items</h6>
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-bordered text-center" id="dataItems" width="100%"
-                                        cellspacing="0"></table>
+                                        cellspacing="0" data-table></table>
                                 </div>
                             </div>
                         </div>
@@ -167,10 +210,12 @@
         crossorigin="anonymous"></script>
 
     <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js"></script>
     <script src="../js/libs/sb-admin-2.min.js"></script>
-    <script type="module" src="../js/controllers/dashboardController.js"></script>
+    <script type="module" src="../js/controllers/admController.js"></script>
     <script type="module" src="../js/controllers/loginController.js"></script>
     <script src="../js/libs/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
@@ -183,6 +228,7 @@
     <script src="../js/libs/buttons.html5.min.js"></script>
     <script src="../js/libs/buttons.print.min.js"></script>
     <script src="../js/libs/geradorarquivo.min.js"></script>
+
     <div data-modal></div>
 
 </body>

@@ -151,7 +151,7 @@ class Tables {
   }
 
   createTableUser() {
-    const sql = `CREATE TABLE IF NOT EXISTS user (id int NOT NULL AUTO_INCREMENT,name VARCHAR (100) NOT NULL, perfil int NOT NULL,
+    const sql = `CREATE TABLE IF NOT EXISTS user (id int NOT NULL AUTO_INCREMENT,name VARCHAR (100) NOT NULL, profile int NOT NULL,
         dateReg DATETIME NOT NULL, id_login int NOT NULL,
         PRIMARY KEY (id), FOREIGN KEY (id_login) REFERENCES login(id))`
 

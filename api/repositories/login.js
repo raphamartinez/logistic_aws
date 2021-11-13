@@ -5,12 +5,10 @@ class Login {
 
     async insert(login) {
         try {
-            const sql = 'INSERT INTO api.login (access, password, mailVerify, status, dateReg ) values (?, ?, ?, ?, now() - interval 4 hour )'
-            await query(sql, [login.access, login.password, login.mailVerify, login.status])
+            const sql = 'INSERT INTO login (access, password, mailVerify, status, dateReg ) values (?, ?, ?, ?, now() - interval 3 hour )'
+            const result = await query(sql, [login.access, login.password, login.mailVerify, login.status])
 
-            const sqlId = 'select LAST_INSERT_ID() as id_login from api.login LIMIT 1'
-            const id = await query(sqlId)
-            return id[0]
+            return result.insertId
         } catch (error) {
             console.log(error);
             throw new InvalidArgumentError('No se pudo ingresar el login en la base de datos')
@@ -27,10 +25,10 @@ class Login {
         }
     }
 
-    async update(login) {
+    async update(user, id) {
         try {
-            const sql = 'UPDATE login SET access = ? WHERE id_login = ?'
-            await query(sql, [login.access, login.id_login])
+            const sql = 'UPDATE login SET access = ? WHERE id = ?'
+            await query(sql, [user.access, id])
             return true
         } catch (error) {
             throw new InvalidArgumentError('Error al actualizar los datos')
@@ -50,8 +48,12 @@ class Login {
 
     async view(id_login) {
         try {
-            const sql = `SELECT US.name, US.perfil, US.id_login FROM api.login LO, api.user US where US.id_login = LO.id and LO.id = ${id_login} and LO.status = 1`
-            const result = await query(sql)
+            const sql = `SELECT us.name, us.profile, us.id_login 
+            FROM api.user us
+            INNER JOIN api.login lo ON us.id_login = lo.id 
+            WHERE lo.id = ? and lo.status = 1`
+
+            const result = await query(sql, id_login)
 
             if (!result) {
                 throw new InvalidArgumentError(`El nombre de usuario o la contraseña no son válidos`)
@@ -113,16 +115,12 @@ class Login {
     }
 
 
-    async checkMail(access) {
+    async checkAccess(access) {
         try {
-            const sql = `SELECT access FROM api.login WHERE access = '${access}'`
+            const sql = `SELECT access FROM api.login WHERE access = ?`
             const result = await query(sql, access)
 
-            if (!result[0]) {
-                return true
-            }
-
-            return false
+            return result[0]
         } catch (error) {
             throw new InternalServerError('El nombre de usuario o la contraseña no son válidos')
         }

@@ -5,8 +5,8 @@ class Patrimony {
 
     async insert(item, id_login) {
         try {
-            const sql = 'INSERT INTO api.patrimony (id_login, local, code, name, dateReg) values (?, ?, ?, ?, now() - interval 4 hour)'
-            await query(sql, [id_login, item.local, item.code, item.name])
+            const sql = 'INSERT INTO api.patrimony (id_login, local, code, name, brand, amount, dateReg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour)'
+            await query(sql, [id_login, item.local, item.code, item.name, item.brand, item.amount])
 
             const sqlId = 'select LAST_INSERT_ID() as id from api.patrimony LIMIT 1'
             const obj = await query(sqlId)
@@ -19,8 +19,8 @@ class Patrimony {
     async update(patrimony) {
 
         try {
-            const sql = 'UPDATE api.patrimony SET name = ?, local = ? WHERE id = ?'
-            const result = await query(sql, [patrimony.name, patrimony.local, patrimony.id])
+            const sql = 'UPDATE api.patrimony SET name = ?, local = ?, brand = ?, amount = ? WHERE id = ?'
+            const result = await query(sql, [patrimony.name, patrimony.local, patrimony.brand, patrimony.amount, patrimony.id])
 
             return result
         } catch (error) {
@@ -30,7 +30,7 @@ class Patrimony {
 
     list() {
         try {
-            let sql = `SELECT  pa.id, pa.code, pa.name, pa.id_login, DATE_FORMAT(pa.datereg, '%H:%i %d/%m/%Y') as date ,
+            let sql = `SELECT  pa.id, pa.code, pa.name, pa.brand, pa.amount, pa.id_login, DATE_FORMAT(pa.datereg, '%H:%i %d/%m/%Y') as date ,
             CASE
                 WHEN pa.local = 1 THEN "KM 1"
                 WHEN pa.local = 2 THEN "KM 28"

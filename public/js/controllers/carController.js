@@ -10,6 +10,15 @@ window.onload = async function () {
     </div>
   </div>
 `
+
+  let user = JSON.parse(sessionStorage.getItem('user'))
+
+  if (user.profile != 4) {
+    document.querySelector('[data-menu]').remove()
+    document.querySelector('[data-menu-adm]').remove()
+  }
+
+
   const date = new Date()
 
   let day = date.getDate()
@@ -23,11 +32,7 @@ window.onload = async function () {
 
   const drivers = await Connection.noBody('drivers', 'GET')
 
-  let user = JSON.parse(sessionStorage.getItem('user'))
-
-  let data = []
-
-  cars.forEach(car => {
+  let data = cars.map(car => {
     let status
 
     if (car.obs == null) car.obs = ""
@@ -63,13 +68,12 @@ window.onload = async function () {
       car.driver
     ]
 
-    data.push(line)
+    return line
   })
 
   listCars(data)
 
-  let driverdt = []
-  drivers.forEach(driver => {
+  let driverdt = drivers.map(driver => {
     let status
     switch (driver.status) {
       case 1:
@@ -97,7 +101,8 @@ window.onload = async function () {
       driver.thirst,
       `<form data-obs-driver="${driver.id}"><div class="input-group mb-3"><textarea data-id="${driver.id}" class="form-control" id="obs" name="obs" value="${driver.obs}">${driver.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`
     ]
-    driverdt.push(line)
+    
+   return line
   })
 
   listDrivers(driverdt)
@@ -403,9 +408,9 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
   const date = new Date(event.currentTarget.date.valueAsDate)
 
   let capacity
-  if(document.querySelector('[data-truck] option:checked').getAttribute('data-capacity') > 0){
+  if (document.querySelector('[data-truck] option:checked').getAttribute('data-capacity') > 0) {
     capacity = document.querySelector('[data-truck] option:checked').getAttribute('data-capacity')
-  }else{
+  } else {
     capacity = document.querySelector('[data-chest] option:checked').getAttribute('data-capacity')
   }
 
@@ -559,7 +564,7 @@ const enable = async () => {
     option.dataset.plate = car.plate
     option.innerHTML = `${car.plate} - ${car.cartype} - ${car.brand} - ${car.model} - ${car.year}</option>`
 
-    if(car.capacity > 0)  option.dataset.capacity = car.capacity
+    if (car.capacity > 0) option.dataset.capacity = car.capacity
 
     if (car.cartype === "FURGON" || car.cartype === "SEMI REMOLQUE") {
       document.querySelector('[data-chest]').appendChild(option)

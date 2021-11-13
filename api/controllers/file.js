@@ -12,14 +12,12 @@ const { promisify } = require('util')
 
 module.exports = app => {
 
-    app.post('/file', [Middleware.bearer, Authorization('file', 'create')], multer(multerConfig).single('file'), async (req, res, next) => {
+    app.post('/file', [Middleware.bearer, Authorization('file', 'create')], multer(multerConfig).array('file', 10), async (req, res, next) => {
         try {
-            const file = req.file
+            const files = req.files
             const details = req.body
 
-            await File.save(file, details, req.login.id)
-
-            cachelist.delPrefix('file')
+            await File.insert(files, details, req.login.id_login)
 
             res.json({ msg: `Imagem agregada con éxito.` })
         } catch (err) {

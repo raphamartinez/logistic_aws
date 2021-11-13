@@ -10,6 +10,20 @@ const { promisify } = require('util')
  */
 class File {
 
+    async insert(files, details, id_login) {
+        try {
+
+            for (const file of files) {
+                await Repositorie.insert(file, details, id_login)
+            }
+
+            return true
+        } catch (error) {
+            throw new InvalidArgumentError('No se pudo guardar el archivo.')
+        }
+    }
+
+
     async save(file, details, id_login) {
         try {
             const id_file = await Repositorie.insert(file, details, id_login)

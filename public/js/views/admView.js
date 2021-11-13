@@ -77,7 +77,43 @@ const modalDelete = () => {
     return div
 }
 
+const modalPass = () => {
+    const div = document.createElement('div')
+
+    div.innerHTML = `
+<div class="modal fade" id="passmodal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cambiar contraseña</h5>
+                <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">x</span>
+                </button>
+            </div>
+            <form data-edit-pass>
+                <div class="modal-body">
+                <div class="form-row">
+                <div class="form-group col-md-6">          
+                    <input type="password" placeholder="Contraseña" class="form-control" name="pass" id="passedit" required>
+                </div>
+                <div class="form-group col-md-6">          
+                    <input type="password" placeholder="Verificación de Contraseña" class="form-control" name="confpass" id="confpassedit" required>
+                </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                    <button data-btn-edit-pass disabled type="submit" class="btn btn-warning"><i class="fas fa-key"> Confirmar</i></button>   
+                </div>
+            </form>
+        </div>
+    </div>
+</div>`
+
+    return div
+}
+
 export const View = {
     modalDelete,
-    modalEdit
+    modalEdit,
+    modalPass
 }

@@ -2,15 +2,15 @@ const query = require('../infrastructure/database/queries')
 const { InvalidArgumentError, InternalServerError, NotFound } = require('../models/error')
 
 class File {
-    async insert(file, id, id_login) {
+    async insert(file, details, id_login) {
         try {
             if (file.name) file.key = file.name
             if (!file.location) file.location = `${process.env.BASE_URL}/files/${file.key}`
 
             file.size = file.size / 1024 / 1024
 
-            const sql = `INSERT INTO api.file (filename, mimetype, path, size, ${id.name}, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )`
-            await query(sql, [file.key, file.mimetype, file.location, file.size, id.code, id_login])
+            const sql = `INSERT INTO api.file (filename, mimetype, path, size, ${details.name}, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )`
+            await query(sql, [file.key, file.mimetype, file.location, file.size, details.code, id_login])
 
             return true
         } catch (error) {

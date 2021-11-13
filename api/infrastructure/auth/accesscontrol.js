@@ -1,24 +1,41 @@
 const AccessControl = require('accesscontrol')
 const controll = new AccessControl()
 
-// 0 - user
 // 4 - admin 
-// 3 - admin 
-// 2 - admin 
-// 1 - admin 
+// 3 - vehiculo 
+// 2 - patrimonio 
+// 1 - mantenimiento 
+// 0 - user
 
 controll
     .grant('1')
     .readAny('quotation')
+    .updateAny('quotation')
+    .createAny('quotation')
+    .deleteAny('quotation')
 
 controll
     .grant('2')
     .readAny('patrimony')
+    .updateAny('patrimony')
+    .createAny('patrimony')
+    .deleteAny('patrimony')
 
 controll
     .grant('3')
     .readAny('driver')
+    .updateAny('driver')
+    .createAny('driver')
+    .deleteAny('driver')
     .readAny('car')
+    .updateAny('car')
+    .createAny('car')
+    .deleteAny('car')
+    .readAny('travel')
+    .updateAny('travel')
+    .createAny('travel')
+    .deleteAny('travel')
+
 
 controll
     .grant('4')

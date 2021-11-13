@@ -38,9 +38,10 @@ class Login {
 
     async updatePassword(password, id_login) {
         try {
-            const sql = 'UPDATE login SET password = ? WHERE id_login = ?'
+            const sql = 'UPDATE login SET password = ? WHERE id = ?'
             await query(sql, [password, id_login])
-            return 'Contraseña actualizada exitosamente'
+            
+            return true
         } catch (error) {
             throw new InvalidArgumentError('Error al actualizar los datos')
         }
@@ -76,8 +77,11 @@ class Login {
 
     async viewMail(access) {
         try {
-            const sql = `SELECT lo.access, lo.password, lo.id FROM login lo, user us where lo.access = '${access}' and lo.status = 1 and us.id_login = lo.id`
-            const result = await query(sql)
+            const sql = `SELECT lo.access, lo.password, us.profile, lo.id 
+            FROM login lo
+            INNER JOIN user us ON lo.id = us.id_login
+            WHERE lo.access = ? and lo.status = 1 `
+            const result = await query(sql, access)
 
             if (!result[0]) {
                 throw new InvalidArgumentError(`El nombre de usuario o la contraseña no son válidos`)

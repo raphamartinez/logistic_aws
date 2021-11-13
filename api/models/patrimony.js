@@ -22,7 +22,7 @@ class Patrimony {
     async delete(id) {
         try {
             const type = "id_patrimony"
-            const files = await File.list(type)
+            const files = await File.list(type, id)
 
             if (files) {
                 await files.forEach(async file => {

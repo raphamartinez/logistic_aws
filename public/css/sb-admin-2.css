@@ -10335,6 +10335,12 @@ iframe {
   padding-right: 3px;
 }
 
+.btn-blue{
+  color: #4682B4;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
 .table-image td, th {
   vertical-align: middle;
 }

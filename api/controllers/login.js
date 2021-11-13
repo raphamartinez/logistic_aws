@@ -18,8 +18,27 @@ module.exports = app => {
             const id_login = req.login.id
             const token = await Login.generateTokens(id_login)
             const login = await Login.viewLogin(id_login)
+            let url
 
-            res.json({ refreshToken: token.refreshToken, accessToken: token.accessToken, url: '../admin/vehiculos.html', user: login })
+            switch (req.login.profile) {
+                case 1:
+                    url = '../admin/reemplazar.html'
+                    break
+                case 2:
+                    url = '../admin/patrimonio.html'
+                    break
+                case 3:
+                    url = '../admin/vehiculos.html'
+                    break
+                case 4:
+                    url = '../admin/vehiculos.html'
+                    break
+                default:
+                    url = '../admin/dashboard.html'
+                    break
+            }
+
+            res.json({ refreshToken: token.refreshToken, accessToken: token.accessToken, url, user: login })
         } catch (err) {
             next(err)
         }
@@ -88,10 +107,10 @@ module.exports = app => {
 
     app.post('/changepass', Middleware.bearer, async (req, res, next) => {
         try {
-            const data = req.body.user
-            const result = await Login.updatePassword(data, data.id_login)
+            const user = req.body.user
+            await Login.updatePassword(user)
 
-            res.json(result)
+            res.json({ msg: `Contraseña cambiada con éxito.` })
         } catch (err) {
             next(err)
         }

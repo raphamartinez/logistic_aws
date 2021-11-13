@@ -51,7 +51,9 @@ const edit = (event) => {
             .row
             .add(
                 [
-                    `<a><i data-action data-dateReg="${dateReg}" data-id_user="${id_user}" data-id_login="${id_login}" data-profile="${newUser.profile}" data-name="${newUser.name}" data-access="${newUser.access}" data-mail="${newUser.mail}" class="btn-edit fas fa-edit"></i></a>
+                    `
+                    <a><i data-action data-id_login="${id_login}" class="btn-gold fas fa-key" ></i></a>
+                    <a><i data-action data-dateReg="${dateReg}" data-id_user="${id_user}" data-id_login="${id_login}" data-profile="${newUser.profile}" data-name="${newUser.name}" data-access="${newUser.access}" data-mail="${newUser.mail}" class="btn-edit fas fa-edit"></i></a>
                     <a><i data-action data-id_login="${id_login}" class="btn-delete fas fa-trash"></i></a>`,
                     newUser.name,
                     newUser.access,
@@ -74,7 +76,6 @@ const edit = (event) => {
 
 const drop = (event) => {
     const tr = event.path[3]
-    const id_user = event.target.getAttribute('data-id_user')
     const id_login = event.target.getAttribute('data-id_login')
 
     document.querySelector('[data-modal]').innerHTML = ``
@@ -99,11 +100,53 @@ const drop = (event) => {
     })
 }
 
+const pass = async (event) => {
+    const id = event.target.getAttribute('data-id_login')
+
+    document.querySelector('[data-modal]').innerHTML = ``
+    document.querySelector('[data-modal]').appendChild(View.modalPass())
+
+    const checkpassedit = () => {
+        if (document.querySelector('#passedit').value.length > 5 && document.querySelector('#passedit').value === document.querySelector('#confpassedit').value) {
+            document.querySelector('[data-btn-edit-pass]').disabled = false
+        } else {
+            document.querySelector('[data-btn-edit-pass]').disabled = true
+        }
+    }
+
+    document.querySelector('#passedit').addEventListener('keyup', checkpassedit, false)
+    document.querySelector('#confpassedit').addEventListener('keyup', checkpassedit, false)
+
+    $("#passmodal").modal('show')
+
+    const modal = document.querySelector('[data-edit-pass]')
+    modal.addEventListener('submit', async (event2) => {
+        event2.preventDefault()
+
+        let user = {
+            pass: event2.currentTarget.pass.value,
+            confpass: event2.currentTarget.confpass.value,
+            id
+        }
+        
+        const obj = await Connection.body(`changepass`, { user }, 'POST')
+
+        document.querySelector('#passedit').removeEventListener('keyup', pass, false)
+        document.querySelector('#confpassedit').removeEventListener('keyup', pass, false)
+
+        $("#passmodal").modal('hide')
+        document.querySelector('[data-modal]').innerHTML = ``
+
+        alert(obj.msg)
+    })
+}
+
 const table = async () => {
     const data = await Connection.noBody('users', 'GET')
 
     const users = data.map(user => {
         let options = `
+        <a><i data-action data-id_login="${user.id_login}" class="btn-gold fas fa-key" ></i></a>
         <a><i data-action data-id_user="${user.id}" data-id_login="${user.id_login}" data-dateReg="${user.dateReg}" data-profile="${user.profile}" data-name="${user.name}" data-access="${user.access}" data-mail="${user.mail}" class="btn-edit fas fa-edit"></i></a>
         <a><i data-action data-id_user="${user.id}" data-id_login="${user.id_login}" class="btn-delete fas fa-trash"></i></a>`
         let line = [
@@ -163,6 +206,7 @@ const table = async () => {
         if (event.target && event.target.nodeName === "I" && event.target.matches("[data-action]")) {
             if (event.target.classList[0] === 'btn-delete') return drop(event)
             if (event.target.classList[0] === 'btn-edit') return edit(event)
+            if (event.target.classList[0] === 'btn-gold') return pass(event)
         }
     })
 
@@ -186,6 +230,7 @@ const table = async () => {
         const date = new Date()
 
         let options = `
+        <a><i data-action data-id_login="${obj.id_login}" class="btn-gold fas fa-key" ></i></a>
         <a><i data-action data-id_user="${obj.id_user}" data-id_login="${obj.id_login}" data-dateReg="${`${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`}" data-profile="${user.profile}" data-name="${user.name}" data-access="${user.access}" data-mail="${user.mail}" class="btn-edit fas fa-edit"></i></a>
         <a><i data-action data-id_user="${obj.id_user}" data-id_login="${obj.id_login}" class="btn-delete fas fa-trash"></i></a>`
 
@@ -212,6 +257,7 @@ const checkpass = () => {
         document.querySelector('[data-btn-add]').disabled = true
     }
 }
+
 document.querySelector('#pass').addEventListener('keyup', checkpass, false)
 document.querySelector('#passconf').addEventListener('keyup', checkpass, false)
 

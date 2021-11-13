@@ -6,11 +6,8 @@ class Patrimony {
     async insert(item, id_login) {
         try {
             const sql = 'INSERT INTO api.patrimony (id_login, local, code, name, brand, amount, dateReg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour)'
-            await query(sql, [id_login, item.local, item.code, item.name, item.brand, item.amount])
-
-            const sqlId = 'select LAST_INSERT_ID() as id from api.patrimony LIMIT 1'
-            const obj = await query(sqlId)
-            return obj[0].id
+            const result = await query(sql, [id_login, item.local, item.code, item.name, item.brand, item.amount])
+            return result.insertId
         } catch (error) {
             throw new InvalidArgumentError('No se pudo ingresar el articulo en la base de datos')
         }

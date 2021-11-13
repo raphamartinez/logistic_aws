@@ -12,9 +12,13 @@ window.onload = async function () {
     </div>
   </div>
 `
-    const cars = await Connection.noBody('cars', 'GET')
     let user = JSON.parse(sessionStorage.getItem('user'))
+    if (user.profile != 4) {
+        document.querySelector('[data-menu]').remove()
+        document.querySelector('[data-menu-adm]').remove()
+    }
 
+    const cars = await Connection.noBody('cars', 'GET')
     const providers = await Connection.noBody('provider', 'GET')
     selectProviders(providers)
     $('#price').mask('#.000.000.000.000.000,00', { reverse: true });

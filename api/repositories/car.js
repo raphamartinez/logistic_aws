@@ -28,12 +28,12 @@ class Car {
 
     insert(car) {
         try {
-            const sql = `INSERT INTO car (id, cartype, brand, model, plate, color, year, chassis, fuel, departament, dateReg)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now() - interval 4 hour  )`
+            const sql = `INSERT INTO car (id, cartype, brand, model, plate, color, year, chassis, fuel, departament, status, dateReg)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,now() - interval 4 hour  )`
 
             return query(sql, car)
         } catch (error) {
             throw new InternalServerError('No se pudieron enumerar los login')
-        }
+        } 
     }
 
     async update(plate, status) {

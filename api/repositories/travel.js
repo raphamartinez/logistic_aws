@@ -37,19 +37,21 @@ class Travel {
                         WHEN tr.route = 19 THEN "Ñemby"
                         WHEN tr.route = 20 THEN "Chacoi"
                         WHEN tr.route = 21 THEN "Sobre ruta 2"
-                        WHEN tr.route = 22 THEN "Caaguacu"
+                        WHEN tr.route = 22 THEN "Caaguazu"
                         WHEN tr.route = 23 THEN "Campo 9"
                         WHEN tr.route = 24 THEN "Campo 8"
-                        WHEN tr.route = 25 THEN "Villa Rica"
+                        WHEN tr.route = 25 THEN "Villarrica"
                         WHEN tr.route = 26 THEN "Chaco"
                         WHEN tr.route = 27 THEN "Villeta"
                         WHEN tr.route = 28 THEN "Eusebio Ayala"
                         WHEN tr.route = 29 THEN "CaacupeMi"
                         WHEN tr.route = 30 THEN "Pillar"
-                        WHEN tr.route = 31 THEN "Villalisa"
+                        WHEN tr.route = 31 THEN "Villa Elisa"
                         WHEN tr.route = 32 THEN "Nasser"
                         WHEN tr.route = 33 THEN "Centrales Ypané"
                         WHEN tr.route = 34 THEN "Canindeyu"
+                        WHEN tr.route = 35 THEN "Zona Franca km11"
+                        WHEN tr.route = 36 THEN "Hernandarias"
                         ELSE ""
                     END as routedesc,
                         CASE
@@ -88,6 +90,8 @@ class Travel {
                         WHEN tr.origin = 32 THEN "Nasser"
                         WHEN tr.origin = 33 THEN "Centrales Ypané"
                         WHEN tr.route = 34 THEN "Canindeyu"
+                        WHEN tr.route = 35 THEN "Zona Franca km11"
+                        WHEN tr.route = 36 THEN "Hernandarias"
                         ELSE ""
 						END as origindesc
                         FROM api.travel tr

@@ -252,7 +252,7 @@ const modalEditCar = (car) => {
                             </div>
                             <div class="form-group col-6">
                                 <input value="${car.obs}" id="obs" name="obs" placeholder="Observación" type="text" class="form-control"
-                                    required>
+                                    >
                             </div>
                         </div>
                     </div>
@@ -320,7 +320,7 @@ const modalEditDriver = (driver) => {
                             </div>
                             <div class="form-group col-6">
                                 <input value="${driver.obs}" id="obs" name="obs" placeholder="Observación" type="text" class="form-control"
-                                    required>
+                                    >
                             </div>
                         </div>
                     </div>

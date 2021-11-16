@@ -67,9 +67,9 @@ window.onload = async function () {
       car.chassis,
       car.fuel,
       car.departament,
-      car.driver,
+      car.capacity,
       `
-      <a><i data-action data-id="${car.id_car}" data-type="${car.cartype}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" data-obs="${car.obs}" data-fuel="${car.fuel}" data-departament="${car.departament}" data-driver="${car.driver}" class="btn-edit fas fa-edit"></i></a>
+      <a><i data-action data-id="${car.id_car}" data-type="${car.cartype}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" data-obs="${car.obs}" data-fuel="${car.fuel}" data-departament="${car.departament}" data-capacity="${car.capacity}" class="btn-edit fas fa-edit"></i></a>
       <a><i data-action data-id="${car.id_car}" data-type="${car.cartype}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" class="btn-delete fas fa-trash" ></i></a>`,
     ]
 
@@ -182,8 +182,7 @@ const editCar = (event) => {
     capacity: event.target.getAttribute('data-capacity'),
     fuel: event.target.getAttribute('data-fuel'),
     departament: event.target.getAttribute('data-departament'),
-    obs: event.target.getAttribute('data-obs'),
-    driver: event.target.getAttribute('data-driver')
+    obs: event.target.getAttribute('data-obs')
   }
 
   document.querySelector('[data-modal]').innerHTML = ``
@@ -240,9 +239,9 @@ const editCar = (event) => {
         newCar.chassis,
         newCar.fuel,
         newCar.departament,
-        car.driver,
+        newCar.capacity,
         `
-        <a><i data-action data-type="${newCar.cartype}" data-plate="${newCar.plate}" data-brand="${newCar.brand}" data-model="${newCar.model}" data-id="${car.id}" data-thirst="${newCar.thirst}" data-color="${newCar.color}" data-year="${newCar.year}" data-obs="${newCar.obs}" data-fuel="${newCar.fuel}" data-departament="${newCar.departament}" class="btn-edit fas fa-edit"></i></a>
+        <a><i data-action data-type="${newCar.cartype}" data-plate="${newCar.plate}" data-brand="${newCar.brand}" data-model="${newCar.model}" data-id="${car.id}" data-thirst="${newCar.thirst}" data-color="${newCar.color}" data-year="${newCar.year}" data-obs="${newCar.obs}" data-fuel="${newCar.fuel}" data-capacity="${newCar.capacity}" data-departament="${newCar.departament}" class="btn-edit fas fa-edit"></i></a>
         <a><i data-action data-id="${car.id}" data-action data-type="${newCar.cartype}" data-plate="${newCar.plate}" data-brand="${newCar.brand}" data-model="${newCar.model}" data-thirst="${newCar.thirst}" data-color="${newCar.color}" data-year="${newCar.year}" class="btn-delete fas fa-trash" ></i></a>`,
       ])
       .draw()
@@ -570,10 +569,7 @@ const listCars = (data) => {
         title: "Chapa",
         className: "finance-control"
       },
-      {
-        title: "Status",
-        className: "finance-control"
-      },
+      { title: "Status" },
       { title: "Vehiculo" },
       { title: "Marca" },
       { title: "Modelo" },
@@ -584,7 +580,7 @@ const listCars = (data) => {
       { title: "Chassi" },
       { title: "Combustible" },
       { title: "Departamento" },
-      { title: "Ultimo Chofer" },
+      { title: "Capacidad" },
       { title: "Opciones" },
     ],
     responsive: true,
@@ -699,7 +695,7 @@ const listCars = (data) => {
         car.chassis,
         car.fuel,
         car.departament,
-        ``,
+        car.capacity,
         `
         <a><i data-action data-type="${car.type}" data-driver="" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-id="${obj.id}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" data-obs="${car.obs}" data-fuel="${car.fuel}" data-departament="${car.departament}" class="btn-edit fas fa-edit"></i></a>
         <a><i data-action data-id="${obj.id}" data-action data-type="${car.type}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-id="${obj.id}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" class="btn-delete fas fa-trash" ></i></a>`,

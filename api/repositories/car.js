@@ -26,12 +26,15 @@ class Car {
         }
     }
 
-    insert(car) {
+    async insert(car) {
         try {
-            const sql = `INSERT INTO car (id, cartype, brand, model, plate, color, year, chassis, fuel, departament, status, dateReg)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,now() - interval 4 hour  )`
+            const sql = `INSERT INTO car (cartype, brand, model, plate, color, year, chassis, fuel, departament, status, thirst, obs, dateReg)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now() - interval 3 hour  )`
 
-            return query(sql, car)
+            const obj = await query(sql, [car.type, car.brand, car.model, car.plate, car.color, car.year, car.chassis, car.fuel, car.departament, 1, car.thirst, car.obs])
+
+            return obj.insertId
         } catch (error) {
+            console.log(error);
             throw new InternalServerError('No se pudieron enumerar los login')
         } 
     }
@@ -47,10 +50,30 @@ class Car {
         }
     }
 
+    async updateCar(id, car) {
+        try {
+            const sql = `UPDATE api.car SET plate = ?, brand = ?, model = ?, cartype = ?, color = ?, year = ?, chassis = ?, fuel = ?, departament = ?, obs = ?, thirst = ?, capacity = ? where id = ?`
+            const data = await query(sql, [car.plate, car.brand, car.model, car.cartype, car.color, car.year, car.chassis, car.fuel, car.departament, car.obs, car.thirst, car.capacity, id])
+
+            return data
+        } catch (error) {
+            throw new InternalServerError('No se pudieron enumerar los login')
+        }
+    }
+
     updateObs(id, obs) {
         try {
             const sql = `UPDATE api.car SET obs = ? where id = ?`
             return query(sql, [obs, id])
+        } catch (error) {
+            throw new InternalServerError('No se pudieron enumerar los login')
+        }
+    }
+
+    delete(id) {
+        try {
+            const sql = `UPDATE api.car SET status = ? where id = ?`
+            return query(sql, [0, id])
         } catch (error) {
             throw new InternalServerError('No se pudieron enumerar los login')
         }

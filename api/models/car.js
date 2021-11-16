@@ -12,9 +12,25 @@ class Car {
         }
     }
 
+    insert(car) {
+        try {
+            return Repositorie.insert(car)
+        } catch (error) {
+            throw new InternalServerError('Error.')
+        }
+    } 
+
     update(plate, status) {
         try {
             return Repositorie.update(plate, status)
+        } catch (error) {
+            throw new InternalServerError('Error.')
+        }
+    } 
+
+    updateCar(id, car) {
+        try {
+            return Repositorie.updateCar(id, car)
         } catch (error) {
             throw new InternalServerError('Error.')
         }
@@ -31,6 +47,15 @@ class Car {
     liststatus() {
         try {
             return Repositorie.liststatus()
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
+    delete(id) {
+        try {
+            return Repositorie.delete(id)
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')

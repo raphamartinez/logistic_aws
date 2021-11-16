@@ -3,12 +3,16 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 
 class Driver {
 
-    insert(car) {
+   async insert(driver) {
         try {
-            const sql = `INSERT INTO driver (id, name, idcard, phone, thirst, id_car, type, classification, vacation)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ? )`
+            const sql = `INSERT INTO driver (name, idcard, phone, thirst, type, classification, vacation, obs, status, dateReg)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now() - interval 3 hour)`
 
-            return query(sql, car)
+            const obj = await query(sql, [driver.name, driver.idcard, driver.phone, driver.thirst, driver.type, driver.classification, driver.vacation, driver.obs, 1])
+
+            return obj.insertId
+
         } catch (error) {
+            console.log(error);
             throw new InternalServerError('No se pudieron enumerar los login')
         }
     }
@@ -43,6 +47,17 @@ class Driver {
         try {
             const sql = `UPDATE api.driver SET status = ? where id = ?`
             const data = await query(sql, [status, id])
+
+            return data
+        } catch (error) {
+            throw new InternalServerError('No se pudieron enumerar los login')
+        }
+    }
+
+    async updateDriver(id, driver) {
+        try {
+            const sql = `UPDATE api.driver SET name = ?, idcard = ?, phone = ?, thirst = ?, type = ?, classification = ?, vacation = ?, obs = ? where id = ?`
+            const data = await query(sql, [driver.name, driver.idcard, driver.phone, driver.thirst, driver.type, driver.classification, driver.vacation, driver.obs, id])
 
             return data
         } catch (error) {

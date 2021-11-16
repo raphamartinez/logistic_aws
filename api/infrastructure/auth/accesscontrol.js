@@ -41,6 +41,8 @@ controll
     .grant('4')
     .readAny('driver')
     .updateAny('driver')
+    .createAny('driver')
+    .deleteAny('driver')
     .readAny('car')
     .createAny('car')
     .deleteAny('car')

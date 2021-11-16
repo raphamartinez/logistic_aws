@@ -427,6 +427,8 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-7 text-right">
+                                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                                data-bs-target="#addcar"><i class="fas fa-plus"></i> Nuevo</button>
                                             <button data-btn-collapse type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#collapseCars" aria-expanded="false"
                                                 aria-controls="collapseCars" class="btn bt-secondary btn-circle">
@@ -473,6 +475,8 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-7 text-right">
+                                            <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                                data-bs-target="#adddriver"><i class="fas fa-plus"></i> Nuevo</button>
                                             <button data-btn-collapse type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#collapseDriver" aria-expanded="false"
                                                 aria-controls="collapseCars" class="btn bt-secondary btn-circle">
@@ -522,6 +526,156 @@
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
                     <a class="btn btn-danger" href="#" onclick="onLogout()">Salir</a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addcar" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Camión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form data-form-add-car>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input id="plate" name="plate" placeholder="Plaqueta" type="text" class="form-control"
+                                    required>
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="brand" name="brand" placeholder="Marca" type="text" class="form-control"
+                                    required>
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="model" name="model" placeholder="Modelo" type="text" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select name="cartype" id="cartype" class="form-select">
+                                    <option value="" selected disabled>Tipo</option>
+                                    <option value="AUTOMOVIL">AUTOMOVIL</option>
+                                    <option value="CAMIÓN">CAMIÓN</option>
+                                    <option value="TRACTO CAMION">TRACTO CAMION</option>
+                                    <option value="CAMION DOBLE EJE">CAMION DOBLE EJE</option>
+                                    <option value="CAMIONETA">CAMIONETA</option>
+                                    <option value="PORTER">PORTER</option>
+                                    <option value="FURGON">FURGON</option>
+                                    <option value="SEMI REMOLQUE">SEMI REMOLQUE</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="color" name="color" placeholder="Color" type="text" class="form-control"
+                                    required>
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="year" name="year" placeholder="Año" type="date" class="form-control">
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="chassis" name="chassis" placeholder="Chassis" type="text"
+                                    class="form-control">
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="capacity" name="capacity" placeholder="Capacidad" type="number"
+                                    class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select name="fuel" id="fuel" class="form-select">
+                                    <option value="" selected disabled>Combustible</option>
+                                    <option value="N/A">N/A</option>
+                                    <option value="Diesel Normal">Diesel Normal</option>
+                                    <option value="Nafta Aditivada">Nafta Aditivada</option>
+                                    <option value="Diesel Podium">Diesel Podium</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select name="departament" id="departament" class="form-select">
+                                    <option value="" selected disabled>Departament</option>
+                                    <option value="N/A">N/A</option>
+                                    <option value="Logistica">Logistica</option>
+                                    <option value="ADM">ADM</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select name="thirst" id="thirst" class="form-select">
+                                    <option value="" selected disabled>Sede</option>
+                                    <option value="Km28">Km28</option>
+                                    <option value="Ypane">Ypane</option>
+                                    <option value="CDE">CDE</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="obs" name="obs" placeholder="Observación" type="text" class="form-control"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="adddriver" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Chofér</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form data-form-add-driver>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input name="name" placeholder="Nombre" type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="idcard" name="idcard" placeholder="ID Card" type="text" class="form-control"
+                                    required>
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="phone" name="phone" placeholder="Teléfono" type="text" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input id="thirst" name="thirst" placeholder="Sede" type="text" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select name="type" id="type" class="form-select">
+                                    <option value="" selected disabled>Tipo</option>
+                                    <option value="SIN INFORMACION">SIN INFORMACION</option>
+                                    <option value="CHOFER CARRETERO">CHOFER CARRETERO</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select id="classification" name="classification" class="form-select">
+                                    <option value="" selected disabled>Clasificación</option>
+                                    <option value="SIN INFORMACION">SIN INFORMACION</option>
+                                    <option value="CHOFER CONTRADADO">CHOFER CONTRADADO</option>
+                                    <option value="CHOFER DE REPARTO">CHOFER DE REPARTO</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select id="vacation" name="vacation" class="form-select">
+                                    <option value="" selected disabled>Vacaciones</option>
+                                    <option value="SIN INFORMACION">SIN INFORMACION</option>
+                                    <option value="NO">NO</option>
+                                    <option value="SI">SI</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-6">
+                                <input id="obs" name="obs" placeholder="Observación" type="text" class="form-control"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Agregar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

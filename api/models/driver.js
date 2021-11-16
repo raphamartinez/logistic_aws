@@ -3,6 +3,14 @@ const Repositorie = require('../repositories/driver')
 
 class Driver {
 
+    insert(driver) {
+        try {
+            return Repositorie.insert(driver)
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
 
     async list() {
         try {
@@ -25,6 +33,14 @@ class Driver {
     update(id, status) {
         try {
             return Repositorie.update(id, status)
+        } catch (error) {
+            throw new InternalServerError('Error.')
+        }
+    } 
+
+    updateDriver(id, driver) {
+        try {
+            return Repositorie.updateDriver(id, driver)
         } catch (error) {
             throw new InternalServerError('Error.')
         }

@@ -5,7 +5,20 @@ const cachelist = require('../infrastructure/redis/cache')
 
 module.exports = app => {
 
-    app.get('/cars/:date', [Middleware.bearer, Authorization('car', 'read')], async ( req, res, next) => {
+    app.post('/car', [Middleware.bearer, Authorization('car', 'create')], async (req, res, next) => {
+        try {
+            const car = req.body.car
+
+            const id = await Car.insert(car)
+
+            res.json({ msg: `Camion agregado con éxito.`, id })
+        } catch (err) {
+            next(err)
+        }
+    })
+
+
+    app.get('/cars/:date', [Middleware.bearer, Authorization('car', 'read')], async (req, res, next) => {
         try {
 
             // const cached = await cachelist.searchValue(`car`)
@@ -23,7 +36,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/carstatus', [Middleware.bearer, Authorization('car', 'read')], async ( req, res, next) => {
+    app.get('/carstatus', [Middleware.bearer, Authorization('car', 'read')], async (req, res, next) => {
         try {
             const cars = await Car.liststatus()
             res.json(cars)
@@ -32,31 +45,53 @@ module.exports = app => {
         }
     })
 
-    app.put('/car/:plate', [Middleware.bearer, Authorization('car', 'update')], async ( req, res, next) => {
+    app.put('/car/edit/:id', [Middleware.bearer, Authorization('car', 'update')], async (req, res, next) => {
+        try {
+
+            const car = req.body.car
+
+            await Car.updateCar(req.params.id, car)
+
+            res.json({ msg: `Camion actualizado con éxito.` })
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.put('/car/:plate', [Middleware.bearer, Authorization('car', 'update')], async (req, res, next) => {
         try {
 
             await Car.update(req.params.plate, req.body.status)
 
-            res.json({msg: `Camion actualizado con éxito.`})
+            res.json({ msg: `Camion actualizado con éxito.` })
         } catch (err) {
             next(err)
         }
     })
 
-    app.put('/car/obs/:id', [Middleware.bearer, Authorization('car', 'update')], async ( req, res, next) => {
+    app.put('/car/obs/:id', [Middleware.bearer, Authorization('car', 'update')], async (req, res, next) => {
         try {
 
             await Car.updateObs(req.params.id, req.body.car.obs)
 
-            res.json({msg: `Camion actualizado con éxito.`})
+            res.json({ msg: `Camion actualizado con éxito.` })
         } catch (err) {
             next(err)
         }
     })
 
+    app.delete('/car/:id', [Middleware.bearer, Authorization('car', 'delete')], async (req, res, next) => {
+        try {
 
+            await Car.delete(req.params.id)
 
-    app.get('/dashboard', [Middleware.bearer, Authorization('car', 'read')], async ( req, res, next) => {
+            res.json({ msg: `Camion eliminado con éxito.` })
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.get('/dashboard', [Middleware.bearer, Authorization('car', 'read')], async (req, res, next) => {
         try {
 
             // const cached = await cachelist.searchValue(`dashboard`)

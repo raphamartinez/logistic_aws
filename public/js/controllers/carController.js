@@ -35,6 +35,8 @@ window.onload = async function () {
   let data = cars.map(car => {
     let status
 
+    if (car.chassis == null) car.chassis = ""
+    if (car.color == null) car.color = ""
     if (car.obs == null) car.obs = ""
 
     switch (car.statuscar) {
@@ -65,7 +67,10 @@ window.onload = async function () {
       car.chassis,
       car.fuel,
       car.departament,
-      car.driver
+      car.driver,
+      `
+      <a><i data-action data-id="${car.id_car}" data-type="${car.cartype}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" data-obs="${car.obs}" data-fuel="${car.fuel}" data-departament="${car.departament}" data-driver="${car.driver}" class="btn-edit fas fa-edit"></i></a>
+      <a><i data-action data-id="${car.id_car}" data-type="${car.cartype}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" class="btn-delete fas fa-trash" ></i></a>`,
     ]
 
     return line
@@ -99,10 +104,13 @@ window.onload = async function () {
       driver.phone,
       driver.classification,
       driver.thirst,
-      `<form data-obs-driver="${driver.id}"><div class="input-group mb-3"><textarea data-id="${driver.id}" class="form-control" id="obs" name="obs" value="${driver.obs}">${driver.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`
+      `<form data-obs-driver="${driver.id}"><div class="input-group mb-3"><textarea data-id="${driver.id}" class="form-control" id="obs" name="obs" value="${driver.obs}">${driver.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`,
+      `
+      <a><i data-action data-id="${driver.id}" data-name="${driver.name}" data-idcard="${driver.idcard}" data-phone="${driver.phone}" data-classification="${driver.classification}" data-thirst="${driver.thirst}" data-obs="${driver.obs}" class="btn-edit fas fa-edit"></i></a>
+      <a><i data-action data-id="${driver.id}" data-name="${driver.name}" class="btn-delete fas fa-trash"></i></a>`,
     ]
-    
-   return line
+
+    return line
   })
 
   listDrivers(driverdt)
@@ -151,6 +159,253 @@ window.onload = async function () {
   })
 }
 
+const editCar = (event) => {
+
+  let tr = event.path[3]
+  if (tr.className === "child") tr = tr.previousElementSibling
+
+  let chassis = ""
+  let color = ""
+  if (event.target.getAttribute('data-chassis') != null) chassis = event.target.getAttribute('data-chassis')
+  if (event.target.getAttribute('data-color') != null) color = event.target.getAttribute('data-color')
+
+  let car = {
+    id: event.target.getAttribute('data-id'),
+    plate: event.target.getAttribute('data-plate'),
+    brand: event.target.getAttribute('data-brand'),
+    model: event.target.getAttribute('data-model'),
+    year: event.target.getAttribute('data-year'),
+    thirst: event.target.getAttribute('data-thirst'),
+    type: event.target.getAttribute('data-type'),
+    color: color,
+    chassis: chassis,
+    capacity: event.target.getAttribute('data-capacity'),
+    fuel: event.target.getAttribute('data-fuel'),
+    departament: event.target.getAttribute('data-departament'),
+    obs: event.target.getAttribute('data-obs'),
+    driver: event.target.getAttribute('data-driver')
+  }
+
+  document.querySelector('[data-modal]').innerHTML = ``
+  document.querySelector('[data-modal]').appendChild(View.modalEditCar(car))
+
+  $("#cartypeedit").val(car.type)
+  $("#fueledit").val(car.fuel)
+  $("#departamentedit").val(car.departament)
+  $("#thirstedit").val(car.thirst)
+  $("#yearedit").val(`${car.year}-01-01`)
+
+  $("#edit").modal('show')
+
+  const modal = document.querySelector('[data-form-edit-car]')
+  modal.addEventListener('submit', async (event2) => {
+    event2.preventDefault()
+
+    const newCar = {
+      plate: event2.currentTarget.plate.value.toUpperCase(),
+      brand: event2.currentTarget.brand.value,
+      model: event2.currentTarget.model.value,
+      cartype: event2.currentTarget.cartype.value,
+      color: event2.currentTarget.color.value,
+      year: event2.currentTarget.year.value,
+      chassis: event2.currentTarget.chassis.value,
+      capacity: event2.currentTarget.capacity.value,
+      fuel: event2.currentTarget.fuel.value,
+      departament: event2.currentTarget.departament.value,
+      thirst: event2.currentTarget.thirst.value,
+      obs: event2.currentTarget.obs.value
+    }
+
+    const obj = await Connection.body(`car/edit/${car.id}`, { car: newCar }, 'PUT')
+
+    const table = $('#dataTable').DataTable()
+
+    table
+      .row(tr)
+      .remove()
+      .draw();
+
+    const rowNode = table
+      .row
+      .add([
+        newCar.plate,
+        `<button data-div-car="${newCar.plate.toLowerCase()}" data-status-${newCar.plate.toLowerCase()} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`,
+        newCar.cartype,
+        newCar.brand,
+        newCar.model,
+        newCar.thirst,
+        newCar.color,
+        newCar.year,
+        `<form data-obs="${car.id}"><div class="input-group mb-3"><textarea data-id="${car.id}" class="form-control" id="obs" name="obs" value="${newCar.obs}">${newCar.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`,
+        newCar.chassis,
+        newCar.fuel,
+        newCar.departament,
+        car.driver,
+        `
+        <a><i data-action data-type="${newCar.cartype}" data-plate="${newCar.plate}" data-brand="${newCar.brand}" data-model="${newCar.model}" data-id="${car.id}" data-thirst="${newCar.thirst}" data-color="${newCar.color}" data-year="${newCar.year}" data-obs="${newCar.obs}" data-fuel="${newCar.fuel}" data-departament="${newCar.departament}" class="btn-edit fas fa-edit"></i></a>
+        <a><i data-action data-id="${car.id}" data-action data-type="${newCar.cartype}" data-plate="${newCar.plate}" data-brand="${newCar.brand}" data-model="${newCar.model}" data-thirst="${newCar.thirst}" data-color="${newCar.color}" data-year="${newCar.year}" class="btn-delete fas fa-trash" ></i></a>`,
+      ])
+      .draw()
+      .node();
+
+    $(rowNode)
+      .css('color', 'black')
+      .animate({ color: '#4e73df' });
+
+    $("#edit").modal('hide')
+
+    alert(obj.msg)
+  })
+}
+
+
+const editDriver = (event) => {
+
+  let tr = event.path[3]
+  if (tr.className === "child") tr = tr.previousElementSibling
+
+  let phone = ""
+  let idcard = ""
+  if (event.target.getAttribute('data-phone') != null) phone = event.target.getAttribute('data-phone')
+  if (event.target.getAttribute('data-idcard') != null) idcard = event.target.getAttribute('data-idcard')
+
+  let driver = {
+    id: event.target.getAttribute('data-id'),
+    name: event.target.getAttribute('data-name'),
+    idcard: idcard,
+    phone: phone,
+    thirst: event.target.getAttribute('data-thirst'),
+    type: event.target.getAttribute('data-type'),
+    classification: event.target.getAttribute('data-classification'),
+    vacation: event.target.getAttribute('data-vacation'),
+    obs: event.target.getAttribute('data-obs')
+  }
+
+  document.querySelector('[data-modal]').innerHTML = ``
+  document.querySelector('[data-modal]').appendChild(View.modalEditDriver(driver))
+
+  $("#classificationedit").val(driver.classification)
+  $("#vacationedit").val(driver.vacation)
+  $("#typeedit").val(driver.type)
+
+  $("#edit").modal('show')
+
+  const modal = document.querySelector('[data-form-edit-driver]')
+  modal.addEventListener('submit', async (event2) => {
+    event2.preventDefault()
+
+    const newDriver = {
+      name: event2.currentTarget.name.value,
+      idcard: event2.currentTarget.idcard.value,
+      phone: event2.currentTarget.phone.value,
+      type: event2.currentTarget.type.value,
+      thirst: event2.currentTarget.thirst.value,
+      obs: event2.currentTarget.obs.value,
+      classification: event2.currentTarget.classification.value,
+      vacation: event2.currentTarget.vacation.value
+    }
+
+    const obj = await Connection.body(`driver/update/${driver.id}`, { driver: newDriver }, 'PUT')
+
+    const table = $('#dataDriver').DataTable()
+
+    table
+      .row(tr)
+      .remove()
+      .draw();
+
+    const rowNode = table
+      .row
+      .add([
+        newDriver.name,
+        `<button data-div-driver="${driver.id}" data-status-driver-${driver.id} data-toggle="popover" title="Chofér disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`,
+        newDriver.idcard,
+        newDriver.phone,
+        newDriver.type,
+        newDriver.thirst,
+        `<form data-obs-driver="${driver.id}"><div class="input-group mb-3"><textarea data-id="${driver.id}" class="form-control" id="obs" name="obs" value="${newDriver.obs}">${newDriver.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`,
+        ` <a><i data-action data-classification="${newDriver.classification}" data-obs="${newDriver.obs}" data-vacation="${newDriver.vacation}" data-type="${newDriver.type}" data-driver="" data-name="${newDriver.name.toUpperCase()}" data-idcard="${newDriver.idcard}" data-phone="${newDriver.phone}" data-id="${driver.id}" data-thirst="${newDriver.thirst}" data-obs="${newDriver.obs}" class="btn-edit fas fa-edit"></i></a>
+        <a><i data-action data-id="${driver.id}" data-action data-name="${newDriver.name.toUpperCase()}" class="btn-delete fas fa-trash" ></i></a>`
+      ])
+      .draw()
+      .node();
+
+    $(rowNode)
+      .css('color', 'black')
+      .animate({ color: '#4e73df' });
+
+    $("#edit").modal('hide')
+
+    alert(obj.msg)
+  })
+}
+
+const deleteCar = (event) => {
+  const tr = event.path[3]
+  if (tr.className === "child") tr = tr.previousElementSibling
+
+  let car = {
+    id: event.target.getAttribute('data-id'),
+    plate: event.target.getAttribute('data-plate'),
+    cartype: event.target.getAttribute('data-type'),
+    model: event.target.getAttribute('data-model'),
+    brand: event.target.getAttribute('data-brand'),
+    year: event.target.getAttribute('data-year'),
+  }
+
+  document.querySelector('[data-modal]').innerHTML = ``
+  document.querySelector('[data-modal]').appendChild(View.modalDeleteCar(car))
+
+  $("#deletecar").modal('show')
+
+  const modal = document.querySelector('[data-delete-car]')
+  modal.addEventListener('submit', async (event2) => {
+    event2.preventDefault()
+
+    const obj = await Connection.noBody(`car/${car.id}`, 'DELETE')
+
+    $('#dataTable').DataTable()
+      .row(tr)
+      .remove()
+      .draw();
+
+    $("#deletecar").modal('hide')
+
+    alert(obj.msg)
+  })
+}
+
+const deleteDriver = (event) => {
+  const tr = event.path[3]
+  if (tr.className === "child") tr = tr.previousElementSibling
+
+  let driver = {
+    id: event.target.getAttribute('data-id'),
+    name: event.target.getAttribute('data-name')
+  }
+
+  document.querySelector('[data-modal]').innerHTML = ``
+  document.querySelector('[data-modal]').appendChild(View.modalDeleteDriver(driver))
+
+  $("#deletedriver").modal('show')
+
+  const modal = document.querySelector('[data-delete-driver]')
+  modal.addEventListener('submit', async (event2) => {
+    event2.preventDefault()
+    let status = 0
+
+    const obj = await Connection.body(`driver/${driver.id}`, { status }, 'PUT')
+
+    $('#dataDriver').DataTable()
+      .row(tr)
+      .remove()
+      .draw();
+
+    $("#deletedriver").modal('hide')
+
+    alert(obj.msg)
+  })
+}
 
 const listDrivers = (driverdt) => {
 
@@ -175,7 +430,9 @@ const listDrivers = (driverdt) => {
       { title: "Telefono" },
       { title: "Tipo" },
       { title: "SEDE" },
-      { title: "Observación" }
+      { title: "Observación" },
+      { title: "Opciones" },
+
     ],
     responsive: true,
     paging: false,
@@ -196,6 +453,14 @@ const listDrivers = (driverdt) => {
     buttons: [
       'copy', 'csv', 'excel', 'pdf', 'print'
     ]
+  })
+
+  const action = document.querySelector('#dataDriver')
+  action.addEventListener('click', async (event) => {
+    if (event.target && event.target.nodeName === "I" && event.target.matches("[data-action]")) {
+      if (event.target.classList[0] === 'btn-delete') return deleteDriver(event)
+      if (event.target.classList[0] === 'btn-edit') return editDriver(event)
+    }
   })
 
   document.querySelector('[data-filter-driver-local]').addEventListener('change', (event) => {
@@ -231,6 +496,61 @@ const listDrivers = (driverdt) => {
 
     table.draw();
   })
+
+  const addDriver = async (event) => {
+    event.preventDefault()
+
+    let loading = document.querySelector('[data-loading]')
+    loading.innerHTML = `
+    <div class="d-flex justify-content-center">
+      <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  `
+
+    const driver = {
+      name: event.currentTarget.name.value,
+      idcard: event.currentTarget.idcard.value,
+      phone: event.currentTarget.phone.value,
+      thirst: event.currentTarget.thirst.value,
+      type: event.currentTarget.type.value,
+      classification: event.currentTarget.classification.value,
+      vacation: event.currentTarget.vacation.value,
+      obs: event.currentTarget.obs.value
+    }
+
+    const obj = await Connection.body('driver', { driver }, 'POST')
+
+    $("#adddriver").modal('hide')
+
+    const rowNode = table
+      .row
+      .add([
+        driver.name.toUpperCase(),
+        `<button data-div-driver="${obj.id}" data-status-driver-${obj.id} data-toggle="popover" title="Chofér disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`,
+        driver.idcard,
+        driver.phone,
+        driver.type,
+        driver.thirst,
+        `<form data-obs-driver="${obj.id}"><div class="input-group mb-3"><textarea data-id="${obj.id}" class="form-control" id="obs" name="obs" value="${driver.obs}">${driver.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`,
+        ` <a><i data-action data-classification="${driver.classification}" data-obs="${driver.obs}" data-vacation="${driver.vacation}" data-type="${driver.type}" data-driver="" data-name="${driver.name.toUpperCase()}" data-idcard="${driver.idcard}" data-phone="${driver.phone}" data-id="${obj.id}" data-thirst="${driver.thirst}" data-obs="${driver.obs}" class="btn-edit fas fa-edit"></i></a>
+        <a><i data-action data-id="${obj.id}" data-action data-name="${driver.name.toUpperCase()}" class="btn-delete fas fa-trash" ></i></a>`
+      ])
+      .draw()
+      .node();
+
+    $(rowNode)
+      .css('color', 'black')
+      .animate({ color: '#4e73df' });
+
+    loading.innerHTML = ``
+
+    console.log(obj.msg);
+
+  }
+
+  document.querySelector('[data-form-add-driver]').addEventListener('submit', addDriver, false)
 }
 
 
@@ -264,7 +584,8 @@ const listCars = (data) => {
       { title: "Chassi" },
       { title: "Combustible" },
       { title: "Departamento" },
-      { title: "Ultimo Chofer" }
+      { title: "Ultimo Chofer" },
+      { title: "Opciones" },
     ],
     responsive: true,
     paging: false,
@@ -285,6 +606,14 @@ const listCars = (data) => {
     buttons: [
       'excel'
     ]
+  })
+
+  const action = document.querySelector('#dataTable')
+  action.addEventListener('click', async (event) => {
+    if (event.target && event.target.nodeName === "I" && event.target.matches("[data-action]")) {
+      if (event.target.classList[0] === 'btn-delete') return deleteCar(event)
+      if (event.target.classList[0] === 'btn-edit') return editCar(event)
+    }
   })
 
   document.querySelector('[data-filter-truck-type]').addEventListener('change', (event) => {
@@ -322,6 +651,73 @@ const listCars = (data) => {
 
     table.draw();
   })
+
+  const addCar = async (event) => {
+    event.preventDefault()
+
+    let loading = document.querySelector('[data-loading]')
+    loading.innerHTML = `
+    <div class="d-flex justify-content-center">
+      <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  `
+
+
+    const car = {
+      plate: event.currentTarget.plate.value.toUpperCase(),
+      brand: event.currentTarget.brand.value,
+      model: event.currentTarget.model.value,
+      type: event.currentTarget.cartype.value,
+      color: event.currentTarget.color.value,
+      year: event.currentTarget.year.value,
+      chassis: event.currentTarget.chassis.value,
+      capacity: event.currentTarget.capacity.value,
+      fuel: event.currentTarget.fuel.value,
+      departament: event.currentTarget.departament.value,
+      thirst: event.currentTarget.thirst.value,
+      obs: event.currentTarget.obs.value
+    }
+
+    const obj = await Connection.body('car', { car }, 'POST')
+
+    $("#addcar").modal('hide')
+
+    const rowNode = table
+      .row
+      .add([
+        car.plate,
+        `<button data-div-car="${car.plate.toLowerCase()}" data-status-${car.plate.toLowerCase()} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`,
+        car.type,
+        car.brand,
+        car.model,
+        car.thirst,
+        car.color,
+        car.year,
+        `<form data-obs="${obj.id}"><div class="input-group mb-3"><textarea data-id="${obj.id}" class="form-control" id="obs" name="obs" value="${car.obs}">${car.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`,
+        car.chassis,
+        car.fuel,
+        car.departament,
+        ``,
+        `
+        <a><i data-action data-type="${car.type}" data-driver="" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-id="${obj.id}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" data-obs="${car.obs}" data-fuel="${car.fuel}" data-departament="${car.departament}" class="btn-edit fas fa-edit"></i></a>
+        <a><i data-action data-id="${obj.id}" data-action data-type="${car.type}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-id="${obj.id}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" class="btn-delete fas fa-trash" ></i></a>`,
+      ])
+      .draw()
+      .node();
+
+    $(rowNode)
+      .css('color', 'black')
+      .animate({ color: '#4e73df' });
+
+    loading.innerHTML = ``
+
+    console.log(obj.msg);
+  }
+
+  document.querySelector('[data-form-add-car]').addEventListener('submit', addCar, false)
+
 }
 
 const selectCars = (cars) => {
@@ -977,7 +1373,6 @@ const collapese = (event) => {
 Array.from(document.querySelectorAll('[data-btn-collapse]')).forEach(btn => {
   btn.addEventListener('click', collapese, false)
 })
-
 
 export const ControllerCar = {
   selectCars

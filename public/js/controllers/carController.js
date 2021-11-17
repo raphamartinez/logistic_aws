@@ -784,7 +784,8 @@ const travel = (travels, drivers) => {
 
     }
 
-    if (travel.driverdesc !== "") {
+    let driverdiv = document.querySelector(`[data-status-driver-${travel.id_driver}]`)
+    if (driverdiv != undefined && travel.driverdesc !== "") {
       document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
       <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" type="button" style="color:#e02d1b" class="btn btn-danger btn-circle btn-sm">2</button>`
     }
@@ -1091,7 +1092,9 @@ const listTravels = (travels) => {
       <button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" style="color:#e02d1b" type="button" class="btn btn-danger btn-circle btn-sm">2</button>`
     }
 
-    document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
+    let driverdiv =  document.querySelector(`[data-status-driver-${travel.id_driver}]`)
+
+    if(driverdiv && driverdiv != undefined) document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
     <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" style="color:#e02d1b" type="button" class="btn btn-danger btn-circle btn-sm">2</button>`
 
     document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, chestdesc))
@@ -1323,7 +1326,7 @@ document.querySelector('[data-copy-travel]').addEventListener('click', () => {
       }
 
       input.value += `𝐒𝐭𝐚𝐭𝐮𝐬: ${status} - `
-      input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${car.children[12].innerText} \n\n`
+      input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${car.children[10].innerText} \n\n`
 
     }
   })

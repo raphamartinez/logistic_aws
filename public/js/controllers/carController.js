@@ -65,11 +65,9 @@ window.onload = async function () {
       car.year,
       `<form data-obs="${car.id_car}"><div class="input-group mb-3"><textarea data-id="${car.id_car}" class="form-control" id="obs" name="obs" value="${car.obs}">${car.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`,
       car.chassis,
-      car.fuel,
-      car.departament,
       car.capacity,
       `
-      <a><i data-action data-id="${car.id_car}" data-type="${car.cartype}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" data-obs="${car.obs}" data-fuel="${car.fuel}" data-departament="${car.departament}" data-capacity="${car.capacity}" class="btn-edit fas fa-edit"></i></a>
+      <a><i data-action data-id="${car.id_car}" data-type="${car.cartype}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" data-obs="${car.obs}" data-fuel="${car.fuel}" data-departament="${car.departament}" data-capacity="${car.capacity}" data-chassis="${car.chassis}" class="btn-edit fas fa-edit"></i></a>
       <a><i data-action data-id="${car.id_car}" data-type="${car.cartype}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" class="btn-delete fas fa-trash" ></i></a>`,
     ]
 
@@ -237,11 +235,9 @@ const editCar = (event) => {
         newCar.year,
         `<form data-obs="${car.id}"><div class="input-group mb-3"><textarea data-id="${car.id}" class="form-control" id="obs" name="obs" value="${newCar.obs}">${newCar.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`,
         newCar.chassis,
-        newCar.fuel,
-        newCar.departament,
         newCar.capacity,
         `
-        <a><i data-action data-type="${newCar.cartype}" data-plate="${newCar.plate}" data-brand="${newCar.brand}" data-model="${newCar.model}" data-id="${car.id}" data-thirst="${newCar.thirst}" data-color="${newCar.color}" data-year="${newCar.year}" data-obs="${newCar.obs}" data-fuel="${newCar.fuel}" data-capacity="${newCar.capacity}" data-departament="${newCar.departament}" class="btn-edit fas fa-edit"></i></a>
+        <a><i data-action data-type="${newCar.cartype}" data-plate="${newCar.plate}" data-brand="${newCar.brand}" data-model="${newCar.model}" data-id="${car.id}" data-thirst="${newCar.thirst}" data-color="${newCar.color}" data-year="${newCar.year}" data-obs="${newCar.obs}" data-fuel="${newCar.fuel}" data-capacity="${newCar.capacity}" data-departament="${newCar.departament}" data-chassis="${newCar.chassis}" class="btn-edit fas fa-edit"></i></a>
         <a><i data-action data-id="${car.id}" data-action data-type="${newCar.cartype}" data-plate="${newCar.plate}" data-brand="${newCar.brand}" data-model="${newCar.model}" data-thirst="${newCar.thirst}" data-color="${newCar.color}" data-year="${newCar.year}" class="btn-delete fas fa-trash" ></i></a>`,
       ])
       .draw()
@@ -578,8 +574,6 @@ const listCars = (data) => {
       { title: "Año" },
       { title: "Observación" },
       { title: "Chassi" },
-      { title: "Combustible" },
-      { title: "Departamento" },
       { title: "Capacidad" },
       { title: "Opciones" },
     ],
@@ -648,6 +642,26 @@ const listCars = (data) => {
     table.draw();
   })
 
+  document.querySelector('[data-filter-truck-sede]').addEventListener('change', (event) => {
+
+    table.rows().every(function (index, element) {
+      let row = $(this.node());
+
+
+      if (row[0].children[5].innerText != event.target.value) {
+        row[0].style.display = 'none'
+      } else {
+        row[0].style.display = ''
+      }
+
+      if (event.target.value == "TODOS") row[0].style.display = ''
+
+    });
+
+
+    table.draw();
+  })
+
   const addCar = async (event) => {
     event.preventDefault()
 
@@ -693,11 +707,9 @@ const listCars = (data) => {
         car.year,
         `<form data-obs="${obj.id}"><div class="input-group mb-3"><textarea data-id="${obj.id}" class="form-control" id="obs" name="obs" value="${car.obs}">${car.obs}</textarea><button class="btn btn-outline-success" type="submit" >Agregar</button></div></form>`,
         car.chassis,
-        car.fuel,
-        car.departament,
         car.capacity,
         `
-        <a><i data-action data-type="${car.type}" data-driver="" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-id="${obj.id}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" data-obs="${car.obs}" data-fuel="${car.fuel}" data-departament="${car.departament}" class="btn-edit fas fa-edit"></i></a>
+        <a><i data-action data-type="${car.type}" data-driver="" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-id="${obj.id}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" data-obs="${car.obs}" data-fuel="${car.fuel}" data-departament="${car.departament}" data-chassis="${car.chassis}" class="btn-edit fas fa-edit"></i></a>
         <a><i data-action data-id="${obj.id}" data-action data-type="${car.type}" data-plate="${car.plate}" data-brand="${car.brand}" data-model="${car.model}" data-id="${obj.id}" data-thirst="${car.thirst}" data-color="${car.color}" data-year="${car.year}" class="btn-delete fas fa-trash" ></i></a>`,
       ])
       .draw()
@@ -1294,7 +1306,6 @@ document.querySelector('[data-copy-travel]').addEventListener('click', () => {
       input.value += `𝐒𝐞𝐝𝐞: ${car.children[5].innerText} - `
       input.value += `𝐂𝐨𝐥𝐨𝐫: ${car.children[6].innerText} - `
       input.value += `𝐀ñ𝐨: ${car.children[7].innerText} - `
-      input.value += `𝐎𝐛𝐬𝐞𝐫𝐯𝐚𝐜𝐢ó𝐧: ${car.children[8].children[0][0].value} - `
 
       switch (car.children[1].children[0].innerText) {
         case "1":
@@ -1311,7 +1322,9 @@ document.querySelector('[data-copy-travel]').addEventListener('click', () => {
           break
       }
 
-      input.value += `𝐒𝐭𝐚𝐭𝐮𝐬: ${status} \n\n`
+      input.value += `𝐒𝐭𝐚𝐭𝐮𝐬: ${status} - `
+      input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${car.children[12].innerText} \n\n`
+
     }
   })
 

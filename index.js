@@ -7,9 +7,12 @@ const express = require('express')
 const path = require('path')
 const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = require('./api/models/error');
 
+const Quiz = require('./api/repositories/quiz')
+Quiz.answer()
+
 process.setMaxListeners(100)
 const app = customExpress()
-app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin')])
+app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])
 app.engine('html', require('ejs').renderFile)
 app.set('view engine', 'html')
 

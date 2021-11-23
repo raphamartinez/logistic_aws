@@ -79,6 +79,9 @@ controll
     .createAny('user')
     .deleteAny('user')
     .updateAny('user')
-
+    .readAny('quiz')
+    .createAny('quiz')
+    .deleteAny('quiz')
+    .updateAny('quiz')
 
 module.exports = controll

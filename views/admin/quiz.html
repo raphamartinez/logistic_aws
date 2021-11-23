@@ -57,9 +57,6 @@
                                         <li><a class="dropdown-item text-white-50" href="./provider.html">Listado de
                                                 Proveedores</a>
                                         </li>
-                                        <li><a class="dropdown-item text-white-50" href="./quiz.html">
-                                            Cuestionario RH</a>
-                                        </li>
                                         <li>
                                             <hr class="dropdown-divider text-white-50" />
                                         </li>
@@ -91,33 +88,23 @@
             <div id="content">
                 <div class="container-fluid">
                     <div class="col-lg-12 text-center">
-                        <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
-                            <h1 class="h3 mb-0 text-gray-800">Proveedores</h1>
-                        </div>
+                        <h1 class="h3 mb-2 font-weight-bold text-primary" data-title></h1>
                     </div>
-                    
-                    <div class="row col-md-12 mb-2 align-items-center">
-                        <div class="d-flex justify-content-center align-items-center" data-loading></div>
+                    <div class="row" data-card></div>
+                    <div class="col-lg-12 text-center">
+                        <div class="form-row" data-powerbi></div>
+                    </div>
+                    <div data-settings></div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-border text-primary" role="status" data-loading>
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
 
-                    <div class="row justify-content-md-center">
-                        <div class="col-lg-10">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-danger">Todos los presupuestos</h6>
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-bordered text-center" id="dataTable" width="100%"
-                                        cellspacing="0" data-table></table>
-                                </div>
-                                <div class="text-center">
-                                    <button data-modal-insert
-                                        class="btn btn-success align-items-center justify-content-md-center mb-2">Agregar
-                                        nuevo</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <table class="table table-bordered text-center mb-2" id="dataTable" width="100%" cellspacing="0">
+                    </table>
+
+                    <div data-features></div>
                 </div>
             </div>
 
@@ -131,11 +118,11 @@
             </footer>
         </div>
     </div>
-
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -160,11 +147,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+
     <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js"></script>
     <script src="../js/libs/sb-admin-2.min.js"></script>
-    <script type="module" src="../js/controllers/providerController.js"></script>
+    <script type="module" src="../js/controllers/quizController.js"></script>
     <script type="module" src="../js/controllers/loginController.js"></script>
     <script src="../js/libs/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
@@ -177,6 +165,10 @@
     <script src="../js/libs/buttons.html5.min.js"></script>
     <script src="../js/libs/buttons.print.min.js"></script>
     <script src="../js/libs/geradorarquivo.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+    <script src="../js/libs/printThis.js"></script>
     <div data-modal></div>
 
 </body>

@@ -44,6 +44,19 @@ module.exports = app => {
         }
     })
 
+    app.get('/travel/hystory/:id', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
+        try {
+            const id = req.params.id
+
+            const history = await Travel.history(id)
+
+            res.json(history)
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
     app.get('/cars/enable/:date/:period', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
         try {
             const date = req.params.date

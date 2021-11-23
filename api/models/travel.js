@@ -3,6 +3,15 @@ const Repositorie = require('../repositories/travel')
 
 class Travel {
 
+    view(id_travel){
+        try {
+            return Repositorie.view(id_travel)
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
 
     async list(date, period) {
         try {
@@ -29,6 +38,18 @@ class Travel {
             throw new InternalServerError('Error.')
         }
     }
+
+    async history(id) {
+        try {
+            let history = await Repositorie.history(id)
+
+            return history
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
 
     async listPeriodCar(date, period) {
         try {

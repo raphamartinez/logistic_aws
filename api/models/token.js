@@ -106,6 +106,20 @@ module.exports = {
             return verifyTokenJWT(token, this.name)
         }
     },
+    verifyQuiz: {
+        name: 'token de acesso ao questionário',
+        list: blocklist,
+        dateExp: [1, 'd'],
+        create(id) {
+            return createTokenJWT(id, this.dateExp)
+        },
+        verify(token) {
+            return verifyTokenJWT(token, this.name)
+        },
+        invalid(token) {
+            return invalidTokenJWT(token, this.list)
+        }
+    },
     resetPassword: {
         name: 'Redefinição de senha',
         list: resetPassword,

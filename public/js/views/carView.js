@@ -7,7 +7,7 @@ const maintenance = (travel, plate, chest, platedesc, chestdesc) => {
     <div class="form-group col-1" data-date>
     <input value="${travel.type}" type="text" class="form-control" disabled>
                                             <a><span data-id="${travel.id}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
-                                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
+                                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
                                                     X
                                                     <span class="visually-hidden"></span>
                                                 </span></a>
@@ -44,7 +44,7 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
     <div class="form-group col-1" data-date>
     <input value="${travel.type}" type="text" class="form-control" disabled>
                                             <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
-                                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
+                                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
                                                     X
                                                     <span class="visually-hidden"></span>
                                                 </span></a>
@@ -69,6 +69,10 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
                                         </div>
                                         <div class="form-group text-center col-2">
                                         <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
+                                        <a><span data-id_travel="${travel.id}" data-type="${travel.typecode}" data-id_car="${travel.cars[0].id_car}" data-truck="${plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-btn-generate
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
+                                        <i data-id_car="${travel.cars[0].id_car}" data-id_travel="${travel.id}" data-type="${travel.typecode}" data-truck="${plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-btn-generate class="fa fa-paper-plane" aria-hidden="true"></i>
+                                        </span></a>
                                         </div>`
     return div
 }
@@ -81,7 +85,7 @@ const addtravel = (travel, plate, chest, platedesc, chestdesc) => {
     <div class="form-group col-1" data-date>
     <input value="${travel.typedesc}" type="text" class="form-control" disabled>
                                             <a><span data-id="${travel.id}" data-iddriver="${travel.driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
-                                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
+                                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
                                                     X
                                                     <span class="visually-hidden"></span>
                                                 </span></a>
@@ -106,6 +110,10 @@ const addtravel = (travel, plate, chest, platedesc, chestdesc) => {
                                         </div>
                                         <div class="form-group text-center col-2 text-center">
                                         <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
+                                        <a><span data-id="${travel.id}" data-type="${travel.type}" data-id_car="${travel.plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-date="${travel.date}" data-driver="${travel.driver}" data data-btn-generate
+                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
+                                        <i data-id_car="${travel.plate}" data-id="${travel.id}" data-type="${travel.type}" data-origin="${travel.origin}" data-route="${travel.route}" data-date="${travel.date}" data-driver="${travel.driver}" data data-btn-generate class="fa fa-paper-plane" aria-hidden="true"></i>
+                                        </span></a>
                                         </div>`
     return div
 }
@@ -336,6 +344,77 @@ const modalEditDriver = (driver) => {
     return div
 }
 
+const modalGenerate = (obj, content) => {
+    const div = document.createElement('div')
+
+    div.innerHTML = `
+    <div class="modal fade" id="generate" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Generar Viático</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form data-form-generate>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label>Chofér</label>
+                                <input value="${obj.travel.driverdesc}" name="driver" placeholder="driver" type="text" class="form-control" disabled required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Truck</label>
+                                <input value="${obj.travel.truck}" id="truck" name="truck" type="text" class="form-control"
+                                disabled required>
+                            </div>
+                            <div class="form-group col-12">
+                                <label>Fecha de Salida</label>
+                                <input value="${obj.travel.datedesc} - ${obj.travel.perioddesc}" id="date" name="date" type="text" class="form-control"
+                                disabled required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Origen</label>
+                                <input value="${obj.travel.origindesc}" id="origin" name="origin" type="text" class="form-control" disabled required>
+                            </div>
+                            <div class="form-group col-6">
+                                <label>Destino</label>
+                                <input value="${obj.travel.routedesc}" id="route" name="route" type="text" class="form-control" disabled required>
+                            </div>
+                        </div>
+                        <div class="form-group text-right col-12">
+                        <button type="button" data-add-description class="btn btn-circle btn-success btn-sm"><i class="fa fa-plus"></i></button>
+                    </div>
+                    <div class="form-row align-items-center shadow-sm p-3 bg-body rounded" data-descriptions>
+                        <div class="form-group col-8">
+                            <label>Concepto</label>
+                        </div>
+                        <div class="form-group col-4">
+                            <label>Total</label>
+                        </div>                                
+                    </div>
+                    <div class="form-row align-items-center mb-2 shadow-sm p-3 bg-body rounded">
+                        <div class="form-group text-right col-8">
+                            <h6><strong>Costo Total</strong></h6>
+                        </div>
+                        <div class="form-group col-4">
+                            <input id="amount" name="amount" type="number" step="1.000" class="form-control" disabled>
+                        </div>
+                    </div>
+                    <div data-obs>
+                    ${content}
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Generar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>`
+
+    return div
+}
 
 export const View = {
     travel,
@@ -344,5 +423,6 @@ export const View = {
     modalDeleteDriver,
     modalDeleteCar,
     modalEditCar,
-    modalEditDriver
+    modalEditDriver,
+    modalGenerate
 }

@@ -15,9 +15,123 @@ class Tables {
     this.createTableDriver()
     this.createTableTravel()
     this.createTableTravelCar()
+    this.createTableTravelReport()
+    this.createTableTravelReportDetail()
+    this.createTableQuiz()
+    this.createTableQuestion()
+    this.createTableAnswer()
+    this.createTableInterview()
+    this.createTableAnsweredInterview()
 
     return true
   } 
+
+  createTableAnsweredInterview() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.answeredinterview (id int NOT NULL AUTO_INCREMENT, 
+      id_answer int, id_question int, id_interview int, value int, 
+      FOREIGN KEY (id_answer) REFERENCES answer (id), 
+      FOREIGN KEY (id_question) REFERENCES question (id), 
+      FOREIGN KEY (id_interview) REFERENCES interview (id), 
+      PRIMARY KEY (id))`
+
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTableInterview() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.interview (id int NOT NULL AUTO_INCREMENT, 
+      id_quiz int, mail VARCHAR(100), name VARCHAR(50), comment VARCHAR(250), datereg DATETIME, status int, id_login int,
+      FOREIGN KEY (id_login) REFERENCES login (id), 
+      FOREIGN KEY (id_quiz) REFERENCES quiz (id), 
+      PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+
+  createTableAnswer() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.answer (id int NOT NULL AUTO_INCREMENT, 
+      title VARCHAR (250), id_question int, classification int, FOREIGN KEY (id_question) REFERENCES question (id),  
+      PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTableQuestion() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.question (id int NOT NULL AUTO_INCREMENT, 
+      title VARCHAR (150), classification int, type VARCHAR (20), id_quiz int, FOREIGN KEY (id_quiz) REFERENCES quiz (id),  
+      PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTableQuiz() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.quiz (id int NOT NULL AUTO_INCREMENT, 
+      title VARCHAR(500), datereg DATETIME, status int, PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTableTravelReportDetail(){
+    const sql = `CREATE TABLE IF NOT EXISTS api.travelreportdetail (id int NOT NULL AUTO_INCREMENT, type int, description VARCHAR(250), value DOUBLE, id_travelreport int,
+    FOREIGN KEY (id_travelreport) REFERENCES travelreport (id), PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTableTravelReport(){
+    const sql = `CREATE TABLE IF NOT EXISTS api.travelreport (id int NOT NULL AUTO_INCREMENT, id_car int, origin int, route int, 
+      FOREIGN KEY (id_car) REFERENCES car (id), PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTableTravelReport(){
+    const sql = `CREATE TABLE IF NOT EXISTS api.travelreport (id int NOT NULL AUTO_INCREMENT, id_car int, origin int, route int, 
+      FOREIGN KEY (id_car) REFERENCES car (id), PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
 
   createTableTravelCar(){
     const sql = `CREATE TABLE IF NOT EXISTS api.travelcar (id int NOT NULL AUTO_INCREMENT, id_car int, id_travel int,

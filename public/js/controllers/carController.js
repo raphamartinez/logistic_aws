@@ -893,34 +893,271 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
   loading.innerHTML = " "
 })
 
-document.querySelector('[data-row-travel]').addEventListener('click', async (event) => {
-  if (event.target && event.target.matches("[data-btn-delete]")) {
+const deleteTravel = async (event) => {
+  const id = event.target.getAttribute('data-id')
+  const obj = await Connection.noBody(`travel/${id}`, 'DELETE')
 
-    const id = event.target.getAttribute('data-id')
-    const obj = await Connection.noBody(`travel/${id}`, 'DELETE')
+  event.path[3].remove()
 
-    event.path[3].remove()
+  const plate = event.target.getAttribute('data-car')
+  const id_driver = event.target.getAttribute('data-iddriver')
+  document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
+  <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
 
-    const plate = event.target.getAttribute('data-car')
-    const id_driver = event.target.getAttribute('data-iddriver')
-    document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
-
-    if (id_driver != "null" && id_driver != null) {
-      document.querySelector(`[data-status-driver-${id_driver}]`).parentNode.innerHTML = `
-      <button data-div-car data-status-driver-${id_driver} data-toggle="popover" title="Chofér disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
-    }
-
-    const chest = event.target.getAttribute('data-chest')
-    if (chest !== "null" && chest !== "") {
-      document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
-      <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
-    }
-
-    document.querySelector('[data-form-travel]').reset();
-
-    alert(obj.msg)
+  if (id_driver != "null" && id_driver != null) {
+    document.querySelector(`[data-status-driver-${id_driver}]`).parentNode.innerHTML = `
+    <button data-div-car data-status-driver-${id_driver} data-toggle="popover" title="Chofér disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
   }
+
+  const chest = event.target.getAttribute('data-chest')
+  if (chest !== "null" && chest !== "") {
+    document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
+    <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
+  }
+
+  document.querySelector('[data-form-travel]').reset();
+
+  alert(obj.msg)
+}
+
+const generate = async (event) => {
+  const id_car = event.target.getAttribute('data-id_car')
+  const origin = event.target.getAttribute('data-origin')
+  const route = event.target.getAttribute('data-route')
+  const truck = event.target.getAttribute('data-truck')
+  const type = event.target.getAttribute('data-type')
+  const id_travel = event.target.getAttribute('data-id_travel')
+
+  const obj = await Connection.noBody(`travelreport/${id_car}/${type}/${origin}/${route}/${id_travel}`, 'GET')
+  obj.travel.truck = truck
+
+  let content = ""
+  if (obj.travel.typecode == 2) {
+    content = `
+  <div class="form-group text-right col-12">
+    <button type="button" data-add-description class="btn btn-circle btn-success btn-sm"><i class="fa fa-plus"></i></button>
+</div>
+<div class="form-row mb-2 shadow p-3 bg-body rounded" data-descriptions>
+    <div class="form-group col-6">
+        <label>Obs</label>
+    </div>
+    <div class="form-group col-3">
+        <label>Referencia Nro</label>
+    </div>
+    <div class="form-group col-3">
+        <label>Contenedor Nro</label>
+    </div>
+</div>`
+  }
+
+  document.querySelector('[data-modal]').innerHTML = ""
+  document.querySelector('[data-modal]').appendChild(View.modalGenerate(obj, content))
+
+  const viatico = (concept) => {
+    const divconcept = document.querySelector('[data-descriptions]')
+
+    if (divconcept.children.length > 15) return alert('Máximo de 5 conceptos por informe.')
+
+    const div1 = document.createElement('div')
+    div1.classList.add('form-group', 'col-1')
+    if (concept && concept.id) {
+      div1.innerHTML = `<button data-id="${concept.id}" data-delete-concept type="button" class="btn btn-circle btn-danger btn-sm">X</button>`
+    } else {
+      div1.innerHTML = `<button data-delete-concept type="button" class="btn btn-circle btn-danger btn-sm">X</button>`
+    }
+
+    const div2 = document.createElement('div')
+    div2.classList.add('form-group', 'col-7')
+    if (concept && concept.description) {
+      div2.innerHTML = `<input data-id="${concept.id}" value="${concept.description}" placeholder="Insira lo concepto" id="adddescription" name="description" type="text" class="form-control" required>`
+    } else {
+      div2.innerHTML = `<input placeholder="Insira lo concepto" id="adddescription" name="description" type="text" class="form-control" required>`
+    }
+
+    const div3 = document.createElement('div')
+    div3.classList.add('form-group', 'col-4')
+    if (concept && concept.value) {
+      div3.innerHTML = `<input value="${concept.value}" placeholder="Insira lo valor" id="addvalue" name="value" type="number" step="1.000" class="form-control" required>`
+    } else {
+      div3.innerHTML = `<input placeholder="Insira lo valor" id="addvalue" name="value" type="number" step="1.000" class="form-control" required>`
+    }
+
+    divconcept.appendChild(div1)
+    divconcept.appendChild(div2)
+    divconcept.appendChild(div3)
+  }
+
+  const contenedor = (concept) => {
+    const divconcept = document.querySelector('[data-descriptions]')
+
+    if (divconcept.children.length > 15) return alert('Máximo de 5 conceptos por informe.')
+
+    const div = document.createElement('div')
+    div.classList.add('form-group', 'col-1')
+    if (concept && concept.id) {
+      div.innerHTML = `<button data-id="${concept.id}" data-delete-concept type="button" class="btn btn-circle btn-danger btn-sm">X</button>`
+    } else {
+      div.innerHTML = `<button data-delete-concept type="button" class="btn btn-circle btn-danger btn-sm">X</button>`
+    }
+
+    const div1 = document.createElement('div')
+    div1.classList.add('form-group', 'col-5')
+    if (concept && concept.description) {
+      div1.innerHTML = `<textarea data-id="${concept.id}" id="adddescription" name="description" placeholder="Agregue la observación" type="text" rows="1" class="form-control" required>${concept.description}</textarea>`
+    } else {
+      div1.innerHTML = `<textarea id="adddescription" name="description" placeholder="Agregue la observación" type="text" rows="1" class="form-control" required></textarea>`
+    }
+
+    const div2 = document.createElement('div')
+    div2.classList.add('form-group', 'col-3')
+    if (concept && concept.refnro) {
+      div2.innerHTML = `<input value="${concept.refnro}" id="addrefnro" name="refnro" placeholder="Referencia Nro" type="text" class="form-control">`
+    } else {
+      div2.innerHTML = `<input id="addrefnro" name="refnro" placeholder="Referencia Nro" type="text" class="form-control">`
+    }
+
+    const div3 = document.createElement('div')
+    div3.classList.add('form-group', 'col-3')
+    if (concept && concept.contnro) {
+      div3.innerHTML = `<input value="${concept.contnro}" id="addcontnro" name="contnro" placeholder="Contenedor Nro" type="text" class="form-control">`
+    } else {
+      div3.innerHTML = `<input id="addcontnro" name="contnro" placeholder="Contenedor Nro" type="text" class="form-control">`
+    }
+
+    divconcept.appendChild(div)
+    divconcept.appendChild(div1)
+    divconcept.appendChild(div2)
+    divconcept.appendChild(div3)
+  }
+
+  const addConcept = (concept) => {
+    if (obj.travel.typecode == 1) {
+      return viatico(concept)
+    } else {
+      return contenedor(concept)
+    }
+  }
+
+  document.querySelector('[data-add-description]').addEventListener('click', addConcept, false)
+
+  document.querySelector('[data-descriptions]').addEventListener('click', (event) => {
+    if (event.target && event.target.matches('[data-delete-concept]')) {
+      const id = event.target.getAttribute('data-id')
+
+      if (document.querySelector('[data-descriptions]').children.length == 5) return alert('Minímo de 1 concepto por informe.')
+
+      if (event.target.matches('[data-id]')) Connection.noBody(`travelreport/${id}`, 'DELETE')
+
+      if (obj.travel.typecode == 2) event.path[1].nextElementSibling.nextElementSibling.nextElementSibling.remove()
+      event.path[1].nextElementSibling.nextElementSibling.remove()
+      event.path[1].nextElementSibling.remove()
+      event.path[1].remove()
+
+    }
+  })
+
+  if (obj.travelreport && obj.travelreport.details.length > 0) {
+    obj.travelreport.details.forEach(detail => {
+      addConcept(detail)
+    })
+  } else {
+    addConcept()
+  }
+
+
+  $("#generate").modal('show')
+
+  document.querySelector('[data-form-generate]').addEventListener('submit', async (event2) => {
+    event2.preventDefault()
+
+    let loading = document.querySelector('[data-loading]')
+    loading.innerHTML = `
+    <div class="d-flex justify-content-center">
+      <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+  `
+
+    let value = ""
+    let description = ""
+    let refnro = ""
+    let contnro = ""
+    let ids = ""
+    let name = "default"
+    let date = new Date()
+
+    let selectdescription = document.querySelectorAll('#adddescription')
+    description = Array.from(selectdescription).map(el => el.value);
+
+
+    ids = Array.from(selectdescription).map(el => {
+      if (el.getAttribute('data-id')) {
+        return el.getAttribute('data-id')
+      } else {
+        return 0
+      }
+    });
+
+    if (obj.travel.typecode == 1) {
+      name =  "Viatico"
+      let selectvalue = document.querySelectorAll('#addvalue')
+      value = Array.from(selectvalue).map(el => el.value);
+
+    } else {
+      name =  "Contenedor"
+
+      let selectdescription = document.querySelectorAll('#adddescription')
+      description = Array.from(selectdescription).map(el => {
+        if (!el.getAttribute('data-id')) {
+          return el.value
+        } else {
+          return 0
+        }
+      });
+
+      let selectrefnro = document.querySelectorAll('#addrefnro')
+      refnro = Array.from(selectrefnro).map(el => el.value);
+
+      let selectcontnro = document.querySelectorAll('#addcontnro')
+      contnro = Array.from(selectcontnro).map(el => el.value);
+    }
+
+
+    const travel = {
+      type: obj.travel.typecode,
+      origin: obj.travel.origin,
+      route: obj.travel.route,
+      id_car,
+      description,
+      value,
+      refnro,
+      contnro,
+      ids
+    }
+    $("#generate").modal('hide')
+
+    const objres = await Connection.backFile('travelreport', { travel }, 'POST')
+
+    let a = document.createElement('a');
+    a.href = window.URL.createObjectURL(objres);
+    a.target = "_blank";
+    a.download = `${name}_${date.getHours()}:${date.getMinutes()}_${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}.docx`
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    loading.innerHTML = ``
+  })
+}
+
+
+
+document.querySelector('[data-row-travel]').addEventListener('click', async (event) => {
+  if (event.target && event.target.matches("[data-btn-delete]")) return deleteTravel(event)
+
+  if (event.target && event.target.matches("[data-btn-generate]")) return generate(event)
+
 })
 
 const enable = async () => {
@@ -1092,9 +1329,9 @@ const listTravels = (travels) => {
       <button data-div-car="${travel.cars[1].plate}" data-status-${travel.cars[1].plate} data-toggle="popover" title="Camion no disponible" style="color:#e02d1b" type="button" class="btn btn-danger btn-circle btn-sm">2</button>`
     }
 
-    let driverdiv =  document.querySelector(`[data-status-driver-${travel.id_driver}]`)
+    let driverdiv = document.querySelector(`[data-status-driver-${travel.id_driver}]`)
 
-    if(driverdiv && driverdiv != undefined) document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
+    if (driverdiv && driverdiv != undefined) document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
     <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" style="color:#e02d1b" type="button" class="btn btn-danger btn-circle btn-sm">2</button>`
 
     document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, chestdesc))

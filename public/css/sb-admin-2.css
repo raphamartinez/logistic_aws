@@ -10482,6 +10482,9 @@ iframe {
   color: #cbccce;
 }
 
+.text-success-green {
+  color: #228B22;
+}
 /* footer.sticky-footer {
   padding: 1rem 0;
   flex-shrink: 0;

@@ -238,7 +238,7 @@ const refresh = async () => {
     throw new Error('error')
 }
 
-const backFile = async (url, method) => {
+const backFile = async (url, data, method) => {
     const accessToken = JSON.parse(localStorage.getItem('accessToken'))
 
     try {
@@ -247,11 +247,12 @@ const backFile = async (url, method) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`
-            }
+            },
+            body: JSON.stringify(data)
         })
 
         if (result.ok) {
-            return result
+            return result.blob()
         } else {
             if (result.status === 401) {
                 const valid = await refresh()

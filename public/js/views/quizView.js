@@ -74,7 +74,7 @@ const int = (question, id_interview) => {
             <div class="form-group text-left col-md-12">
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <select class="form-control-color me-1" type="number" data-id_interview="${id_interview}" data-id="${question.id}" data-answer="${question.answers[0].id}" data-index="1">
+                        <select style="min-width: 4rem;" class="form-control-color me-2" type="number" data-id_interview="${id_interview}" data-id="${question.id}" data-answer="${question.answers[0].id}" data-index="1">
                             <option value="0" disabled selected></option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -84,7 +84,7 @@ const int = (question, id_interview) => {
                         ${question.answers[0].title}
                     </li>
                     <li class="list-group-item">
-                        <select class="form-control-color me-1" type="number" data-id_interview="${id_interview}" data-id="${question.id}" data-answer="${question.answers[1].id}" data-index="2">
+                        <select style="min-width: 4rem;" class="form-control-color me-2" type="number" data-id_interview="${id_interview}" data-id="${question.id}" data-answer="${question.answers[1].id}" data-index="2">
                             <option value="0" disabled selected></option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -94,7 +94,7 @@ const int = (question, id_interview) => {
                         ${question.answers[1].title}
                         </li>
                     <li class="list-group-item">
-                        <select class="form-control-color me-1" type="number" data-id_interview="${id_interview}" data-id="${question.id}" data-answer="${question.answers[2].id}" data-index="3">
+                        <select style="min-width: 4rem;" class="form-control-color me-2" type="number" data-id_interview="${id_interview}" data-id="${question.id}" data-answer="${question.answers[2].id}" data-index="3">
                             <option value="0" disabled selected></option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -104,7 +104,7 @@ const int = (question, id_interview) => {
                         ${question.answers[2].title}
                         </li>
                     <li class="list-group-item">
-                        <select class="form-control-color me-1" type="number" data-id_interview="${id_interview}" data-id="${question.id}" data-answer="${question.answers[3].id}" data-index="4">
+                        <select style="min-width: 4rem;" class="form-control-color me-2" type="number" data-id_interview="${id_interview}" data-id="${question.id}" data-answer="${question.answers[3].id}" data-index="4">
                             <option value="0" disabled selected></option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -167,7 +167,7 @@ const table = () => {
             <div class="card-header">
                 <div class="form-row">
                     <div class="form-group col-12">
-                        <h6 class="m-0 font-weight-bold text-primary">Cuestionarios</h6>
+                        <h6 class="m-0 font-weight-bold text-danger">Cuestionarios</h6>
                     </div>
                 </div>
             </div>
@@ -191,7 +191,7 @@ const view = () => {
         <div class="card-header">
             <div class="form-row">
                 <div class="col-md-6">
-                    <h6 class="m-0 font-weight-bold text-primary">Rueda de Vida</h6>
+                    <h6 class="m-0 font-weight-bold text-danger">Rueda de Vida</h6>
                 </div>
                 <div class="col-md-6 text-right">
                     <button type="button" class="btn btn-secondary" data-print-first>Imprimir</button>
@@ -356,7 +356,7 @@ const view = () => {
         <div class="card-header">
             <div class="form-row">
                 <div class="col-md-6">
-                    <h6 class="m-0 font-weight-bold text-primary">Descripcion de la Personalidad </h6>
+                    <h6 class="m-0 font-weight-bold text-danger">Descripcion de la Personalidad </h6>
                 </div>
                 <div class="col-md-6 text-right">
                 <button type="button" class="btn btn-secondary" data-print-second>Imprimir</button>

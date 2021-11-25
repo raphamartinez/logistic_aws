@@ -69,9 +69,9 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
                                         </div>
                                         <div class="form-group text-center col-2">
                                         <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
-                                        <a><span data-id_travel="${travel.id}" data-type="${travel.typecode}" data-id_car="${travel.cars[0].id_car}" data-truck="${plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-btn-generate
+                                        <a><span data-id_travel="${travel.id}" data-chest="${chestdesc}" data-type="${travel.typecode}" data-id_car="${travel.cars[0].id_car}" data-truck="${plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-btn-generate
                                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-                                        <i data-id_car="${travel.cars[0].id_car}" data-id_travel="${travel.id}" data-type="${travel.typecode}" data-truck="${plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-btn-generate class="fa fa-paper-plane" aria-hidden="true"></i>
+                                        <i data-id_car="${travel.cars[0].id_car}" data-chest="${chestdesc}" data-id_travel="${travel.id}" data-type="${travel.typecode}" data-truck="${plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-btn-generate class="fa fa-paper-plane" aria-hidden="true"></i>
                                         </span></a>
                                         </div>`
     return div
@@ -397,7 +397,7 @@ const modalGenerate = (obj, content) => {
                             <h6><strong>Costo Total</strong></h6>
                         </div>
                         <div class="form-group col-4">
-                            <input id="amount" name="amount" type="number" step="1.000" class="form-control" disabled>
+                            <input id="amount" name="amount" type="text" class="form-control" disabled>
                         </div>
                     </div>
                     <div data-obs>

@@ -90,6 +90,28 @@ class TravelReport {
 
         let headerDesc
         let tableDesc
+        let chest
+
+        if (travel.chest) {
+            chest = new Paragraph({
+                alignment: AlignmentType.LEFT,
+                children: [
+                    new TextRun({
+                        text: `Chapa del Acoplado: `,
+                        font: "Calibri",
+                        bold: true,
+                        allCaps: true,
+                        size: "5mm"
+                    }),
+                    new TextRun({
+                        text: travel.chest,
+                        font: "Calibri",
+                        allCaps: true,
+                        size: "5mm"
+                    })
+                ]
+            })
+        }
 
         if (travel.descriptions && travel.descriptions.length > 0) {
             headerDesc = new Table({
@@ -380,6 +402,7 @@ class TravelReport {
                                                         })
                                                     ]
                                                 }),
+                                                chest,
                                                 new Paragraph({
                                                     alignment: AlignmentType.LEFT,
                                                     children: [

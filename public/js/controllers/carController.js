@@ -925,6 +925,8 @@ const generate = async (event) => {
   const origin = event.target.getAttribute('data-origin')
   const route = event.target.getAttribute('data-route')
   const truck = event.target.getAttribute('data-truck')
+  const chest = event.target.getAttribute('data-chest')
+
   const type = event.target.getAttribute('data-type')
   const id_travel = event.target.getAttribute('data-id_travel')
 
@@ -978,7 +980,7 @@ const generate = async (event) => {
     const div3 = document.createElement('div')
     div3.classList.add('form-group', 'col-4')
     if (concept && concept.value) {
-      div3.innerHTML = `<input value="${concept.value}" placeholder="Insira lo valor" id="addvalue" name="value" type="number" step="1.000" class="form-control" required>`
+      div3.innerHTML = `<input value="${parseFloat(concept.value).toFixed(3)}" placeholder="Insira lo valor" id="addvalue" name="value" type="number" step="1.000" class="form-control" required>`
     } else {
       div3.innerHTML = `<input placeholder="Insira lo valor" id="addvalue" name="value" type="number" step="1.000" class="form-control" required>`
     }
@@ -1065,8 +1067,8 @@ const generate = async (event) => {
         amount = document.querySelector('#addvalue').value
       } else {
         amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
-          let a = 0.0
-          let b = 0.0
+          let a = 0.000
+          let b = 0.000
 
           if (x.value) {
             a = parseFloat(x.value)
@@ -1080,7 +1082,7 @@ const generate = async (event) => {
         })
       }
 
-      document.querySelector('#amount').value = amount
+      document.querySelector('#amount').value = parseFloat(amount).toFixed(3)
     }
   })
 
@@ -1097,8 +1099,8 @@ const generate = async (event) => {
         amount = document.querySelector('#addvalue').value
       } else {
         amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
-          let a = 0.0
-          let b = 0.0
+          let a = 0.000
+          let b = 0.000
 
           if (x.value) {
             a = parseFloat(x.value)
@@ -1112,7 +1114,7 @@ const generate = async (event) => {
         })
       }
 
-      document.querySelector('#amount').value = amount
+      document.querySelector('#amount').value = parseFloat(amount).toFixed(3)
     })
   } else {
     viatico()
@@ -1200,6 +1202,7 @@ const generate = async (event) => {
       origindesc,
       routedesc,
       truck,
+      chest,
       datereg: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     }
 

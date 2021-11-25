@@ -198,7 +198,7 @@ class Travel {
     async view(id_travel){
         try {
             const sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
-            IF(dr.name is null, "", dr.name) as driverdesc, tr.origin, tr.route,
+            IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
                         WHEN tr.type = 2 THEN "Retiro Contenedor"

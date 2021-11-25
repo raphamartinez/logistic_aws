@@ -360,7 +360,7 @@ const modalGenerate = (obj, content) => {
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label>Chofér</label>
-                                <input value="${obj.travel.driverdesc}" name="driver" placeholder="driver" type="text" class="form-control" disabled required>
+                                <input data-idcard="${obj.travel.idcard}" value="${obj.travel.driverdesc}" name="driver" placeholder="driver" type="text" class="form-control" disabled required>
                             </div>
                             <div class="form-group col-6">
                                 <label>Truck</label>
@@ -382,9 +382,9 @@ const modalGenerate = (obj, content) => {
                             </div>
                         </div>
                         <div class="form-group text-right col-12">
-                        <button type="button" data-add-description class="btn btn-circle btn-success btn-sm"><i class="fa fa-plus"></i></button>
+                        <button type="button" data-add-concept class="btn btn-circle btn-success btn-sm"><i class="fa fa-plus"></i></button>
                     </div>
-                    <div class="form-row align-items-center shadow-sm p-3 bg-body rounded" data-descriptions>
+                    <div class="form-row align-items-center shadow-sm p-3 bg-body rounded" data-concepts>
                         <div class="form-group col-8">
                             <label>Concepto</label>
                         </div>

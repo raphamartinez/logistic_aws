@@ -932,6 +932,7 @@ const generate = async (event) => {
   obj.travel.truck = truck
 
   let content = ""
+
   if (obj.travel.typecode == 2) {
     content = `
   <div class="form-group text-right col-12">
@@ -954,7 +955,7 @@ const generate = async (event) => {
   document.querySelector('[data-modal]').appendChild(View.modalGenerate(obj, content))
 
   const viatico = (concept) => {
-    const divconcept = document.querySelector('[data-descriptions]')
+    const divconcept = document.querySelector('[data-concepts]')
 
     if (divconcept.children.length > 15) return alert('Máximo de 5 conceptos por informe.')
 
@@ -969,9 +970,9 @@ const generate = async (event) => {
     const div2 = document.createElement('div')
     div2.classList.add('form-group', 'col-7')
     if (concept && concept.description) {
-      div2.innerHTML = `<input data-id="${concept.id}" value="${concept.description}" placeholder="Insira lo concepto" id="adddescription" name="description" type="text" class="form-control" required>`
+      div2.innerHTML = `<input data-id="${concept.id}" value="${concept.description}" placeholder="Insira lo concepto" id="addconcept" name="description" type="text" class="form-control" required>`
     } else {
-      div2.innerHTML = `<input placeholder="Insira lo concepto" id="adddescription" name="description" type="text" class="form-control" required>`
+      div2.innerHTML = `<input placeholder="Insira lo concepto" id="addconcept" name="description" type="text" class="form-control" required>`
     }
 
     const div3 = document.createElement('div')
@@ -1010,19 +1011,12 @@ const generate = async (event) => {
 
     const div2 = document.createElement('div')
     div2.classList.add('form-group', 'col-3')
-    if (concept && concept.refnro) {
-      div2.innerHTML = `<input value="${concept.refnro}" id="addrefnro" name="refnro" placeholder="Referencia Nro" type="text" class="form-control">`
-    } else {
-      div2.innerHTML = `<input id="addrefnro" name="refnro" placeholder="Referencia Nro" type="text" class="form-control">`
-    }
+    div2.innerHTML = `<input id="addrefnro" name="refnro" placeholder="Referencia Nro" type="text" class="form-control">`
 
     const div3 = document.createElement('div')
     div3.classList.add('form-group', 'col-3')
-    if (concept && concept.contnro) {
-      div3.innerHTML = `<input value="${concept.contnro}" id="addcontnro" name="contnro" placeholder="Contenedor Nro" type="text" class="form-control">`
-    } else {
-      div3.innerHTML = `<input id="addcontnro" name="contnro" placeholder="Contenedor Nro" type="text" class="form-control">`
-    }
+    div3.innerHTML = `<input id="addcontnro" name="contnro" placeholder="Contenedor Nro" type="text" class="form-control">`
+
 
     divconcept.appendChild(div)
     divconcept.appendChild(div1)
@@ -1030,38 +1024,99 @@ const generate = async (event) => {
     divconcept.appendChild(div3)
   }
 
-  const addConcept = (concept) => {
-    if (obj.travel.typecode == 1) {
-      return viatico(concept)
-    } else {
-      return contenedor(concept)
-    }
+  document.querySelector('[data-add-concept]').addEventListener('click', viatico, false)
+  if (obj.travel.typecode == 2) {
+    document.querySelector('[data-add-description]').addEventListener('click', contenedor, false)
+    document.querySelector('[data-descriptions]').addEventListener('click', (event) => {
+      if (event.target && event.target.matches('[data-delete-concept]')) {
+        const id = event.target.getAttribute('data-id')
+
+        if (document.querySelector('[data-descriptions]').children.length == 7) return alert('Minímo de 1 concepto por informe.')
+
+        if (event.target.matches('[data-id]')) Connection.noBody(`travelreport/${id}`, 'DELETE')
+
+        event.path[1].nextElementSibling.nextElementSibling.nextElementSibling.remove()
+        event.path[1].nextElementSibling.nextElementSibling.remove()
+        event.path[1].nextElementSibling.remove()
+        event.path[1].remove()
+
+      }
+    })
   }
 
-  document.querySelector('[data-add-description]').addEventListener('click', addConcept, false)
-
-  document.querySelector('[data-descriptions]').addEventListener('click', (event) => {
+  document.querySelector('[data-concepts]').addEventListener('click', (event) => {
     if (event.target && event.target.matches('[data-delete-concept]')) {
       const id = event.target.getAttribute('data-id')
 
-      if (document.querySelector('[data-descriptions]').children.length == 5) return alert('Minímo de 1 concepto por informe.')
+      if (document.querySelector('[data-concepts]').children.length == 5) return alert('Minímo de 1 concepto por informe.')
 
       if (event.target.matches('[data-id]')) Connection.noBody(`travelreport/${id}`, 'DELETE')
 
-      if (obj.travel.typecode == 2) event.path[1].nextElementSibling.nextElementSibling.nextElementSibling.remove()
       event.path[1].nextElementSibling.nextElementSibling.remove()
       event.path[1].nextElementSibling.remove()
       event.path[1].remove()
-
     }
   })
 
-  if (obj.travelreport && obj.travelreport.details.length > 0) {
+  document.querySelector('[data-concepts]').addEventListener('keyup', (event) => {
+    if (event.target && event.target.matches('#addvalue')) {
+      let amount
+      if (document.querySelectorAll('#addvalue').length == 1) {
+        amount = document.querySelector('#addvalue').value
+      } else {
+        amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
+          let a = 0.0
+          let b = 0.0
+
+          if (x.value) {
+            a = parseFloat(x.value)
+          } else {
+            a = x
+          }
+
+          if (y.value) b = parseFloat(y.value)
+
+          return a + b
+        })
+      }
+
+      document.querySelector('#amount').value = amount
+    }
+  })
+
+  if (obj.travelreport && obj.travelreport.details) {
     obj.travelreport.details.forEach(detail => {
-      addConcept(detail)
+      if (detail.type == 1) {
+        viatico(detail)
+      } else {
+        contenedor(detail)
+      }
+
+      let amount
+      if (document.querySelectorAll('#addvalue').length == 1) {
+        amount = document.querySelector('#addvalue').value
+      } else {
+        amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
+          let a = 0.0
+          let b = 0.0
+
+          if (x.value) {
+            a = parseFloat(x.value)
+          } else {
+            a = x
+          }
+
+          if (y.value) b = parseFloat(y.value)
+
+          return a + b
+        })
+      }
+
+      document.querySelector('#amount').value = amount
     })
   } else {
-    addConcept()
+    viatico()
+    if (obj.travel.typecode == 2) contenedor()
   }
 
 
@@ -1079,49 +1134,55 @@ const generate = async (event) => {
     </div>
   `
 
-    let value = ""
-    let description = ""
-    let refnro = ""
-    let contnro = ""
-    let ids = ""
+  let dateTravel = event2.currentTarget.date.value
+  let origindesc = event2.currentTarget.origin.value
+  let routedesc = event2.currentTarget.route.value
+  let truck = event2.currentTarget.truck.value
+
+    let driver = event2.currentTarget.driver.value
+    let amount = event2.currentTarget.amount.value
+    let idcard = event2.currentTarget.driver.getAttribute('data-idcard')
+    let descriptions = ""
+    let concepts = ""
     let name = "default"
     let date = new Date()
 
-    let selectdescription = document.querySelectorAll('#adddescription')
-    description = Array.from(selectdescription).map(el => el.value);
+    if (obj.travel.typecode == 1) {
+      name = "Viatico"
 
+    } else {
+      name = "Contenedor"
+    }
 
-    ids = Array.from(selectdescription).map(el => {
-      if (el.getAttribute('data-id')) {
-        return el.getAttribute('data-id')
-      } else {
-        return 0
+    let selectconcept = document.querySelectorAll('#addconcept')
+    concepts = Array.from(selectconcept).map(el => {
+      let id = 0
+      let type = 1
+      if (el.getAttribute('data-id')) id = el.getAttribute('data-id')
+
+      return {
+        id,
+        type,
+        comment: el.value,
+        value: el.offsetParent.nextElementSibling.children[0].value
       }
     });
 
-    if (obj.travel.typecode == 1) {
-      name =  "Viatico"
-      let selectvalue = document.querySelectorAll('#addvalue')
-      value = Array.from(selectvalue).map(el => el.value);
+    let selectdescription = document.querySelectorAll('#adddescription')
+    descriptions = Array.from(selectdescription).map(el => {
+      let id = 0
+      let type = 2
+      if (el.getAttribute('data-id')) id = el.getAttribute('data-id')
 
-    } else {
-      name =  "Contenedor"
-
-      let selectdescription = document.querySelectorAll('#adddescription')
-      description = Array.from(selectdescription).map(el => {
-        if (!el.getAttribute('data-id')) {
-          return el.value
-        } else {
-          return 0
-        }
-      });
-
-      let selectrefnro = document.querySelectorAll('#addrefnro')
-      refnro = Array.from(selectrefnro).map(el => el.value);
-
-      let selectcontnro = document.querySelectorAll('#addcontnro')
-      contnro = Array.from(selectcontnro).map(el => el.value);
-    }
+      return {
+        id,
+        type,
+        comment: el.value,
+        value: "",
+        refnro: el.offsetParent.nextElementSibling.children[0].value,
+        contnro: el.offsetParent.nextElementSibling.nextElementSibling.children[0].value,
+      }
+    });
 
 
     const travel = {
@@ -1129,25 +1190,35 @@ const generate = async (event) => {
       origin: obj.travel.origin,
       route: obj.travel.route,
       id_car,
-      description,
-      value,
-      refnro,
-      contnro,
-      ids
+      descriptions,
+      concepts,
+      name,
+      driver,
+      idcard,
+      amount,
+      dateTravel,
+      origindesc,
+      routedesc,
+      truck,
+      datereg: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     }
+
     $("#generate").modal('hide')
+    try {
+      const objres = await Connection.backFile('travelreport', { travel }, 'POST')
 
-    const objres = await Connection.backFile('travelreport', { travel }, 'POST')
+      let a = document.createElement('a');
+      a.href = window.URL.createObjectURL(objres);
+      a.target = "_blank";
+      a.download = `${name}_${date.getHours()}:${date.getMinutes()}_${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}.docx`
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
 
-    let a = document.createElement('a');
-    a.href = window.URL.createObjectURL(objres);
-    a.target = "_blank";
-    a.download = `${name}_${date.getHours()}:${date.getMinutes()}_${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}.docx`
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    loading.innerHTML = ``
+      loading.innerHTML = ``
+    } catch (error) {
+      loading.innerHTML = ``
+    }
   })
 }
 

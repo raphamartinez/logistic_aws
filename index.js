@@ -7,8 +7,8 @@ const express = require('express')
 const path = require('path')
 const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = require('./api/models/error');
 
-const Quiz = require('./api/repositories/quiz')
-Quiz.answer()
+// const Quiz = require('./api/repositories/quiz')
+// Quiz.answer()
 
 process.setMaxListeners(100)
 const app = customExpress()

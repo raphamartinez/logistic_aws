@@ -87,7 +87,7 @@ const salutation = async () => {
 
     const quiz = await Connection.noBody(`quiz/${token}`, 'GET')
 
-    if (quiz.status === false) window.location.href = "http://54.161.250.7/"
+    if (quiz.status === false) window.location.href = "https://www.sunset.com.py/"
 
     switch (quiz.id_quiz) {
         case 7:
@@ -131,7 +131,7 @@ const finish = async (event) => {
     await Connection.body(`quiz/finish/${token}`, { comment }, 'POST')
 
     alert("Gracias por su participación.")
-    window.location.href = "http://54.161.250.7/"
+    window.location.href = "https://www.sunset.com.py/"
 }
 
 document.querySelector('[data-row]').addEventListener('change', change, false)

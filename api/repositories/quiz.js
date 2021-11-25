@@ -6,18 +6,224 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 class Quiz {
 
     async answer() {
-        let title = ''
+        let titles = [
+            [
+                'Ingenioso',
+                'Activo',
+                'Cooperador',
+                'Metódico'
+            ],
+            [
+                'Entusiasta',
+                'Arriesgado',
+                'Diplomático',
+                'Pausado'
+            ],
+            [
+                'Cauteloso',
+                'Resuelto',
+                'Convincente',
+                'Bondadoso'
+            ],
+            [
+                'Amistoso',
+                'Esmerado',
+                'Franco',
+                'Calmado'
+            ],
+            [
+                'Comunicativo',
+                'Controlado',
+                'Convencional',
+                'Decidido'
+            ],
+            [
+                'Osado',
+                'Agudo',
+                'Abierto',
+                'Moderado'
+            ],
+            [
+                'Respetuoso',
+                'Persuasivo',
+                'Prudente',
+                'Renovador'
+            ],
+            [
+                'Expresivo',
+                'Escrupuloso',
+                'Muestra autoridad',
+                'Comedido'
+            ],
+            [
+                'Ocurrente',
+                'Observador',
+                'Mesurado',
+                'Impaciente'
+            ],
+            [
+                'Cortés',
+                'Complaciente',
+                'Original',
+                'Insistente'
+            ],
+            [
+                'Sin miedos',
+                'Alentador',
+                'Dócil',
+                'Tímido'
+            ],
+            [
+                'Callado',
+                'Comprensivo',
+                'Determinado',
+                'De buen humor'
+            ],
+            [
+                'Espontáneo',
+                'Bien dispuesto',
+                'Indagador',
+                'Independiente'
+            ],
+            [
+                'Competitivo',
+                'En armonía',
+                'Alegre',
+                'Discreto'
+            ],
+            [
+                'Meticuloso',
+                'Obediente',
+                'Firme',
+                'De bien llevarse'
+            ],
+            [
+                'Habla con fluidez',
+                'Introvertido',
+                'Obstinado',
+                'Previsible'
+            ],
+            [
+                'Lógico',
+                'Audaz',
+                'Leal',
+                'Encantador'
+            ],
+            [
+                'Sociable',
+                'Paciente',
+                'Fuerte',
+                'Analítico'
+            ],
+            [
+                'Servicial',
+                'Expeditivo',
+                'Perfeccionista',
+                'Vehemente'
+            ],
+            [
+                'Agresivo',
+                'Extrovertido',
+                'Protector',
+                'Aprensivo'
+            ],
+            [
+                'Motivador',
+                'Organizado',
+                'Imparcial',
+                'Se hace valer'
+            ],
+            [
+                'Disciplinado',
+                'Generoso',
+                'Animado',
+                'Tenaz'
+            ],
+            [
+                'Impulsivo',
+                'Reservado',
+                'Enérgico',
+                'Adaptable'
+            ],
+            [
+                'Efusivo',
+                'Detallista',
+                'Dinámico',
+                'Tolerante'
+            ],
+            [
+                'Cautivador',
+                'Conforme',
+                'Demandante',
+                'Crítico'
+            ],
+            [
+                'Polémico',
+                'Sistemático',
+                'Colaborador',
+                'Desenvuelto'
+            ],
+            [
+                'Sensible',
+                'Preciso',
+                'Directo',
+                'Apacible'
+            ],
+            [
+                'Incansable',
+                'Tranquilo',
+                'Simpático',
+                'Cuidadoso'
+            ],
+            [
+                'Correcto',
+                'Pionero',
+                'Optimista',
+                'Solidario'
+            ],
+            [
+                'Previsor',
+                'Justo',
+                'Informal',
+                'Resolutivo'
+            ],
+            
+        ]
 
-        for (let index = 30; index < 31; index++) {
+        let id_questionapi = 105
+        let id_questionansa = 248
 
-            title = `Cuadro ${index}`
+        // for (let index = 0; index < titles.length; index++) {
 
-            const sql1 = 'INSERT INTO api.question (title, type, id_quiz) VALUES (?, ?, ?)'
-            await query(sql1, [title, 'int', 9])
+        //     title = `Cuadro ${index}`
 
-            const sql2 = 'INSERT INTO ansa.question (title, type, id_quiz) VALUES (?, ?, ?)'
-            await querytwo(sql2, [title, 'int', 9])
-        }
+        //     const sql1 = 'INSERT INTO api.answer (title, type, id_quiz) VALUES (?, ?, ?)'
+        //     await query(sql1, [titles[index][0], 'select', 9])
+
+        //     const sql2 = 'INSERT INTO ansa.answer (title, type, id_quiz) VALUES (?, ?, ?)'
+        //     await querytwo(sql2, [titles[index][0], 'select', 9])
+
+        //     const sql1 = 'INSERT INTO api.answer (title, type, id_quiz) VALUES (?, ?, ?)'
+        //     await query(sql1, [titles[index][1], 'int', 9])
+
+        //     const sql2 = 'INSERT INTO ansa.answer (title, type, id_quiz) VALUES (?, ?, ?)'
+        //     await querytwo(sql2, [titles[index][1], 'int', 9])
+
+        //     const sql1 = 'INSERT INTO api.answer (title, type, id_quiz) VALUES (?, ?, ?)'
+        //     await query(sql1, [titles[index][2], 'int', 9])
+
+        //     const sql2 = 'INSERT INTO ansa.answer (title, type, id_quiz) VALUES (?, ?, ?)'
+        //     await querytwo(sql2, [titles[index][2], 'int', 9])
+
+        //     const sql1 = 'INSERT INTO api.answer (title, type, id_quiz) VALUES (?, ?, ?)'
+        //     await query(sql1, [titles[index][3], 'int', 9])
+
+        //     const sql2 = 'INSERT INTO ansa.answer (title, type, id_quiz) VALUES (?, ?, ?)'
+        //     await querytwo(sql2, [titles[index][3], 'int', 9])
+
+        //     id_questionapi++
+        //     id_questionansa++
+        // }
 
     }
 

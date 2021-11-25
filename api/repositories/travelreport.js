@@ -5,7 +5,6 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 class TravelReport {
 
     async insert(travel) {
-        console.log(travel);
 
         try {
             const sql = `INSERT INTO travelreport (id_car, origin, route, type)  VALUES (?, ?, ?, ?)`
@@ -19,12 +18,12 @@ class TravelReport {
         }
     }
 
-    async insertDetail(travel) {
+    async insertDetail(travel, id_travelreport) {
 
         try {
-            const sql = `INSERT INTO travelreportdetail (refnro, contnro, description, value, id_travelreport)  VALUES (?, ?, ?, ?, ?)`
+            const sql = `INSERT INTO travelreportdetail (description, value, type, id_travelreport)  VALUES (?, ?, ?, ?)`
 
-            const obj = await query(sql, [travel.refnro, travel.contnro, travel.description, travel.value, travel.id_travelreport])
+            const obj = await query(sql, [travel.comment, travel.value, travel.type, id_travelreport])
 
             return obj.insertId
         } catch (error) {
@@ -63,7 +62,7 @@ class TravelReport {
 
     async listDetail(id) {
         try {
-            const sql = `SELECT td.id, td.refnro, td.contnro, td.description, td.value
+            const sql = `SELECT td.id, td.description, td.value, td.type
             FROM api.travelreportdetail td
             WHERE td.id_travelreport = ?`
 
@@ -77,9 +76,9 @@ class TravelReport {
 
     update(detail) {
         try {
-            const sql = `UPDATE travelreportdetail SET description = ?, refnro = ?, contnro = ?, value = ? WHERE id = ?`
+            const sql = `UPDATE travelreportdetail SET description = ?, value = ? WHERE id = ?`
 
-            return query(sql, [detail.description, detail.refnro, detail.contnro, detail.value, detail.id])
+            return query(sql, [detail.description, detail.value, detail.id])
         } catch (error) {
             throw new InternalServerError('No se pudieron agregar los datos')
         }

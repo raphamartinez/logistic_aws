@@ -123,6 +123,7 @@ const chartcomparation = () => {
             }]
         },
         options: {
+            responsive: true,
             elements: {
                 line: {
                     borderWidth: 3
@@ -161,11 +162,20 @@ const chartcomparation = () => {
             }]
         },
         options: {
+            responsive: true,
             elements: {
                 line: {
                     borderWidth: 3
                 }
-            }
+            },
+            layout: {
+                padding: {
+                  left: 0,
+                  right: 0,
+                  top: 15,
+                  bottom: 0
+                }
+              }
         }
     });
 

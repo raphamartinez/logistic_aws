@@ -26,9 +26,14 @@ module.exports = app => {
             // if (cached) {
             //     return res.json(JSON.parse(cached))
             // }
+            let cars
+            if (req.access.all.allowed) {
+                cars = await Car.list(req.params.date)
+            } else {
+                cars = await Car.list(req.params.date, req.login.places)
+            }
 
-            const cars = await Car.list(req.params.date)
-            cachelist.addCache(`car`, JSON.stringify(cars), 60 * 60 * 2)
+            // cachelist.addCache(`car`, JSON.stringify(cars), 60 * 60 * 2)
 
             res.json(cars)
         } catch (err) {

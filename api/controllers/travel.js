@@ -33,9 +33,16 @@ module.exports = app => {
 
     app.get('/travel/:date', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
         try {
+            let travels
             const date = req.params.date
+            const period = false
 
-            const travels = await Travel.list(date)
+            if (req.access.all.allowed) {
+                travels = await Travel.list(date, period, req.login.id_login)
+
+            } else {
+                travels = await Travel.list(date, period, req.login.id_login)
+            }
 
             res.json(travels)
         } catch (err) {
@@ -59,10 +66,16 @@ module.exports = app => {
 
     app.get('/cars/enable/:date/:period', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
         try {
+            let cars
             const date = req.params.date
             const period = req.params.period
 
-            const cars = await Travel.listPeriodCar(date, period)
+            if (req.access.all.allowed) {
+                cars = await Travel.listPeriodCar(date, period)
+
+            } else {
+                cars = await Travel.listPeriodCar(date, period, req.login.places)
+            }
 
             res.json(cars)
         } catch (err) {
@@ -73,10 +86,16 @@ module.exports = app => {
 
     app.get('/travelperiod/:date/:period', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
         try {
+            let travels
             const date = req.params.date
             const period = req.params.period
 
-            const travels = await Travel.list(date, period)
+            console.log(req.access.all);
+            if (req.access.all.allowed) {
+                travels = await Travel.list(date, period)
+            } else {
+                travels = await Travel.list(date, period, req.login.id_login)
+            }
 
             res.json(travels)
         } catch (err) {

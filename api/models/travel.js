@@ -13,10 +13,13 @@ class Travel {
     }
 
 
-    async list(date, period) {
+    async list(date, period, id_login) {
         try {
-            let lastdate = `${date} 23:59:59`
-            let travels = await Repositorie.list(date, lastdate, period)
+            const dateSQL = new Date(date)
+            let firstdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() + 1}`
+            let lastdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() + 1} 23:59:59`
+
+            let travels = await Repositorie.list(firstdate, lastdate, period, id_login)
 
             let data = []
             for (let travel of travels) {
@@ -51,9 +54,13 @@ class Travel {
     }
 
 
-    async listPeriodCar(date, period) {
+    async listPeriodCar(date, period, places) {
         try {
-            return Repositorie.listPeriodCar(date, period)
+            const dateSQL = new Date(date)
+            let firstdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate()}`
+            let lastdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate()} 23:59:59`
+
+            return Repositorie.listPeriodCar(firstdate, lastdate, period, places)
 
         } catch (error) {
             console.log(error);

@@ -3,15 +3,15 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 
 class Travel {
 
-    async list(date, lastdate, period) {
-
+    async list(date, lastdate, period, id_login) {
         try {
             let sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
-            IF(dr.name is null, "", dr.name) as driverdesc, tr.origin, tr.route,
+            IF(dr.name is null, "", dr.name) as driverdesc, tr.origin, tr.route, us.name,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
                         WHEN tr.type = 2 THEN "Retiro Contenedor"
                         WHEN tr.type = 3 THEN "Mantenimiento"
+                        WHEN tr.type = 4 THEN "Region Metropolitana"
                         ELSE ""
                     END as type,
                     CASE
@@ -95,10 +95,13 @@ class Travel {
                         ELSE ""
 						END as origindesc
                         FROM api.travel tr
+                        INNER JOIN api.user us ON tr.id_login = us.id_login 
                         LEFT JOIN api.driver dr ON tr.id_driver = dr.id 
                         WHERE tr.date between ? and ? `
 
-            if (period) sql += `AND tr.period = '${period}'`
+            if (period) sql += ` AND tr.period = '${period}'`
+
+            if (id_login) sql += ` AND tr.id_login = ${id_login} `
 
             const data = await query(sql, [date, lastdate])
             return data
@@ -108,7 +111,7 @@ class Travel {
         }
     }
 
-    listPeriodCar(date, period) {
+    listPeriodCar(firstdate, lastdate, period, places) {
         let sql = `SELECT ca.id as id_car, ca.plate, ca.brand, ca.model, ca.cartype, DATE_FORMAT(ca.year, '%Y') as year, ca.color, ca.obs, ca.capacity, ca.status as status_car FROM api.car ca
         LEFT JOIN api.travelcar tc ON ca.id = tc.id_car
         LEFT JOIN api.travel tr ON tc.id_travel = tr.id
@@ -117,14 +120,15 @@ class Travel {
         FROM api.car ca
         INNER JOIN api.travelcar tc ON ca.id = tc.id_car
         INNER JOIN api.travel tr ON tc.id_travel = tr.id
-        WHERE tr.date = ? AND tr.period = ?
+        WHERE tr.date between ? and ? AND tr.period = ?
         GROUP BY id
-        ORDER BY id
-        ) AND ca.status = 1
-        GROUP BY ca.plate
-        ORDER BY ca.plate`
+        ORDER BY id ) AND ca.status = 1 `
 
-        return query(sql, [date, period])
+        if (places) sql += ` AND ca.thirst IN (${places}) `
+
+        sql += ` GROUP BY ca.plate ORDER BY ca.plate `
+
+        return query(sql, [firstdate, lastdate, period])
     }
 
     async listPlates(id) {
@@ -195,14 +199,15 @@ class Travel {
         }
     }
 
-    async view(id_travel){
+    async view(id_travel) {
         try {
             const sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
-            IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route,
+            IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, us.name,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
                         WHEN tr.type = 2 THEN "Retiro Contenedor"
                         WHEN tr.type = 3 THEN "Mantenimiento"
+                        WHEN tr.type = 4 THEN "Region Metropolitana"
                         ELSE ""
                     END as type,
                     CASE
@@ -286,6 +291,7 @@ class Travel {
                         ELSE ""
 						END as origindesc
                         FROM api.travel tr
+                        INNER JOIN api.user us ON tr.id_login = us.id_login 
                         LEFT JOIN api.driver dr ON tr.id_driver = dr.id 
                         WHERE tr.id = ? `
 

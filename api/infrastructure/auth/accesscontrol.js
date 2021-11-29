@@ -23,19 +23,18 @@ controll
 
 controll
     .grant('3')
-    .readAny('driver')
-    .updateAny('driver')
-    .createAny('driver')
-    .deleteAny('driver')
-    .readAny('car')
-    .updateAny('car')
-    .createAny('car')
-    .deleteAny('car')
-    .readAny('travel')
-    .updateAny('travel')
-    .createAny('travel')
-    .deleteAny('travel')
-
+    .readOwn('driver')
+    .updateOwn('driver')
+    .createOwn('driver')
+    .deleteOwn('driver')
+    .readOwn('car')
+    .updateOwn('car')
+    .createOwn('car')
+    .deleteOwn('car')
+    .readOwn('travel')
+    .updateOwn('travel')
+    .createOwn('travel')
+    .deleteOwn('travel')
 
 controll
     .grant('4')

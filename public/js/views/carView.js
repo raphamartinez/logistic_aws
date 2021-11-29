@@ -4,19 +4,22 @@ const maintenance = (travel, plate, chest, platedesc, chestdesc) => {
     div.classList.add('form-row')
 
     div.innerHTML = `
+    <div class="form-group text-center col-1">
+        <input value="${travel.name}" type="text" class="form-control" disabled>
+        <a><span data-id="${travel.id}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
+        class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
+        X
+        <span class="visually-hidden"></span>
+    </span></a>
+     </div>
     <div class="form-group col-1" data-date>
     <input value="${travel.type}" type="text" class="form-control" disabled>
-                                            <a><span data-id="${travel.id}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
-                                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
-                                                    X
-                                                    <span class="visually-hidden"></span>
-                                                </span></a>
                                         </div>
                                         <div class="form-group text-center col-1">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-2">
-                                        <textarea value="${travel.obs}" class="form-control" disabled>${travel.obs}</textarea>
+                                        <div class="form-group text-center col-1">
+                                        <textarea value="${travel.obs}" rows="1" class="form-control" disabled>${travel.obs}</textarea>
                                         </div>
                                         <div class="form-group col-2">
                                             <input value="" type="text" class="form-control" disabled>
@@ -41,18 +44,21 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
     div.classList.add('form-row')
 
     div.innerHTML = `
+    <div class="form-group text-center col-1">
+    <input value="${travel.name}" type="text" class="form-control" disabled>
+    <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
+    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
+    X
+    <span class="visually-hidden"></span>
+</span></a>
+ </div>
     <div class="form-group col-1" data-date>
     <input value="${travel.type}" type="text" class="form-control" disabled>
-                                            <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
-                                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
-                                                    X
-                                                    <span class="visually-hidden"></span>
-                                                </span></a>
                                         </div>
                                         <div class="form-group text-center col-1">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-2">
+                                        <div class="form-group text-center col-1">
                                         <input value="${travel.routedesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-2">
@@ -82,18 +88,21 @@ const addtravel = (travel, plate, chest, platedesc, chestdesc) => {
     div.classList.add('form-row')
 
     div.innerHTML = `
+    <div class="form-group text-center col-1">
+    <input value="${travel.name}" type="text" class="form-control" disabled>
+    <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
+    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
+    X
+    <span class="visually-hidden"></span>
+</span></a>
+ </div>
     <div class="form-group col-1" data-date>
     <input value="${travel.typedesc}" type="text" class="form-control" disabled>
-                                            <a><span data-id="${travel.id}" data-iddriver="${travel.driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
-                                                    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
-                                                    X
-                                                    <span class="visually-hidden"></span>
-                                                </span></a>
                                         </div>
                                         <div class="form-group text-center col-1 text-center">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-2 text-center">
+                                        <div class="form-group text-center col-1 text-center">
                                         <input value="${travel.routedesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-2">
@@ -253,14 +262,13 @@ const modalEditCar = (car) => {
                             <div class="form-group col-md-6">
                                 <select name="thirst" id="thirstedit" class="form-select">
                                     <option value="" selected disabled>Sede</option>
-                                    <option value="Km28">Km28</option>
-                                    <option value="Ypane">Ypane</option>
+                                    <option value="KM 28">KM 28</option>
+                                    <option value="YPANE">YPANE</option>
                                     <option value="CDE">CDE</option>
                                 </select>
                             </div>
                             <div class="form-group col-6">
-                                <input value="${car.obs}" id="obs" name="obs" placeholder="Observación" type="text" class="form-control"
-                                    >
+                                <input value="${car.obs}" id="obs" name="obs" placeholder="Observación" type="text" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -301,9 +309,6 @@ const modalEditDriver = (driver) => {
                                 <input value="${driver.phone}" id="phone" name="phone" placeholder="Teléfono" type="text" class="form-control">
                             </div>
                             <div class="form-group col-md-6">
-                                <input value="${driver.thirst}" id="thirst" name="thirst" placeholder="Sede" type="text" class="form-control">
-                            </div>
-                            <div class="form-group col-md-6">
                                 <select name="type" id="typeedit" class="form-select">
                                     <option value="" selected disabled>Tipo</option>
                                     <option value="SIN INFORMACION">SIN INFORMACION</option>
@@ -326,9 +331,16 @@ const modalEditDriver = (driver) => {
                                     <option value="SI">SI</option>
                                 </select>
                             </div>
+                            <div class="form-group col-md-6">
+                            <select name="thirst" id="thirstedit" class="form-select">
+                                <option value="" selected disabled>Sede</option>
+                                <option value="KM 28">KM 28</option>
+                                <option value="YPANE">YPANE</option>
+                                <option value="CDE">CDE</option>
+                            </select>
+                            </div>
                             <div class="form-group col-6">
-                                <input value="${driver.obs}" id="obs" name="obs" placeholder="Observación" type="text" class="form-control"
-                                    >
+                                <input value="${driver.obs}" id="obs" name="obs" placeholder="Observación" type="text" class="form-control">
                             </div>
                         </div>
                     </div>

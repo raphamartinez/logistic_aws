@@ -58,7 +58,7 @@
                                                 Proveedores</a>
                                         </li>
                                         <li><a class="dropdown-item text-white-50" href="./quiz.html">
-                                            Cuestionario RRHH</a>
+                                                Cuestionario RRHH</a>
                                         </li>
                                         <li>
                                             <hr class="dropdown-divider text-white-50" />
@@ -74,7 +74,8 @@
                                 <a data-username class="nav-link dropdown-toggle text-white-50" id="dromenu" href="#"
                                     role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
                                 <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-                                    <li data-menu-adm><a class="dropdown-item text-white-50" href="./adm.html">Administracion</a></li>
+                                    <li data-menu-adm><a class="dropdown-item text-white-50"
+                                            href="./adm.html">Administracion</a></li>
                                     <li>
                                         <hr class="dropdown-divider text-white-50" />
                                     </li>
@@ -138,6 +139,14 @@
                                             <input id="passconf" name="passconf"
                                                 placeholder="Confirmación de Contraseña" type="password"
                                                 class="form-control" required>
+                                        </div>
+                                        <div class="form-group col-12 text-center">
+                                            <select name="place" id="place" class="d-none form-control" multiple>
+                                                <option value="" selected disabled>Seleccione las sedes que el usuario tendrá acceso</option>
+                                                <option value="KM 28">KM 28</option>
+                                                <option value="YPANE">YPANE</option>
+                                                <option value="CDE">CDE</option>
+                                            </select>
                                         </div>
                                         <div class="form-group col-12 text-center">
                                             <p>Ingrese una contraseña segura que contenga.</p>
@@ -237,26 +246,3 @@
 </body>
 
 </html>
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-</head>
-<body>
-    <form action="validando.php" method="GET">
-        Digite seu nome:
-        <input name="name" type="text" placeholder="Digite seu Nome">
-        Digite seu e-mail:
-        <input type="email" name="e-mail" placeholder="Digite seu e-mail"> // Tipo é email
-        <button type="submit"></button> // para enviar o form é necessário trocar o input por um button
-    </form>
-</body>
-</html>
-
-<?php
-$numero = $_GET["num"]
-print "o valor que você digitou foi: $numero."; // a variavel deve estar dentro das "" para ser interpretada pelo print.
-?>

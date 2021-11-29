@@ -18,16 +18,20 @@ module.exports = app => {
     })
 
     app.get('/drivers', [Middleware.bearer, Authorization('driver', 'read')], async (req, res, next) => {
+        let drivers
         try {
+            if (req.access.all.allowed) {
+                // const cached = await cachelist.searchValue(`driver`)
 
-            // const cached = await cachelist.searchValue(`driver`)
+                // if (cached) {
+                //     return res.json(JSON.parse(cached))
+                // }
 
-            // if (cached) {
-            //     return res.json(JSON.parse(cached))
-            // }
-
-            const drivers = await Driver.list()
-            cachelist.addCache(`driver`, JSON.stringify(drivers), 60 * 60 * 2)
+                drivers = await Driver.list()
+                // cachelist.addCache(`driver`, JSON.stringify(drivers), 60 * 60 * 2)
+            } else {
+                drivers = await Driver.list(req.login.places)
+            }
 
             res.json(drivers)
         } catch (err) {
@@ -55,10 +59,18 @@ module.exports = app => {
 
     app.get('/drivers/enable/:date/:period', [Middleware.bearer, Authorization('driver', 'read')], async (req, res, next) => {
         try {
+            let drivers
+
             const date = req.params.date
             const period = req.params.period
 
-            const drivers = await Driver.listPeriodDriver(date, period)
+            
+            if (req.access.all.allowed) {
+                drivers = await Driver.listPeriodDriver(date, period)
+
+            } else {
+                drivers = await Driver.listPeriodDriver(date, period, req.login.places)
+            }
 
             res.json(drivers)
         } catch (err) {

@@ -12,18 +12,25 @@ class Driver {
         }
     }
 
-    async list() {
+    async list(places) {
         try {
-            return Repositorie.list()
+            return Repositorie.list(places)
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')
         }
     }
 
-    listPeriodDriver(date, period) {
+   async listPeriodDriver(date, period) {
         try {
-            return Repositorie.listPeriodDriver(date, period)
+            const dateSQL = new Date(date)
+
+            let firstdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() }`
+            let lastdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() } 23:59:59`
+
+            const data = await Repositorie.listPeriodDriver(firstdate, lastdate, period)
+
+            return data
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')

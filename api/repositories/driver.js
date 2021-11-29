@@ -3,7 +3,7 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 
 class Driver {
 
-   async insert(driver) {
+    async insert(driver) {
         try {
             const sql = `INSERT INTO driver (name, idcard, phone, thirst, type, classification, vacation, obs, status, dateReg)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, now() - interval 3 hour)`
 
@@ -17,9 +17,11 @@ class Driver {
         }
     }
 
-    list() {
+    list(places) {
         try {
-            const sql = `SELECT * FROM api.driver where status > 0`
+            let sql = `SELECT * FROM api.driver where status > 0 `
+
+            if (places) sql += ` and thirst IN (${places})`
 
             return query(sql)
         } catch (error) {
@@ -27,20 +29,24 @@ class Driver {
         }
     }
 
-    listPeriodDriver(date, period) {
+    listPeriodDriver(firstdate, lastdate, period, places) {
         let sql = `SELECT dr.name, dr.id, dr.status as status_driver FROM api.driver dr
         WHERE dr.id NOT IN (
         SELECT tr.id_driver
         FROM api.travel tr
         INNER JOIN api.driver dr ON dr.id = tr.id_driver
-        WHERE tr.date = ? AND tr.period = ?
+        WHERE tr.date between ? and ? AND tr.period = ?
         GROUP BY id_driver
         ORDER BY id_driver
         ) AND dr.status  = 1
-        GROUP BY dr.id
+        `
+
+        if (places) sql += `dr.thirst IN (${places})`
+
+        sql += ` GROUP BY dr.id
         ORDER BY dr.name`
 
-        return query(sql, [date, period])
+        return query(sql, [firstdate, lastdate, period])
     }
 
     async update(id, status) {

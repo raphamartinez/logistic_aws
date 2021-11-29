@@ -58,7 +58,7 @@
                                                 Proveedores</a>
                                         </li>
                                         <li><a class="dropdown-item text-white-50" href="./quiz.html">
-                                            Cuestionario RRHH</a>
+                                                Cuestionario RRHH</a>
                                         </li>
                                         <li>
                                             <hr class="dropdown-divider text-white-50" />
@@ -170,6 +170,7 @@
                                                     <option value="1">Viatico Nacional</option>
                                                     <option value="2">Retiro Contenedor</option>
                                                     <option value="3">Mantenimiento</option>
+                                                    <option value="4">Region Metropolitana</option>
                                                 </select>
                                             </div>
                                             <div class="form-group col-md-2">
@@ -249,18 +250,19 @@
                             <div class="card shadow mb-4">
                                 <div class="card-header">
                                     <div class="form-row">
-                                        <div class="form-group col-md-1">
+                                        <div class="form-group col-1">
                                             <h6 class="m-0 font-weight-bold text-danger">Listado de Viajes</h6>
                                         </div>
-                                        <div class="form-group col-md-1">
+                                        <div class="form-group col-1">
                                             <select class="form-select" data-filter-travel-type>
                                                 <option value="Todos" selected>TODAS LAS VIAJES</option>
                                                 <option value="Viatico Nacional">Viatico Nacional</option>
                                                 <option value="Retiro Contenedor">Retiro Contenedor</option>
                                                 <option value="Mantenimiento">Mantenimiento</option>
+                                                <option value="Region Metropolitana">Region Metropolitana</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-2">
+                                        <div class="form-group col-2">
                                             <select class="form-select" data-filter-travel-origin>
                                                 <option value="Todos" selected>TODAS LAS ORIGENS</option>
                                                 <option value="KM 1">KM 1</option>
@@ -301,7 +303,7 @@
                                                 <option value="Hernandarias">Hernandarias</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-2">
+                                        <div class="form-group col-2">
                                             <select class="form-select" data-filter-travel-route>
                                                 <option value="Todos" selected>TODOS LOS DESTINOS</option>
                                                 <option value="KM 1">KM 1</option>
@@ -342,7 +344,7 @@
                                                 <option value="Hernandarias">Hernandarias</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-2">
+                                        <div class="form-group col-2">
                                             <select class="form-select" data-filter-travel-trucktype>
                                                 <option value="Todos" selected>TODOS LOS CAMIONES</option>
                                                 <option value="AUTOMOVIL">AUTOMOVIL</option>
@@ -355,11 +357,11 @@
                                                 <option value="SEMI REMOLQUE">SEMI REMOLQUE</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-md-2 text-right">
+                                        <div class="form-group col-2 text-right">
                                             <button type="button" class="btn btn-secondary" style="cursor:cell;"
                                                 data-print-travel>Copiar Viajes</button>
                                         </div>
-                                        <div class="form-group col-md-2">
+                                        <div class="form-group col-2">
                                             <input class="form-control" type="date" data-search-date>
                                         </div>
                                     </div>
@@ -368,12 +370,15 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-1 text-center">
+                                            <h6>Usuario</h6>
+                                        </div>
+                                        <div class="col-1 text-center">
                                             <h6>Tipo</h6>
                                         </div>
                                         <div class="col-1 text-center">
                                             <h6>Origem</h6>
                                         </div>
-                                        <div class="col-2 text-center">
+                                        <div class="col-1 text-center">
                                             <h6>Destino/Obs</h6>
                                         </div>
                                         <div class="col-2 text-center">
@@ -432,12 +437,36 @@
                                         <div class="form-group col-2 text-center">
                                             <select class="form-select" data-filter-truck-sede>
                                                 <option value="TODOS" selected>Todos las sedes</option>
-                                                <option value="Km28">Km28</option>
-                                                <option value="Ypane">Ypane</option>
+                                                <option value="KM 28">Km28</option>
+                                                <option value="YPANE">Ypane</option>
                                                 <option value="CDE">CDE</option>
                                             </select>
                                         </div>
-                                        <div class="form-group col-5 text-right">
+                                        <div class="form-group col-2 text-center">
+                                            <select class="form-select" data-filter-truck-brand>
+                                                <option value="TODOS" selected>Todos las marcas</option>
+                                                <option value="NISSAN">NISSAN</option>
+                                                <option value="VOLKSWAGEN">VOLKSWAGEN</option>
+                                                <option value="KIA">KIA</option>
+                                                <option value="CHEVROLET">CHEVROLET</option>
+                                                <option value="MERCEDES BENZ">MERCEDES BENZ</option>
+                                                <option value="FOTON">FOTON</option>
+                                                <option value="FUSO">FUSO</option>
+                                                <option value="SCANIA">SCANIA</option>
+                                                <option value="HYUNDAI">HYUNDAI</option>
+                                                <option value="VOLVO">VOLVO</option>
+                                                <option value="FIAT">FIAT</option>
+                                                <option value="VANHOOL">VANHOOL</option>
+                                                <option value="GUERRA">GUERRA</option>
+                                                <option value="RANDON">RANDON</option>
+                                                <option value="FERCAP">FERCAP</option>
+                                                <option value="ORO VERDE">ORO VERDE</option>
+                                                <option value="FAW">FAW</option>
+                                                <option value="LIBRELATO">LIBRELATO</option>
+                                                <option value="GOODYEAR">GOODYEAR</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-3 text-right">
                                             <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                                 data-bs-target="#addcar"><i class="fas fa-plus"></i> Nuevo</button>
                                             <button data-btn-collapse type="button" data-bs-toggle="collapse"

@@ -17,11 +17,26 @@ const edit = (event) => {
         access: event.target.getAttribute('data-access'),
         mail: event.target.getAttribute('data-mail'),
         profile: event.target.getAttribute('data-profile'),
+        thirst: event.target.getAttribute('data-thirst')
     }
 
     document.querySelector('[data-modal]').innerHTML = ``
     document.querySelector('[data-modal]').appendChild(View.modalEdit(user))
     document.querySelector('#profileedit').selectedIndex = user.profile
+
+    const places = user.thirst.split(",")
+
+    if(places.length > 0 && user.profile != 4){
+        document.querySelector('#thirstedit').classList.remove('d-none')
+
+        const optionsPlace = document.querySelectorAll('#thirstedit option')
+        optionsPlace.forEach(option => {
+            let check = places.find(place => place === option.value)
+
+            if(check)option.selected = true
+        })
+        document.querySelector('#thirstedit').classList.remove('d-none')
+    }
 
     $("#edit").modal('show')
 
@@ -29,11 +44,17 @@ const edit = (event) => {
     modal.addEventListener('submit', async (event2) => {
         event2.preventDefault()
 
+        let newThirsts
+
+        let thirstselecteds = document.querySelectorAll('#thirstedit :checked')
+        newThirsts = Array.from(thirstselecteds).map(e => e.value)
+
         const newUser = {
             id_login: id_login,
             name: event2.currentTarget.name.value,
             access: event2.currentTarget.access.value,
             mail: event2.currentTarget.mail.value,
+            places: newThirsts,
             profile: event2.currentTarget.profile.value,
             profiledesc: document.querySelector('#profileedit option:checked').innerHTML
         }
@@ -53,7 +74,7 @@ const edit = (event) => {
                 [
                     `
                     <a><i data-action data-id_login="${id_login}" class="btn-gold fas fa-key" ></i></a>
-                    <a><i data-action data-dateReg="${dateReg}" data-id_user="${id_user}" data-id_login="${id_login}" data-profile="${newUser.profile}" data-name="${newUser.name}" data-access="${newUser.access}" data-mail="${newUser.mail}" class="btn-edit fas fa-edit"></i></a>
+                    <a><i data-action data-thirst="${newThirsts}" data-dateReg="${dateReg}" data-id_user="${id_user}" data-id_login="${id_login}" data-profile="${newUser.profile}" data-name="${newUser.name}" data-access="${newUser.access}" data-mail="${newUser.mail}" class="btn-edit fas fa-edit"></i></a>
                     <a><i data-action data-id_login="${id_login}" class="btn-delete fas fa-trash"></i></a>`,
                     newUser.name,
                     newUser.access,
@@ -128,7 +149,7 @@ const pass = async (event) => {
             confpass: event2.currentTarget.confpass.value,
             id
         }
-        
+
         const obj = await Connection.body(`changepass`, { user }, 'POST')
 
         document.querySelector('#passedit').removeEventListener('keyup', pass, false)
@@ -147,7 +168,7 @@ const table = async () => {
     const users = data.map(user => {
         let options = `
         <a><i data-action data-id_login="${user.id_login}" class="btn-gold fas fa-key" ></i></a>
-        <a><i data-action data-id_user="${user.id}" data-id_login="${user.id_login}" data-dateReg="${user.dateReg}" data-profile="${user.profile}" data-name="${user.name}" data-access="${user.access}" data-mail="${user.mail}" class="btn-edit fas fa-edit"></i></a>
+        <a><i data-action data-id_user="${user.id}" data-id_login="${user.id_login}" data-dateReg="${user.dateReg}" data-profile="${user.profile}" data-name="${user.name}" data-access="${user.access}" data-mail="${user.mail}" data-thirst="${user.places}" class="btn-edit fas fa-edit"></i></a>
         <a><i data-action data-id_user="${user.id}" data-id_login="${user.id_login}" class="btn-delete fas fa-trash"></i></a>`
         let line = [
             options,
@@ -213,13 +234,19 @@ const table = async () => {
     const add = async (event) => {
         event.preventDefault()
 
+        let places = []
+
+        const placesSelect = document.querySelectorAll('#place :checked')
+        places = Array.from(placesSelect).map(e => e.value)
+
         const user = {
             name: event.currentTarget.name.value,
             access: event.currentTarget.access.value,
             mail: event.currentTarget.mail.value,
             profile: event.currentTarget.profile.value,
             profiledesc: document.querySelector('#profile :checked').innerHTML,
-            pass: event.currentTarget.pass.value
+            pass: event.currentTarget.pass.value,
+            places
         }
 
         event.currentTarget.reset()
@@ -258,6 +285,17 @@ const checkpass = () => {
     }
 }
 
+const checkProfile = (event) => {
+    if (event.target && event.target.value != 4) {
+        document.querySelector('#place').classList.remove('d-none')
+        document.querySelector('#place').required = true
+    }else{
+        document.querySelector('#place').classList.add('d-none')
+        document.querySelector('#place').required = false
+    }
+}
+
+document.querySelector('#profile').addEventListener('change', checkProfile, false)
 document.querySelector('#pass').addEventListener('keyup', checkpass, false)
 document.querySelector('#passconf').addEventListener('keyup', checkpass, false)
 

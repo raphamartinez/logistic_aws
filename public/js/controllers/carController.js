@@ -282,6 +282,7 @@ const editDriver = (event) => {
   $("#classificationedit").val(driver.classification)
   $("#vacationedit").val(driver.vacation)
   $("#typeedit").val(driver.type)
+  $("#thirstedit").val(driver.thirst)
 
   $("#edit").modal('show')
 
@@ -642,6 +643,26 @@ const listCars = (data) => {
     table.draw();
   })
 
+  document.querySelector('[data-filter-truck-brand]').addEventListener('change', (event) => {
+
+    table.rows().every(function (index, element) {
+      let row = $(this.node());
+
+
+      if (row[0].children[3].innerText != event.target.value) {
+        row[0].style.display = 'none'
+      } else {
+        row[0].style.display = ''
+      }
+
+      if (event.target.value == "TODOS") row[0].style.display = ''
+
+    });
+
+
+    table.draw();
+  })
+
   document.querySelector('[data-filter-truck-sede]').addEventListener('change', (event) => {
 
     table.rows().every(function (index, element) {
@@ -760,7 +781,7 @@ const travel = (travels, drivers) => {
     if (travel.cars[1]) carchestdesc = travel.cars[1].plate
     if (travel.cars[1]) chest = `${travel.cars[1].plate} - ${travel.cars[1].cartype} - ${travel.cars[1].brand} - ${travel.cars[1].model} - ${travel.cars[1].year}`
 
-    if (travel.type === "Mantenimiento") {
+    if (travel.type === "Mantenimiento" || travel.type === "Region Metropolitana") {
       document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
   <button data-div-car="${travel.cars[0].plate}" data-status-${travel.cars[0].plate} data-toggle="popover" title="Camion en Mantenimiento Programado" type="button" style="border-color: #ff9855; background-color: #ff8c00; color: #ff8c00" class="btn btn-warning btn-circle btn-sm">3</button>`
 
@@ -810,7 +831,7 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
     </div>
   </div>
 `
-  const date = new Date(event.currentTarget.date.valueAsDate)
+  const date = new Date(event.currentTarget.date.value)
 
   let capacity
   if (document.querySelector('[data-truck] option:checked').getAttribute('data-capacity') > 0) {
@@ -820,6 +841,7 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
   }
 
   let travel = {
+    name: document.querySelector('[data-username]').innerText,
     plate: event.currentTarget.car.value,
     cardesc: document.querySelector('[data-truck] option:checked').innerHTML,
     platedesc: document.querySelector('[data-truck] option:checked').getAttribute('data-plate'),
@@ -861,15 +883,14 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
   const obj = await Connection.body('travel', { travel }, 'POST')
 
   travel.id = obj.id
-  const viewDate = document.querySelector('[data-search-date]').value
-  const date2 = new Date(viewDate)
+  const date2 = new Date(`${document.querySelector('[data-search-date]').value}T12:00`)
 
-  if (date.getTime() === date2.getTime()) {
+  if (`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}` === `${date2.getDate()}/${date2.getMonth() + 1}/${date2.getFullYear()}`) {
     let plate = travel.cardesc
     let chest = ""
     if (travel.chest) chest = travel.carchestdesc
 
-    if (travel.type == 3) {
+    if (travel.type == 3 || travel.type == 4) {
       travel.type = travel.typedesc
       document.querySelector('[data-row-travel]').appendChild(View.maintenance(travel, plate, chest, travel.platedesc, travel.chestdesc))
     } else {
@@ -1136,10 +1157,10 @@ const generate = async (event) => {
     </div>
   `
 
-  let dateTravel = event2.currentTarget.date.value
-  let origindesc = event2.currentTarget.origin.value
-  let routedesc = event2.currentTarget.route.value
-  let truck = event2.currentTarget.truck.value
+    let dateTravel = event2.currentTarget.date.value
+    let origindesc = event2.currentTarget.origin.value
+    let routedesc = event2.currentTarget.route.value
+    let truck = event2.currentTarget.truck.value
 
     let driver = event2.currentTarget.driver.value
     let amount = event2.currentTarget.amount.value
@@ -1206,6 +1227,8 @@ const generate = async (event) => {
       datereg: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     }
 
+    let plateTruck = truck.split("-")
+
     $("#generate").modal('hide')
     try {
       const objres = await Connection.backFile('travelreport', { travel }, 'POST')
@@ -1213,7 +1236,7 @@ const generate = async (event) => {
       let a = document.createElement('a');
       a.href = window.URL.createObjectURL(objres);
       a.target = "_blank";
-      a.download = `${name}_${date.getHours()}:${date.getMinutes()}_${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}.docx`
+      a.download = `${name}_${plateTruck[0]}_${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}.docx`
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -1291,11 +1314,20 @@ const enable = async () => {
 
 
 
-  if (document.querySelector('[data-type]').value == 3) {
-    document.querySelector('[data-route]').required = false
+  if (document.querySelector('[data-type]').value == 3 || document.querySelector('[data-type]').value == 4) {
     document.querySelector('[data-obs]').required = true
-    document.querySelector('[data-route]').style.display = 'none'
     document.querySelector('[data-obs]').style.display = 'block'
+    document.querySelector('[data-route]').required = false
+    document.querySelector('[data-route]').style.display = 'none'
+
+    if (document.querySelector('[data-type]').value == 4) {
+      document.querySelector('[data-obs]').placeholder = 'Detalles de la entrega'
+      document.querySelector('[data-driver]').disabled = false
+
+    } else {
+      document.querySelector('[data-obs]').placeholder = 'Observación del Mantenimiento'
+    }
+
   } else {
     document.querySelector('[data-route]').required = true
     document.querySelector('[data-obs]').required = false
@@ -1407,6 +1439,8 @@ const listTravels = (travels) => {
 
     if (driverdiv && driverdiv != undefined) document.querySelector(`[data-status-driver-${travel.id_driver}]`).parentNode.innerHTML = `
     <button data-div-driver="${travel.id_driver}" data-status-driver-${travel.id_driver} data-toggle="popover" title="Chofér no disponible" style="color:#e02d1b" type="button" class="btn btn-danger btn-circle btn-sm">2</button>`
+
+    if (travel.typecode == 3 || travel.typecode == 4) document.querySelector('[data-row-travel]').appendChild(View.maintenance(travel, plate, chest, platedesc, chestdesc))
 
     document.querySelector('[data-row-travel]').appendChild(View.travel(travel, plate, chest, platedesc, chestdesc))
   })
@@ -1573,14 +1607,14 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
   const travels = document.querySelector('[data-row-travel]')
   Array.from(travels.children).forEach(travel => {
     if (travel.style.display == 'flex' || travel.style.display == '') {
-      input.value += `𝐓𝐢𝐩𝐨: ${travel.children[0].children[0].value} - `
-      if (travel.children[1].children[0].value) input.value += `𝐎𝐫𝐢𝐠𝐞𝐧: ${travel.children[1].children[0].value} - `
-      if (travel.children[2].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[2].children[0].value} - `
-      if (travel.children[3].children[0].value) input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[3].children[0].value} - `
-      input.value += `𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${travel.children[4].children[0].value} - `
-      if (travel.children[5].children[0].value) input.value += `𝐅𝐮𝐫𝐠𝐨𝐧: ${travel.children[5].children[0].value} - `
-      input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${travel.children[6].children[0].value} cubiertas - `
-      input.value += `𝐅𝐞𝐜𝐡𝐚: ${travel.children[7].children[0].value} \n\n`
+      input.value += `𝐓𝐢𝐩𝐨: ${travel.children[1].children[0].value} - `
+      if (travel.children[2].children[0].value) input.value += `𝐎𝐫𝐢𝐠𝐞𝐧: ${travel.children[2].children[0].value} - `
+      if (travel.children[3].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[3].children[0].value} - `
+      if (travel.children[4].children[0].value) input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[4].children[0].value} - `
+      input.value += `𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${travel.children[5].children[0].value} - `
+      if (travel.children[6].children[0].value) input.value += `𝐅𝐮𝐫𝐠𝐨𝐧: ${travel.children[6].children[0].value} - `
+      input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${travel.children[7].children[0].value} cubiertas - `
+      input.value += `𝐅𝐞𝐜𝐡𝐚: ${travel.children[8].children[0].value} \n\n`
     }
   })
 
@@ -1655,20 +1689,20 @@ const viewTravel = (event) => {
   const divs = document.querySelector('[data-row-travel]')
   let index
 
-  if (event.target && event.target.matches('[data-filter-travel-type]')) index = 0
-  if (event.target && event.target.matches('[data-filter-travel-origin]')) index = 1
-  if (event.target && event.target.matches('[data-filter-travel-route]')) index = 2
-  if (event.target && event.target.matches('[data-filter-travel-trucktype]')) index = 4
+  if (event.target && event.target.matches('[data-filter-travel-type]')) index = 1
+  if (event.target && event.target.matches('[data-filter-travel-origin]')) index = 2
+  if (event.target && event.target.matches('[data-filter-travel-route]')) index = 3
+  if (event.target && event.target.matches('[data-filter-travel-trucktype]')) index = 5
 
   Array.from(divs.children).forEach(row => {
     let content = row.children[index].children[0].value
     if (content.indexOf(event.target.value) == -1 && event.target.value != "Todos") {
       row.style.display = 'none'
     } else {
-      if (document.querySelector('[data-filter-travel-type] :checked').value == row.children[0].children[0].value || document.querySelector('[data-filter-travel-type] :checked').value == 'Todos') row.style.display = 'flex'
-      if (document.querySelector('[data-filter-travel-origin] :checked').value == row.children[1].children[0].value || document.querySelector('[data-filter-travel-origin] :checked').value == 'Todos') row.style.display = 'flex'
-      if (document.querySelector('[data-filter-travel-route] :checked').value == row.children[2].children[0].value || document.querySelector('[data-filter-travel-route] :checked').value == 'Todos') row.style.display = 'flex'
-      if (document.querySelector('[data-filter-travel-trucktype] :checked').value == row.children[4].children[0].value || document.querySelector('[data-filter-travel-trucktype] :checked').value == 'Todos') row.style.display = 'flex'
+      if (document.querySelector('[data-filter-travel-type] :checked').value == row.children[1].children[0].value || document.querySelector('[data-filter-travel-type] :checked').value == 'Todos') row.style.display = 'flex'
+      if (document.querySelector('[data-filter-travel-origin] :checked').value == row.children[2].children[0].value || document.querySelector('[data-filter-travel-origin] :checked').value == 'Todos') row.style.display = 'flex'
+      if (document.querySelector('[data-filter-travel-route] :checked').value == row.children[3].children[0].value || document.querySelector('[data-filter-travel-route] :checked').value == 'Todos') row.style.display = 'flex'
+      if (document.querySelector('[data-filter-travel-trucktype] :checked').value == row.children[5].children[0].value || document.querySelector('[data-filter-travel-trucktype] :checked').value == 'Todos') row.style.display = 'flex'
     }
   })
 }

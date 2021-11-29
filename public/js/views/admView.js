@@ -34,6 +34,14 @@ const modalEdit = (user) => {
                             <option value="4">Admin</option>
                         </select>
                     </div>
+                    <div class="form-group col-12">
+                        <select name="thirst" id="thirstedit" class="d-none form-control" multiple required>
+                        <option value="" selected disabled>Sede</option>
+                        <option value="KM 28">KM 28</option>
+                        <option value="YPANE">YPANE</option>
+                        <option value="CDE">CDE</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>

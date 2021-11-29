@@ -1,4 +1,6 @@
 const Repositorie = require('../repositories/login')
+const RepositoriePlace = require('../repositories/place')
+
 const bcrypt = require('bcrypt')
 const Token = require('./token')
 const { ResetPasswordMail } = require('./mail')
@@ -9,7 +11,12 @@ class Login {
 
     async viewLogin(id_login) {
         try {
-            const login = await Repositorie.view(id_login)
+            let login = await Repositorie.view(id_login)
+            let places = await RepositoriePlace.list(id_login)
+
+            places = Array.from(places).map(e => `"${e.value}"`)
+            login.places = places
+
             return login
         } catch (error) {
             throw new NotFound('Login.')
@@ -38,7 +45,12 @@ class Login {
 
     async searchMail(mail) {
         try {
-            const login = await Repositorie.viewMail(mail)
+            let login = await Repositorie.viewMail(mail)
+            let places = await RepositoriePlace.list(login.id)
+
+            places = Array.from(places).map(e => `"${e.value}"`)
+            login.places = places
+
             return login
         } catch (error) {
             return error

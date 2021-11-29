@@ -79,7 +79,7 @@ class Car {
         }
     }
 
-    cars(date) {
+    cars(date, places) {
 
         try {
             if (date) {
@@ -89,12 +89,20 @@ class Car {
                 LEFT JOIN api.travel tr ON tc.id_travel = tr.id 
                 LEFT JOIN api.driver dr ON tr.id_driver = dr.id
                 WHERE ca.status > 0
-                GROUP BY ca.plate
+                `
+
+                if(places) sql += ` AND ca.thirst IN (${places})`
+
+                sql+= ` GROUP BY ca.plate
                 ORDER BY ca.status DESC`
+
                 return query(sql)
 
             } else {
                 let sql = `SELECT *, DATE_FORMAT(year, '%Y') as year, DATE_FORMAT(dateReg, '%H:%i %d/%m/%Y') as date FROM api.car `
+
+                if(places) sql += ` where thirst IN (${places})`
+
                 return query(sql)
             }
 

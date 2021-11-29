@@ -11,7 +11,7 @@ class Tables {
     this.createTableFile()
     this.createTableQuotation()
     this.createTablePatrimony()
-    this.createTableCar() 
+    this.createTableCar()
     this.createTableDriver()
     this.createTableTravel()
     this.createTableTravelCar()
@@ -22,9 +22,23 @@ class Tables {
     this.createTableAnswer()
     this.createTableInterview()
     this.createTableAnsweredInterview()
+    this.createTableAccessLogin()
 
     return true
-  } 
+  }
+
+  createTableAccessLogin() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.accessplace (id int NOT NULL AUTO_INCREMENT, 
+      id_login int, value int, FOREIGN KEY (id_login) REFERENCES login (id),
+      PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
 
   createTableAnsweredInterview() {
     const sql = `CREATE TABLE IF NOT EXISTS api.answeredinterview (id int NOT NULL AUTO_INCREMENT, 
@@ -97,7 +111,7 @@ class Tables {
     })
   }
 
-  createTableTravelReportDetail(){
+  createTableTravelReportDetail() {
     const sql = `CREATE TABLE IF NOT EXISTS api.travelreportdetail (id int NOT NULL AUTO_INCREMENT, type int, description VARCHAR(250), value DOUBLE, id_travelreport int,
     FOREIGN KEY (id_travelreport) REFERENCES travelreport (id), PRIMARY KEY (id))`
 
@@ -109,7 +123,7 @@ class Tables {
     })
   }
 
-  createTableTravelReport(){
+  createTableTravelReport() {
     const sql = `CREATE TABLE IF NOT EXISTS api.travelreport (id int NOT NULL AUTO_INCREMENT, id_car int, origin int, route int, 
       FOREIGN KEY (id_car) REFERENCES car (id), PRIMARY KEY (id))`
 
@@ -121,7 +135,7 @@ class Tables {
     })
   }
 
-  createTableTravelReport(){
+  createTableTravelReport() {
     const sql = `CREATE TABLE IF NOT EXISTS api.travelreport (id int NOT NULL AUTO_INCREMENT, id_car int, origin int, route int, 
       FOREIGN KEY (id_car) REFERENCES car (id), PRIMARY KEY (id))`
 
@@ -133,7 +147,7 @@ class Tables {
     })
   }
 
-  createTableTravelCar(){
+  createTableTravelCar() {
     const sql = `CREATE TABLE IF NOT EXISTS api.travelcar (id int NOT NULL AUTO_INCREMENT, id_car int, id_travel int,
       FOREIGN KEY (id_car) REFERENCES car (id), type int,
       FOREIGN KEY (id_travel) REFERENCES travel (id),
@@ -147,7 +161,7 @@ class Tables {
     })
   }
 
-  createTableTravel(){
+  createTableTravel() {
     const sql = `CREATE TABLE IF NOT EXISTS api.travel (id int NOT NULL AUTO_INCREMENT, date DATE NOT NULL, period int NOT NULL,
       id_driver int, route int, id_login int, datereg DATETIME, type int,
       FOREIGN KEY (id_login) REFERENCES login (id), 
@@ -163,7 +177,7 @@ class Tables {
   }
 
 
-  createTableDriver(){
+  createTableDriver() {
     const sql = `CREATE TABLE IF NOT EXISTS api.driver (id int NOT NULL AUTO_INCREMENT, name VARCHAR (250) NOT NULL, idcard VARCHAR (100),
     phone VARCHAR (100), thirst VARCHAR (25), id_car VARCHAR(50), type VARCHAR(100), classification VARCHAR(100), vacation varchar (100),
     PRIMARY KEY (id))`
@@ -176,7 +190,7 @@ class Tables {
     })
   }
 
-  createTableStock(){
+  createTableStock() {
     const sql = `CREATE TABLE IF NOT EXISTS stock (id int NOT NULL AUTO_INCREMENT, id_item int, FOREIGN KEY (id_item) REFERENCES item (id), PRIMARY KEY (id))`
 
     this.connection.query(sql, (error) => {
@@ -187,7 +201,7 @@ class Tables {
     })
   }
 
-  createTableFile(){
+  createTableFile() {
     const sql = `CREATE TABLE IF NOT EXISTS api.file (id int NOT NULL AUTO_INCREMENT, filename VARCHAR (250) NOT NULL, mimetype VARCHAR (10) NOT NULL,
     path VARCHAR (250) NOT NULL, size int, id_login int, datereg DATETIME, description VARCHAR (250),
     id_item int, 
@@ -207,7 +221,7 @@ class Tables {
     })
   }
 
-  createTableVoucher(){
+  createTableVoucher() {
     const sql = `CREATE TABLE IF NOT EXISTS voucher (id int NOT NULL AUTO_INCREMENT, filename VARCHAR (250), mimetype VARCHAR (10) NOT NULL,
     path VARCHAR (250) NOT NULL, size int, id_login int, id_quotation int, datereg DATETIME, 
     FOREIGN KEY (id_login) REFERENCES login (id), 
@@ -303,7 +317,7 @@ class Tables {
     })
   }
 
-  createTablePatrimony(){
+  createTablePatrimony() {
     const sql = `CREATE TABLE IF NOT EXISTS api.patrimony (id int NOT NULL AUTO_INCREMENT, id_login int, datereg DATETIME, local VARCHAR(100), code VARCHAR(25), name VARCHAR(150), 
     FOREIGN KEY (id_login) REFERENCES login (id), 
     PRIMARY KEY (id))`
@@ -316,7 +330,7 @@ class Tables {
     })
   }
 
-  createTablePatrimonyImage(){
+  createTablePatrimonyImage() {
     const sql = `CREATE TABLE IF NOT EXISTS api.patrimonyImage (id int NOT NULL AUTO_INCREMENT, filename VARCHAR (250), mimetype VARCHAR (10) NOT NULL,
     location VARCHAR (250) NOT NULL, size int, id_login int, id_patrimony int, datereg DATETIME, 
     FOREIGN KEY (id_login) REFERENCES login (id), 

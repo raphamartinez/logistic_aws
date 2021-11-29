@@ -16,8 +16,8 @@ class Travel {
     async list(date, period, id_login) {
         try {
             const dateSQL = new Date(date)
-            let firstdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() + 1}`
-            let lastdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() + 1} 23:59:59`
+            let firstdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() }`
+            let lastdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() } 23:59:59`
 
             let travels = await Repositorie.list(firstdate, lastdate, period, id_login)
 

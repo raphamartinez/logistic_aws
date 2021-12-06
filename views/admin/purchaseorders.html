@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=chrome">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="site">
+    <meta name="author" content="raphael martinez batista">
+    <title>LOGISTICA
+    </title>
+    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/touch-icon-iphone.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../img/touch-icon-iphone.png">
+    <link href="../css/sb-admin-2.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="../css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top sidebar" class="off-canvas hide-extras ">
+    <div id="wrapper  ">
+        <div id="content-wrapper " class="d-flex flex-column">
+            <header>
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+                    <div class="container px-4 px-lg-5 text-white-50">
+                        <a class="sidebar-brand d-flex align-items-center justify-content-center"
+                            href="./vehiculos.html">
+                            <div class="sidebar-brand-icon">
+                                <img width="110" height="30" src="../img/Logowhite.png" alt="Sunset Logo">
+                            </div>
+                        </a>
+                        <button class="navbar-toggler text-white-50" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation"><span
+                                class="navbar-toggler-icon"></span></button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul data-menu class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-white-50" id="navbarDropdown" href="#"
+                                        role="button" data-bs-toggle="dropdown" aria-expanded="false">Menu</a>
+                                    <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item text-white-50" href="./vehiculos.html">Listado de
+                                                Vehículos</a>
+                                        </li>
+                                        <li><a class="dropdown-item text-white-50" href="./patrimonio.html">Control de
+                                                Patrimonio</a>
+                                        </li>
+                                        <li><a class="dropdown-item text-white-50" href="./provider.html">Listado de
+                                                Proveedores</a>
+                                        </li>
+                                        <li><a class="dropdown-item text-white-50" href="./quiz.html">
+                                                Cuestionario RRHH</a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider text-white-50" />
+                                        </li>
+                                        <li><a class="dropdown-item text-white-50" href="./reemplazar.html">Piezas a
+                                                reemplazar</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4  dropdown ">
+                                <a data-username class="nav-link dropdown-toggle text-white-50" id="dromenu" href="#"
+                                    role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                                <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+                                    <li data-menu-adm><a class="dropdown-item text-white-50"
+                                            href="./adm.html">Administracion</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider text-white-50" />
+                                    </li>
+                                    <li><a class="dropdown-item text-white-50" data-toggle="modal"
+                                            data-target="#logoutModal">Salir</a></li>
+                                </ul>
+                            </ul>
+
+                        </div>
+                    </div>
+                </nav>
+            </header>
+
+            <div id="content">
+                <div class="container-fluid">
+                    <div class="col-lg-12 text-center">
+                        <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
+                            <h1 class="h3 mb-0 text-gray-800">Ordenes de Compra</h1>
+                        </div>
+                    </div>
+
+                    <div class="row col-md-12 mb-2 align-items-center">
+                        <div class="d-flex justify-content-center align-items-center" data-loading></div>
+                    </div>
+
+                    <div class="row justify-content-md-center">
+                        <div class="col-lg-10">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-danger">Generar Informe de Ordenes de Compra
+                                    </h6>
+                                </div>
+                                <form action="/purchaseorders" method="POST" data-form-generate>
+                                    <div class="card-body">
+                                        <div class="form-row">
+                                            <div class="form-group col-6">
+                                                <label for="numberstart">Status</label>
+                                                <select data-select-status id="status" name="status" type="text"
+                                                    multiple class="form-control">
+                                                    <option value="" selected disabled>Status do Item</option>
+                                                    <option value="3">En processo</option>
+                                                    <option value="5">Concluido</option>
+                                                    <option value="6">Cancelado</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="group">Agrupar por: </label>
+                                                <select data-select-group id="group" name="group" class="form-control">
+                                                    <option value="" selected disabled>Grupo</option>
+                                                    <option value="placa">Placa</option>
+                                                    <option value="proveedor">Proveedor</option>
+                                                    <option value="naturaleza">Natureza</option>
+                                                    <option value="categoria">Grupo del Vehiculo</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="datestart">Fecha Inicial</label>
+                                                <input id="datestart" name="datestart" placeholder="Fecha Inicial"
+                                                    type="date" class="form-control" required>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="dateend">Fecha Final</label>
+                                                <input id="dateend" name="dateend" placeholder="Fecha Final" type="date"
+                                                    class="form-control" required>
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="numberstart">Numero Inicial</label>
+                                                <input id="numberstart" name="numberstart"
+                                                    placeholder="Número Ordem Inicial" type="number"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="form-group col-6">
+                                                <label for="numberend">Numero Final</label>
+                                                <input id="numberend" name="numberend" placeholder="Número Ordem Final"
+                                                    type="number" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button href="_blank" data-modal-search type="submit"
+                                            class="btn btn-info align-items-center justify-content-md-center mb-2">Generar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>© LOGISTICA
+                        </span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cerrar sesión?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Seleccione salir si desea finalizar la sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-danger" href="#" onclick="onLogout()">Salir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js"></script>
+    <script src="../js/libs/sb-admin-2.min.js"></script>
+    <script type="module" src="../js/controllers/purchaseController.js"></script>
+    <script type="module" src="../js/controllers/loginController.js"></script>
+    <script src="../js/libs/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="../js/libs/dataTables.bootstrap4.min.js"></script>
+    <script src="../js/libs/dataTables.buttons.min.js"></script>
+    <script src="../js/libs/jszip.min.js"></script>
+    <script src="../js/libs/pdfmake.min.js"></script>
+    <script src="../js/libs/pdfmake_vfs_fonts.min.js"></script>
+    <script src="../js/libs/buttons.html5.min.js"></script>
+    <script src="../js/libs/buttons.print.min.js"></script>
+    <script src="../js/libs/geradorarquivo.min.js"></script>
+    <div data-modal></div>
+
+</body>
+
+</html>

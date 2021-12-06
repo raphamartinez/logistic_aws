@@ -75,7 +75,28 @@ class Car {
             const sql = `UPDATE api.car SET status = ? where id = ?`
             return query(sql, [0, id])
         } catch (error) {
-            throw new InternalServerError('No se pudieron enumerar los login')
+            throw new InternalServerError('No se pudieron enumerar los vehiculos')
+        }
+    }
+
+    count(){
+        try {
+            const sql = `SELECT count(ca.id) as count, ca.thirst, ca.cartype
+            FROM api.car ca 
+            WHERE ca.status = 1 and ac.id not in (
+                    SELECT ca.id
+                    FROM api.car ca
+                    INNER JOIN api.travelcar tc ON ca.id = tc.id_car
+                    INNER JOIN api.travel tr ON tc.id_travel = tr.id
+                    WHERE tr.date between ? and ? AND tr.period = ?
+                    GROUP BY id
+                    ORDER BY id 
+            )
+            GROUP BY ca.model
+            ORDER BY ca.thirst
+                    `
+        } catch (error) {
+            throw new InternalServerError('No se pudieron enumerar los vehiculos')
         }
     }
 

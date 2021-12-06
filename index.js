@@ -7,7 +7,8 @@ const express = require('express')
 const path = require('path')
 const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = require('./api/models/error');
 
-// const Quiz = require('./api/repositories/quiz')
+const Purchase = require('./api/repositories/purchase')
+// Purchase.getOrders()
 // Quiz.answer()
 
 process.setMaxListeners(100)

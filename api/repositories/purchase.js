@@ -1,13 +1,13 @@
 const sql = require('mssql');
 
 var config = {
-  server: process.env.DB_SERVER_HOST,
-  user: process.env.G8_CONSULTA,
-  password: process.env.DB_SERVER_PASSWORD,
-  database: process.env.DB_SERVER_DATABASE,
+  server: "192.168.201.254",
+  user: 'G8_CONSULTA',
+  password: 'Pa$$wOrd',
+  database: 'G8BD',
   options: {
     encrypt: false, // Use this if you're on Windows Azure 
-    instanceName: process.env.DB_SERVER_NAME
+    instanceName: 'SQLG8_PRODUCAO'
   }
 };
 

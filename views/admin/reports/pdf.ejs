@@ -111,7 +111,7 @@
             padding-bottom: 12px;
             text-align: left;
             color: #0000FF;
-            background-color: #DCDCDC	;
+            background-color: #DCDCDC;
         }
 
         .footer {
@@ -145,7 +145,7 @@
 
                 <% }%>
                     <% if(filter.datestart && filter.dateend) {%>
-                        Período: <%= filter.datestart %> hasta <%= filter.dateend %> 
+                        Período: <%= filter.datestart %> hasta <%= filter.dateend %>
 
                                 <% }%>
                                     <% if(filter.numberstart && filter.numberend) {%>
@@ -155,7 +155,9 @@
 
 
             <% for (let index=0; index < Object.keys(orders).length; index++) { %>
-                <h3 style="color: #9932cc;text-align: start; align-items: center; margin-left: 15px; text-decoration:underline;">Agrupado por <%= filter.group %>:
+                <h3
+                    style="color: #9932cc;text-align: start; align-items: center; margin-left: 15px; text-decoration:underline;">
+                    Agrupado por <%= filter.group %>:
                         <%=Object.keys(orders)[index]%>
                 </h3>
                 <table id="dataTable">
@@ -240,12 +242,17 @@
                     </h4>
                     <%} %>
                         <div class="footer">
-                            <div class="grid-container" style="align-items: center; justify-content: center; color: gray;" >
+                            <div class="grid-container"
+                                style="align-items: center; justify-content: center; color: gray;">
                                 <p style="padding-right: 400px;">Version 8.000.03</p>
                                 <p>13 - Informe para Aprobacion de Cuentas</p>
-                                <p style="padding-left: 400px;"><strong> Monto Total: Gs <%= monto.vlr_total.toLocaleString('es');%></strong></p>
+                                <p style="padding-left: 400px;"><strong> Monto Total: Gs <%=
+                                            monto.vlr_total.toLocaleString('es');%></strong></p>
                             </div>
                         </div>
+                        <script>
+                            window.onload = function () { window.print(); }
+                        </script>
 </body>
 
 </html>

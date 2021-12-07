@@ -111,7 +111,7 @@
                                     <h6 class="m-0 font-weight-bold text-danger">Generar Informe de Ordenes de Compra
                                     </h6>
                                 </div>
-                                <form action="/purchaseorders" method="POST" data-form-generate>
+                                <form target="_blank" action="/purchaseorders" method="POST" data-form-generate>
                                     <div class="card-body">
                                         <div class="form-row">
                                             <div class="form-group col-6">
@@ -158,8 +158,8 @@
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        <button href="_blank" data-modal-search type="submit"
-                                            class="btn btn-info align-items-center justify-content-md-center mb-2">Generar</button>
+                                        <button data-modal-search type="submit"
+                                            class="btn btn-info align-items-center text-white justify-content-md-center mb-2">Generar</button>
                                     </div>
                                 </form>
                             </div>
@@ -195,7 +195,7 @@
                 </div>
                 <div class="modal-body">Seleccione salir si desea finalizar la sesión.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-secondary " type="button" data-dismiss="modal">Cancelar</button>
                     <a class="btn btn-danger" href="#" onclick="onLogout()">Salir</a>
                 </div>
             </div>

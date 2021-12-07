@@ -1,13 +1,13 @@
 const sql = require('mssql');
 
 var config = {
-  server: "192.168.201.254",
-  user: 'G8_CONSULTA',
-  password: 'Pa$$wOrd',
-  database: 'G8BD',
+  server: process.env.DB_SERVER_HOST,
+  user: process.env.G8_CONSULTA,
+  password: process.env.DB_SERVER_PASSWORD,
+  database: process.env.DB_SERVER_DATABASE,
   options: {
     encrypt: false, // Use this if you're on Windows Azure 
-    instanceName: 'SQLG8_PRODUCAO'
+    instanceName: process.env.DB_SERVER_NAME
   }
 };
 
@@ -61,13 +61,12 @@ class Purchase {
             INNER JOIN [G8BD].[dbo].[PESSOAS] as [pe] on [oc].[ID_FORNECEDOR] = [pe].[PES_CODIGO]`
             
 
-      query += ` WHERE CONVERT(date,[oc].[DT_EMISSAO] ) BETWEEN '${search.datestart}' AND '${search.dateend}'`
+      query += ` WHERE CONVERT(date,[oc].[DT_EMISSAO] ) BETWEEN '${search.datestart}' AND '${search.dateend}' `
 
       if (search.numberstart) query += ` AND [oc].[NR_ORDEMCOMPRA] BETWEEN '${search.numberstart}' AND '${search.numberend}' `
 
       if (search.status) query += ` AND [oc].[FG_STATUS] IN ('${search.status}')`
 
-      console.log(query);
       await sql.connect(config);
 
       let request = new sql.Request();

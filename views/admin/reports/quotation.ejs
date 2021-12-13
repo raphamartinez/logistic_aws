@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Compras</title>
+
+    <style>
+        
+        body {
+            margin-top: 10px !important;
+            padding-top: 10px !important;
+            padding-left: 5px !important;
+            padding-left: 5px !important;
+            padding-right: 5px !important;
+            padding-right: 5px !important;
+        }
+
+        .item1 {
+            grid-area: header;
+            grid-gap: 1px;
+        }
+
+        .item2 {
+            grid-area: menu;
+        }
+
+        .item3 {
+            grid-area: main;
+            border: 2px solid black;
+        }
+
+        .item4 {
+            grid-area: right;
+            border: 2px solid black;
+        }
+
+        .item5 {
+            grid-area: footer;
+        }
+
+
+        .grid-container {
+            display: grid;
+            grid-template-areas:
+                'header header header header header header'
+                'menu main main main right right'
+                'menu footer footer footer footer footer';
+            grid-gap: 10px;
+            padding: 10px;
+        }
+
+
+        h1 {
+            align-items: center;
+            text-align: center;
+        }
+
+        h3 {
+            align-items: center;
+            text-align: center;
+            margin-bottom: 3px;
+        }
+
+        h4 {
+            align-items: center;
+            text-align: right;
+            margin-right: 30px;
+        }
+
+        p {
+            align-items: center;
+            text-align: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            height: 60px;
+            padding-left: 40px;
+            padding-top: 10px;
+        }
+
+        table {
+            font-family: Arial, Helvetica, sans-serif;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            margin-right: 10px;
+            margin-left: 10px;
+            font-size: 12px;
+        }
+
+        thead {
+            margin-top: 25px;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr {
+            border-bottom: 1px solid grey;
+        }
+
+
+        #dataTable tr:hover {
+            background-color: #ddd;
+        }
+
+        #dataTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            color: #0000FF;
+            background-color: #DCDCDC;
+        }
+
+        .footer {
+            top: 100%;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            padding-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-container">
+        <div class="item2"> <img src="../img/launch.png" alt="Sunset Logo"></div>
+        <div class="item3">
+            <h2 style="margin-left: 5px;text-align:center; align-items:center;">COTIZACION DE PRECIOS</h2>
+        </div>
+        <div class="item4">
+            <h2 style="text-align: center; align-items:center;">
+                <%=dateReg%>
+            </h2>
+        </div>
+    </div>
+
+    <h3>Para aprobacion del diretorio</h3>
+    <p style="color: gray; font-style: italic;">
+        <% if(filter.provider) {%>
+            Proveedor: <%= filter.provider %> ---
+
+                <% }%>
+                    <% if(filter.datestart && filter.dateend) {%>
+                        Período: <%= filter.datestart %> hasta <%= filter.dateend %>
+
+                                <% }%>
+                                    <% if(filter.status) {%>
+                                        --- Status: <%= filter.status %>
+    </p>
+    <% }%>
+
+        <div style="padding-left: 20px; padding-right: 20px; ">
+            <% for (let index=0; index < Object.keys(orders).length; index++) { %>
+
+                <% let pr=orders[`${Object.keys(orders)[index]}`]; let quotationnr=pr[`${Object.keys(pr)[0]}`]; %>
+
+                    <h3
+                        style="text-align:center;float:inline-start; padding-top: 20px; text-decoration: underline; background-color: #ffffa6; grid-row: 1 / 2;">
+                        COTIZACION: <%= quotationnr[`${Object.keys(quotationnr)[0]}`].id_cotacao %>
+                    </h3>
+                    <h3 style="text-align:center;float:inline-start;">
+                        <% if(quotationnr[`${Object.keys(quotationnr)[0]}`].truck) {%>
+                            <%= quotationnr[`${Object.keys(quotationnr)[0]}`].truck %> - <%=
+                                    quotationnr[`${Object.keys(quotationnr)[0]}`].category %> - <%=
+                                        quotationnr[`${Object.keys(quotationnr)[0]}`].model %>
+                                        <% }%>
+                                            <% if(!quotationnr[`${Object.keys(quotationnr)[0]}`].truck) { %> Sin
+                                                vehiculo definido para Taller, Stock o ADM.
+                    </h3>
+                    <% }%>
+                        <hr style="clear:both;" />
+                        <% for (let ipr=0; ipr < Object.keys(pr).length; ipr++) { %>
+                            <% let provider=pr[`${Object.keys(pr)[ipr]}`]; %>
+                                <% if( Object.keys(pr)[ipr] !="zhistory" ) { %>
+                                    <h3
+                                        style="color: #9932cc;text-align: start; align-items: center; margin-left: 15px; text-decoration:underline;">
+                                        Proveedor: <%= provider[`${Object.keys(provider)[0]}`].proveedor %>
+                                    </h3>
+                                    <table id="dataTable">
+                                        <col style="width:30%">
+                                        <col style="width:15%">
+                                        <col style="width:4%">
+                                        <col style="width:10%">
+                                        <col style="width:10%">
+                                        <col style="width:15%">
+                                        <col style="width:12%">
+                                        <col style="width:4%">
+                                        <thead>
+                                            <tr>
+                                                <th>Cod y Articulo</th>
+                                                <th>Marca</th>
+                                                <th>Cant</th>
+                                                <th style="text-align: right;">Valor Unit</th>
+                                                <th style="text-align: right;">Valor Total</th>
+                                                <th style="padding-left: 5px;">Naturaleza</th>
+                                                <th>Estado</th>
+                                                <th>OC</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% for (let iqt=0; iqt < Object.keys(provider).length; iqt++) { %>
+                                                <% const quotation=provider[`${Object.keys(provider)[iqt]}`]; %>
+
+                                                    <tr <% if(quotation.stt_reprov) {%> style="color:red;" <% } %> >
+                                                            <td>
+                                                                <%= quotation.codproduct %> - <%= quotation.product %>
+                                                            </td>
+                                                            <td>
+                                                                <%= quotation.model_product %>
+                                                            </td>
+                                                            <td>
+                                                                <%= quotation.qtd_product %>
+                                                            </td>
+                                                            <td style="text-align: right;">
+                                                                <%= quotation.valor_unit.toLocaleString('es') %>
+                                                            </td>
+                                                            <td style="text-align: right;">
+                                                                <%= (quotation.qtd_product *
+                                                                    quotation.valor_unit).toLocaleString('es') %>
+                                                            </td>
+                                                            <td style="padding-left: 5px;">
+                                                                <%= quotation.naturaleza %>
+                                                            </td>
+                                                            <td>
+                                                                <%= quotation.status_desc %>
+                                                            </td>
+                                                            <td>
+                                                                <%= quotation.nr_oc %>
+                                                            </td>
+                                                    </tr>
+                                                    <%}%>
+                                        </tbody>
+                                    </table>
+                                    <% let dt=new Date(provider[`${Object.keys(provider)[0]}`].dt_emissao) %>
+                                        <h4 style="text-align: left ;display: inline; padding-left: 20px;"> Fecha: <%=
+                                                dt.getDate() %>/<%= dt.getMonth() %>/<%= dt.getFullYear() %>
+                                        </h4>
+                                        <% let amountAprrove=Object.keys(provider).reduce(function (previous, key) {
+                                            return previous + (provider[key].qtd_product * provider[key].valor_unit); },
+                                            0); %>
+
+                                            <h4 style="display: inline; padding-left: 400px;">Totales: Gs <%=
+                                                    amountAprrove.toLocaleString('es'); %>
+                                            </h4>
+
+
+
+                                            <%} else {%>
+                                                <h3 style="padding-top: 30px; padding-bottom: 10px;">Historial de gastos
+                                                    del vehículo - <% let car=provider[`${Object.keys(provider)[0]}`];
+                                                        if(car) {%>
+                                                        <%=car.plate %>
+                                                            <% } %>
+                                                </h3>
+
+                                                <% for (let iqt=0; iqt < Object.keys(provider).length; iqt++) { %>
+                                                    <% const quotation=provider[`${Object.keys(provider)[iqt]}`]; let
+                                                        date=new Date(quotation.date) %>
+
+                                                        <div
+                                                            style="padding-left:50px;padding-right:50px; background-color: #d2d2d238; display: flow-root; font-size: 12px;">
+                                                            <p
+                                                                style="text-align:left;float:left;color: grey;margin: 0px;">
+                                                                <%= iqt + 1 %> -
+                                                            </p>
+                                                            <p
+                                                                style="text-align:left;float:left; padding-left: 4px;margin: 0px;">
+                                                                Fecha: <%= date.getDate()%>/<%= date.getMonth() + 1 %>/
+                                                                        <%= date.getFullYear()%> - <%= quotation.type %>
+                                                                                : <%= quotation.product %> - OC: <%=
+                                                                                        quotation.nr_oc %> -
+                                                                                        KM: <%= quotation.km %>
+                                                            </p>
+                                                            <p style="text-align:right;float:right;margin: 0px;">
+                                                                <strong> Gs <%= quotation.vlr_total.toLocaleString('es')
+                                                                        %>
+                                                                </strong>
+                                                            </p>
+                                                            <hr style="clear:both;" />
+                                                        </div>
+                                                        <%}%>
+                                                            <% let amountAprrove=Object.keys(provider).reduce(function
+                                                                (previous, key) { return previous +
+                                                                provider[key].vlr_total; }, 0); %>
+
+                                                                <h4 style="padding-left:100px;padding-right:100px;">
+                                                                    Total gastado en el vehículo hasta ahora: Gs <%=
+                                                                        amountAprrove.toLocaleString('es'); %>
+                                                                </h4>
+                                                                <%}%>
+                                                                    <%}%>
+
+                                                                        <% if(index < Object.keys(orders).length - 1)
+                                                                            {%>
+                                                                            <div style="page-break-before: always">
+                                                                            </div>
+
+                                                                            <% } else {%>
+                                                                                <div class="footer">
+                                                                                    <div
+                                                                                        style="align-items: center; justify-content: center; color: gray;">
+                                                                                        <p style="display: block;">
+                                                                                            ----------------------------------------------------
+                                                                                        </p>
+                                                                                    </div>
+                                                                                    <div
+                                                                                        style="align-items: center; justify-content: center; color: gray;">
+                                                                                        <p><strong> Assinatura do
+                                                                                                Responsável</strong>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <%} %>
+                                                                                    <%} %>
+        </div>
+        <script>
+            window.onload = function () { window.print(); }
+        </script>
+</body>
+
+</html>

@@ -84,6 +84,16 @@ class TravelReport {
         }
     }
 
+    drop(id) {
+        try {
+            const sql = `DELETE FROM travelreportdetail WHERE id_travelreport = ?`
+
+            return query(sql, id)
+        } catch (error) {
+            throw new InternalServerError('No se pudieron agregar los datos')
+        }
+    }
+
     delete(id) {
         try {
             const sql = `DELETE FROM travelreportdetail WHERE id = ?`

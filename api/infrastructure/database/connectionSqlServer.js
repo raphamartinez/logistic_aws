@@ -1,4 +1,13 @@
 
-const config = 'Provider=SQLNCLI11.1;Persist Security Info=False;User ID=G8_CONSULTA;Initial Catalog="";Data Source=192.168.201.254;Initial File Name="";Server SPN=""'
+const config = {
+    server: "192.168.201.254",
+    user: 'G8_CONSULTA',
+    password: 'Pa$$wOrd',
+    database: 'G8BD',
+    options: {
+        encrypt: false, 
+        instanceName: 'SQLG8_PRODUCAO'
+    }
+};
 
 module.exports = config

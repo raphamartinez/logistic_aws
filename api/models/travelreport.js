@@ -47,6 +47,7 @@ class TravelReport {
                 if (concept.id == 0) {
                     await Repositorie.insertDetail(concept, travel.id_travelreport)
                 } else {
+                    await Repositorie.drop(concept.id)
                     await Repositorie.update(concept)
                 }
             }
@@ -78,6 +79,7 @@ class TravelReport {
     }
 
     delete(id) {
+        console.log(id);
         try {
             return Repositorie.delete(id)
         } catch (error) {

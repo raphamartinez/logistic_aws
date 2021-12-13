@@ -980,7 +980,7 @@ const generate = async (event) => {
   const viatico = (concept) => {
     const divconcept = document.querySelector('[data-concepts]')
 
-    if (divconcept.children.length > 15) return alert('Máximo de 5 conceptos por informe.')
+    // if (divconcept.children.length > 33) return alert('Máximo de 10 conceptos por informe.')
 
     const div1 = document.createElement('div')
     div1.classList.add('form-group', 'col-1')
@@ -1014,7 +1014,7 @@ const generate = async (event) => {
   const contenedor = (concept) => {
     const divconcept = document.querySelector('[data-descriptions]')
 
-    if (divconcept.children.length > 15) return alert('Máximo de 5 conceptos por informe.')
+    // if (divconcept.children.length > 33) return alert('Máximo de 10 conceptos por informe.')
 
     const div = document.createElement('div')
     div.classList.add('form-group', 'col-1')

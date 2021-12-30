@@ -1117,11 +1117,10 @@ const generate = async (event) => {
         contenedor(detail)
       }
 
-      let amount
+      let amount = 0;
       if (document.querySelectorAll('#addvalue').length == 1) {
         amount = document.querySelector('#addvalue').value
       } else {
-        if (amount) {
           amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
             let a = 0.000
             let b = 0.000
@@ -1136,7 +1135,6 @@ const generate = async (event) => {
 
             return a + b
           })
-        }
       }
 
       document.querySelector('#amount').value = parseFloat(amount).toFixed(3)

@@ -94,4 +94,30 @@ module.exports = app => {
             next(err)
         }
     })
+
+    app.post('/history', async (req, res, next) => {
+        try {
+            const search = req.body;
+
+            let historys = await Purchase.history(search)
+
+            let date = new Date()
+            let dateReg = ` ${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+
+            const filePath = path.join(__dirname, "../", "../", "views/admin/reports/history.ejs")
+            ejs.renderFile(
+                filePath, {
+                historys,
+                filter: search,
+                dateReg
+            }, (err, data) => {
+                if (err) console.log(err);
+
+                return res.send(data)
+            })
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
 }

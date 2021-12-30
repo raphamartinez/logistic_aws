@@ -27,49 +27,116 @@ class Purchase {
 
         try {
             const obj = {}
+            let groups
             let quotations = await Repositorie.getQuotation(search)
 
-            if (search.status == 2) {
-                let ids = quotations.map(qtt => qtt.id_cotacao)
-                search.status = '4'
-                search.quotation = ids
-                
-                let quotationReproved = await Repositorie.getQuotation(search)
-                quotations = quotations.concat(quotationReproved)
+            if (quotations) {
+                if (search.status == 2) {
+                    let ids = quotations.map(qtt => qtt.id_cotacao)
+                    search.status = '4'
+                    search.quotation = ids
 
-                search.status = '2'
-            }
+                    let quotationReproved = await Repositorie.getQuotation(search)
+                    quotations = quotations.concat(quotationReproved)
 
-            let groups = quotations.reduce(function (r, a) {
-                r[a[`id_cotacao`]] = r[a[`id_cotacao`]] || [];
-                r[a[`id_cotacao`]].push(a);
+                    search.status = '2'
+                }
 
-                return r;
-            }, Object.create(obj));
-
-
-            for (let index = 0; index < Object.keys(groups).length; index++) {
-
-                groups[`${Object.keys(groups)[index]}`] = groups[`${Object.keys(groups)[index]}`].reduce(function (r, a) {
-                    r[a[`proveedor`]] = r[a[`proveedor`]] || [];
-                    r[a[`proveedor`]].push(a);
+                groups = quotations.reduce(function (r, a) {
+                    r[a[`id_cotacao`]] = r[a[`id_cotacao`]] || [];
+                    r[a[`id_cotacao`]].push(a);
 
                     return r;
                 }, Object.create(obj));
 
-                if (search.history == '1') {
-                    let quotation = groups[`${Object.keys(groups)[index]}`]
 
-                    let plate = quotation[`${Object.keys(quotation)[0]}`][0].truck
+                for (let index = 0; index < Object.keys(groups).length; index++) {
 
-                    if (plate) {
-                        const history = await Repositorie.getHistory(plate)
-                        groups[Object.keys(groups)[index]].zhistory = history
+                    groups[`${Object.keys(groups)[index]}`] = groups[`${Object.keys(groups)[index]}`].reduce(function (r, a) {
+                        r[a[`product`]] = r[a[`product`]] || [];
+                        r[a[`product`]].push(a);
+
+                        return r;
+                    }, Object.create(obj));
+
+                    if (search.history == '1') {
+                        let quotation = groups[`${Object.keys(groups)[index]}`]
+
+                        let plate = quotation[`${Object.keys(quotation)[0]}`][0].truck
+
+                        if (plate) {
+                            const hgroups = await Repositorie.getHistoryGroup(plate)
+                            groups[Object.keys(groups)[index]].hgroups = hgroups
+
+                            const history = await Repositorie.getHistoryAuto(plate)
+                            groups[Object.keys(groups)[index]].zhistory = history
+                        }
                     }
+
                 }
             }
 
+            let arr = Object.keys(groups).map((key) => [Number(key), groups[key]]);
+
+            arr.map(ar => {
+
+                let ar2 = Object.keys(ar[1]).map((key) => [key, ar[1][key]]);
+
+                // ar[`${Object.keys(ar[1])}`] = groups[`${Object.keys(ar[1])}`].reduce(function (r, a) {
+                //     r[a[`model_product`]] = r[a[`model_product`]] || [];
+                //     r[a[`model_product`]].push(a);
+
+                //     return r;
+                // }, Object.create(obj));
+
+                console.log(ar2);
+            })
+
+            console.log(result);
+
             return groups
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
+    async history(search) {
+        try {
+            let historys = []
+
+            if (Array.isArray(search.truck)) {
+                for (let truck of search.truck) {
+
+                    const history = await Repositorie.getHistory(truck)
+
+                    const amount = history.reduce((a, b) => a + b.vlr_total, 0)
+
+                    let obj = {
+                        amount,
+                        history,
+                        plate: `${history[0].plate} - ${history[0].category} - ${history[0].model}`,
+                        category: history[0].category
+                    }
+
+                    historys.push(obj)
+                }
+            } else {
+                const history = await Repositorie.getHistory(search.truck)
+
+                const amount = history.reduce((a, b) => a + b.vlr_total, 0)
+
+                let obj = {
+                    amount,
+                    history,
+                    plate: `${history[0].plate} - ${history[0].category} - ${history[0].model}`,
+                    category: history[0].category
+                }
+
+                historys.push(obj)
+            }
+
+            return historys
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')

@@ -1087,20 +1087,22 @@ const generate = async (event) => {
       if (document.querySelectorAll('#addvalue').length == 1) {
         amount = document.querySelector('#addvalue').value
       } else {
-        amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
-          let a = 0.000
-          let b = 0.000
+        if (amount) {
+          amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
+            let a = 0.000
+            let b = 0.000
 
-          if (x.value) {
-            a = parseFloat(x.value)
-          } else {
-            a = x
-          }
+            if (x.value) {
+              a = parseFloat(x.value)
+            } else {
+              a = x
+            }
 
-          if (y.value) b = parseFloat(y.value)
+            if (y.value) b = parseFloat(y.value)
 
-          return a + b
-        })
+            return a + b
+          })
+        }
       }
 
       document.querySelector('#amount').value = parseFloat(amount).toFixed(3)
@@ -1119,20 +1121,22 @@ const generate = async (event) => {
       if (document.querySelectorAll('#addvalue').length == 1) {
         amount = document.querySelector('#addvalue').value
       } else {
-        amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
-          let a = 0.000
-          let b = 0.000
+        if (amount) {
+          amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
+            let a = 0.000
+            let b = 0.000
 
-          if (x.value) {
-            a = parseFloat(x.value)
-          } else {
-            a = x
-          }
+            if (x.value) {
+              a = parseFloat(x.value)
+            } else {
+              a = x
+            }
 
-          if (y.value) b = parseFloat(y.value)
+            if (y.value) b = parseFloat(y.value)
 
-          return a + b
-        })
+            return a + b
+          })
+        }
       }
 
       document.querySelector('#amount').value = parseFloat(amount).toFixed(3)

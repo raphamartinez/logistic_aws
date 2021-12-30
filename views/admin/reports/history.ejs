@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial</title>
+
+    <style>
+        body {
+            margin-top: 10px !important;
+            padding-top: 10px !important;
+            padding-left: 5px !important;
+            padding-left: 5px !important;
+            padding-right: 5px !important;
+            padding-right: 5px !important;
+        }
+
+        .item1 {
+            grid-area: header;
+            grid-gap: 1px;
+        }
+
+        .item2 {
+            grid-area: menu;
+        }
+
+        .item3 {
+            grid-area: main;
+            border: 2px solid black;
+        }
+
+        .item4 {
+            grid-area: right;
+            border: 2px solid black;
+        }
+
+        .item5 {
+            grid-area: footer;
+        }
+
+
+        .grid-container {
+            display: grid;
+            grid-template-areas:
+                'header header header header header header'
+                'menu main main main right right'
+                'menu footer footer footer footer footer';
+            grid-gap: 10px;
+            padding: 10px;
+        }
+
+
+        h1 {
+            align-items: center;
+            text-align: center;
+        }
+
+        h3 {
+            align-items: center;
+            text-align: center;
+            margin-bottom: 3px;
+        }
+
+        h4 {
+            align-items: center;
+            text-align: right;
+            margin-right: 30px;
+        }
+
+        p {
+            align-items: center;
+            text-align: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            height: 60px;
+            padding-left: 40px;
+            padding-top: 10px;
+        }
+
+        table {
+            font-family: Arial, Helvetica, sans-serif;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            margin-right: 10px;
+            margin-left: 10px;
+            font-size: 12px;
+        }
+
+        thead {
+            margin-top: 25px;
+        }
+
+        th {
+            text-align: left;
+            padding: 8px;
+        }
+
+        td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr {
+            border-bottom: 1px solid grey;
+        }
+
+
+        #dataTable tr:hover {
+            background-color: #ddd;
+        }
+
+        #dataTable th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            color: #0000FF;
+            background-color: #DCDCDC;
+        }
+
+        .footer {
+            top: 100%;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            padding-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="grid-container">
+        <div class="item2"> <img src="../img/launch.png" alt="Sunset Logo"></div>
+        <div class="item3">
+            <h2 style="margin-left: 5px;text-align:center; align-items:center;">HISTORIAL</h2>
+        </div>
+        <div class="item4">
+            <h2 style="text-align: center; align-items:center;">
+                <%=dateReg%>
+            </h2>
+        </div>
+    </div>
+
+    <% if(filter.datestart && filter.dateend) {%>
+        <h3>Filtros</h3>
+        <p style="color: gray; font-style: italic;">
+
+            Período: <%= filter.datestart %> hasta <%= filter.dateend %>
+
+
+        </p>
+        <% }%>
+            <div style="padding-left: 20px; padding-right: 20px; ">
+                <% historys.forEach((obj, i)=> { %>
+                     <h3
+                        style="text-align:center;float:inline-start; padding-top: 20px; padding-bottom: 20px; text-decoration: underline; background-color: #ffffa6; grid-row: 1 / 2;">
+                        Historial del Vehiculo: <%= obj.plate %>
+                    </h3>
+                    <table id="dataTable">
+                        <col style="width:5%">
+                        <col style="width:10%">
+                        <col style="width:10%">
+                        <col style="width:30%">
+                        <col style="width:10%">
+                        <col style="width:5%">
+                        <col style="width:5%">
+                        <col style="width:10%">
+                        <col style="width:5%">
+                        <col style="width:30%">
+                        <thead>
+                            <tr>
+                                <th>Orden</th>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
+                                <th>Descripcion</th>
+                                <th>Marca</th>
+                                <th>OC</th>
+                                <th>KM</th>
+                                <th style="text-align: right;">Valor Unit</th>
+                                <th style="text-align: center;">Cant</th>
+                                <th style="text-align: right;">Valor Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% obj.history.forEach(history=> { %>
+                                <% let date=new Date(history.date) %>
+                                    <tr>
+                                        <td>
+                                            <%= history.id %>
+                                        </td>
+                                        <td>
+                                            <%= date.getDate()%>/<%= date.getMonth() + 1 %>/<%= date.getFullYear()%>
+                                        </td>
+                                        <td>
+                                            <%= history.type %>
+                                        </td>
+                                        <td>
+                                            <%= history.product %>
+                                        </td>
+                                        <td>
+                                            <%= history.model_product %>
+                                        </td>
+                                        <td>
+                                            <%= history.nr_oc %>
+                                        </td>
+                                        <td>
+                                            <% if(obj.category.match(/SEMI REBOQUE 3 EIXOS*/) || obj.category.match(/FURGON 3 EJES*/)) {%> Vehiculo sin Control de Kilometraje <%}else{%><%if(history.km) {%><%= history.km.toLocaleString('es')  %><% }} %> 
+                                        </td>
+                                        <td style="text-align: right;">
+                                            Gs <%= history.vlr_unit.toLocaleString('es') %>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <%= history.qtd %>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <strong>
+                                                Gs <%= history.vlr_total.toLocaleString('es') %>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <% })%>
+                        </tbody>
+                    </table>
+
+                    <div style="display:block; text-align: right;">
+                        <h3 style="text-align: end;">
+                            Total gastado en el vehículo hasta ahora: Gs <%= obj.amount.toLocaleString('es') %>
+                        </h3>
+                    </div>
+                    
+                 <% if(i !== historys.length - 1 ) {%>    <div style="page-break-before: always"> <% } %> 
+                    </div>
+                    <% })%>
+                        <!-- 
+
+                                        <div style="page-break-before: always">
+                                        </div>
+
+
+                                        <div class="footer">
+
+                                        </div> -->
+
+            </div>
+            <script>
+                window.onload = function () { window.print(); }
+            </script>
+</body>
+
+</html>

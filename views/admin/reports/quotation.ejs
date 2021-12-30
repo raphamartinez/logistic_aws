@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informe de Compras</title>
+    <title>Informe de Cotizacion</title>
 
     <style>
         
@@ -169,64 +169,60 @@
                 <% let pr=orders[`${Object.keys(orders)[index]}`]; let quotationnr=pr[`${Object.keys(pr)[0]}`]; %>
 
                     <h3
-                        style="text-align:center;float:inline-start; padding-top: 20px; text-decoration: underline; background-color: #ffffa6; grid-row: 1 / 2;">
+                        style="text-align:center;float:inline-start; padding-top: 20px; text-decoration: underline; background-color: #ffffa6; grid-row: 1 / 2; margin-top: 70px;">
                         COTIZACION: <%= quotationnr[`${Object.keys(quotationnr)[0]}`].id_cotacao %>
                     </h3>
                     <h3 style="text-align:center;float:inline-start;">
                         <% if(quotationnr[`${Object.keys(quotationnr)[0]}`].truck) {%>
-                            <%= quotationnr[`${Object.keys(quotationnr)[0]}`].truck %> - <%=
-                                    quotationnr[`${Object.keys(quotationnr)[0]}`].category %> - <%=
-                                        quotationnr[`${Object.keys(quotationnr)[0]}`].model %>
+                            <%= quotationnr[`${Object.keys(quotationnr)[0]}`].truck %> - <%= quotationnr[`${Object.keys(quotationnr)[0]}`].category %> - <%= quotationnr[`${Object.keys(quotationnr)[0]}`].model %>
                                         <% }%>
                                             <% if(!quotationnr[`${Object.keys(quotationnr)[0]}`].truck) { %> Sin
                                                 vehiculo definido para Taller, Stock o ADM.
                     </h3>
                     <% }%>
-                        <hr style="clear:both;" />
+                    <table id="dataTable">
+                        <col style="width:20%">
+                        <col style="width:15%">
+                        <col style="width:5%">
+                        <col style="width:4%">
+                        <col style="width:8%">
+                        <col style="width:15%">
+                        <col style="width:8%">
+                        <col style="width:4%">
+                        <thead>
+                            <tr>
+                                <th>Articulo</th>
+                                <th>Grupo</th>
+                                <th>Marca</th>
+                                <th>Cant</th>
+                                <th style="text-align: right;"><% console.log(pr[`${Object.keys(pr)[0]}`]); if(pr[`${Object.keys(pr)[0]}`].proveedor) {%> <%= pr[`${Object.keys(pr)[0]}`].proveedor %> <% } %></th>
+                                <th style="text-align: right;"><% if(pr[`${Object.keys(pr)[1]}`]) {%> <%= pr[`${Object.keys(pr)[1]}`].proveedor %> <% } %></th>
+                                <th style="text-align: right;"><% if(pr[`${Object.keys(pr)[2]}`]) {%> <%= pr[`${Object.keys(pr)[2]}`].proveedor %> <% } pr[`${Object.keys(pr)[3]}`].proveedor %></th>
+                                <th style="padding-left: 5px;">Naturaleza</th>
+                                <th>Estado</th>
+                                <th>OC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         <% for (let ipr=0; ipr < Object.keys(pr).length; ipr++) { %>
                             <% let provider=pr[`${Object.keys(pr)[ipr]}`]; %>
-                                <% if( Object.keys(pr)[ipr] !="zhistory" ) { %>
-                                    <h3
-                                        style="color: #9932cc;text-align: start; align-items: center; margin-left: 15px; text-decoration:underline;">
-                                        Proveedor: <%= provider[`${Object.keys(provider)[0]}`].proveedor %>
-                                    </h3>
-                                    <table id="dataTable">
-                                        <col style="width:30%">
-                                        <col style="width:15%">
-                                        <col style="width:4%">
-                                        <col style="width:10%">
-                                        <col style="width:10%">
-                                        <col style="width:15%">
-                                        <col style="width:12%">
-                                        <col style="width:4%">
-                                        <thead>
-                                            <tr>
-                                                <th>Cod y Articulo</th>
-                                                <th>Marca</th>
-                                                <th>Cant</th>
-                                                <th style="text-align: right;">Valor Unit</th>
-                                                <th style="text-align: right;">Valor Total</th>
-                                                <th style="padding-left: 5px;">Naturaleza</th>
-                                                <th>Estado</th>
-                                                <th>OC</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                <% if( Object.keys(pr)[ipr] !="zhistory" && Object.keys(pr)[ipr] != "hgroups" ) { %>
+
                                             <% for (let iqt=0; iqt < Object.keys(provider).length; iqt++) { %>
                                                 <% const quotation=provider[`${Object.keys(provider)[iqt]}`]; %>
 
-                                                    <tr <% if(quotation.stt_reprov) {%> style="color:red;" <% } %> >
+                                                    <tr>
                                                             <td>
-                                                                <%= quotation.codproduct %> - <%= quotation.product %>
+                                                                 <%= quotation.product %>
+                                                            </td>
+                                                            <td>
+                                                                <%= quotation.grupo %>
                                                             </td>
                                                             <td>
                                                                 <%= quotation.model_product %>
                                                             </td>
                                                             <td>
                                                                 <%= quotation.qtd_product %>
-                                                            </td>
-                                                            <td style="text-align: right;">
-                                                                <%= quotation.valor_unit.toLocaleString('es') %>
                                                             </td>
                                                             <td style="text-align: right;">
                                                                 <%= (quotation.qtd_product *
@@ -243,69 +239,79 @@
                                                             </td>
                                                     </tr>
                                                     <%}%>
-                                        </tbody>
-                                    </table>
-                                    <% let dt=new Date(provider[`${Object.keys(provider)[0]}`].dt_emissao) %>
-                                        <h4 style="text-align: left ;display: inline; padding-left: 20px;"> Fecha: <%=
-                                                dt.getDate() %>/<%= dt.getMonth() %>/<%= dt.getFullYear() %>
-                                        </h4>
-                                        <% let amountAprrove=Object.keys(provider).reduce(function (previous, key) {
-                                            return previous + (provider[key].qtd_product * provider[key].valor_unit); },
-                                            0); %>
+                                 
+            
 
-                                            <h4 style="display: inline; padding-left: 400px;">Totales: Gs <%=
-                                                    amountAprrove.toLocaleString('es'); %>
-                                            </h4>
+                                            <%} else { %>
+                                            </tbody>
+                                        </table>
+                                      
 
+                                                <% if( Object.keys(pr)[ipr] == "hgroups" ) { %>
+                                                    <h3 style="padding-top: 30px; padding-bottom: 10px;">Historial de gastos
+                                                        del vehículo <strong style="background-color: #ffffa6;">(Por Grupo)</strong> - <% if(quotationnr[`${Object.keys(quotationnr)[0]}`].truck) {%>
+                                                            <%=quotationnr[`${Object.keys(quotationnr)[0]}`].truck %>
+                                                                <% } %>
+                                                    </h3>
 
+                             
+                                                    <% let amountAprroveH=Object.keys(provider).reduce(function (previous, key) { return previous + provider[key].vlr_total; }, 0); %>   
 
-                                            <%} else {%>
-                                                <h3 style="padding-top: 30px; padding-bottom: 10px;">Historial de gastos
-                                                    del vehículo - <% let car=provider[`${Object.keys(provider)[0]}`];
-                                                        if(car) {%>
-                                                        <%=car.plate %>
-                                                            <% } %>
-                                                </h3>
-
-                                                <% for (let iqt=0; iqt < Object.keys(provider).length; iqt++) { %>
-                                                    <% const quotation=provider[`${Object.keys(provider)[iqt]}`]; let
-                                                        date=new Date(quotation.date) %>
-
-                                                        <div
-                                                            style="padding-left:50px;padding-right:50px; background-color: #d2d2d238; display: flow-root; font-size: 12px;">
-                                                            <p
-                                                                style="text-align:left;float:left;color: grey;margin: 0px;">
-                                                                <%= iqt + 1 %> -
-                                                            </p>
-                                                            <p
-                                                                style="text-align:left;float:left; padding-left: 4px;margin: 0px;">
-                                                                Fecha: <%= date.getDate()%>/<%= date.getMonth() + 1 %>/
-                                                                        <%= date.getFullYear()%> - <%= quotation.type %>
-                                                                                : <%= quotation.product %> - OC: <%=
-                                                                                        quotation.nr_oc %> -
-                                                                                        KM: <%= quotation.km %>
-                                                            </p>
+                                                    <% for (let iqt=0; iqt < Object.keys(provider).length; iqt++) { %>
+                                                    <% let qhistory=provider[`${Object.keys(provider)[iqt]}`]; %>
+                                                        <div style="padding-left:50px;padding-right:50px; background-color: #d2d2d238; display: flow-root; font-size: 12px;">
+                                                            <p style="text-align:left;float:left; padding-left: 4px;margin: 0px;">
+                                                               <strong>Grupo:</strong>  <%= qhistory.grupo %> 
+                                                                </p>
                                                             <p style="text-align:right;float:right;margin: 0px;">
-                                                                <strong> Gs <%= quotation.vlr_total.toLocaleString('es')
-                                                                        %>
-                                                                </strong>
+                                                                <strong> Gs <%= qhistory.vlr_total.toLocaleString('es')%></strong> - <%= (qhistory.vlr_total * 100 / amountAprroveH).toFixed(0)%> %
                                                             </p>
                                                             <hr style="clear:both;" />
                                                         </div>
                                                         <%}%>
-                                                            <% let amountAprrove=Object.keys(provider).reduce(function
-                                                                (previous, key) { return previous +
-                                                                provider[key].vlr_total; }, 0); %>
+
+                                                   
+
+                                                        <h4 style="padding-left:100px;padding-right:100px;">
+                                                            Total gastado en el vehículo hasta ahora: Gs <%= amountAprroveH.toLocaleString('es'); %>
+                                                        </h4>
+<br>
+                                                    <%} else {%>
+                                                        <h3 style="padding-top: 30px; padding-bottom: 10px;">Historial de gastos
+                                                            del vehículo <strong style="background-color: #ffffa6;">(Por Produto)</strong> - <% if(quotationnr[`${Object.keys(quotationnr)[0]}`].truck) {%>
+                                                                <%=quotationnr[`${Object.keys(quotationnr)[0]}`].truck %>
+                                                                    <% } %>
+                                                        </h3>
+
+                                                <% for (let iqt=0; iqt < Object.keys(provider).length; iqt++) { %>
+                                                    <%let quotation=provider[`${Object.keys(provider)[iqt]}`]; let date=new Date(quotation.date) %>
+                                                        <div style="padding-left:50px;padding-right:50px; background-color: #d2d2d238; display: flow-root; font-size: 12px;">
+                                                            <p
+                                                                style="text-align:left;float:left;color: grey;margin: 0px;">
+                                                                <%= quotation.id %> -
+                                                            </p>
+                                                            <p
+                                                                style="text-align:left;float:left; padding-left: 4px;margin: 0px;">
+                                                                <strong>Fecha:</strong> <%= date.getDate()%>/<%= date.getMonth() + 1 %>/
+                                                                        <%= date.getFullYear()%> - <strong>Grupo:</strong> <%= quotation.grupo %> - <strong><%= quotation.type %></strong>: <%= quotation.product %> - <strong>OC:</strong> <%= quotation.nr_oc %> -
+                                                                        <strong>KM:</strong><% if(quotationnr[`${Object.keys(quotationnr)[0]}`].category.match(/SEMI REBOQUE 3 EIXOS*/) || quotationnr[`${Object.keys(quotationnr)[0]}`].category.match(/FURGON 3 EJES*/)) {%> Vehiculo sin Control de Kilometraje <%}else{%><%if(quotation.km) {%><%= quotation.km.toLocaleString('es')  %><% }} %> 
+                                                            </p>
+                                                            <p style="text-align:right;float:right;margin: 0px;">
+                                                                <strong> Gs <%= quotation.vlr_total.toLocaleString('es') %> </strong>
+                                                            </p>
+                                                            <hr style="clear:both;" />
+                                                        </div>
+                                                        <%}%>
+                                                        
+                                                            <% let amountAprrove=Object.keys(provider).reduce(function (previous, key) { return previous + provider[key].vlr_total; }, 0); %>
 
                                                                 <h4 style="padding-left:100px;padding-right:100px;">
-                                                                    Total gastado en el vehículo hasta ahora: Gs <%=
-                                                                        amountAprrove.toLocaleString('es'); %>
+                                                                    Total gastado en el vehículo hasta ahora: Gs <%= amountAprrove.toLocaleString('es'); %>
                                                                 </h4>
                                                                 <%}%>
-                                                                    <%}%>
+                                                                    <%}}%>
 
-                                                                        <% if(index < Object.keys(orders).length - 1)
-                                                                            {%>
+                                                                        <% if(index < Object.keys(orders).length - 1){%>
                                                                             <div style="page-break-before: always">
                                                                             </div>
 

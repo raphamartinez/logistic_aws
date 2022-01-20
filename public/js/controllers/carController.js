@@ -25,7 +25,7 @@ window.onload = async function () {
 
   if (day < 10) day = `0${day}`
 
-  const now = `${date.getFullYear()}-${date.getMonth() + 1}-${day}`
+  const now = `${date.getFullYear()}-${(date.getMonth() + 1).toString().length == 1 ? "0" : ""}${date.getMonth() + 1}-${day}`
 
   const cars = await Connection.noBody(`cars/${now}`, 'GET')
   const travels = await Connection.noBody(`travel/${now}`, 'GET')
@@ -1087,22 +1087,21 @@ const generate = async (event) => {
       if (document.querySelectorAll('#addvalue').length == 1) {
         amount = document.querySelector('#addvalue').value
       } else {
-        if (amount) {
           amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
+            if (x.value === "") x.value = 0;
+            if (y.value === "") y.value = 0;
             let a = 0.000
             let b = 0.000
-
             if (x.value) {
-              a = parseFloat(x.value)
+              a = parseFloat(x.value.toLocaleString('es')) 
             } else {
               a = x
             }
 
-            if (y.value) b = parseFloat(y.value)
+            if(y.value) b = parseFloat(y.value.toLocaleString('es'))
 
             return a + b
           })
-        }
       }
 
       document.querySelector('#amount').value = parseFloat(amount).toFixed(3)

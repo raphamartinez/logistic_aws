@@ -126,51 +126,14 @@
                                     <h6 class="m-0 font-weight-bold text-danger">Generar Informe de Ordenes de Compra
                                     </h6>
                                 </div>
-                                <form target="_blank" action="/gestranorder" method="POST" data-form-generate>
+                                <form target="_blank" action="/order/gestran" method="POST" data-form-generate>
                                     <div class="card-body">
                                         <div class="form-row">
-                                            <div class="form-group col-6">
-                                                <label for="numberstart">Status</label>
-                                                <select data-select-status id="status" name="status" type="text"
-                                                    multiple class="form-control">
-                                                    <option value="" selected disabled>Status do Item</option>
-                                                    <option value="'3'">En processo</option>
-                                                    <option value="'5'">Concluido</option>
-                                                    <option value="'6'">Cancelado</option>
+                                            <div class="form-group col-12">
+                                                <label for="purchaseorder">Orden de Compra</label>
+                                                <select data-select-purchaseorder id="purchaseorder"
+                                                    name="purchaseorder" class="form-control" multiple>
                                                 </select>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label for="group">Agrupar por: </label>
-                                                <select data-select-group id="group" name="group" class="form-control"
-                                                    required>
-                                                    <option value="" selected disabled>Grupo</option>
-                                                    <option value="placa">Placa</option>
-                                                    <option value="proveedor">Proveedor</option>
-                                                    <option value="naturaleza">Natureza</option>
-                                                    <option value="categoria">Grupo del Vehiculo</option>
-                                                    <option value="nr_oc">Orden de Compra</option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label for="datestart">Fecha Inicial</label>
-                                                <input id="datestart" name="datestart" placeholder="Fecha Inicial"
-                                                    type="date" class="form-control" required>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label for="dateend">Fecha Final</label>
-                                                <input id="dateend" name="dateend" placeholder="Fecha Final" type="date"
-                                                    class="form-control" required>
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label for="numberstart">Numero Inicial</label>
-                                                <input id="numberstart" name="numberstart"
-                                                    placeholder="Número Ordem Inicial" type="number"
-                                                    class="form-control">
-                                            </div>
-                                            <div class="form-group col-6">
-                                                <label for="numberend">Numero Final</label>
-                                                <input id="numberend" name="numberend" placeholder="Número Ordem Final"
-                                                    type="number" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -228,7 +191,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js"></script>
     <script src="../js/libs/sb-admin-2.min.js"></script>
-    <script type="module" src="../js/controllers/purchaseController.js"></script>
+    <script type="module" src="../js/controllers/qttController.js"></script>
     <script type="module" src="../js/controllers/loginController.js"></script>
     <script src="../js/libs/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/rowreorder/1.2.8/js/dataTables.rowReorder.min.js"></script>

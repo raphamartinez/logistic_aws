@@ -29,6 +29,31 @@ module.exports = app => {
         }
     })
 
+    app.post('/order/gestran', async (req, res, next) => {
+        try {
+            const oc = req.body.purchaseorder;
+            let { orders, amount, natures } = await Purchase.gestranOrder(oc)
+
+            let order = orders[0];
+            order.items = orders;
+
+            let date = new Date()
+            let dateReg = ` ${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+
+            const filePath = path.join(__dirname, "../", "../", "views/admin/reports/order.ejs")
+            ejs.renderFile(
+                filePath, { order, dateReg, amount, natures }, (err, data) => {
+                    if (err) return console.log(err);
+
+                    return res.send(data)
+                })
+
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
     app.get('/quotation', async (req, res, next) => {
         try {
 
@@ -56,7 +81,7 @@ module.exports = app => {
         try {
             const search = req.body;
 
-            let groups = await Purchase.quotation(search)
+            let { result, sellers, natures } = await Purchase.quotation(search)
 
             switch (search.status) {
                 case '1':
@@ -80,9 +105,11 @@ module.exports = app => {
             const filePath = path.join(__dirname, "../", "../", "views/admin/reports/quotation.ejs")
             ejs.renderFile(
                 filePath, {
-                orders: groups,
+                orders: result,
                 filter: search,
-                dateReg
+                dateReg,
+                sellers,
+                natures
             }, (err, data) => {
                 if (err) console.log(err);
 

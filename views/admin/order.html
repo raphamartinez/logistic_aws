@@ -9,6 +9,12 @@
     <link href="../css/sb-admin-2.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        .rounded-3 {
+            border-radius: 2rem !important;
+        }
+    </style>
 </head>
 <header>
     <div class="container-fluid mb-2">
@@ -18,6 +24,10 @@
                     <img width="320" height="80" src="../img/launch.png" alt="Sunset Logo">
                 </div>
             </div>
+
+            <% let dtEmission = new Date(order.dt_emission) %>
+            <% let dtDelivery = new Date(order.dt_delivery) %>
+
             <div class="form-group col-md-3">
                 <h4 style="font-family: Arial, Helvetica, sans-serif;">Cotización</h4>
                 <h4 style="font-family: Arial, Helvetica, sans-serif;">Orden de Compra</h4>
@@ -25,14 +35,14 @@
                 <h8 style="font-family: Arial, Helvetica, sans-serif;">Solicitado por:</h8>
             </div>
             <div class="form-group col-md-3">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">1</h4>
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">1</h4>
-                <h5 style="font-family: Arial, Helvetica, sans-serif;">01/01/2021</h5>
-                <h8 style="font-family: Arial, Helvetica, sans-serif;">DATA</h8>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;"><%= order.nr_quotation %></h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;"><%= order.nr_oc %></h4>
+                <h5 style="font-family: Arial, Helvetica, sans-serif;"><%= dtEmission.getDate() %>/<%= dtEmission.getMonth() + 1 %>/<%= dtEmission.getFullYear() %></h5>
+                <h8 style="font-family: Arial, Helvetica, sans-serif;"><%= order.buyer %></h8>
             </div>
             <div class="form-group col-md-1">
                 <h4 class="text-danger" style="font-family: Arial, Helvetica, sans-serif;">Chapa:</h4>
-                <h5 class="text-danger" style="font-family: Arial, Helvetica, sans-serif;">DATA</h5>
+                <h5 class="text-danger" style="font-family: Arial, Helvetica, sans-serif;"><%= order.plate %></h5>
             </div>
         </div>
     </div>
@@ -46,7 +56,7 @@
                 <h4>DATOS DE LA EMPRESA</h4>
             </div>
             <div class="form-group col-md-12">
-                <h4>NOMBRE DE LA EMPRESA: <strong>DATA</strong></h4>
+                <h4>NOMBRE DE LA EMPRESA: <strong>SUNSET S.A.C.I.S</strong></h4>
             </div>
             <div class="form-group col-md-12">
                 <h4 style="font-family: Arial, Helvetica, sans-serif;">RUC: 80049455-5</h4>
@@ -58,46 +68,46 @@
                 <h4>DATOS DEL PROVEEDOR</h4>
             </div>
             <div class="form-group col-md-12">
-                <h4>NOMBRE DEL PROVEEDOR: <strong>DATA</strong></h4>
+                <h4>NOMBRE DEL PROVEEDOR: <strong><%= order.provider %></strong></h4>
             </div>
             <div class="form-group col-md-6">
-                <h4>DIRECCIÓN: DATA</h4>
+                <h4>DIRECCIÓN: <%= order.provider_address %>, Nº <%= order.provider_number %></h4>
             </div>
             <div class="form-group col-md-6">
-                <h4>TELÉFONO: DATA</h4>
+                <h4>TELÉFONO: <%= order.provider_phone %></h4>
             </div>
             <div class="form-group col-md-4">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">CIUDAD: DATA</h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;">CIUDAD: </h4>
             </div>
             <div class="form-group col-md-4">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">DEPARTAMENTO: DATA</h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;">DEPARTAMENTO: </h4>
             </div>
             <div class="form-group col-md-4">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">BARRIO: DATA</h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;">BARRIO: <%= order.provider_district %></h4>
             </div>
             <div class="form-group col-md-12">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">RUC: 80049455-5</h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;">RUC: <%= order.provider_cnpj %></h4>
             </div>
             <div class="form-group col-md-12">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">VENDEDOR: DATA</h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;">VENDEDOR: <%= order.salesman %></h4>
             </div>
         </div>
 
         <div style="background-color:#E2E4E3" class="form-row rounded-3 border border-3 border-dark mb-2">
             <div class="form-group col-md-12">
-                <h4>NOMBRE - LOCAL DE LA EMPRESA: <strong>DATA</strong></h4>
+                <h4>NOMBRE - LOCAL DE LA EMPRESA: <strong><%= order.delivery_name %></strong></h4>
             </div>
             <div class="form-group col-md-12">
-                <h4>DIRECCIÓN DE LA ENTREGA: DATA</h4>
+                <h4>DIRECCIÓN DE LA ENTREGA: <%= order.delivery_address %>, Nº <%= order.delivery_number %></h4>
             </div>
             <div class="form-group col-md-8">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">BARRIO: DATA</h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;">BARRIO: <%= order.delivery_district %></h4>
             </div>
             <div class="form-group col-md-4">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">TELÉFONO: DATA</h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;">TELÉFONO: <%= order.delivery_phone %></h4>
             </div>
             <div class="form-group offset-4 col-md-8">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;">PLAZO DE ENTREGA: DATA</h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;">PLAZO DE ENTREGA: <%= dtDelivery.getDate() %>/<%= dtDelivery.getMonth() + 1 %>/<%= dtDelivery.getFullYear() %></h4>
             </div>
         </div>
 
@@ -124,36 +134,39 @@
                 <h5>MONTO TOTAL</h5>
             </div>
         </div>
+
+        <% order.items.forEach((item, index) => {%>
         <div class="form-row align-items-center">
             <div class="form-group text-center col-md-1">
-                <h5>DATA</h5>
+                <h5><%= item.qt_product %></h5>
             </div>
             <div class="form-group col-md-1">
-                <h5>DATA</h5>
+                <h5>Un</h5>
             </div>
             <div class="form-group col-md-3">
-                <h5>DATA</h5>
+                <h5><%= item.cod_art %> - <%= item.product %></h5>
+            </div>
+            <div class="form-group text-center col-md-1.5">
+                <h5>Mantenimiento Piezas</h5>
             </div>
             <div class="form-group col-md-1">
-                <h5>DATA</h5>
+                <h5><%= item.plate %></h5>
             </div>
             <div class="form-group text-center col-md-3">
-                <h5>DATA</h5>
+                <h5><%= item.vlr_unitario.toLocaleString('es') %></h5>
             </div>
             <div class="form-group text-center col-md-1.5">
-                <h5>DATA</h5>
-            </div>
-            <div class="form-group text-center col-md-1.5">
-                <h5>DATA</h5>
-            </div>
+                <h5><%= item.vlr_total.toLocaleString('es') %></h5>
+            </div>     
         </div>
+        <% })%>
 
         <div class="form-row border-top border-3 border-dark align-items-center">
             <div class="form-group offset-8 col-md-2 text-right border border-dark">
                 <h4 style="font-family: Arial, Helvetica, sans-serif;">MONTO</h4>
             </div>
             <div class="form-group col-md-2 border border-dark">
-                <h4 style="font-family: Arial, Helvetica, sans-serif;"> DATA</h4>
+                <h4 style="font-family: Arial, Helvetica, sans-serif;"><%= amount.toLocaleString('es') %></h4>
             </div>
         </div>
 
@@ -164,25 +177,25 @@
                         <h4>Monto Bruto:</h4>
                     </div>
                     <div class="form-group col-md-6">
-                        <h4>DATA</h4>
+                        <h4><%= amount.toLocaleString('es') %></h4>
                     </div>
                     <div class="form-group col-md-6">
                         <h4>Flete:</h4>
                     </div>
                     <div class="form-group col-md-6">
-                        <h4>DATA</h4>
+                        <h4>0</h4>
                     </div>
                     <div class="form-group col-md-6">
                         <h4>Monto Final:</h4>
                     </div>
                     <div class="form-group col-md-6">
-                        <h4>DATA</h4>
+                        <h4><%= amount.toLocaleString('es') %></h4>
                     </div>
                     <div class="form-group col-md-6">
                         <h4>Forma de Pago:</h4>
                     </div>
                     <div class="form-group col-md-6">
-                        <h4>DATA</h4>
+                        <h4><%= order.cond_faturamento %></h4>
                     </div>
                 </div>
             </div>
@@ -210,14 +223,7 @@
                     NOSOTROS ANTES DEL VENCIMIENTO DE LA FACTURA.</H6>
             </div>
         </div>
-
     </div>
-
-
-
-
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>

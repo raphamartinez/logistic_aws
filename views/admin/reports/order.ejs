@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orden de Compra</title>
+    <link href="../css/sb-admin-2.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        .rounded-3 {
+            border-radius: 2rem !important;
+        }
+
+        .h4, h4, h6, h7, h8{
+            line-height: 1;
+        }
+        .h6, h6{
+            line-height: 1;
+        }
+        .h8{
+            line-height: 1;
+        }
+    </style>
+</head>
+<header>
+    <div class="container-fluid mb-2 pl-5 pr-5">
+        <div class="form-row rounded-3 border border-2 border-dark">
+            <div class="form-group col-md-5 text-center align-items-center justify-content-between">
+                <div class="sidebar-brand-icon mt-4">
+                    <img width="320" height="80" src="../img/launch.png" alt="Sunset Logo">
+                </div>
+            </div>
+
+            <% let dtEmission=new Date(order.dt_emission) %>
+                <% let dtDelivery=new Date(order.dt_delivery) %>
+
+                    <div class="form-group col-md-3 mt-3">
+                        <h4 style="font-family: Arial;"><strong>Orden de Compra:</strong></h4>
+                        <h4 style="font-family: Arial;">Cotización:</h4>
+                        <h6 style="font-family: Arial;"><strong>Fecha de Emision:</strong></h6>
+                        <h8 style="font-family: Arial;"><strong>Solicitado por:</strong></h8>
+                    </div>
+                    <div class="form-group col-md-2 mt-3">
+                        <h4 style="font-family: Arial;"><strong>
+                            <%= order.nr_oc %>
+                        </strong></h4>
+                        <h4 style="font-family: Arial;">
+                                <%= order.nr_quotation %>
+                        </h4>
+                        <h6 style="font-family: Arial;"><strong>
+                                <%= dtEmission.getDate() %>/<%= dtEmission.getMonth() + 1 %>/<%=
+                                            dtEmission.getFullYear() %>
+                            </strong></h6>
+                        <h8 style="font-family: Arial;"><strong>
+                                Diana Saraiva
+                            </strong></h8>
+                    </div>
+                    <div class="form-group col-md-2 mt-3">
+                        <% if(order.plate) {%>   
+                        <h5 class="text-danger text-center" style="font-family: Arial;">
+                            <strong>Chapa:</strong></h5>
+                        <h5 class="text-danger text-center" style="font-family: Arial;">
+                            <%= order.plate %>
+                        </h5>
+                        <h6 class="text-danger text-center" style="font-family: Arial;">
+                            <%= order.category %>
+                        </h6>
+                        <h6 class="text-danger text-center" style="font-family: Arial;">
+                            <%= order.model %>
+                        </h6>
+                        <% } %> 
+                    </div>
+        </div>
+    </div>
+</header>
+
+<body>
+    <div class="container-fluid pb-5 pl-5 pr-5">
+        <div class="form-row rounded-3 border-top border-end border-start border-2 border-dark">
+            <div class="form-group col-md-12 border-bottom border-2 border-dark text-center">
+                <h4>DATOS DE LA EMPRESA</h4>
+            </div>
+            <div class="form-group col-md-12 p-2">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>NOMBRE DE LA EMPRESA: SUNSET S.A.C.I.S</strong></h5>
+            </div>
+            <div class="form-group col-md-12 p-2">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>RUC: 80028071-7</strong></h5>
+            </div>
+        </div>
+
+        <div class="form-row rounded-3 border-top border-end border-start border-2 border-dark">
+            <div class="form-group col-md-12 border-bottom border-2 border-dark text-center">
+                <h4>DATOS DEL PROVEEDOR</h4>
+            </div>
+            <div class="form-group col-md-12">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>NOMBRE DEL PROVEEDOR: 
+                        <%= order.provider %>
+                    </strong></h5>
+            </div>
+            <div class="form-group col-md-8">
+                <h5 style="font-family: Arial;"><strong>DIRECCIÓN:</strong> <%= order.provider_address %>, Nº <%= order.provider_number %>
+                </h5>
+            </div>
+            <div class="form-group col-md-4">
+                <h5 style="font-family: Arial;"><strong>TELÉFONO CLIENTE:</strong> <%= order.provider_phone %>
+                </h5>
+            </div>
+            <div class="form-group col-md-4">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>CIUDAD:</strong> </h5>
+            </div>
+            <div class="form-group col-md-4">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>DEPARTAMENTO:</strong> </h5>
+            </div>
+            <div class="form-group col-md-4">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>BARRIO:</strong> <%= order.provider_district %>
+                </h5>
+            </div>
+            <div class="form-group col-md-12">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>RUC:</strong> <%= order.provider_cnpj %>
+                </h5>
+            </div>
+            <div class="form-group col-md-6">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>VENDEDOR:</strong> <%= order.salesman %>
+                </h5>
+            </div>
+            <div class="form-group col-md-6">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>TELÉFONO VENDEDOR:</strong> <%= order.phone %>
+                </h5>
+            </div>
+        </div>
+
+        <div style="background-color:#E2E4E3" class="form-row rounded-3 border border-2 border-dark mb-2">
+            <div class="form-group pl-2 pt-2 col-md-12">
+                <h5><strong>NOMBRE - LOCAL DE LA EMPRESA: 
+                        <%= order.delivery_name %>
+                    </strong></h5>
+            </div>
+            <div class="form-group pl-2 col-md-12">
+                <h5 style="font-family: Arial; line-height: 0.5rem">DIRECCIÓN DE LA ENTREGA: <%= order.delivery_address %>, Nº <%= order.delivery_number %>
+                </h5>
+            </div>
+            <div class="form-group pl-2 col-md-8">
+                <h5 style="font-family: Arial; line-height: 0.5rem">BARRIO: <%= order.delivery_district %>
+                </h5>
+            </div>
+            <div class="form-group pl-2 col-md-4">
+                <h5 style="font-family: Arial; line-height: 0.5rem">TELÉFONO: <%= order.delivery_phone %>
+                </h5>
+            </div>
+            <div class="form-group pl-2 offset-4 col-md-8">
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>PLAZO DE ENTREGA:</strong> <%= dtDelivery.getDate() %>/<%=
+                            dtDelivery.getMonth() + 1 %>/<%= dtDelivery.getFullYear() %>
+                </h5>
+            </div>
+        </div>
+
+        <div class="form-row rounded-1 border border-2 border-dark align-items-center">
+            <div class="form-group text-center col-md-1">
+                <h6>QTDE.</h6>
+            </div>
+            <div class="form-group col-md-1">
+                <h6>UNID.</h6>
+            </div>
+            <div class="form-group col-md-3">
+                <h6>CODIGO Y DESCRIPCION</h6>
+            </div>
+            <% if(order.plate) {%>  
+            <div class="form-group col-md-1">
+                <h6>CHAPA</h6>
+            </div>
+            <div class="form-group text-center col-md-3">
+                <h6>NATURALEZA</h6>
+            </div>
+            <% } else{ %> 
+            <div class="form-group text-center col-md-4">
+                <h6>NATURALEZA</h6>
+            </div>
+            <% } %> 
+            <div style="width: 11%;" class="form-group text-right col-md-2">
+                <h6>MONTO UNI</h6>
+            </div>
+            <div style="width: 12%;" class="form-group text-right col-md-2">
+                <h6>MONTO TOTAL</h6>
+            </div>
+        </div>
+
+        <% order.items.forEach((item, index)=> {%>
+            <div class="form-row align-items-center">
+                <div class="form-group text-center col-md-1">
+                    <h6>
+                        <%= item.qt_product %>
+                    </h6>
+                </div>
+                <div class="form-group col-md-1">
+                    <h6>Un</h6>
+                </div>
+                <div class="form-group col-md-3">
+                    <h6>
+                        <%= item.cod_art %> - <%= item.product %>
+                    </h6>
+                </div>
+                <% if(order.plate) {%>  
+                <div class="form-group col-md-1">
+                    <h6>
+                        <%= item.plate %>
+                    </h6>
+                </div>
+                <div class="form-group text-center col-md-3">
+                    <h6><%= item.naturality %></h6>
+                </div>
+                <% }else {%> 
+                    <div class="form-group text-center col-md-4">
+                        <h6><%= item.naturality %></h6>
+                    </div>
+                    <% } %> 
+                <div style="width: 11%;" class="form-group text-right col-md-2">
+                    <% let unit = item.vlr_unitario; if(item.vlr_unitario.toString().length === 4){var vlr_unitario = item.vlr_unitario.toString().split(''); var map = vlr_unitario.map(Number); unit = `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
+                    <h6>
+                        <%= unit.toLocaleString('es') %>
+                    </h6>
+                </div>
+                <div style="width: 12%;" class="form-group text-right col-md-2">
+                    <% let total = item.vlr_total; if(item.vlr_total.toString().length === 4){var vlr_total = item.vlr_total.toString().split(''); var map = vlr_total.map(Number); total = `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
+                    <h6>
+                        <%= total.toLocaleString('es') %>
+                    </h6>
+                </div>
+            </div>
+            <% })%>
+            <% let ttAmount = amount; if(amount.toString().length === 4){var am = amount.toString().split(''); var map = am.map(Number); ttAmount = `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
+
+                <div class="form-row border-top border-2 border-dark align-items-center">
+                    <div class="form-group offset-8 col-md-2 text-center border border-2 border-dark">
+                        <h5 style="font-family: Arial;">MONTO</h5>
+                    </div>
+                    <div class="form-group col-md-2 border text-right border-2 border-dark">
+                        <h5 style="font-family: Arial;">
+                            <%= ttAmount.toLocaleString('es') %>
+                        </h5>
+                    </div>
+                </div>
+
+                    <!-- <div class="col-md-12 text-center">
+                        <h5 style="font-family: Arial;">Indice de las naturalezas </h5>
+                    
+                    <table class="table text-center">
+                        <col style="width:50%">
+                        <col style="width:50%">
+                        <thead>
+                           </tr>
+                               <th>Cod</th>
+                               <th>Descripcion</th>
+                           </tr>
+                        </thead>
+                           <tbody>
+                <% //natures.forEach(nat => {%> 
+                    <tr>
+                        <td>
+                            <%=// nat.naturaleza %> 
+                        </td>
+                        <td>
+                            <%=// nat.naturalezadesc %> 
+                        </td>
+                    </tr>
+                <%// }) %> 
+            </tbody>
+        </table>
+    </div> -->
+                <div class="form-row rounded-3 border border-2 border-dark mb-2">
+                    <div class="form-group col-md-6">
+                        <div class="form-row pt-5 pr-2 pl-2">
+                            <div class="form-group col-md-6">
+                                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>Monto Bruto:</strong></h5>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h5 style="font-family: Arial; line-height: 0.5rem">
+                                    <%= order.coin %>   <%= ttAmount.toLocaleString('es') %>
+                                </h5>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h5 style="font-family: Arial; line-height: 0.5rem" ><strong>Flete:</strong></h5>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h5 style="font-family: Arial; line-height: 0.5rem">-</h5>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>Monto Final:</strong></h5>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h5 style="font-family: Arial; line-height: 0.5rem">
+                                    <%= order.coin %> <%= ttAmount.toLocaleString('es') %>
+                                </h5>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>Forma de Pago:</strong></h5>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <h5 style="font-family: Arial;">
+                                    <%= order.cond_faturamento %>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <div style="border-radius: 1rem !important; max-width: 95%;" class="form-row mt-3 h-75 border border-2 border-dark mb-2">
+                            <div class="form-group mt-2 col-md-12 border-bottom  border-dark text-center">
+                                <h5 style="font-family: Arial; line-height: 0.7rem"><strong>Observaciones</strong></h5>
+                            </div>
+                            <div class="form-group col-md-12 text-center">
+                                <h6 style="font-family: Arial; color: grey"><%= order.description %></h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group border-top border-2 border-dark col-md-12"></div>
+                        <div class="form-group pt-2 pr-2 col-md-12">
+                            <H6>Obligaciones:</H6>
+                        </div>
+                        <div class="form-group pr-2 col-md-12">
+                        <H6>1 - NÚMERO DE ORDEN DE COMPRA INDISPENSABLE EN LA FACTURA;</H6>
+                        <H6>2 - NO SE ACEPTARÀN FACTURAS CON VALORES DIFERENTES A LOS DE LA ORDEN DE COMPRA;</H6>
+                        <H6>3 - POR FAVOR, RESPETE LA FECHA Y LA FORMA DE PAGO MENCIONADOS EN LA ORDEN DE COMPRA;</H6>
+                        <H6>4 - NO SE EFECTUARÁN PAGOS CON FECHAS Y CONDICIONES DIFERENTES A LAS INFORMADAS ANTERIORMENTE.
+                        </H6>
+                        <BR>
+                        <div class="form-group col-md-12 pt-1 text-center">
+                            <H6 class="text-danger">SI NO ES POSIBLE CUMPLIR CON ALGUNO DE LOS PUNTOS, PÓNGASE EN CONTACTO
+                                CON
+                                NOSOTROS ANTES DEL VENCIMIENTO DE LA FACTURA.</H6>
+                        </div>
+                    </div>
+                </div>
+  
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        window.onload = function () { window.print(); }
+    </script>
+</body>
+
+</html>

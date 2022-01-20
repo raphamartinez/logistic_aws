@@ -27,7 +27,7 @@ window.onload = async function () {
 
   const data = await Connection.noBody('quotation', 'GET')
 
-  data.cars.forEach(car => {
+  if (document.querySelector('[data-select-truck]')) data.cars.forEach(car => {
     document.querySelector('[data-select-truck]').appendChild(option(car))
   })
 

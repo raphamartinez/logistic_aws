@@ -1,5 +1,4 @@
 import { Connection } from '../services/connection.js'
-import { View } from '../views/providerView.js'
 import { View as ViewMaintenance } from '../views/maintenanceView.js'
 
 window.onload = async function () {

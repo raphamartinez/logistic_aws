@@ -82,5 +82,9 @@ controll
     .createAny('quiz')
     .deleteAny('quiz')
     .updateAny('quiz')
+    .readAny('report')
+    .createAny('report')
+    .deleteAny('report')
+    .updateAny('report')
 
 module.exports = controll

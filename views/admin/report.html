@@ -22,6 +22,7 @@
     <link href="../css/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/rowreorder/1.2.8/css/rowReorder.dataTables.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/bootstrap-select.css" />
 
 </head>
 
@@ -184,12 +185,12 @@
                     </div>
                 </div>
             </div>
-
             <div id="content">
                 <div class="container-fluid">
                     <div class="col-lg-12 text-center">
                         <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
-                            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                            <h1 class="h3 mb-0 text-gray-800">Informes
+                            </h1>
                         </div>
                     </div>
 
@@ -198,27 +199,21 @@
                     </div>
 
                     <div class="row justify-content-md-center">
-                        <div class="col-lg-10">
-                            <div class="card shadow mb-4">
+                        <div class="col-md-10" data-view-report></div>
+                        <div class="col-md-10">
+                            <div class="card shadow mb-3">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-danger">Listado de Mantenimiento</h6>
+                                    <h6 class="m-0 font-weight-bold text-danger">Listado de Informes</h6>
                                 </div>
                                 <div class="card-body">
-                                    <table class="table table-bordered text-center" id="dataTable" width="100%"
+                                    <table class="table table-bordered text-center mb-2" id="tableReports" width="100%"
                                         cellspacing="0"></table>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row justify-content-md-center">
-                        <div class="col-lg-10">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-danger">Listado de Items</h6>
-                                </div>
-                                <div class="card-body">
-                                    <table class="table table-bordered text-center" id="dataItems" width="100%"
-                                        cellspacing="0"></table>
+                            <div class="card shadow mb-3">
+                                <div class="card-body text-center">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add">Agregar
+                                        nuevo</button>
                                 </div>
                             </div>
                         </div>
@@ -239,6 +234,168 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+
+    
+    <div class="modal fade" id="add" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar nuevo informe</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <form data-form-add>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" placeholder="Título" class="form-control"
+                                    name="title" id="title" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select class="form-control" name="type" id="typeadd" required>
+                                    <option value="" disabled selected>Tipo</option>
+                                    <option value="1">Ingresos</option>
+                                    <option value="2">Despesas Totales</option>
+                                    <option value="3">Combustibles</option>
+                                    <option value="4">Analisis de Resultados</option>
+                                    <option value="5">Viajes y Choferes</option>
+                                    <option value="6">Suprimentos</option>
+                                    <option value="7">Compras</option>
+                                    <option value="8">Plano de Cuentas</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <input type="url" placeholder="Url" class="form-control" name="url"
+                                    id="url" required>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <textarea placeholder="Descripción del informe..." id="description"
+                                    name="description" class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button"
+                                data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success"><i
+                                    class="fas fa-check">Agregar</i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editmodal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar informe</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <form data-form-edit>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" placeholder="Título" class="form-control"
+                                    name="title" id="titleedit" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select class="form-control" name="type" id="typeedit" required>
+                                    <option value="" disabled selected>Tipo</option>
+                                    <option value="1">Ingresos</option>
+                                    <option value="2">Despesas Totales</option>
+                                    <option value="3">Combustibles</option>
+                                    <option value="4">Analisis de Resultados</option>
+                                    <option value="5">Viajes y Choferes</option>
+                                    <option value="6">Suprimentos</option>
+                                    <option value="7">Compras</option>
+                                    <option value="8">Plano de Cuentas</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <input type="text" placeholder="Url" class="form-control" name="url"
+                                    id="urledit" required>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <textarea placeholder="Descripción del informe..."
+                                    id="descriptionedit" name="description"
+                                    class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning"><i class="fas fa-edit">
+                                Editar</i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="dropmodal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Quieres eliminar este informe?</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <form data-form-drop>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <h8>Si lo borra no podrá recuperarlo de nuevo.</h8>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button"
+                            data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger"><i class="fas fa-times">
+                                Eliminar</i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addBiUser" tabindex="-1" >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Acceso</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <form data-form-add-biuser >
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12 text-center"> 
+                                <label for="userselect">Usuarios</label>
+                                <select title="Usuarios" multiple class="selectpicker form-control" name="userselect" id="userselect" required></select>
+                                <hr>
+                            </div> 
+                            <div class="form-group col-md-12 text-center"> 
+                                <h6>Usuarios con acceso</h6>
+                                <table class="table table-bordered text-center" id="tableusers" width="100%" cellspacing="0"></table>
+                            </div> 
+                        </div>
+                    </div>    
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" onclick="addBiUser(event)" class=" btn btn-success"><i class="fas fa-plus"> Enlace</i></button>   
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -267,10 +424,12 @@
         crossorigin="anonymous"></script>
 
     <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.6.8-fix/jquery.nicescroll.min.js"></script>
     <script src="../js/libs/sb-admin-2.min.js"></script>
-    <script type="module" src="../js/controllers/dashboardController.js"></script>
+    <script type="module" src="../js/controllers/reportController.js"></script>
     <script type="module" src="../js/controllers/loginController.js"></script>
     <script type="module" src="../js/controllers/menuController.js"></script>
     <script src="../js/libs/jquery.dataTables.min.js"></script>
@@ -284,6 +443,8 @@
     <script src="../js/libs/buttons.html5.min.js"></script>
     <script src="../js/libs/buttons.print.min.js"></script>
     <script src="../js/libs/geradorarquivo.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
     <div data-modal></div>
 
 </body>

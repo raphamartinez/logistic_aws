@@ -8,6 +8,7 @@ class Purchase {
     try {
 
       let query = `SELECT [oc].[NR_ORDEMCOMPRA] as nr_oc
+            ,ipf.ID_COTACAOPRECO as nr_quotation
             ,[oc].[DT_ENTREGA]
             ,[oc].[DT_EMISSAO] as dt_emission 
             ,[co].[DESCRICAO] as cond_faturamento
@@ -33,14 +34,15 @@ class Purchase {
             END as status_oc
             FROM [G8BD].[dbo].[ORDEMCOMPRA] as [oc]
             INNER JOIN [G8BD].[dbo].[ORDEMCOMPRA_ITENS] as [oi] ON [oc].[SEQ_ORDEMCOMPRA] = [oi].[ID_ORDEMCOMPRA]
-            INNER JOIN [G8BD].[dbo].[PRODUTOSERVICO] as [ps] ON [oi].[ID_PRODUTOSERVICO] = [ps].[SEQPRODUTOSERVICO]
+            LEFT JOIN [G8BD].[dbo].[ITENSPRECOCOMPRAS_FORNEC] as ipf ON oi.ID_ITEM_COTACAOPRECO = ipf.SEQ_ITENSPRECOCOMPRAS_FORNEC 
+            LEFT JOIN [G8BD].[dbo].[PRODUTOSERVICO] as [ps] ON [oi].[ID_PRODUTOSERVICO] = [ps].[SEQPRODUTOSERVICO]
             LEFT JOIN [G8BD].[dbo].[VEICULOS] as [ve] ON [oi].ID_VEICULOS =  [ve].[SEQVEICULOS]
             LEFT JOIN [G8BD].[dbo].[CATEGORIASVEI] as [ca] ON [ve].[IDTCATEGORIASVEI] = [ca].[SEQCATEGORIASVEI]
             LEFT JOIN [G8BD].[dbo].[MODELOSFAB] as [mo] ON [ve].[IDTMODELOSFAB] = [mo].[SEQMODELOSFAB]
-            INNER JOIN [G8BD].[dbo].[NATTRANSACAO] as [na] on [oc].[ID_NATUREZA] = [na].SEQNATTRANSACAO
-            INNER JOIN [G8BD].[dbo].[CONDICAO_FATURAMENTO] as [co] on [oc].[ID_CONDICAOFATURAMENTO] = [co].SEQ_CONDFATURAMENTO
-            INNER JOIN [G8BD].[dbo].[CENTRORECDES] as [cc] on [oi].[ID_CENTROCUSTO] = [cc].SEQCENTRORECDES
-            INNER JOIN [G8BD].[dbo].[PESSOAS] as [pe] on [oc].[ID_FORNECEDOR] = [pe].[PES_CODIGO]
+            LEFT JOIN [G8BD].[dbo].[NATTRANSACAO] as [na] on [oc].[ID_NATUREZA] = [na].SEQNATTRANSACAO
+            LEFT JOIN [G8BD].[dbo].[CONDICAO_FATURAMENTO] as [co] on [oc].[ID_CONDICAOFATURAMENTO] = [co].SEQ_CONDFATURAMENTO
+            LEFT JOIN [G8BD].[dbo].[CENTRORECDES] as [cc] on [oi].[ID_CENTROCUSTO] = [cc].SEQCENTRORECDES
+            LEFT JOIN [G8BD].[dbo].[PESSOAS] as [pe] on [oc].[ID_FORNECEDOR] = [pe].[PES_CODIGO]
             WHERE CONVERT(date,[oc].[DT_EMISSAO] ) BETWEEN '${search.datestart}' AND '${search.dateend}' `
 
       if (search.numberstart) query += ` AND [oc].[NR_ORDEMCOMPRA] BETWEEN '${search.numberstart}' AND '${search.numberend}' `
@@ -194,7 +196,7 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
 
       if (search.quotation && search.quotation.length > 0) query += ` AND cp.SEQ_COTACAOPRECOCOMPRA IN (${search.quotation}) `
 
-      if (search.purchaseorder) query += ` AND oc.SEQ_ORDEMCOMPRA IN (${search.purchaseorder}) `
+      if (search.purchaseorder) query += ` AND oc.NR_ORDEMCOMPRA IN (${search.purchaseorder}) `
 
       switch (search.status) {
         case '1':
@@ -434,7 +436,9 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
   async getPurchaseOrders() {
     try {
 
-      let query = `SELECT DISTINCT(oc.NR_ORDEMCOMPRA) as code, oc.NR_ORDEMCOMPRA as name FROM [G8BD].[dbo].[ORDEMCOMPRA] as [oc] `
+      let query = `SELECT DISTINCT(oc.NR_ORDEMCOMPRA) as code, oc.NR_ORDEMCOMPRA as name 
+      FROM [G8BD].[dbo].[ORDEMCOMPRA] as [oc] 
+      ORDER BY oc.NR_ORDEMCOMPRA DESC`
 
       await sql.connect(config);
 
@@ -451,7 +455,9 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
   async getQuotationOrders() {
     try {
 
-      let query = `SELECT DISTINCT(cp.SEQ_COTACAOPRECOCOMPRA) as code, cp.SEQ_COTACAOPRECOCOMPRA as name FROM [G8BD].[dbo].[COTACAOPRECOCOMPRAS] as cp `
+      let query = `SELECT DISTINCT(cp.SEQ_COTACAOPRECOCOMPRA) as code, cp.SEQ_COTACAOPRECOCOMPRA as name 
+      FROM [G8BD].[dbo].[COTACAOPRECOCOMPRAS] as cp 
+      ORDER BY cp.SEQ_COTACAOPRECOCOMPRA DESC`
 
       await sql.connect(config);
 

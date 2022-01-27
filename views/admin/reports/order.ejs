@@ -48,10 +48,15 @@
                         <h4 style="font-family: Arial;"><strong>
                             <%= order.nr_oc %>
                         </strong></h4>
-                        <h4 style="font-family: Arial;">
+                        <%if(order.nr_quotation) {%>   <h4 style="font-family: Arial;">
                                 <%= order.nr_quotation %>
-                        </h4>
+                        </h4><% }else{%> <h4 style="font-family: Arial;">
+                            -
+                    </h4><% }%>
                         <h6 style="font-family: Arial;"><strong>
+        
+                        <% dtEmission.setTime(dtEmission.getTime() +
+                        dtEmission.getTimezoneOffset()*60*1000 ); %> 
                                 <%= dtEmission.getDate() %>/<%= dtEmission.getMonth() + 1 %>/<%=
                                             dtEmission.getFullYear() %>
                             </strong></h6>
@@ -218,20 +223,20 @@
                     </div>
                     <% } %> 
                 <div style="width: 11%;" class="form-group text-right col-md-2">
-                    <% let unit = item.vlr_unitario; if(item.vlr_unitario.toString().length === 4){var vlr_unitario = item.vlr_unitario.toString().split(''); var map = vlr_unitario.map(Number); unit = `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
+                    <% let unit = item.vlr_unitario; if(item.vlr_unitario.toString().length === 4 || (item.vlr_unitario.toString().length === 7 && item.vlr_unitario.toLocaleString('es').toString().includes(","))){var vlr_unitario = item.vlr_unitario.toString().split(''); var map = vlr_unitario.map(Number); unit = unit.toLocaleString('es').toString().length === 7? `${map[0]}.${map[1]}${map[2]}${map[3]},${map[5]}${map[6]}` : `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
                     <h6>
                         <%= unit.toLocaleString('es') %>
                     </h6>
                 </div>
                 <div style="width: 12%;" class="form-group text-right col-md-2">
-                    <% let total = item.vlr_total; if(item.vlr_total.toString().length === 4){var vlr_total = item.vlr_total.toString().split(''); var map = vlr_total.map(Number); total = `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
+                    <% let total = item.vlr_total; if(item.vlr_total.toString().length === 4 || (item.vlr_total.toString().length === 7 && item.vlr_total.toLocaleString('es').toString().includes(","))){var vlr_total = item.vlr_total.toString().split(''); var map = vlr_total.map(Number); total = total.toLocaleString('es').toString().length === 7? `${map[0]}.${map[1]}${map[2]}${map[3]},${map[5]}${map[6]}` : `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
                     <h6>
                         <%= total.toLocaleString('es') %>
                     </h6>
                 </div>
             </div>
             <% })%>
-            <% let ttAmount = amount; if(amount.toString().length === 4){var am = amount.toString().split(''); var map = am.map(Number); ttAmount = `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
+            <% let ttAmount = amount; if(amount.toString().length === 4 || (amount.toString().length === 7 && amount.toLocaleString('es').toString().includes(","))){var am = amount.toString().split(''); var map = am.map(Number); ttAmount = ttAmount.toLocaleString('es').toString().length === 7? `${map[0]}.${map[1]}${map[2]}${map[3]},${map[5]}${map[6]}` : `${map[0]}.${map[1]}${map[2]}${map[3]}`  }%> 
 
                 <div class="form-row border-top border-2 border-dark align-items-center">
                     <div class="form-group offset-8 col-md-2 text-center border border-2 border-dark">

@@ -120,12 +120,17 @@
             bottom: 0;
             width: 100%;
         }
+
+        .responsive {
+            width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 
 <body>
     <div class="grid-container">
-        <div class="item2"> <img src="../img/launch.png" alt="Sunset Logo"></div>
+        <div class="item2 responsive"><img src="../img/launch.png" alt="Sunset Logo"></div>
         <div class="item3">
             <h2 style="margin-left: 3px;text-align: start; align-items:flex-start;">SUNSET SA COMERCIAL INDUSTRIAL</h2>
             <h2 style="margin-left: 3px;text-align: start; align-items:flex-start;">G3COM151F1 - Informe de Orden de
@@ -162,10 +167,11 @@
                 </h3>
                 <table id="dataTable">
                     <col style="width:2.5%">
+                    <col style="width:2.5%">
                     <col style="width:5%">
                     <col style="width:5%">
                     <col style="width:15%">
-                    <col style="width:15%">
+                    <col style="width:12.5%">
                     <col style="width:2.5%">
                     <col style="width:5%">
                     <col style="width:5%">
@@ -176,6 +182,7 @@
                     <thead>
                         <tr>
                             <th>Nr OC</th>
+                            <th>Nr COT</th>
                             <th>Fecha</th>
                             <th>Chapa</th>
                             <th>Descripcion Vehiculo</th>
@@ -198,6 +205,9 @@
                                     <%= order.nr_oc %>
                                 </td>
                                 <td>
+                                    <%= order.nr_quotation %>
+                                </td>
+                                <td>
                                     <% let date=new Date(order.dt_emission) %>
                                         <%= date.getDate() %>/<%= date.getMonth() + 1%>/<%= date.getFullYear() %>
                                 </td>
@@ -207,7 +217,7 @@
                                 <td style="font-size: 12px;">
                                     <%= order.modelo %> - <%= order.categoria %>
                                 </td>
-                                <td>
+                                <td style="font-size: 12px;">
                                     <%= order.product %>
                                 </td>
                                 <td>

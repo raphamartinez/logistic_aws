@@ -23,9 +23,37 @@ class Tables {
     this.createTableInterview()
     this.createTableAnsweredInterview()
     this.createTableAccessLogin()
+    this.createTableReport()
+    this.createTableReportView()
 
     return true
   }
+
+  createTableReport() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.report (id int NOT NULL AUTO_INCREMENT, url VARCHAR (1000) NOT NULL, title VARCHAR (50) NOT NULL,
+    type int, token VARCHAR (250), description VARCHAR (250), idreport VARCHAR (100), dateReg DATETIME NOT NULL, PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTableReportView() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.reportview (id int NOT NULL AUTO_INCREMENT, id_report int NOT NULL, id_login int NOT NULL,
+      dateReg DATETIME NOT NULL, PRIMARY KEY (id),  FOREIGN KEY (id_report) REFERENCES report (id), 
+      FOREIGN KEY (id_login) REFERENCES login (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
 
   createTableAccessLogin() {
     const sql = `CREATE TABLE IF NOT EXISTS api.accessplace (id int NOT NULL AUTO_INCREMENT, 

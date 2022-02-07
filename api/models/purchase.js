@@ -26,7 +26,7 @@ class Purchase {
     async gestranOrder(oc) {
         try {
             let orders = await Repositorie.getOrderGestran(oc)
-            let amount = orders.reduce((a, b) => a + b.vlr_total, 0 );
+            let amount = orders.reduce((a, b) => a + b.vlr_total, 0);
 
             let search = {
                 purchaseorder: orders[0].nr_oc
@@ -146,7 +146,7 @@ class Purchase {
 
                     ar3[1] = Object.keys(ar3[1]).map((key) => ar3[1][key]);
 
-                    ar3[1] .forEach(min => {
+                    ar3[1].forEach(min => {
                         if (parseFloat(min[0].qtd_product * min[0].valor_unit) > 0 && minprovider1 > parseFloat(min[0].qtd_product * min[0].valor_unit)) minprovider1 = parseFloat(min[0].qtd_product * min[0].valor_unit);
                         if (min[1] && parseFloat(min[1].qtd_product * min[1].valor_unit) > 0 && minprovider2 > parseFloat(min[1].qtd_product * min[1].valor_unit)) minprovider2 = parseFloat(min[1].qtd_product * min[1].valor_unit);
                         if (min[2] && parseFloat(min[2].qtd_product * min[2].valor_unit) > 0 && minprovider3 > parseFloat(min[2].qtd_product * min[2].valor_unit)) minprovider3 = parseFloat(min[2].qtd_product * min[2].valor_unit);
@@ -255,6 +255,38 @@ class Purchase {
     getQuotationOrders() {
         try {
             return Repositorie.getQuotationOrders()
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
+    getOrderCategory(search) {
+        try {
+            return Repositorie.getOrderCategory(search)
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
+   async getOrderModel(search) {
+        try {
+            let details = await Repositorie.getOrders(search)
+            let orders = await Repositorie.getOrderModel(search)
+
+            return { details, orders }
+        } catch (error) {
+            throw new InternalServerError('Error.')
+        }
+    }
+
+    async getOrderPlate(search) {
+        try {
+            let details = await Repositorie.getOrders(search)
+            let orders = await Repositorie.getOrderPlate(search)
+
+            return { details, orders }
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')

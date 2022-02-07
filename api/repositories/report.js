@@ -17,10 +17,15 @@ class PowerBi {
         try {
             let sql = `SELECT rp.id, rp.title, rp.description,  rp.url, 
             CASE
-            WHEN rp.type = 1 THEN "Informe"
-            WHEN rp.type = 2 THEN "Personal"
-            WHEN rp.type = 3 THEN "Seguridad - Vehículos"
-            WHEN rp.type = 4 THEN "Seguridad - Sucursales"
+            WHEN rp.type = 1 THEN "Ingresos"
+            WHEN rp.type = 2 THEN "Despesas Totales"
+            WHEN rp.type = 3 THEN "Combustibles"
+            WHEN rp.type = 4 THEN "Analisis de Resultados"
+            WHEN rp.type = 5 THEN "Viajes y Choferes"
+            WHEN rp.type = 6 THEN "Suprimentos"
+            WHEN rp.type = 7 THEN "Compras"
+            WHEN rp.type = 8 THEN "Plano de Cuentas"
+            WHEN rp.type = 9 THEN "Rastreo y Telemetria"
             ELSE "Usuario"
             END as typedesc,
             rp.type, rp.token, rp.idreport, DATE_FORMAT(rp.dateReg, '%H:%i %d/%m/%Y') as dateReg,

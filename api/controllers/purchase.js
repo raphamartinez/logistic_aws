@@ -147,4 +147,54 @@ module.exports = app => {
             next(err)
         }
     })
+
+    app.get('/purchase/category/:datestart/:dateend', async (req, res, next) => {
+        try {
+            let search = {
+                datestart: req.params.datestart,
+                dateend: req.params.dateend
+            };
+
+            let orders = await Purchase.getOrderCategory(search);
+
+            res.json(orders)
+        } catch (error) {
+            console.log(err);
+            next(err)
+        }
+    })
+
+    app.get('/purchase/model/:datestart/:dateend/:search', async (req, res, next) => {
+        try {
+            let search = {
+                datestart: req.params.datestart,
+                dateend: req.params.dateend,
+                category: req.params.search.replace('*', '/')
+            };
+
+            let { details, orders } = await Purchase.getOrderModel(search);
+
+            res.json({details, orders})
+        } catch (error) {
+            console.log(err);
+            next(err)
+        }
+    })
+
+    app.get('/purchase/plate/:datestart/:dateend/:search', async (req, res, next) => {
+        try {
+            let search = {
+                datestart: req.params.datestart,
+                dateend: req.params.dateend,
+                model: req.params.search.replace('*', '/')
+            };
+
+            let { details, orders } = await Purchase.getOrderPlate(search);
+
+            res.json({details, orders})
+        } catch (error) {
+            console.log(err);
+            next(err)
+        }
+    })
 }

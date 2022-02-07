@@ -49,6 +49,10 @@ class Purchase {
 
       if (search.status) query += ` AND [oc].[FG_STATUS] IN (${search.status})`
 
+      if (search.model) query += ` AND [mo].[DESCRICAO] = '${search.model}' `
+
+      if (search.category) query += ` AND [ca].[DESCRICAO] = '${search.category}'`
+
       await sql.connect(config);
 
       let request = new sql.Request();
@@ -582,6 +586,113 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
 
       query += ` GROUP BY [oi].SEQ_ORDEMCOMPRA_ITENS, [VR_UNITARIO], fa.DESCRICAO, [QT_PRODUTO], [oc].[NR_ORDEMCOMPRA], [ca].[DESCRICAO], [mo].[DESCRICAO], [pe].[PES_RAZAOSOCIAL], [oc].[DT_ENTREGA], [ps].[DESCRICAO], [ps].[TIPO_PRODUTOSERVICO] ,[oi].[VR_TOTAL], ve.PLACA 
       ORDER BY ROW_NUMBER() OVER ( ORDER BY [oc].[DT_ENTREGA] ASC) DESC `
+
+      await sql.connect(config);
+
+      let request = new sql.Request();
+
+      const obj = await request.query(query);
+
+      return obj.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getOrderCategory(search) {
+    try {
+      let query = `SELECT CASE WHEN [ca].[DESCRICAO] IS NULL THEN 'ADM o TALLER'
+      ELSE UPPER([ca].[DESCRICAO])
+      END as category
+      ,COUNT(DISTINCT ve.SEQVEICULOS) as cars
+      ,SUM([oi].[VR_TOTAL]) as amount
+      FROM [G8BD].[dbo].[ORDEMCOMPRA] as [oc]
+      INNER JOIN [G8BD].[dbo].[ORDEMCOMPRA_ITENS] as [oi] ON [oc].[SEQ_ORDEMCOMPRA] = [oi].[ID_ORDEMCOMPRA]
+      LEFT JOIN [G8BD].[dbo].[ITENSPRECOCOMPRAS_FORNEC] as ipf ON oi.ID_ITEM_COTACAOPRECO = ipf.SEQ_ITENSPRECOCOMPRAS_FORNEC 
+      LEFT JOIN [G8BD].[dbo].[PRODUTOSERVICO] as [ps] ON [oi].[ID_PRODUTOSERVICO] = [ps].[SEQPRODUTOSERVICO]
+      LEFT JOIN [G8BD].[dbo].[VEICULOS] as [ve] ON [oi].ID_VEICULOS =  [ve].[SEQVEICULOS]
+      LEFT JOIN [G8BD].[dbo].[CATEGORIASVEI] as [ca] ON [ve].[IDTCATEGORIASVEI] = [ca].[SEQCATEGORIASVEI]
+      LEFT JOIN [G8BD].[dbo].[MODELOSFAB] as [mo] ON [ve].[IDTMODELOSFAB] = [mo].[SEQMODELOSFAB]
+      LEFT JOIN [G8BD].[dbo].[NATTRANSACAO] as [na] on [oc].[ID_NATUREZA] = [na].SEQNATTRANSACAO
+      LEFT JOIN [G8BD].[dbo].[CONDICAO_FATURAMENTO] as [co] on [oc].[ID_CONDICAOFATURAMENTO] = [co].SEQ_CONDFATURAMENTO
+      LEFT JOIN [G8BD].[dbo].[CENTRORECDES] as [cc] on [oi].[ID_CENTROCUSTO] = [cc].SEQCENTRORECDES
+      LEFT JOIN [G8BD].[dbo].[PESSOAS] as [pe] on [oc].[ID_FORNECEDOR] = [pe].[PES_CODIGO]
+      WHERE CONVERT(date,[oc].[DT_EMISSAO]) BETWEEN '${search.datestart}' AND '${search.dateend}'
+      AND [oc].[FG_STATUS] != 6
+      GROUP BY [ca].[DESCRICAO] 
+      ORDER BY SUM([oi].[VR_TOTAL]) DESC `
+
+      await sql.connect(config);
+
+      let request = new sql.Request();
+
+      const obj = await request.query(query);
+
+      return obj.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getOrderModel(search) {
+    try {
+      let query = `SELECT CASE WHEN [mo].[DESCRICAO] IS NULL THEN 'ADM o TALLER'
+      ELSE UPPER([mo].[DESCRICAO])
+      END as model
+      ,COUNT(DISTINCT ve.SEQVEICULOS) as cars
+      ,SUM([oi].[VR_TOTAL]) as amount
+      FROM [G8BD].[dbo].[ORDEMCOMPRA] as [oc]
+      INNER JOIN [G8BD].[dbo].[ORDEMCOMPRA_ITENS] as [oi] ON [oc].[SEQ_ORDEMCOMPRA] = [oi].[ID_ORDEMCOMPRA]
+      LEFT JOIN [G8BD].[dbo].[ITENSPRECOCOMPRAS_FORNEC] as ipf ON oi.ID_ITEM_COTACAOPRECO = ipf.SEQ_ITENSPRECOCOMPRAS_FORNEC 
+      LEFT JOIN [G8BD].[dbo].[PRODUTOSERVICO] as [ps] ON [oi].[ID_PRODUTOSERVICO] = [ps].[SEQPRODUTOSERVICO]
+      LEFT JOIN [G8BD].[dbo].[VEICULOS] as [ve] ON [oi].ID_VEICULOS =  [ve].[SEQVEICULOS]
+      LEFT JOIN [G8BD].[dbo].[CATEGORIASVEI] as [ca] ON [ve].[IDTCATEGORIASVEI] = [ca].[SEQCATEGORIASVEI]
+      LEFT JOIN [G8BD].[dbo].[MODELOSFAB] as [mo] ON [ve].[IDTMODELOSFAB] = [mo].[SEQMODELOSFAB]
+      LEFT JOIN [G8BD].[dbo].[NATTRANSACAO] as [na] on [oc].[ID_NATUREZA] = [na].SEQNATTRANSACAO
+      LEFT JOIN [G8BD].[dbo].[CONDICAO_FATURAMENTO] as [co] on [oc].[ID_CONDICAOFATURAMENTO] = [co].SEQ_CONDFATURAMENTO
+      LEFT JOIN [G8BD].[dbo].[CENTRORECDES] as [cc] on [oi].[ID_CENTROCUSTO] = [cc].SEQCENTRORECDES
+      LEFT JOIN [G8BD].[dbo].[PESSOAS] as [pe] on [oc].[ID_FORNECEDOR] = [pe].[PES_CODIGO]
+      WHERE CONVERT(date,[oc].[DT_EMISSAO]) BETWEEN '${search.datestart}' AND '${search.dateend}' 
+      AND [ca].[DESCRICAO] = '${search.category}'
+      AND [oc].[FG_STATUS] != 6
+      GROUP BY [mo].[DESCRICAO]
+      ORDER BY SUM([oi].[VR_TOTAL]) DESC `
+
+      await sql.connect(config);
+
+      let request = new sql.Request();
+
+      const obj = await request.query(query);
+
+      return obj.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getOrderPlate(search) {
+    try {
+      let query = `SELECT CASE WHEN [ve].PLACA IS NULL THEN 'ADM o TALLER'
+      ELSE UPPER([ve].PLACA)
+      END as plate
+      ,COUNT(DISTINCT ve.SEQVEICULOS) as cars
+      ,SUM([oi].[VR_TOTAL]) as amount
+      FROM [G8BD].[dbo].[ORDEMCOMPRA] as [oc]
+      INNER JOIN [G8BD].[dbo].[ORDEMCOMPRA_ITENS] as [oi] ON [oc].[SEQ_ORDEMCOMPRA] = [oi].[ID_ORDEMCOMPRA]
+      LEFT JOIN [G8BD].[dbo].[ITENSPRECOCOMPRAS_FORNEC] as ipf ON oi.ID_ITEM_COTACAOPRECO = ipf.SEQ_ITENSPRECOCOMPRAS_FORNEC 
+      LEFT JOIN [G8BD].[dbo].[PRODUTOSERVICO] as [ps] ON [oi].[ID_PRODUTOSERVICO] = [ps].[SEQPRODUTOSERVICO]
+      LEFT JOIN [G8BD].[dbo].[VEICULOS] as [ve] ON [oi].ID_VEICULOS =  [ve].[SEQVEICULOS]
+      LEFT JOIN [G8BD].[dbo].[CATEGORIASVEI] as [ca] ON [ve].[IDTCATEGORIASVEI] = [ca].[SEQCATEGORIASVEI]
+      LEFT JOIN [G8BD].[dbo].[MODELOSFAB] as [mo] ON [ve].[IDTMODELOSFAB] = [mo].[SEQMODELOSFAB]
+      LEFT JOIN [G8BD].[dbo].[NATTRANSACAO] as [na] on [oc].[ID_NATUREZA] = [na].SEQNATTRANSACAO
+      LEFT JOIN [G8BD].[dbo].[CONDICAO_FATURAMENTO] as [co] on [oc].[ID_CONDICAOFATURAMENTO] = [co].SEQ_CONDFATURAMENTO
+      LEFT JOIN [G8BD].[dbo].[CENTRORECDES] as [cc] on [oi].[ID_CENTROCUSTO] = [cc].SEQCENTRORECDES
+      LEFT JOIN [G8BD].[dbo].[PESSOAS] as [pe] on [oc].[ID_FORNECEDOR] = [pe].[PES_CODIGO]
+      WHERE CONVERT(date,[oc].[DT_EMISSAO]) BETWEEN '${search.datestart}' AND '${search.dateend}' 
+      AND [mo].[DESCRICAO] = '${search.model}'
+      AND [oc].[FG_STATUS] != 6
+      GROUP BY [ve].PLACA
+      ORDER BY SUM([oi].[VR_TOTAL]) DESC`
 
       await sql.connect(config);
 

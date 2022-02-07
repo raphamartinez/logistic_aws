@@ -10,7 +10,7 @@ const list = (powerbis) => {
         $('#tableReports').empty();
     }
 
-    $("#tableReports").DataTable({
+   const table = $("#tableReports").DataTable({
         data: powerbis,
         columns: [
             { title: "Opciones" },
@@ -38,6 +38,23 @@ const list = (powerbis) => {
         ]
     }
     )
+
+    document.querySelector('[data-filter-report-type]').addEventListener('change', (event) => {
+
+        $.fn.dataTable.ext.search.push(
+          function (settings, data, dataIndex) {
+            var filter = $('[data-filter-report-type]').val()
+            var truck = data[2]
+    
+            if (filter == 'TODOS') return true
+            if (filter == truck) return true
+            return false;
+          }
+        );
+    
+        table.draw();
+      })
+    
 }
 
 const view = (event) => {

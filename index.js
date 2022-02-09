@@ -1,4 +1,4 @@
-require('dotenv').config({ path: __dirname + '\\.env', encoding: 'utf8' })
+if(process.env.NODE_ENV === "development") require('dotenv').config({ path: __dirname + '\\.env', encoding: 'utf8' })
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 const customExpress = require('./api/config/customExpress')
@@ -19,7 +19,7 @@ const app = customExpress();
 
 app.locals = appLocals;
 
-app.listen(80, () => {
+app.listen(process.env.BASE_PORT, () => {
 
   app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])
   app.set('view engine', 'ejs');

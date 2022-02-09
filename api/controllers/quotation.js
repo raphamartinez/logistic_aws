@@ -6,7 +6,15 @@ const multer = require('multer')
 const multerConfig = require('../config/multer')
 module.exports = app => {
 
-    app.get('/quotation', [Middleware.bearer, Authorization('quotation', 'read')], async (req, res, next) => {
+    app.get('/cotizacion', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('quotation')
+        } catch (err) {
+            next(err)
+        }
+    })
+    
+    app.get('/quotation', [Middleware.authenticatedMiddleware, Authorization('quotation', 'read')], async (req, res, next) => {
         try {
             // cachelist.delPrefix('quotation')
 
@@ -25,7 +33,7 @@ module.exports = app => {
         }
     })
 
-    app.post('/quotation', [Middleware.bearer, Authorization('quotation', 'create')], multer(multerConfig).single('file'), async (req, res, next) => {
+    app.post('/quotation', [Middleware.authenticatedMiddleware, Authorization('quotation', 'create')], multer(multerConfig).single('file'), async (req, res, next) => {
         try {
 
             const file = req.file

@@ -10,14 +10,6 @@ window.onload = async function () {
     </div>
   </div>`
 
-  let user = JSON.parse(sessionStorage.getItem('user'))
-  if (user.profile != 4) {
-    document.querySelector('[data-menu-adm]').remove()
-  }
-
-  let name = user.name.substring(0, (user.name + " ").indexOf(" "))
-  let username = document.querySelector('[data-username]')
-  username.innerHTML = name
 
   const items = await Connection.noBody(`item`, 'GET')
 
@@ -68,7 +60,7 @@ window.onload = async function () {
   listMaintenances(itemsdt)
 
 
-  const cars = await Connection.noBody('dashboard', 'GET')
+  const cars = await Connection.noBody('dashboardcar', 'GET')
 
   let dtview = []
   cars.forEach(car => {

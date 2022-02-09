@@ -11,14 +11,6 @@ window.onload = async function () {
   </div>
 `
 
-  let user = JSON.parse(sessionStorage.getItem('user'))
-
-  if (user.profile != 4) {
-    document.querySelector('[data-menu]').remove()
-    document.querySelector('[data-menu-adm]').remove()
-  }
-
-
   const date = new Date()
 
   let day = date.getDate()
@@ -81,15 +73,12 @@ window.onload = async function () {
     switch (driver.status) {
       case 1:
         status = `<button data-div-driver="${driver.id}" data-status-driver-${driver.id} data-toggle="popover" title="Chofér disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
-
         break
       case 2:
         status = `<button data-div-driver="${driver.id}" data-status-driver-${driver.id} data-toggle="popover" title="Chófer temporalmente no disponible" type="button" style="color:#ffc107" class="btn btn-warning btn-circle btn-sm">3</button>`
-
         break
       default:
         status = `<button data-div-driver="${driver.id}" data-status-driver-${driver.id} data-toggle="popover" title="Chofér disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
-
         break
     }
 
@@ -115,9 +104,6 @@ window.onload = async function () {
 
   travel(travels, drivers)
 
-  let name = user.name.substring(0, (user.name + " ").indexOf(" "))
-  let username = document.querySelector('[data-username]')
-  username.innerHTML = name
   loading.innerHTML = " "
 
   document.querySelector('[data-search-date]').value = now

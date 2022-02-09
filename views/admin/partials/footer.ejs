@@ -13,35 +13,28 @@
 </a>
 
 <!-- Logout Modal-->
-<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="logoutModal" tabindex="-1">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Cerrar sesión?</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">Seleccione salir si desea finalizar la sesión.</div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-danger" href="#" onclick="onLogout()">Salir</a>
-            </div>
+            <form method="POST" action="/salir">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Cerrar sesión?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Seleccione salir si desea finalizar la sesión.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger" href="#">Salir</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <div data-modal></div>
 
-<% if(accessToken && refreshToken){ %>
-    <script>     
-        sessionStorage.setItem('user', JSON.stringify(user))
-        localStorage.setItem('accessToken', JSON.stringify(accessToken))
-        localStorage.setItem('refreshToken', JSON.stringify(refreshToken))
-    </script>
-<% } %>
-
 </body>
 
-</html>
+</html

@@ -4,7 +4,7 @@ const cachelist = require('../infrastructure/redis/cache')
 
 module.exports = app => {
 
-    app.post('/powerbiview', Middleware.bearer, async (req, res, next) => {
+    app.post('/powerbiview', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
             const users = req.body.users
             const id = req.body.id
@@ -18,7 +18,7 @@ module.exports = app => {
         }
     })
 
-    app.post('/powerbisview', Middleware.bearer, async (req, res, next) => {
+    app.post('/powerbisview', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
             const powerbis = req.body.powerbi
             const id_login = req.body.id_login
@@ -32,7 +32,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/powerbiview/:id_powerbi', Middleware.bearer, async (req, res, next) => {
+    app.get('/powerbiview/:id_powerbi', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
             const powerbis = await ViewPowerBi.listPowerBi(req.params.id_powerbi)
 
@@ -42,7 +42,7 @@ module.exports = app => {
         }
     })
 
-    app.delete('/powerbiview/:id_powerbi', Middleware.bearer, async (req, res, next) => {
+    app.delete('/powerbiview/:id_powerbi', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
             await ViewPowerBi.delete(req.params.id_powerbi)
 

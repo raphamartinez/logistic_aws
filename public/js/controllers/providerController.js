@@ -28,13 +28,8 @@ window.onload = async function () {
     data.push(line)
   })
 
-  let user = JSON.parse(sessionStorage.getItem('user'))
-
   listProviders(data)
 
-  let name = user.name.substring(0, (user.name + " ").indexOf(" "))
-  let username = document.querySelector('[data-username]')
-  username.innerHTML = name
   loading.innerHTML = " "
 }
 

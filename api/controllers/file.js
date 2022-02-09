@@ -12,7 +12,15 @@ const { promisify } = require('util')
 
 module.exports = app => {
 
-    app.post('/file', [Middleware.bearer, Authorization('file', 'create')], multer(multerConfig).array('file', 10), async (req, res, next) => {
+    app.get('/documientos', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('documentacion')
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.post('/file', [Middleware.authenticatedMiddleware, Authorization('file', 'create')], multer(multerConfig).array('file', 10), async (req, res, next) => {
         try {
             const files = req.files
             const details = req.body
@@ -26,7 +34,7 @@ module.exports = app => {
         }
     })
 
-    app.delete('/file/:key', [Middleware.bearer, Authorization('file', 'delete')], async (req, res, next) => {
+    app.delete('/file/:key', [Middleware.authenticatedMiddleware, Authorization('file', 'delete')], async (req, res, next) => {
         try {
 
             if (process.env.STORAGE_TYPE === 's3') {
@@ -48,7 +56,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/file/:type/:id', [Middleware.bearer, Authorization('file', 'read')], async (req, res, next) => {
+    app.get('/file/:type/:id?', [Middleware.authenticatedMiddleware, Authorization('file', 'read')], async (req, res, next) => {
         try {
             const type = req.params.type
             const id = req.params.id
@@ -61,7 +69,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/file/:id', [Middleware.bearer, Authorization('file', 'update')], async (req, res, next) => {
+    app.put('/file/:id', [Middleware.authenticatedMiddleware, Authorization('file', 'update')], async (req, res, next) => {
         try {
             const file = req.body.file
             const id = req.params.id

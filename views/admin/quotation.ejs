@@ -1,0 +1,113 @@
+<%- include(partials + 'header.ejs' ) %>
+
+    <div id="content">
+        <div class="container-fluid">
+            <div class="col-lg-12 text-center">
+                <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
+                    <h1 class="h3 mb-0 text-gray-800">Cotizacion</h1>
+                </div>
+            </div>
+
+            <div class="row col-md-12 mb-2 align-items-center">
+                <div class="d-flex justify-content-center align-items-center" data-loading></div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-lg-10">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">Generar Informe de Cotizacion
+                            </h6>
+                        </div>
+                        <form target="_blank" action="/quotation" method="POST" data-form-generate>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="numberstart">Status</label>
+                                        <select data-select-status id="status" name="status" type="text"
+                                            class="form-control">
+                                            <option value="" selected disabled>Status do Item</option>
+                                            <option value="1">Pendiente - Cotizacion</option>
+                                            <option value="2">Pendiente - Orden de Compra</option>
+                                            <option value="3">Aprobado</option>
+                                            <option value="4">Desaprobado</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="group">Proveedores </label>
+                                        <select data-select-provider id="provider" name="provider" class="form-control"
+                                            multiple>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="datestart">Fecha Inicial</label>
+                                        <input id="datestart" name="datestart" placeholder="Fecha Inicial" type="date"
+                                            class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="dateend">Fecha Final</label>
+                                        <input id="dateend" name="dateend" placeholder="Fecha Final" type="date"
+                                            class="form-control" required>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="truck">Camion</label>
+                                        <select data-select-truck id="truck" name="truck" class="form-control" multiple>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="product">Articulo</label>
+                                        <select data-select-product id="product" name="product" class="form-control"
+                                            multiple>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="quotation">Nr Cotizacion</label>
+                                        <select data-select-quotation id="quotation" name="quotation"
+                                            class="form-control" multiple>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="purchaseorder">Nr Orden de Compra</label>
+                                        <select data-select-purchaseorder id="purchaseorder" name="purchaseorder"
+                                            class="form-control" multiple>
+                                        </select>
+                                    </div>
+                                    <div class="form-group text-center col-12">
+                                        <label for="history">¿Mostrar historial del vehículo?</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="history" value="1"
+                                                id="history1">
+                                            <label class="form-check-label" for="history1">
+                                                Si
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="history" value="0"
+                                                id="history2" checked>
+                                            <label class="form-check-label" for="history2">
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="reset"
+                                    class="btn btn-warning align-items-center text-white justify-content-md-center mb-2">Borrar</button>
+                                <button data-modal-search type="submit"
+                                    class="btn btn-info align-items-center text-white justify-content-md-center mb-2">Generar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include(partials + 'script.ejs' ) %>
+
+        <script type="module" src="../js/controllers/qttController.js"></script>
+        <script type="module" src="../js/controllers/loginController.js"></script>
+        <script type="module" src="../js/controllers/menuController.js"></script>
+
+        <%- include(partials + 'footer.ejs' ) %>

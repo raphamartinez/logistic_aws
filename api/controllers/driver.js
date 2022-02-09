@@ -5,7 +5,7 @@ const cachelist = require('../infrastructure/redis/cache')
 
 module.exports = app => {
 
-    app.post('/driver', [Middleware.bearer, Authorization('driver', 'create')], async (req, res, next) => {
+    app.post('/driver', [Middleware.authenticatedMiddleware, Authorization('driver', 'create')], async (req, res, next) => {
         try {
             const driver = req.body.driver
 
@@ -17,7 +17,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/drivers', [Middleware.bearer, Authorization('driver', 'read')], async (req, res, next) => {
+    app.get('/drivers', [Middleware.authenticatedMiddleware, Authorization('driver', 'read')], async (req, res, next) => {
         let drivers
         try {
             if (req.access.all.allowed) {
@@ -39,7 +39,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/driver/:id', [Middleware.bearer, Authorization('driver', 'update')], async (req, res, next) => {
+    app.put('/driver/:id', [Middleware.authenticatedMiddleware, Authorization('driver', 'update')], async (req, res, next) => {
         try {
             await Driver.update(req.params.id, req.body.status)
             res.json({ msg: `Chofér actualizado con éxito.` })
@@ -48,7 +48,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/driver/update/:id', [Middleware.bearer, Authorization('driver', 'update')], async (req, res, next) => {
+    app.put('/driver/update/:id', [Middleware.authenticatedMiddleware, Authorization('driver', 'update')], async (req, res, next) => {
         try {
             await Driver.updateDriver(req.params.id, req.body.driver)
             res.json({ msg: `Chofér actualizado con éxito.` })
@@ -57,7 +57,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/drivers/enable/:date/:period', [Middleware.bearer, Authorization('driver', 'read')], async (req, res, next) => {
+    app.get('/drivers/enable/:date/:period', [Middleware.authenticatedMiddleware, Authorization('driver', 'read')], async (req, res, next) => {
         try {
             let drivers
 
@@ -79,7 +79,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/driver/obs/:id', [Middleware.bearer, Authorization('driver', 'update')], async (req, res, next) => {
+    app.put('/driver/obs/:id', [Middleware.authenticatedMiddleware, Authorization('driver', 'update')], async (req, res, next) => {
         try {
 
             await Driver.updateObs(req.params.id, req.body.driver.obs)

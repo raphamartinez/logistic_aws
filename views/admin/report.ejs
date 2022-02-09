@@ -1,0 +1,225 @@
+<%- include(partials + 'header.ejs' ) %>
+
+    <div id="content">
+        <div class="container-fluid">
+            <div class="col-lg-12 text-center">
+                <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
+                    <h1 class="h3 mb-0 text-gray-800">Informes
+                    </h1>
+                </div>
+            </div>
+
+            <div class="row col-md-12 mb-2 align-items-center">
+                <div class="d-flex justify-content-center align-items-center" data-loading></div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-md-10" data-view-report></div>
+                <div class="col-md-10">
+                    <div class="card shadow mb-3">
+                        <div class="card-header">
+                            <div class="form-row">
+                                <div class="form-group col-10">
+                                    <h6 class="m-0 font-weight-bold text-danger">Listado de Informes</h6>
+                                </div>
+                                <div class="form-group col-2">
+                                    <select class="form-select" data-filter-report-type>
+                                        <option value="TODOS" selected>Todos los tipos</option>
+                                        <option value="Ingresos">Ingresos</option>
+                                        <option value="Despesas Totales">Despesas Totales</option>
+                                        <option value="Combustibles">Combustibles</option>
+                                        <option value="Analisis de Resultados">Analisis de Resultados</option>
+                                        <option value="Viajes y Choferes">Viajes y Choferes</option>
+                                        <option value="Suprimentos">Suprimentos</option>
+                                        <option value="Compras">Compras</option>
+                                        <option value="Plano de Cuentas">Plano de Cuentas</option>
+                                        <option value="Rastreo y Telemetria">Rastreo y Telemetria</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered text-center mb-2" id="tableReports" width="100%"
+                                cellspacing="0"></table>
+                        </div>
+                    </div>
+                    <div class="card shadow mb-3">
+                        <div class="card-body text-center">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add">Agregar
+                                nuevo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="add" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar nuevo informe</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <form data-form-add>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" placeholder="Título" class="form-control" name="title" id="title"
+                                    required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select class="form-control" name="type" id="typeadd" required>
+                                    <option value="" disabled selected>Tipo</option>
+                                    <option value="1">Ingresos</option>
+                                    <option value="2">Despesas Totales</option>
+                                    <option value="3">Combustibles</option>
+                                    <option value="4">Analisis de Resultados</option>
+                                    <option value="5">Viajes y Choferes</option>
+                                    <option value="6">Suprimentos</option>
+                                    <option value="7">Compras</option>
+                                    <option value="8">Plano de Cuentas</option>
+                                    <option value="9">Rastreo y Telemetria</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <input type="url" placeholder="Url" class="form-control" name="url" id="url" required>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <textarea placeholder="Descripción del informe..." id="description" name="description"
+                                    class="form-control"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success"><i class="fas fa-check">Agregar</i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editmodal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar informe</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <form data-form-edit>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" placeholder="Título" class="form-control" name="title" id="titleedit"
+                                    required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <select class="form-control" name="type" id="typeedit" required>
+                                    <option value="" disabled selected>Tipo</option>
+                                    <option value="1">Ingresos</option>
+                                    <option value="2">Despesas Totales</option>
+                                    <option value="3">Combustibles</option>
+                                    <option value="4">Analisis de Resultados</option>
+                                    <option value="5">Viajes y Choferes</option>
+                                    <option value="6">Suprimentos</option>
+                                    <option value="7">Compras</option>
+                                    <option value="8">Plano de Cuentas</option>
+                                    <option value="9">Rastreo y Telemetria</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <input type="text" placeholder="Url" class="form-control" name="url" id="urledit"
+                                    required>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <textarea placeholder="Descripción del informe..." id="descriptionedit"
+                                    name="description" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning"><i class="fas fa-edit">
+                                Editar</i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="dropmodal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Quieres eliminar este informe?</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <form data-form-drop>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <h8>Si lo borra no podrá recuperarlo de nuevo.</h8>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger"><i class="fas fa-times">
+                                Eliminar</i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addBiUser" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Acceso</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                </div>
+                <form data-form-add-biuser>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-12 text-center">
+                                <label for="userselect">Usuarios</label>
+                                <select title="Usuarios" multiple class="selectpicker form-control" name="userselect"
+                                    id="userselect" required></select>
+                                <hr>
+                            </div>
+                            <div class="form-group col-md-12 text-center">
+                                <h6>Usuarios con acceso</h6>
+                                <table class="table table-bordered text-center" id="tableusers" width="100%"
+                                    cellspacing="0"></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" onclick="addBiUser(event)" class=" btn btn-success"><i
+                                class="fas fa-plus"> Enlace</i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include(partials + 'script.ejs' ) %>
+
+        <script type="module" src="../js/controllers/reportController.js"></script>
+        <script type="module" src="../js/controllers/loginController.js"></script>
+        <script type="module" src="../js/controllers/menuController.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+        <%- include(partials + 'footer.ejs' ) %>

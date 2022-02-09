@@ -4,11 +4,6 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 class File {
     async insert(file, details, id_login) {
         try {
-            if (file.name) file.key = file.name
-            if (!file.location) file.location = `${process.env.BASE_URL}/files/${file.key}`
-
-            file.size = file.size / 1024 / 1024
-
             const sql = `INSERT INTO api.file (filename, mimetype, path, size, ${details.name}, id_login, datereg) values (?, ?, ?, ?, ?, ?, now() - interval 4 hour )`
             await query(sql, [file.key, file.mimetype, file.location, file.size, details.code, id_login])
 
@@ -19,11 +14,27 @@ class File {
         }
     }
 
+    async insertArchive(file, details, id_login) {
+        try {
+            const sql = `INSERT INTO api.file (filename, name, description, type, download, mimetype, path, size, id_login, datereg) values (?, ?, ?, ?, ?, ?, ?, ?, ?, now() - interval 4 hour )`
+            await query(sql, [file.key, details.name, details.description, details.type, details.download, file.mimetype, file.location, file.size, id_login])
+
+            return true
+        } catch (error) {
+            console.log(error);
+            throw new InvalidArgumentError('No se pudo insertar el archivo en la base de datos')
+        }
+    }
+
     list(type, id) {
         try {
-            let sql = `SELECT id, filename, path, mimetype, size, id_login, IFNULL(description, "No hay descripción") as description, DATE_FORMAT(datereg, '%H:%i %d/%m/%Y') as date from api.file `
+            let sql = `SELECT id, name, type, download, filename, path, mimetype, size, id_login, IFNULL(description, "No hay descripción") as description, DATE_FORMAT(datereg, '%H:%i %d/%m/%Y') as date from api.file `
 
-            if (type) sql += `WHERE (${type} <> 0 || null) `
+            if (type && type == 5) {
+                sql += `WHERE id_patrimony is null AND id_quotation is null AND id_item is null`
+            } else {
+                sql += `WHERE (${type} <> 0 || null) `
+            }
 
             if (id) sql += `AND ${type} = ${id}`
 

@@ -17,7 +17,6 @@ window.onload = async function () {
   selectProviders(providers)
 
   const quotations = await Connection.noBody('quotation', 'GET')
-  let user = JSON.parse(sessionStorage.getItem('user'))
 
   let dtview = []
   quotations.forEach(car => {
@@ -38,10 +37,6 @@ window.onload = async function () {
 
   listCars(dtview)
 
-
-  let name = user.name.substring(0, (user.name + " ").indexOf(" "))
-  let username = document.querySelector('[data-username]')
-  username.innerHTML = name
   loading.innerHTML = " "
 }
 

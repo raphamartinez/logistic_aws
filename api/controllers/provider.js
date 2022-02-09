@@ -5,7 +5,7 @@ const cachelist = require('../infrastructure/redis/cache')
 
 module.exports = app => {
 
-    app.get('/provider', [Middleware.bearer, Authorization('provider', 'read')], async ( req, res, next) => {
+    app.get('/provider', [Middleware.authenticatedMiddleware, Authorization('provider', 'read')], async ( req, res, next) => {
         try {
             
             // const cached = await cachelist.searchValue(`proveedor`)
@@ -23,7 +23,7 @@ module.exports = app => {
         }
     })
 
-    app.post('/provider', [Middleware.bearer, Authorization('provider', 'create')], async ( req, res, next) => {
+    app.post('/provider', [Middleware.authenticatedMiddleware, Authorization('provider', 'create')], async ( req, res, next) => {
         try {
             cachelist.delPrefix('proveedor')
             const id = await Provider.insert(req.body.provider)
@@ -34,7 +34,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/provider/:id', [Middleware.bearer, Authorization('provider', 'update')], async ( req, res, next) => {
+    app.put('/provider/:id', [Middleware.authenticatedMiddleware, Authorization('provider', 'update')], async ( req, res, next) => {
         try {
             const provider = req.body.newProvider
             await Provider.update(provider, req.params.id)
@@ -46,7 +46,7 @@ module.exports = app => {
         }
     })
 
-    app.delete('/provider/:id', [Middleware.bearer, Authorization('provider', 'delete')], async ( req, res, next) => {
+    app.delete('/provider/:id', [Middleware.authenticatedMiddleware, Authorization('provider', 'delete')], async ( req, res, next) => {
         try {
             await Provider.delete(req.params.id)
             cachelist.delPrefix('proveedor')

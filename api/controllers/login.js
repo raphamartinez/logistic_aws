@@ -1,65 +1,89 @@
 const Login = require('../models/login')
 const Middleware = require('../infrastructure/auth/middleware')
 const path = require('path')
+const passport = require('passport');
 
 module.exports = app => {
 
-    app.all('/admin/*', Middleware.bearer, async function (req, res, next) {
+    app.get('/login', async function (req, res, next) {
         try {
-            next()
+            if (req.query.fail) {
+                req.flash('error', '¡Nombre de usuario y/o contraseña inválido!');
+                res.redirect('login');
+            } else
+                res.render('login');
         } catch (err) {
-            console.log(err);
             next(err)
         }
-    })
+    });
 
-    app.post('/login', Middleware.local, async function (req, res, next) {
+    app.post('/login', passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/login?fail=true'
+    }));
+
+    app.get('/dashboard', async function (req, res, next) {
         try {
-            const id_login = req.login.id
-            const token = await Login.generateTokens(id_login)
-            const login = await Login.viewLogin(id_login)
-            let url
+            let id_login = false;
+            let url = 'dashboard';
 
-            switch (req.login.profile) {
-                case 1:
-                    url = '../admin/reemplazar.html'
-                    break
-                case 2:
-                    url = '../admin/patrimonio.html'
-                    break
-                case 3:
-                    url = '../admin/vehiculos.html'
-                    break
-                case 4:
-                    url = '../admin/vehiculos.html'
-                    break
-                default:
-                    url = '../admin/dashboard.html'
-                    break
+            if (req.session.passport) {
+                id_login = req.session.passport.user;
+            } else {
+                id_login = req.login.id_login;
             }
 
-            res.json({ refreshToken: token.refreshToken, accessToken: token.accessToken, url, user: login })
-        } catch (err) {
-            next(err)
-        }
-    })
+            const login = await Login.viewLogin(id_login);
 
-    app.post('/logout', [Middleware.refresh, Middleware.bearer], async function (req, res, next) {
+            switch (login.perfil) {
+                case 1:
+                    url = 'reemplazar';
+                    break;
+                case 2:
+                    url = 'patrimonio';
+                    break;
+                case 3:
+                    url = 'vehiculos';
+                    break;
+                case 4:
+                    url = 'vehiculos';
+                    break;
+            }
+
+            res.render(url,{
+                perfil: login.perfil,
+                username: login.name
+            });
+            
+        } catch (err) {
+            res.redirect('login?fail=true')
+        }
+    });
+
+
+    app.post('/salir', async function (req, res, next) {
         try {
-            const token = req.token
-            await Login.logout(token)
-            res.json({ url: '../public/login.html' })
+            req.logout();
+            res.redirect('/')
         } catch (err) {
             next(err)
         }
 
     });
 
-    app.post('/insertLogin', Middleware.bearer, async function (req, res, next) {
+    app.post('/insertLogin', Middleware.authenticatedMiddleware, async function (req, res, next) {
         try {
             const data = req.body
             await Login.insertLogin(data)
             res.sendFile('login.html', { root: path.join(__dirname, '../../views/public') });
+        } catch (err) {
+            next(err)
+        }
+    });
+
+    app.get('/forgotPassword', async function (req, res, next) {
+        try {
+            res.render('forgotPassword');
         } catch (err) {
             next(err)
         }
@@ -96,16 +120,7 @@ module.exports = app => {
         }
     });
 
-    app.post('/refresh', Middleware.refresh, async function (req, res, next) {
-        try {
-            const token = await Login.generateTokens(req.login.id_login)
-            res.json({ refreshToken: token.refreshToken, accessToken: token.accessToken })
-        } catch (err) {
-            next(err)
-        }
-    });
-
-    app.post('/changepass', Middleware.bearer, async (req, res, next) => {
+    app.post('/changepass', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
             const user = req.body.user
             await Login.updatePassword(user)

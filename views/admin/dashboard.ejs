@@ -1,0 +1,50 @@
+<%- include(partials + 'header.ejs' ) %>
+
+    <div id="content">
+        <div class="container-fluid">
+            <div class="col-lg-12 text-center">
+                <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
+                    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                </div>
+            </div>
+
+            <div class="row col-md-12 mb-2 align-items-center">
+                <div class="d-flex justify-content-center align-items-center" data-loading></div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-lg-10">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">Listado de Mantenimiento</h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-md-center">
+                <div class="col-lg-10">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">Listado de Items</h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered text-center" id="dataItems" width="100%" cellspacing="0">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include(partials + 'script.ejs' ) %>
+
+        <script type="module" src="../js/controllers/dashboardController.js"></script>
+        <script type="module" src="../js/controllers/loginController.js"></script>
+        <script type="module" src="../js/controllers/menuController.js"></script>
+
+        <%- include(partials + 'footer.ejs' ) %>

@@ -308,11 +308,6 @@ window.onload = async function () {
     </div>
   </div>`
 
-    let user = JSON.parse(sessionStorage.getItem('user'))
-    let name = user.name.substring(0, (user.name + " ").indexOf(" "))
-    let username = document.querySelector('[data-username]')
-    username.innerHTML = name
-
     table()
 
     loading.innerHTML = " "

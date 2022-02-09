@@ -1,0 +1,61 @@
+<%- include(partials + 'header.ejs' ) %>
+
+    <div id="content">
+        <div class="container-fluid">
+            <div class="col-lg-12 text-center">
+                <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
+                    <h1 class="h3 mb-0 text-gray-800">Historial del Vehiculo</h1>
+                </div>
+            </div>
+
+            <div class="row col-md-12 mb-2 align-items-center">
+                <div class="d-flex justify-content-center align-items-center" data-loading></div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-lg-10">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">Generar Informe de Historial del Vehiculo
+                            </h6>
+                        </div>
+                        <form target="_blank" action="/history" method="POST" data-form-generate>
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="datestart">Fecha Inicial</label>
+                                        <input id="datestart" name="datestart" placeholder="Fecha Inicial" type="date"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="dateend">Fecha Final</label>
+                                        <input id="dateend" name="dateend" placeholder="Fecha Final" type="date"
+                                            class="form-control">
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <label for="truck">Camion</label>
+                                        <select data-select-truck id="truck" name="truck" class="form-control" multiple>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="reset"
+                                    class="btn btn-warning align-items-center text-white justify-content-md-center mb-2">Borrar</button>
+                                <button data-modal-search type="submit"
+                                    class="btn btn-info align-items-center text-white justify-content-md-center mb-2">Generar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include(partials + 'script.ejs' ) %>
+
+        <script type="module" src="../js/controllers/qttController.js"></script>
+        <script type="module" src="../js/controllers/loginController.js"></script>
+        <script type="module" src="../js/controllers/menuController.js"></script>
+
+        <%- include(partials + 'footer.ejs' ) %>

@@ -12,8 +12,16 @@ const { promisify } = require('util')
 
 module.exports = app => {
 
+    app.get('/patrimonio', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('patrimonio')
+        } catch (err) {
+            next(err)
+        }
+    })
+
     app.post('/patrimony', 
-    [Middleware.bearer, Authorization('patrimony', 'create')],
+    [Middleware.authenticatedMiddleware, Authorization('patrimony', 'create')],
     multer(multerConfig)
         .array('file', 10), async (req, res, next) => {
         try {
@@ -30,7 +38,7 @@ module.exports = app => {
         }
     })
 
-    app.delete('/patrimony/:id', [Middleware.bearer, Authorization('patrimony', 'delete')], async (req, res, next) => {
+    app.delete('/patrimony/:id', [Middleware.authenticatedMiddleware, Authorization('patrimony', 'delete')], async (req, res, next) => {
         try {
             await Patrimony.delete(req.params.id)
 
@@ -42,7 +50,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/patrimony', [Middleware.bearer, Authorization('patrimony', 'read')], async (req, res, next) => {
+    app.get('/patrimony', [Middleware.authenticatedMiddleware, Authorization('patrimony', 'read')], async (req, res, next) => {
         try {
 
             // const cached = await cachelist.searchValue(`patrimony`)
@@ -60,7 +68,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/patrimony/route/:id', [Middleware.bearer, Authorization('patrimony', 'read')], async (req, res, next) => {
+    app.get('/patrimony/route/:id', [Middleware.authenticatedMiddleware, Authorization('patrimony', 'read')], async (req, res, next) => {
         try {
             const code = await Patrimony.last(req.params.id)
 
@@ -70,7 +78,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/patrimony/:id', [Middleware.bearer, Authorization('patrimony', 'update')], async ( req, res, next) => {
+    app.put('/patrimony/:id', [Middleware.authenticatedMiddleware, Authorization('patrimony', 'update')], async ( req, res, next) => {
         try {
             const patrimony = req.body.newPatrimony
 
@@ -83,7 +91,7 @@ module.exports = app => {
         }
     })
 
-    app.delete('/patrimony/:id', [Middleware.bearer, Authorization('patrimony', 'delete')], async ( req, res, next) => {
+    app.delete('/patrimony/:id', [Middleware.authenticatedMiddleware, Authorization('patrimony', 'delete')], async ( req, res, next) => {
         try {
             await Patrimony.delete(req.params.id)
             cachelist.delPrefix('patrimony')

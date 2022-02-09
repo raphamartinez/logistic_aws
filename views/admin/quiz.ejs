@@ -1,0 +1,37 @@
+<%- include(partials + 'header.ejs' ) %>
+
+    <div id="content">
+        <div class="container-fluid">
+            <div class="col-lg-12 text-center">
+                <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
+                    <h1 class="h3 mb-0 text-gray-800">Cuestionario</h1>
+                </div>
+            </div>
+            <div class="row" data-card></div>
+            <div class="col-lg-12 text-center">
+                <div class="form-row" data-powerbi></div>
+            </div>
+            <div data-settings></div>
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="spinner-grow text-danger" role="status" data-loading>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+
+            <table class="table table-bordered text-center mb-2" id="dataTable" width="100%" cellspacing="0">
+            </table>
+
+            <div data-features></div>
+        </div>
+    </div>
+
+    <%- include(partials + 'script.ejs' ) %>
+
+
+
+        <script type="module" src="../js/controllers/quizController.js"></script>
+        <script type="module" src="../js/controllers/loginController.js"></script>
+        <script type="module" src="../js/controllers/menuController.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <%- include(partials + 'footer.ejs' ) %>

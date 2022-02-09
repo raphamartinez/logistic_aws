@@ -7,7 +7,7 @@ const multerConfig = require('../config/multer')
 
 module.exports = app => {
 
-    app.get('/item', [Middleware.bearer, Authorization('item', 'read')], async (req, res, next) => {
+    app.get('/item', [Middleware.authenticatedMiddleware, Authorization('item', 'read')], async (req, res, next) => {
         try {
 
             // const cached = await cachelist.searchValue(`item`)
@@ -25,7 +25,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/item/:plate', [Middleware.bearer, Authorization('item', 'read')], async (req, res, next) => {
+    app.get('/item/:plate', [Middleware.authenticatedMiddleware, Authorization('item', 'read')], async (req, res, next) => {
         try {
 
             const plate = req.params.plate
@@ -38,7 +38,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/itemview/:id', [Middleware.bearer, Authorization('item', 'read')], async (req, res, next) => {
+    app.get('/itemview/:id', [Middleware.authenticatedMiddleware, Authorization('item', 'read')], async (req, res, next) => {
         try {
 
             const id = req.params.id
@@ -51,7 +51,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/itemstatus/:status', [Middleware.bearer, Authorization('item', 'read')], async (req, res, next) => {
+    app.get('/itemstatus/:status', [Middleware.authenticatedMiddleware, Authorization('item', 'read')], async (req, res, next) => {
         try {
 
             const status = req.params.status
@@ -65,7 +65,7 @@ module.exports = app => {
     })
 
     app.post('/item',
-        [Middleware.bearer, Authorization('item', 'create')],
+        [Middleware.authenticatedMiddleware, Authorization('item', 'create')],
         multer(multerConfig)
             .fields([{ name: 'file', maxCount: 10 }, { name: 'voucher', maxCount: 1 }]), async (req, res, next) => {
 
@@ -84,7 +84,7 @@ module.exports = app => {
             })
 
     app.put('/item/:id',
-        [Middleware.bearer, Authorization('item', 'update')],
+        [Middleware.authenticatedMiddleware, Authorization('item', 'update')],
         multer(multerConfig)
             .fields([{ name: 'file', maxCount: 10 }, { name: 'voucher', maxCount: 1 }]), async (req, res, next) => {
                 try {
@@ -101,7 +101,7 @@ module.exports = app => {
                 }
             })
 
-    app.delete('/item/:id', [Middleware.bearer, Authorization('item', 'delete')], async (req, res, next) => {
+    app.delete('/item/:id', [Middleware.authenticatedMiddleware, Authorization('item', 'delete')], async (req, res, next) => {
         try {
             await Item.delete(req.params.id)
             cachelist.delPrefix(`item`)

@@ -18,13 +18,6 @@ window.onload = async function () {
     </div>
   </div>
 `
-
-  let user = JSON.parse(sessionStorage.getItem('user'))
-
-  let name = user.name.substring(0, (user.name + " ").indexOf(" "))
-  let username = document.querySelector('[data-username]')
-  username.innerHTML = name
-
   const data = await Connection.noBody('quotation', 'GET')
 
   if (document.querySelector('[data-select-truck]')) data.cars.forEach(car => {

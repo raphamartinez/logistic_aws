@@ -6,7 +6,7 @@ const Authorization = require('../infrastructure/auth/authorization')
 
 module.exports = app => {
 
-    app.post('/travelreport', [Middleware.bearer, Authorization('travel', 'create')], async (req, res, next) => {
+    app.post('/travelreport', [Middleware.authenticatedMiddleware, Authorization('travel', 'create')], async (req, res, next) => {
         try {
             const travel = req.body.travel
 
@@ -19,7 +19,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/travelreport/:id', [Middleware.bearer, Authorization('travel', 'delete')], async (req, res, next) => {
+    app.put('/travelreport/:id', [Middleware.authenticatedMiddleware, Authorization('travel', 'delete')], async (req, res, next) => {
         try {
             const travel = req.body.travel
             const id = req.params.id
@@ -32,7 +32,7 @@ module.exports = app => {
         }
     })
 
-    app.delete('/travelreport/:id', [Middleware.bearer, Authorization('travel', 'delete')], async (req, res, next) => {
+    app.delete('/travelreport/:id', [Middleware.authenticatedMiddleware, Authorization('travel', 'delete')], async (req, res, next) => {
         try {
             await TravelReport.delete(req.params.id)
 
@@ -42,7 +42,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/travelreport/:id_car/:type/:origin/:route/:id_travel', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
+    app.get('/travelreport/:id_car/:type/:origin/:route/:id_travel', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
 
             const report = {
@@ -63,7 +63,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/travelreport/:id_car/:type/:origin/:route/:id_travel', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
+    app.get('/travelreport/:id_car/:type/:origin/:route/:id_travel', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
 
             const report = {

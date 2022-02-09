@@ -359,12 +359,6 @@ window.onload = async function () {
     </div>
   </div>
 `
-    let user = JSON.parse(sessionStorage.getItem('user'))
-    if (user.profile != 4) {
-        document.querySelector('[data-menu]').remove()
-        document.querySelector('[data-menu-adm]').remove()
-    }
-
     const data = await Connection.noBody('patrimony', 'GET')
     let patrimonys = data.map(obj => {
         let a = `<a><i data-action data-id="${obj.id}" class="btn-view fas fa-eye" ></i></a>
@@ -379,9 +373,6 @@ window.onload = async function () {
 
     listPatrimonys(patrimonys)
 
-    let name = user.name.substring(0, (user.name + " ").indexOf(" "))
-    let username = document.querySelector('[data-username]')
-    username.innerHTML = name
     loading.innerHTML = " "
 }
 

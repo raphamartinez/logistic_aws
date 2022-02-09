@@ -5,7 +5,7 @@ const cachelist = require('../infrastructure/redis/cache')
 
 module.exports = app => {
 
-    app.post('/travel', [Middleware.bearer, Authorization('travel', 'create')], async (req, res, next) => {
+    app.post('/travel', [Middleware.authenticatedMiddleware, Authorization('travel', 'create')], async (req, res, next) => {
         try {
             const travel = req.body.travel
 
@@ -19,7 +19,7 @@ module.exports = app => {
         }
     })
 
-    app.delete('/travel/:id', [Middleware.bearer, Authorization('travel', 'delete')], async (req, res, next) => {
+    app.delete('/travel/:id', [Middleware.authenticatedMiddleware, Authorization('travel', 'delete')], async (req, res, next) => {
         try {
             await Travel.delete(req.params.id)
 
@@ -31,7 +31,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/travel/:date', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
+    app.get('/travel/:date', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
             let travels
             const date = req.params.date
@@ -51,7 +51,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/travel/hystory/:id', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
+    app.get('/travel/hystory/:id', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
             const id = req.params.id
 
@@ -64,7 +64,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/cars/enable/:date/:period', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
+    app.get('/cars/enable/:date/:period', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
             let cars
             const date = req.params.date
@@ -84,7 +84,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/travelperiod/:date/:period', [Middleware.bearer, Authorization('travel', 'read')], async (req, res, next) => {
+    app.get('/travelperiod/:date/:period', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
             let travels
             const date = req.params.date

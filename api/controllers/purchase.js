@@ -7,6 +7,38 @@ const path = require('path')
 
 module.exports = app => {
 
+    app.get('/ordenesCompra', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('purchaseorders')
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.get('/despesasVehiculos', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('expense')
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.get('/ordenGestran', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('ordergestran')
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.get('/historialVehiculos', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('history')
+        } catch (err) {
+            next(err)
+        }
+    })
+
     app.post('/purchaseorders', async (req, res, next) => {
         try {
             const search = req.body;

@@ -13,8 +13,24 @@ class File {
     async insert(files, details, id_login) {
         try {
 
-            for (const file of files) {
-                await Repositorie.insert(file, details, id_login)
+            if (details.typeFile == 1) {
+                let file = files[0];
+                
+                if (file.name) file.key = file.name
+                if (!file.location) file.location = `${process.env.BASE_URL}/files/${file.key}`
+
+                file.size = file.size / 1024 / 1024
+
+                await Repositorie.insertArchive(file, details, id_login)
+            } else {
+                for (let file of files) {
+                    if (file.name) file.key = file.name
+                    if (!file.location) file.location = `${process.env.BASE_URL}/files/${file.key}`
+
+                    file.size = file.size / 1024 / 1024
+
+                    await Repositorie.insert(file, details, id_login)
+                }
             }
 
             return true
@@ -42,7 +58,7 @@ class File {
         }
     }
 
-    list(type, id){
+    list(type, id) {
         try {
             return Repositorie.list(type, id)
         } catch (error) {
@@ -50,7 +66,7 @@ class File {
         }
     }
 
-    async update(file, id){
+    async update(file, id) {
         try {
             return Repositorie.update(file, id)
         } catch (error) {

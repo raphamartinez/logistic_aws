@@ -29,15 +29,15 @@
                                     <div class="text-center">
                                         <img class="img-fluid mx-auto" src="../img/launch.png" alt="">
                                     </div>
-                                    <form id="formLogin" action="#" class="user" data-form>
+                                    <form id="formLogin" method="POST" action="/login" class="user" data-form>
 
                                         <div class="form-group pt-3">
                                             <input type="email" class="form-control form-control-user text-center"
-                                                id="exampleInputEmail" aria-describedby="emailHelp" placeholder="E-mail"
+                                                id="exampleInputEmail" aria-describedby="emailHelp" placeholder="E-mail" name="mail"
                                                 data-mail>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user text-center"
+                                            <input type="password" class="form-control form-control-user text-center" name="password"
                                                 placeholder="Contrasenã" data-password>
                                         </div>
                                         <div class="form-group">
@@ -47,9 +47,9 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href="" class="btn btn-danger btn-user btn-block" onclick="login(event)" id="btnLogin">
+                                        <button type="submit" class="btn btn-danger btn-user btn-block" id="btnLogin">
                                             Login
-                                        </a>
+                                        </button>
                                     </form>
                                     <hr>
                                 </div>

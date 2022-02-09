@@ -1,13 +1,8 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
-const BearerStrategy = require('passport-http-bearer').Strategy
 const bcrypt = require('bcrypt')
 const Login = require('../../models/login')
-const Token = require('../../models/token')
-
 const { NotAuthorized, InvalidArgumentError } = require('../../models/error')
-
-
 
 function verifyLogin(login) {
   if (!login) {
@@ -22,38 +17,41 @@ async function verifyPassword(password, passwordHash) {
   }
 }
 
+passport.serializeUser((login, done) => {
+  done(null, login.id);
+})
+
+passport.deserializeUser(async (id_login, done) => {
+  try {
+    const login = await Login.viewLogin(id_login)
+    done(null, login);
+
+  } catch (error) {
+    console.log(error);
+    return done(err, null);
+  }
+})
+
 passport.use(
   new LocalStrategy(
     {
       usernameField: 'mail',
-      passwordField: 'password',
-      session: false
+      passwordField: 'password'
     },
     async (mail, password, done) => {
       try {
-        const login = await Login.searchMail(mail)
-        verifyLogin(login.access)
-        await verifyPassword(password, login.password)
-        done(null, login)
+        const login = await Login.searchMail(mail);
+        verifyLogin(login.access);
+        await verifyPassword(password, login.password);
+        return done(null, login);
       } catch (error) {
-        done(error)
+        return done(error, false);
       }
     }
   )
-)
+);
 
-passport.use(
-  new BearerStrategy(
-    async (token, done) => {
-    try {
-      const id = await Token.access.verify(token)
-      const login = await Login.viewLogin(id)
-      done(null, login, { token })
-    } catch (error) {
-      done(error)
-    }
-  })
-)
+
 
 
 

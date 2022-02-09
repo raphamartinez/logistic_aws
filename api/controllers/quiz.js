@@ -6,7 +6,15 @@ const cachelist = require('../infrastructure/redis/cache')
 
 module.exports = app => {
 
-    app.get('/quiz', [Middleware.bearer, Authorization('quiz', 'read')], async (req, res, next) => {
+    app.get('/cuestionario', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('quiz')
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.get('/quiz', [Middleware.authenticatedMiddleware, Authorization('quiz', 'read')], async (req, res, next) => {
         try {
 
             // const cached = await cachelist.searchValue('quiz')
@@ -25,7 +33,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/interviews', [Middleware.bearer, Authorization('quiz', 'read')], async (req, res, next) => {
+    app.get('/interviews', [Middleware.authenticatedMiddleware, Authorization('quiz', 'read')], async (req, res, next) => {
         try {
             const interviews = await Quiz.listInterview()
 
@@ -35,7 +43,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/interview/:type/:id', [Middleware.bearer, Authorization('quiz', 'read')], async (req, res, next) => {
+    app.get('/interview/:type/:id', [Middleware.authenticatedMiddleware, Authorization('quiz', 'read')], async (req, res, next) => {
         try {
             const responses = await Quiz.listGraph(req.params.type, req.params.id)
             res.json(responses)
@@ -44,7 +52,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/viewquiz/:id_quiz', [Middleware.bearer, Authorization('quiz', 'read')], async (req, res, next) => {
+    app.get('/viewquiz/:id_quiz', [Middleware.authenticatedMiddleware, Authorization('quiz', 'read')], async (req, res, next) => {
         try {
             const id_quiz = req.params.id_quiz
 
@@ -87,7 +95,7 @@ module.exports = app => {
         }
     });
 
-    app.post('/quiz', [Middleware.bearer, Authorization('quiz', 'create')], async (req, res, next) => {
+    app.post('/quiz', [Middleware.authenticatedMiddleware, Authorization('quiz', 'create')], async (req, res, next) => {
         try {
             const user = req.body.user
             const quiz = req.body.quiz

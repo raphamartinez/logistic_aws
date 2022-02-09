@@ -5,7 +5,15 @@ const cachelist = require('../infrastructure/redis/cache')
 
 module.exports = app => {
 
-    app.post('/car', [Middleware.bearer, Authorization('car', 'create')], async (req, res, next) => {
+    app.get('/vehiculos', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('vehiculos')
+        } catch (err) {
+            next(err)
+        }
+    })
+
+    app.post('/car', [Middleware.authenticatedMiddleware, Authorization('car', 'create')], async (req, res, next) => {
         try {
             const car = req.body.car
 
@@ -18,7 +26,7 @@ module.exports = app => {
     })
 
 
-    app.get('/cars/:date', [Middleware.bearer, Authorization('car', 'read')], async (req, res, next) => {
+    app.get('/cars/:date', [Middleware.authenticatedMiddleware, Authorization('car', 'read')], async (req, res, next) => {
         try {
 
             // const cached = await cachelist.searchValue(`car`)
@@ -41,7 +49,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/carstatus', [Middleware.bearer, Authorization('car', 'read')], async (req, res, next) => {
+    app.get('/carstatus', [Middleware.authenticatedMiddleware, Authorization('car', 'read')], async (req, res, next) => {
         try {
             const cars = await Car.liststatus()
             res.json(cars)
@@ -50,7 +58,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/car/edit/:id', [Middleware.bearer, Authorization('car', 'update')], async (req, res, next) => {
+    app.put('/car/edit/:id', [Middleware.authenticatedMiddleware, Authorization('car', 'update')], async (req, res, next) => {
         try {
 
             const car = req.body.car
@@ -63,7 +71,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/car/:plate', [Middleware.bearer, Authorization('car', 'update')], async (req, res, next) => {
+    app.put('/car/:plate', [Middleware.authenticatedMiddleware, Authorization('car', 'update')], async (req, res, next) => {
         try {
 
             await Car.update(req.params.plate, req.body.status)
@@ -74,7 +82,7 @@ module.exports = app => {
         }
     })
 
-    app.put('/car/obs/:id', [Middleware.bearer, Authorization('car', 'update')], async (req, res, next) => {
+    app.put('/car/obs/:id', [Middleware.authenticatedMiddleware, Authorization('car', 'update')], async (req, res, next) => {
         try {
 
             await Car.updateObs(req.params.id, req.body.car.obs)
@@ -85,7 +93,7 @@ module.exports = app => {
         }
     })
 
-    app.delete('/car/:id', [Middleware.bearer, Authorization('car', 'delete')], async (req, res, next) => {
+    app.delete('/car/:id', [Middleware.authenticatedMiddleware, Authorization('car', 'delete')], async (req, res, next) => {
         try {
 
             await Car.delete(req.params.id)
@@ -96,7 +104,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/dashboard', [Middleware.bearer, Authorization('car', 'read')], async (req, res, next) => {
+    app.get('/dashboardcar', [Middleware.authenticatedMiddleware, Authorization('car', 'read')], async (req, res, next) => {
         try {
 
             // const cached = await cachelist.searchValue(`dashboard`)

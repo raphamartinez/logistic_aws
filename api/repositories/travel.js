@@ -12,6 +12,8 @@ class Travel {
                         WHEN tr.type = 2 THEN "Retiro Contenedor"
                         WHEN tr.type = 3 THEN "Mantenimiento"
                         WHEN tr.type = 4 THEN "Region Metropolitana"
+                        WHEN tr.type = 5 THEN "Retorno"
+                        WHEN tr.type = 6 THEN "Transferencia"
                         ELSE ""
                     END as type,
                     CASE
@@ -208,6 +210,8 @@ class Travel {
                         WHEN tr.type = 2 THEN "Retiro Contenedor"
                         WHEN tr.type = 3 THEN "Mantenimiento"
                         WHEN tr.type = 4 THEN "Region Metropolitana"
+                        WHEN tr.type = 5 THEN "Retorno"
+                        WHEN tr.type = 6 THEN "Transferencia"
                         ELSE ""
                     END as type,
                     CASE

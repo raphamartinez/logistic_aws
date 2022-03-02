@@ -90,7 +90,6 @@ module.exports = app => {
             const date = req.params.date
             const period = req.params.period
 
-            console.log(req.access.all);
             if (req.access.all.allowed) {
                 travels = await Travel.list(date, period)
             } else {

@@ -25,8 +25,9 @@ class Purchase {
             ,[oc].[ID_OPER_CANCELAMENTO] as status
             ,[oc].[DT_CANCELAMENTO]
             ,[oc].[DS_MOTIVO_CANCELAMENTO]
-            ,[cc].[DESCRICAO] as centro_custo,
-            CASE [oc].[FG_STATUS]
+            ,[cc].[DESCRICAO] as centro_custo
+            ,[ed].[MDA_SIMBOL] as coin
+            ,CASE [oc].[FG_STATUS]
             WHEN 3 THEN 'En processo'
             WHEN 5 THEN 'Concluido'
             WHEN 6 THEN 'Cancelado'
@@ -43,6 +44,7 @@ class Purchase {
             LEFT JOIN [G8BD].[dbo].[CONDICAO_FATURAMENTO] as [co] on [oc].[ID_CONDICAOFATURAMENTO] = [co].SEQ_CONDFATURAMENTO
             LEFT JOIN [G8BD].[dbo].[CENTRORECDES] as [cc] on [oi].[ID_CENTROCUSTO] = [cc].SEQCENTRORECDES
             LEFT JOIN [G8BD].[dbo].[PESSOAS] as [pe] on [oc].[ID_FORNECEDOR] = [pe].[PES_CODIGO]
+            LEFT JOIN [G8BD].[dbo].[MOEDA] as ed on oc.ID_MOEDA = ed.[MDA_CODIGO]
             WHERE CONVERT(date,[oc].[DT_EMISSAO] ) BETWEEN '${search.datestart}' AND '${search.dateend}' `
 
       if (search.numberstart) query += ` AND [oc].[NR_ORDEMCOMPRA] BETWEEN '${search.numberstart}' AND '${search.numberend}' `

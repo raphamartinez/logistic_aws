@@ -224,10 +224,14 @@
                                     <%= order.qt_product %>
                                 </td>
                                 <td style="text-align: right;">
-                                    <%= order.vlr_unitario.toLocaleString('es'); %>
+                                    <% let vlr_unitario = order.vlr_unitario; if(order.vlr_unitario.toString().length === 4 || (order.vlr_unitario.toString().length === 7 && order.vlr_unitario.toLocaleString('es').toString().includes(","))){var unit = order.vlr_unitario.toString().split(''); var map = unit.map(Number); vlr_unitario = vlr_unitario.toLocaleString('es').toString().length === 7? `${map[0]}.${map[1]}${map[2]}${map[3]},${map[5]}${map[6]}` : `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
+                    
+                                    <%= vlr_unitario.toLocaleString('es') %>
                                 </td>
                                 <td style="text-align: right;">
-                                    <%= order.vlr_total.toLocaleString('es'); %>
+                                    <% let vlr_total = order.vlr_total; if(order.vlr_total.toString().length === 4 || (order.vlr_total.toString().length === 7 && order.vlr_total.toLocaleString('es').toString().includes(","))){var total = order.vlr_total.toString().split(''); var map = total.map(Number); vlr_total = vlr_total.toLocaleString('es').toString().length === 7? `${map[0]}.${map[1]}${map[2]}${map[3]},${map[5]}${map[6]}` : `${map[0]}.${map[1]}${map[2]}${map[3]}` }%> 
+                    
+                                    <%= vlr_total.toLocaleString('es') %>
                                 </td>
                                 <td style="font-size: 12px;">
                                     <%= order.proveedor %>
@@ -245,19 +249,49 @@
                             <%})%>
                     </tbody>
                 </table>
-                <% let amount=Object.keys(orders[`${Object.keys(orders)[index]}`]).reduce(function (previous, key) {
-                    return previous + orders[`${Object.keys(orders)[index]}`][key].vlr_total; }, 0); %>
+                <% let amount=Object.keys(orders[`${Object.keys(orders)[index]}`]).reduce((a, b) => {
+                    switch (orders[`${Object.keys(orders)[index]}`][b].coin) {
+                        case "R$":
+                            a.vlr_totalRs += orders[`${Object.keys(orders)[index]}`][b].vlr_total
+                            break;
+                        case "US$":
+                            a.vlr_totalUsd += orders[`${Object.keys(orders)[index]}`][b].vlr_total
+                            break;
+                        case "G$":
+                            a.vlr_totalGs += orders[`${Object.keys(orders)[index]}`][b].vlr_total
+                            break;
+                    }
+    
+                    return a;
+                },{
+                    vlr_totalRs: 0,
+                    vlr_totalUsd: 0,
+                    vlr_totalGs: 0
+                });                    
+                    
+                    %>
 
-                    <h4>Totales: Gs <%= amount.toLocaleString('es'); %>
-                    </h4>
+                    <% if(amount.vlr_totalUsd > 0) {%>  <h4>Totales USD: <%=
+                        amount.vlr_totalUsd.toLocaleString('en-US');%></h4><% } %> 
+                    <% if(amount.vlr_totalRs > 0) {%>  <h4>Totales R$: <%=
+                        amount.vlr_totalRs.toLocaleString('pt-BR',{ minimumFractionDigits: 2 });%></h4><% } %> 
+                    <% if(amount.vlr_totalGs > 0) {%>  <h4>Totales Gs: <%=
+                        amount.vlr_totalGs.toLocaleString('es');%></h4><% } %> 
                     <%} %>
+                    <hr>
+                    <br>
+                    <% if(monto.vlr_totalUsd > 0) {%>  <h4><strong> Gastos en Dolares: USD <%=
+                        monto.vlr_totalUsd.toLocaleString('en-US');%></strong></h4><% } %> 
+                    <% if(monto.vlr_totalRs > 0) {%>  <h4><strong> Gastos en Reales: R$ <%=
+                        monto.vlr_totalRs.toLocaleString('pt-BR',{ minimumFractionDigits: 2 });%></strong></h4><% } %> 
+                    <% if(monto.vlr_totalGs > 0) {%>  <h4><strong> Gastos en Guaranies: Gs <%=
+                        monto.vlr_totalGs.toLocaleString('es');%></strong></h4><% } %> 
+
                         <div class="footer">
                             <div class="grid-container"
                                 style="align-items: center; justify-content: center; color: gray;">
                                 <p style="padding-right: 400px;">Version 8.000.03</p>
                                 <p>13 - Informe para Aprobacion de Cuentas</p>
-                                <p style="padding-left: 400px;"><strong> Monto Total: Gs <%=
-                                            monto.vlr_total.toLocaleString('es');%></strong></p>
                             </div>
                         </div>
                         <script>

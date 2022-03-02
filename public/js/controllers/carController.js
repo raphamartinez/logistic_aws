@@ -1144,18 +1144,17 @@ const generate = async (event) => {
     </div>
   `
 
-    let dateTravel = event2.currentTarget.date.value
-    let origindesc = event2.currentTarget.origin.value
-    let routedesc = event2.currentTarget.route.value
-    let truck = event2.currentTarget.truck.value
-
-    let driver = event2.currentTarget.driver.value
-    let amount = event2.currentTarget.amount.value
-    let idcard = event2.currentTarget.driver.getAttribute('data-idcard')
-    let descriptions = ""
-    let concepts = ""
-    let name = "default"
-    let date = new Date()
+    let dateTravel = event2.currentTarget.date.value;
+    let origindesc = event2.currentTarget.origin.value;
+    let routedesc = event2.currentTarget.route.value;
+    let truck = event2.currentTarget.truck.value;
+    let driver = event2.currentTarget.driver.value;
+    let amount = event2.currentTarget.amount.value;
+    let idcard = event2.currentTarget.driver.getAttribute('data-idcard');
+    let descriptions = "";
+    let concepts = "";
+    let name = "default";
+    let date = new Date();
 
     if (obj.travel.typecode == 1) {
       name = "Viatico"
@@ -1196,6 +1195,7 @@ const generate = async (event) => {
 
 
     const travel = {
+      typedesc: obj.travel.type,
       type: obj.travel.typecode,
       origin: obj.travel.origin,
       route: obj.travel.route,
@@ -1214,11 +1214,11 @@ const generate = async (event) => {
       datereg: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     }
 
-    let plateTruck = truck.split("-")
+    let plateTruck = truck.split("-");
 
-    $("#generate").modal('hide')
+    $("#generate").modal('hide');
     try {
-      const objres = await Connection.backFile('travelreport', { travel }, 'POST')
+      const objres = await Connection.backFile('travelreport', { travel }, 'POST');
 
       let a = document.createElement('a');
       a.href = window.URL.createObjectURL(objres);
@@ -1228,9 +1228,9 @@ const generate = async (event) => {
       a.click();
       document.body.removeChild(a);
 
-      loading.innerHTML = ``
+      loading.innerHTML = ``;
     } catch (error) {
-      loading.innerHTML = ``
+      loading.innerHTML = ``;
     }
   })
 }

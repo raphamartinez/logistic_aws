@@ -280,7 +280,19 @@ class TravelReport {
                         },
                         paragraph: {
                             alignment: AlignmentType.CENTER,
-                            spacing: { line: 340 },
+                            spacing: { line: 200 },
+                        }
+                    },
+                    heading3: {
+                        run: {
+                            font: "Calibri",
+                            size: 40,
+                            bold: true,
+                            color: "000000"
+                        },
+                        paragraph: {
+                            alignment: AlignmentType.CENTER,
+                            spacing: { line: 180 },
                         }
                     }
                 }
@@ -341,12 +353,30 @@ class TravelReport {
                     },
                     children: [
                         new Paragraph({
-                            text: `Informe de Viaje - ${travel.name}`,
+                            text: `Orden de Trabajo`,
                             color: "000",
                             heading: HeadingLevel.HEADING_1,
                             alignment: AlignmentType.CENTER,
                             spacing: {
-                                after: 400,
+                                after: 200,
+                            },
+                        }),
+                        new Paragraph({
+                            text: `Informe de Viaje`,
+                            color: "000",
+                            heading: HeadingLevel.HEADING_3,
+                            alignment: AlignmentType.CENTER,
+                            spacing: {
+                                after: 100,
+                            },
+                        }),
+                        new Paragraph({
+                            text: `${travel.typedesc}`,
+                            color: "000",
+                            heading: HeadingLevel.HEADING_3,
+                            alignment: AlignmentType.CENTER,
+                            spacing: {
+                                after: 100,
                             },
                         })
                     ]

@@ -8,7 +8,25 @@ class Purchase {
         try {
             const obj = {}
             let orders = await Repositorie.getOrders(search)
-            let amount = orders.reduce((a, b) => ({ vlr_total: a.vlr_total + b.vlr_total }));
+            let amount = orders.reduce((a, b) => {
+                switch (b.coin) {
+                    case "R$":
+                        a.vlr_totalRs += b.vlr_total
+                        break;
+                    case "US$":
+                        a.vlr_totalUsd += b.vlr_total
+                        break;
+                    case "G$":
+                        a.vlr_totalGs += b.vlr_total
+                        break;
+                }
+
+                return a;
+            },{
+                vlr_totalRs: 0,
+                vlr_totalUsd: 0,
+                vlr_totalGs: 0
+            });
 
             let groups = orders.reduce(function (r, a) {
                 r[a[`${search.group}`]] = r[a[`${search.group}`]] || [];
@@ -40,24 +58,24 @@ class Purchase {
         }
     }
 
-    async list(search) {
-        try {
-            const obj = {}
-            let orders = await Repositorie.getOrders(search)
-            let amount = orders.reduce((a, b) => ({ vlr_total: a.vlr_total + b.vlr_total }));
+    // async list(search) {
+    //     try {
+    //         const obj = {}
+    //         let orders = await Repositorie.getOrders(search)
+    //         let amount = orders.reduce((a, b) => ({ vlr_total: a.vlr_total + b.vlr_total }));
 
-            let groups = orders.reduce(function (r, a) {
-                r[a[`${search.group}`]] = r[a[`${search.group}`]] || [];
-                r[a[`${search.group}`]].push(a);
-                return r;
-            }, Object.create(obj));
+    //         let groups = orders.reduce(function (r, a) {
+    //             r[a[`${search.group}`]] = r[a[`${search.group}`]] || [];
+    //             r[a[`${search.group}`]].push(a);
+    //             return r;
+    //         }, Object.create(obj));
 
-            return { groups, amount }
-        } catch (error) {
-            console.log(error);
-            throw new InternalServerError('Error.')
-        }
-    }
+    //         return { groups, amount }
+    //     } catch (error) {
+    //         console.log(error);
+    //         throw new InternalServerError('Error.')
+    //     }
+    // }
 
     async quotation(search) {
 
@@ -270,7 +288,7 @@ class Purchase {
         }
     }
 
-   async getOrderModel(search) {
+    async getOrderModel(search) {
         try {
             let details = await Repositorie.getOrders(search)
             let orders = await Repositorie.getOrderModel(search)

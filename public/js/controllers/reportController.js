@@ -10,7 +10,7 @@ const list = (powerbis) => {
         $('#tableReports').empty();
     }
 
-   const table = $("#tableReports").DataTable({
+    const table = $("#tableReports").DataTable({
         data: powerbis,
         columns: [
             { title: "Opciones" },
@@ -42,29 +42,40 @@ const list = (powerbis) => {
     document.querySelector('[data-filter-report-type]').addEventListener('change', (event) => {
 
         $.fn.dataTable.ext.search.push(
-          function (settings, data, dataIndex) {
-            var filter = $('[data-filter-report-type]').val()
-            var truck = data[2]
-    
-            if (filter == 'TODOS') return true
-            if (filter == truck) return true
-            return false;
-          }
+            function (settings, data, dataIndex) {
+                var filter = $('[data-filter-report-type]').val()
+                var truck = data[2]
+
+                if (filter == 'TODOS') return true
+                if (filter == truck) return true
+                return false;
+            }
         );
-    
+
         table.draw();
-      })
-    
+    })
+
 }
 
-const view = (event) => {
+const view = async (event) => {
 
     const title = event.target.getAttribute('data-title')
-    // const description = event.target.getAttribute('data-description')
     const url = event.target.getAttribute('data-url')
+    const session = await Connection.noBody('webscrasping', 'GET');
+
+    var DifferentWindow = window.open("http://dvrveicular.i9techx.com.br/");
+    DifferentWindow.sessionStorage.setItem("wialon_sid", session);
+
+    sessionStorage.setItem('wialon_sid', JSON.stringify(session))
 
     document.querySelector('[data-view-report]').innerHTML = `
-    <div class="card mb-4"><iframe width="1140" height="600" src="${url}" alt="${title}" frameborder="0" allowFullScreen="true"></iframe></div>`
+    <div class="card mb-4"><iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" id="report_frame" width="1140" height="600" src="http://dvrveicular.i9techx.com.br/" alt="${title}" frameborder="0" allowFullScreen="true"></iframe></div>`
+
+    document.getElementById('report_frame').contentWindow.postMessage({
+        key: 'wialon_sid',
+        value: session,
+        method: 'store'
+    });
 }
 
 const add = async (event) => {

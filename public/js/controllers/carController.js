@@ -755,8 +755,14 @@ const travel = (travels, drivers) => {
   drivers.forEach(driver => {
     const option = document.createElement('option')
     option.value = driver.id
-    option.innerHTML = `${driver.name}</option>`
+    option.innerHTML = driver.name
     if (driver.name !== "SIN ASIGNACION") document.querySelector('[data-driver]').appendChild(option)
+
+    const option2 = document.createElement('option')
+    option2.value = driver.id
+    option2.innerHTML = driver.name
+    option2.setAttribute('data-idcard', driver.idcard)
+    if (driver.name !== "SIN ASIGNACION") document.querySelector('[data-company]').appendChild(option2)
   })
 
   travels.forEach(travel => {
@@ -847,12 +853,20 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
     type: event.currentTarget.type.value,
     typedesc: document.querySelector('#type option:checked').innerHTML,
     driverdesc: document.querySelector('[data-driver] option:checked').innerHTML,
+    company: event.currentTarget.company.value,
+    companydesc: document.querySelector('[data-company] option:checked').innerHTML,
+    companyidcard: document.querySelector('[data-company] option:checked').getAttribute('data-idcard'),
     obs: event.currentTarget.obs.value
   }
 
   if (travel.driverdesc === "Chofér") {
     travel.driverdesc = ""
     travel.driver = null
+  }
+
+  if (travel.companydesc === "Acompañante") {
+    travel.companydesc = ""
+    travel.company = null
   }
 
   if (travel.routedesc === "Destino") {
@@ -1150,24 +1164,21 @@ const generate = async (event) => {
     let truck = event2.currentTarget.truck.value;
     let driver = event2.currentTarget.driver.value;
     let amount = event2.currentTarget.amount.value;
+    let companion_name = event2.currentTarget.companion.value;
+    let companion_idcard = event2.currentTarget.companion.getAttribute('data-idcard');
     let idcard = event2.currentTarget.driver.getAttribute('data-idcard');
     let descriptions = "";
     let concepts = "";
     let name = "default";
     let date = new Date();
 
-    if (obj.travel.typecode == 1) {
-      name = "Viatico"
-
-    } else {
-      name = "Contenedor"
-    }
-
-    let selectconcept = document.querySelectorAll('#addconcept')
+    obj.travel.typecode == 1 ? name = "Viatico" : name = "Contenedor";
+      
+    let selectconcept = document.querySelectorAll('#addconcept');
     concepts = Array.from(selectconcept).map(el => {
-      let id = 0
-      let type = 1
-      if (el.getAttribute('data-id')) id = el.getAttribute('data-id')
+      let id = 0;
+      let type = 1;
+      if (el.getAttribute('data-id')) id = el.getAttribute('data-id');
 
       return {
         id,
@@ -1199,6 +1210,8 @@ const generate = async (event) => {
       type: obj.travel.typecode,
       origin: obj.travel.origin,
       route: obj.travel.route,
+      companion_name,
+      companion_idcard,
       id_car,
       descriptions,
       concepts,
@@ -1238,131 +1251,135 @@ const generate = async (event) => {
 
 
 document.querySelector('[data-row-travel]').addEventListener('click', async (event) => {
-  if (event.target && event.target.matches("[data-btn-delete]")) return deleteTravel(event)
+  if (event.target && event.target.matches("[data-btn-delete]")) return deleteTravel(event);
 
-  if (event.target && event.target.matches("[data-btn-generate]")) return generate(event)
+  if (event.target && event.target.matches("[data-btn-generate]")) return generate(event);
 
 })
 
 const enable = async () => {
 
-  document.querySelector('[data-driver]').disabled = true
-  document.querySelector('[data-truck]').disabled = true
-  document.querySelector('[data-chest]').disabled = true
-  document.querySelector('[data-route]').disabled = true
+  document.querySelector('[data-driver]').disabled = true;
+  document.querySelector('[data-truck]').disabled = true;
+  document.querySelector('[data-chest]').disabled = true;
+  document.querySelector('[data-route]').disabled = true;
+  document.querySelector('[data-company]').disabled = true;
 
-  const date = document.querySelector('[data-date]').value
-  const period = document.querySelector('[data-period]').value
-  const type = document.querySelector('[data-type]').value
+  const date = document.querySelector('[data-date]').value;
+  const period = document.querySelector('[data-period]').value;
+  const type = document.querySelector('[data-type]').value;
 
 
-  if (!date && type) return alert("¡Seleccione una fecha valida!")
-  if (!period && type) return alert("¡Seleccione un período válido!")
-  if (!type) return false
+  if (!date && type) return alert("¡Seleccione una fecha valida!");
+  if (!period && type) return alert("¡Seleccione un período válido!");
+  if (!type) return false;
 
-  let loading = document.querySelector('[data-loading]')
+  let loading = document.querySelector('[data-loading]');
   loading.innerHTML = `
   <div class="d-flex justify-content-center">
     <div class="spinner-grow text-danger" role="status">
       <span class="sr-only">Loading...</span>
     </div>
-  </div>
-`
+  </div>`;
 
-  const cars = await Connection.noBody(`cars/enable/${date}/${period}`, 'GET')
-  const drivers = await Connection.noBody(`drivers/enable/${date}/${period}`, 'GET')
+  const cars = await Connection.noBody(`cars/enable/${date}/${period}`, 'GET');
+  const drivers = await Connection.noBody(`drivers/enable/${date}/${period}`, 'GET');
 
-  document.querySelector('[data-driver]').innerHTML = `<option value="" selected disabled>Chofér</option>`
+  document.querySelector('[data-driver]').innerHTML = `<option value="" selected disabled>Chofér</option>`;
   drivers.forEach(driver => {
-    const option = document.createElement('option')
-    option.value = driver.id
-    option.innerHTML = `${driver.name}</option>`
-    if (driver.name !== "SIN ASIGNACION") document.querySelector('[data-driver]').appendChild(option)
+    const option = document.createElement('option');
+    option.value = driver.id;
+    option.innerHTML = driver.name;
+    if (driver.name !== "SIN ASIGNACION") document.querySelector('[data-driver]').appendChild(option);
+
+    const option2 = document.createElement('option');
+    option2.value = driver.id;
+    option2.innerHTML = driver.name;
+    if (driver.name !== "SIN ASIGNACION") document.querySelector('[data-company]').appendChild(option2);
   })
 
-
-  document.querySelector('[data-truck]').innerHTML = `<option value="" selected disabled>Camion</option>`
-  document.querySelector('[data-chest]').innerHTML = `<option value="" selected disabled>Furgon</option>`
+  document.querySelector('[data-truck]').innerHTML = `<option value="" selected disabled>Camion</option>`;
+  document.querySelector('[data-chest]').innerHTML = `<option value="" selected disabled>Furgon</option>`;
 
   cars.forEach(car => {
-    const option = document.createElement('option')
-    option.value = car.id_car
-    option.dataset.plate = car.plate
-    option.innerHTML = `${car.plate} - ${car.cartype} - ${car.brand} - ${car.model} - ${car.year}</option>`
+    const option = document.createElement('option');
+    option.value = car.id_car;
+    option.dataset.plate = car.plate;
+    option.innerHTML = `${car.plate} - ${car.cartype} - ${car.brand} - ${car.model} - ${car.year}</option>`;
 
-    if (car.capacity > 0) option.dataset.capacity = car.capacity
+    if (car.capacity > 0) option.dataset.capacity = car.capacity;
 
     if (car.cartype === "FURGON" || car.cartype === "SEMI REMOLQUE") {
-      document.querySelector('[data-chest]').appendChild(option)
+      document.querySelector('[data-chest]').appendChild(option);
     } else {
-      document.querySelector('[data-truck]').appendChild(option)
+      document.querySelector('[data-truck]').appendChild(option);
     }
   })
 
-
-
   if (document.querySelector('[data-type]').value == 3 || document.querySelector('[data-type]').value == 4) {
-    document.querySelector('[data-obs]').required = true
-    document.querySelector('[data-obs]').style.display = 'block'
-    document.querySelector('[data-route]').required = false
-    document.querySelector('[data-route]').style.display = 'none'
+    document.querySelector('[data-obs]').required = true;
+    document.querySelector('[data-obs]').style.display = 'block';
+    document.querySelector('[data-route]').required = false;
+    document.querySelector('[data-route]').style.display = 'none';
 
     if (document.querySelector('[data-type]').value == 4) {
-      document.querySelector('[data-obs]').placeholder = 'Detalles de la entrega'
-      document.querySelector('[data-driver]').disabled = false
+      document.querySelector('[data-obs]').placeholder = 'Detalles de la entrega';
+      document.querySelector('[data-driver]').disabled = false;
 
     } else {
-      document.querySelector('[data-obs]').placeholder = 'Observación del Mantenimiento'
+      document.querySelector('[data-obs]').placeholder = 'Observación del Mantenimiento';
     }
 
   } else {
-    document.querySelector('[data-route]').required = true
-    document.querySelector('[data-obs]').required = false
-    document.querySelector('[data-driver]').disabled = false
-    document.querySelector('[data-route]').disabled = false
-    document.querySelector('[data-obs]').style.display = 'none'
-    document.querySelector('[data-route]').style.display = 'block'
+    document.querySelector('[data-route]').required = true;
+    document.querySelector('[data-obs]').required = false;
+    document.querySelector('[data-driver]').disabled = false;
+    document.querySelector('[data-route]').disabled = false;
+    document.querySelector('[data-obs]').style.display = 'none';
+    document.querySelector('[data-route]').style.display = 'block';
   }
 
-  document.querySelector('[data-truck]').disabled = false
-  document.querySelector('[data-chest]').disabled = false
-  document.querySelector('[data-route]').disabled = false
-  loading.innerHTML = " "
+  document.querySelector('[data-company]').disabled = false;
+  document.querySelector('[data-truck]').disabled = false;
+  document.querySelector('[data-chest]').disabled = false;
+  document.querySelector('[data-route]').disabled = false;
+  loading.innerHTML = " ";
 }
 
-document.querySelector('[data-type]').addEventListener('change', enable, false)
-document.querySelector('[data-period]').addEventListener('change', enable, false)
-document.querySelector('[data-date]').addEventListener('change', enable, false)
+document.querySelector('[data-type]').addEventListener('change', enable, false);
+document.querySelector('[data-period]').addEventListener('change', enable, false);
+document.querySelector('[data-date]').addEventListener('change', enable, false);
 
 
 document.querySelector('[data-search-date]').addEventListener('change', async (event) => {
 
-  const cars = document.querySelectorAll('[data-div-car]')
+  const cars = document.querySelectorAll('[data-div-car]');
   Array.from(cars).forEach(car => {
     if (car.title === 'Camion no disponible') {
-      car.title = `Camion disponible`
-      car.classList.remove('btn-danger')
-      car.classList.add('btn-success')
+      car.title = `Camion disponible`;
+      car.classList.remove('btn-danger');
+      car.classList.add('btn-success');
     }
   })
 
-  const drivers = document.querySelectorAll('[data-div-driver]')
+  const drivers = document.querySelectorAll('[data-div-driver]');
   Array.from(drivers).forEach(driver => {
     if (driver.title === 'Chofér no disponible') {
-      driver.title = `Chofér disponible`
-      driver.classList.remove('btn-danger')
-      driver.classList.add('btn-success')
+      driver.title = `Chofér disponible`;
+      driver.classList.remove('btn-danger');
+      driver.classList.add('btn-success');
     }
   })
 
   document.querySelector('[data-form-travel]').reset();
-  document.querySelector('[data-driver]').disabled = true
-  document.querySelector('[data-truck]').disabled = true
-  document.querySelector('[data-chest]').disabled = true
-  document.querySelector('[data-route]').disabled = true
+  document.querySelector('[data-driver]').disabled = true;
+  document.querySelector('[data-truck]').disabled = true;
+  document.querySelector('[data-chest]').disabled = true;
+  document.querySelector('[data-route]').disabled = true;
+  document.querySelector('[data-company]').disabled = true;
 
-  const date = event.currentTarget.value
-  const travels = await Connection.noBody(`travel/${date}`, 'GET')
+  const date = event.currentTarget.value;
+  const travels = await Connection.noBody(`travel/${date}`, 'GET');
 
   listTravels(travels)
 })
@@ -1370,35 +1387,36 @@ document.querySelector('[data-search-date]').addEventListener('change', async (e
 document.querySelector('[data-search-date]').addEventListener('keypress', async (event) => {
   if (e.keyCode === 13) {
 
-    const cars = document.querySelectorAll('[data-div-car]')
+    const cars = document.querySelectorAll('[data-div-car]');
     Array.from(cars).forEach(car => {
       if (car.title === 'Camion no disponible') {
-        car.title = `Camion disponible`
-        car.classList.remove('btn-danger')
-        car.classList.add('btn-success')
+        car.title = `Camion disponible`;
+        car.classList.remove('btn-danger');
+        car.classList.add('btn-success');
       }
     })
 
 
-    const drivers = document.querySelectorAll('[data-div-driver]')
+    const drivers = document.querySelectorAll('[data-div-driver]');
     Array.from(drivers).forEach(driver => {
       if (driver.title === 'Chofér no disponible') {
-        driver.title = `Chofér disponible`
-        driver.classList.remove('btn-danger')
-        driver.classList.add('btn-success')
+        driver.title = `Chofér disponible`;
+        driver.classList.remove('btn-danger');
+        driver.classList.add('btn-success');
       }
     })
 
     document.querySelector('[data-form-travel]').reset();
-    document.querySelector('[data-driver]').disabled = true
-    document.querySelector('[data-truck]').disabled = true
-    document.querySelector('[data-chest]').disabled = true
-    document.querySelector('[data-route]').disabled = true
+    document.querySelector('[data-driver]').disabled = true;
+    document.querySelector('[data-truck]').disabled = true;
+    document.querySelector('[data-chest]').disabled = true;
+    document.querySelector('[data-route]').disabled = true;
+    document.querySelector('[data-company]').disabled = true;
 
-    const date = event.currentTarget.value
-    const travels = await Connection.noBody(`travel/${date}`, 'GET')
+    const date = event.currentTarget.value;
+    const travels = await Connection.noBody(`travel/${date}`, 'GET');
 
-    listTravels(travels)
+    listTravels(travels);
   }
 })
 
@@ -1449,25 +1467,25 @@ const changeDriver = async (event) => {
     // { id_driver: "2", plate: 'CEV933', except: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '50', '52', '53', '51', '78'] }
   ]
 
-  let favorite = drivers.find(driver => driver.id_driver == event.target.value)
+  let favorite = drivers.find(driver => driver.id_driver == event.target.value);
 
   if (favorite) {
-    const cars = document.querySelectorAll('[data-truck] option')
-    const chests = document.querySelectorAll('[data-chest] option')
-    const chestselect = document.querySelectorAll('[data-chest]')
-    chestselect[0].disabled = false
+    const cars = document.querySelectorAll('[data-truck] option');
+    const chests = document.querySelectorAll('[data-chest] option');
+    const chestselect = document.querySelectorAll('[data-chest]');
+    chestselect[0].disabled = false;
 
     cars.forEach(car => {
-      if (favorite.plate == car.label) car.selected = true
+      if (favorite.plate == car.label) car.selected = true;
     })
 
     if (favorite.except.length > 0) {
       chests.forEach(chest => {
-        let obj = favorite.except.find(plate => plate == chest.value)
+        let obj = favorite.except.find(plate => plate == chest.value);
         if (obj) {
-          chest.style.display = 'block'
+          chest.style.display = 'block';
         } else {
-          chest.style.display = 'none'
+          chest.style.display = 'none';
         }
       })
     }
@@ -1518,55 +1536,55 @@ document.querySelector('#dataTable').addEventListener('click', async (event) => 
   if (event.target && event.target.matches("[data-div-car]")) {
     console.log(event.target.title);
 
-    const plate = event.target.attributes[0].value.toUpperCase()
+    const plate = event.target.attributes[0].value.toUpperCase();
 
-    let status
+    let status;
     if (event.target.title === 'Camion disponible') {
       status = 2
-      event.target.title = `Camion en mantenimiento`
-      event.target.classList.remove('btn-success')
-      event.target.classList.add('btn-warning')
+      event.target.title = `Camion en mantenimiento`;
+      event.target.classList.remove('btn-success');
+      event.target.classList.add('btn-warning');
 
     } else {
       status = 1
-      event.target.title = `Camion disponible`
-      event.target.classList.remove('btn-warning')
-      event.target.classList.add('btn-success')
+      event.target.title = `Camion disponible`;
+      event.target.classList.remove('btn-warning');
+      event.target.classList.add('btn-success');
     }
 
-    const obj = await Connection.body(`car/${plate}`, { status }, 'PUT')
+    const obj = await Connection.body(`car/${plate}`, { status }, 'PUT');
 
     console.log(obj.msg);
   }
 })
 
-document.querySelector('#dataDriver').addEventListener('click', async (event) => {
-  if (event.target && event.target.matches("[data-div-driver]")) {
-    console.log(event.target.title);
+// document.querySelector('#dataDriver').addEventListener('click', async (event) => {
+//   if (event.target && event.target.matches("[data-div-driver]")) {
+//     console.log(event.target.title);
 
-    const id = event.target.attributes[0].value.toUpperCase()
+//     const id = event.target.attributes[0].value.toUpperCase()
 
-    let status
-    if (event.target.title === 'Chofér disponible') {
-      status = 2
-      event.target.title = `Chófer temporalmente no disponible`
-      event.target.classList.remove('btn-success')
-      event.target.classList.add('btn-warning')
+//     let status
+//     if (event.target.title === 'Chofér disponible') {
+//       status = 2
+//       event.target.title = `Chófer temporalmente no disponible`
+//       event.target.classList.remove('btn-success')
+//       event.target.classList.add('btn-warning')
 
-    } else {
-      status = 1
-      event.target.title = `Chofér disponible`
-      event.target.classList.remove('btn-warning')
-      event.target.classList.add('btn-success')
-    }
+//     } else {
+//       status = 1
+//       event.target.title = `Chofér disponible`
+//       event.target.classList.remove('btn-warning')
+//       event.target.classList.add('btn-success')
+//     }
 
-    const obj = await Connection.body(`driver/${id}`, { status }, 'PUT')
+//     const obj = await Connection.body(`driver/${id}`, { status }, 'PUT')
 
-    console.log(obj.msg);
-  }
-})
+//     console.log(obj.msg);
+//   }
+// })
 
-document.querySelector('[data-driver]').addEventListener('change', changeDriver, false)
+// document.querySelector('[data-driver]').addEventListener('change', changeDriver, false)
 document.querySelector('[data-truck]').addEventListener('change', changeCar, false)
 
 document.querySelector('[data-print]').addEventListener('click', () => {
@@ -1673,31 +1691,31 @@ document.querySelector('[data-copy-travel]').addEventListener('click', () => {
 
 
 const viewTravel = (event) => {
-  const divs = document.querySelector('[data-row-travel]')
-  let index
+  const divs = document.querySelector('[data-row-travel]');
+  let index;
 
-  if (event.target && event.target.matches('[data-filter-travel-type]')) index = 1
-  if (event.target && event.target.matches('[data-filter-travel-origin]')) index = 2
-  if (event.target && event.target.matches('[data-filter-travel-route]')) index = 3
-  if (event.target && event.target.matches('[data-filter-travel-trucktype]')) index = 5
+  if (event.target && event.target.matches('[data-filter-travel-type]')) index = 1;
+  if (event.target && event.target.matches('[data-filter-travel-origin]')) index = 2;
+  if (event.target && event.target.matches('[data-filter-travel-route]')) index = 3;
+  if (event.target && event.target.matches('[data-filter-travel-trucktype]')) index = 5;
 
   Array.from(divs.children).forEach(row => {
-    let content = row.children[index].children[0].value
+    let content = row.children[index].children[0].value;
     if (content.indexOf(event.target.value) == -1 && event.target.value != "Todos") {
-      row.style.display = 'none'
+      row.style.display = 'none';
     } else {
-      if (document.querySelector('[data-filter-travel-type] :checked').value == row.children[1].children[0].value || document.querySelector('[data-filter-travel-type] :checked').value == 'Todos') row.style.display = 'flex'
-      if (document.querySelector('[data-filter-travel-origin] :checked').value == row.children[2].children[0].value || document.querySelector('[data-filter-travel-origin] :checked').value == 'Todos') row.style.display = 'flex'
-      if (document.querySelector('[data-filter-travel-route] :checked').value == row.children[3].children[0].value || document.querySelector('[data-filter-travel-route] :checked').value == 'Todos') row.style.display = 'flex'
-      if (document.querySelector('[data-filter-travel-trucktype] :checked').value == row.children[5].children[0].value || document.querySelector('[data-filter-travel-trucktype] :checked').value == 'Todos') row.style.display = 'flex'
+      if (document.querySelector('[data-filter-travel-type] :checked').value == row.children[1].children[0].value || document.querySelector('[data-filter-travel-type] :checked').value == 'Todos') row.style.display = 'flex';
+      if (document.querySelector('[data-filter-travel-origin] :checked').value == row.children[2].children[0].value || document.querySelector('[data-filter-travel-origin] :checked').value == 'Todos') row.style.display = 'flex';
+      if (document.querySelector('[data-filter-travel-route] :checked').value == row.children[3].children[0].value || document.querySelector('[data-filter-travel-route] :checked').value == 'Todos') row.style.display = 'flex';
+      if (document.querySelector('[data-filter-travel-trucktype] :checked').value == row.children[5].children[0].value || document.querySelector('[data-filter-travel-trucktype] :checked').value == 'Todos') row.style.display = 'flex';
     }
   })
 }
 
-document.querySelector('[data-filter-travel-type]').addEventListener('change', viewTravel, false)
-document.querySelector('[data-filter-travel-origin]').addEventListener('change', viewTravel, false)
-document.querySelector('[data-filter-travel-route]').addEventListener('change', viewTravel, false)
-document.querySelector('[data-filter-travel-trucktype]').addEventListener('change', viewTravel, false)
+document.querySelector('[data-filter-travel-type]').addEventListener('change', viewTravel, false);
+document.querySelector('[data-filter-travel-origin]').addEventListener('change', viewTravel, false);
+document.querySelector('[data-filter-travel-route]').addEventListener('change', viewTravel, false);
+document.querySelector('[data-filter-travel-trucktype]').addEventListener('change', viewTravel, false);
 
 
 const collapese = (event) => {
@@ -1706,16 +1724,16 @@ const collapese = (event) => {
   })
 
   if (event.currentTarget.getAttribute('aria-expanded') == "true" && event.currentTarget.nodeName == "BUTTON") {
-    event.currentTarget.children[0].classList.remove('fa-arrow-down')
-    event.currentTarget.children[0].classList.add('fa-arrow-up')
+    event.currentTarget.children[0].classList.remove('fa-arrow-down');
+    event.currentTarget.children[0].classList.add('fa-arrow-up');
   } else {
-    event.currentTarget.children[0].classList.remove('fa-arrow-up')
-    event.currentTarget.children[0].classList.add('fa-arrow-down')
+    event.currentTarget.children[0].classList.remove('fa-arrow-up');
+    event.currentTarget.children[0].classList.add('fa-arrow-down');
   }
 }
 
 Array.from(document.querySelectorAll('[data-btn-collapse]')).forEach(btn => {
-  btn.addEventListener('click', collapese, false)
+  btn.addEventListener('click', collapese, false);
 })
 
 export const ControllerCar = {

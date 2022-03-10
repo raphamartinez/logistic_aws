@@ -25,9 +25,55 @@ class Tables {
     this.createTableAccessLogin()
     this.createTableReport()
     this.createTableReportView()
+    this.createTableMoviasCar()
+    this.createTableMoviasCarAccessories()
 
     return true
   }
+
+  createTableMoviasCarTracking() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.moviastracking (id int NOT NULL AUTO_INCREMENT, idVeiculo int NOT NULL, licensePlate VARCHAR(10) NOT NULL, 
+    latitude VARCHAR(15), longitude VARCHAR(15), altitude VARCHAR(15), locationRef VARCHAR(150), 
+    speed DOUBLE, battery DOUBLE, eventId INT, driverId INT, ppc boolean, trip boolean, odometer DOUBLE, rpm DOUBLE, 
+    tripDistance DOUBLE, tripFuel DOUBLE, tripTime DOUBLE, inp0 boolean, inp1 boolean, inp2 boolean, inp3 boolean, inp4 boolean,
+    in0 boolean, in1 boolean, in2 boolean, in3 boolean, in4 boolean,  in5 boolean, in6 boolean, in7 boolean, in8 boolean, in9 boolean,
+    in10 boolean,  in11 boolean, in12 boolean, in13 boolean, in14 boolean, in15 boolean,
+    out0 boolean, out1 boolean, out2 boolean, out3 boolean, out4 boolean,  out5 boolean, out6 boolean, out7 boolean, out8 boolean, out9 boolean,
+    out10 boolean,  out11 boolean, out12 boolean, out13 boolean, out14 boolean, out15 boolean,
+    accumFuel int, accumHours int, fuelLevel1 DOUBLE, fuelLevel2 DOUBLE, oilLevel DOUBLE, isFuelType DOUBLE, isAlcoholPercent DOUBLE, 
+    isVin DOUBLE, isFuelEconomy DOUBLE, isFuelConsumption DOUBLE, isAmbientTemperature DOUBLE, isLowResTripFuel DOUBLE, isLowResAccumFuel DOUBLE,
+    isHighResTripFuel DOUBLE, isHighResAccumFuel DOUBLE, PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  // createTableMoviasCarAccessories() {
+  //   const sql = `CREATE TABLE IF NOT EXISTS api.moviascaraccessories (id int NOT NULL AUTO_INCREMENT, description VARCHAR (1000) NOT NULL, type int NOT NULL, id_moviascar int,
+  //   FOREIGN KEY (id_moviascar) REFERENCES moviascar (id), PRIMARY KEY (id))`
+
+  //   this.connection.query(sql, (error) => {
+  //     if (error) {
+  //       console.log(error)
+  //     } else {
+  //     }
+  //   })
+  // }
+
+  // createTableMoviasCar() {
+  //   const sql = `CREATE TABLE IF NOT EXISTS api.moviascar (id int NOT NULL AUTO_INCREMENT, idVehicle VARCHAR (1000) NOT NULL, licensePlate VARCHAR (50) NOT NULL, PRIMARY KEY (id))`
+
+  //   this.connection.query(sql, (error) => {
+  //     if (error) {
+  //       console.log(error)
+  //     } else {
+  //     }
+  //   })
+  // }
 
   createTableReport() {
     const sql = `CREATE TABLE IF NOT EXISTS api.report (id int NOT NULL AUTO_INCREMENT, url VARCHAR (1000) NOT NULL, title VARCHAR (50) NOT NULL,

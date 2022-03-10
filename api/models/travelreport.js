@@ -416,6 +416,24 @@ class TravelReport {
                                                         before: 400,
                                                     },
                                                 }),
+                                                new Paragraph(travel.companion_name ? {
+                                                    alignment: AlignmentType.LEFT,
+                                                    children: [
+                                                        new TextRun({
+                                                            text: `Acompañante: `,
+                                                            font: "Calibri",
+                                                            bold: true,
+                                                            allCaps: true,
+                                                            size: "5mm"
+                                                        }),
+                                                        new TextRun({
+                                                            text: travel.companion_name,
+                                                            font: "Calibri",
+                                                            allCaps: true,
+                                                            size: "5mm"
+                                                        })
+                                                    ]
+                                                } : {}),
                                                 new Paragraph({
                                                     alignment: AlignmentType.LEFT,
                                                     children: [
@@ -760,9 +778,63 @@ class TravelReport {
                                 }),
                             ],
                             spacing: {
-                                before: 500,
+                                before: 400,
                             },
                         }),
+                        new Paragraph(travel.companion_name ? {
+                            alignment: AlignmentType.CENTER,
+                            children: [
+                                new TextRun({
+                                    text: `ACOMPAÑANTE: `,
+                                    bold: true,
+                                    font: "Calibri",
+                                    allCaps: true,
+                                    size: "5mm"
+                                }),
+                                new TextRun({
+                                    text: travel.companion_name,
+                                    font: "Calibri",
+                                    allCaps: true,
+                                    size: "5mm"
+                                })
+                            ],
+                            spacing: {
+                                before: 150,
+                            },
+                        } : {}),
+                        new Paragraph(travel.companion_idcard ? {
+                            alignment: AlignmentType.CENTER,
+                            children: [
+                                new TextRun({
+                                    text: `CI: `,
+                                    bold: true,
+                                    font: "Calibri",
+                                    allCaps: true,
+                                    size: "5mm"
+                                }),
+                                new TextRun({
+                                    text: travel.companion_idcard,
+                                    font: "Calibri",
+                                    allCaps: true,
+                                    size: "5mm"
+                                })
+                            ]
+                        } : {}),
+                        new Paragraph(travel.companion_name ? {
+                            alignment: AlignmentType.CENTER,
+                            children: [
+                                new TextRun({
+                                    text: `Firma: .................................................................`,
+                                    bold: true,
+                                    font: "Calibri",
+                                    allCaps: true,
+                                    size: "5mm"
+                                }),
+                            ],
+                            spacing: {
+                                before: 400,
+                            },
+                        } : {}),
                     ]
                 }]
 

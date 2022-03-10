@@ -91,12 +91,17 @@
                                             <option value="" selected disabled>Chofér</option>
                                         </select>
                                     </div>
+                                    <div class="form-group col-md-1">
+                                        <select data-company class="form-select" id="company" name="company" disabled>
+                                            <option value="" selected disabled>Acompañante</option>
+                                        </select>
+                                    </div>
                                     <div class="form-group col-md-2">
                                         <select data-truck class="form-select" id="car" name="car" required disabled>
                                             <option value="" selected disabled>Camion</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-2">
+                                    <div class="form-group col-md-1">
                                         <select data-chest class="form-select" id="chest" name="chest" disabled>
                                             <option value="" selected disabled>Furgon</option>
                                         </select>
@@ -161,10 +166,10 @@
                     <div class="card shadow mb-4">
                         <div class="card-header">
                             <div class="form-row">
-                                <div class="form-group col-1">
+                                <div class="form-group col-md-1">
                                     <h6 class="m-0 font-weight-bold text-danger">Listado de Viajes</h6>
                                 </div>
-                                <div class="form-group col-1">
+                                <div class="form-group col-md-1">
                                     <select class="form-select" data-filter-travel-type>
                                         <option value="Todos" selected>TODAS LAS VIAJES</option>
                                         <option value="Viatico Nacional">Viatico Nacional</option>
@@ -175,7 +180,7 @@
                                         <option value="Transferencia">Transferencia</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-2">
+                                <div class="form-group col-md-2">
                                     <select class="form-select" data-filter-travel-origin>
                                         <option value="Todos" selected>TODAS LAS ORIGENS</option>
                                         <option value="KM 1">KM 1</option>
@@ -216,7 +221,7 @@
                                         <option value="Hernandarias">Hernandarias</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-2">
+                                <div class="form-group col-md-2">
                                     <select class="form-select" data-filter-travel-route>
                                         <option value="Todos" selected>TODOS LOS DESTINOS</option>
                                         <option value="KM 1">KM 1</option>
@@ -257,7 +262,7 @@
                                         <option value="Hernandarias">Hernandarias</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-2">
+                                <div class="form-group col-md-2">
                                     <select class="form-select" data-filter-travel-trucktype>
                                         <option value="Todos" selected>TODOS LOS CAMIONES</option>
                                         <option value="AUTOMOVIL">AUTOMOVIL</option>
@@ -270,11 +275,11 @@
                                         <option value="SEMI REMOLQUE">SEMI REMOLQUE</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-2 text-right">
+                                <div class="form-group col-md-2 text-right">
                                     <button type="button" class="btn btn-secondary" style="cursor:cell;"
                                         data-print-travel>Copiar Viajes</button>
                                 </div>
-                                <div class="form-group col-2">
+                                <div class="form-group col-md-2">
                                     <input class="form-control" type="date" data-search-date>
                                 </div>
                             </div>
@@ -282,31 +287,34 @@
 
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-1 text-center">
+                                <div class="col-md-1 text-center">
                                     <h6>Usuario</h6>
                                 </div>
-                                <div class="col-1 text-center">
+                                <div class="col-md-1 text-center">
                                     <h6>Tipo</h6>
                                 </div>
-                                <div class="col-1 text-center">
+                                <div class="col-md-1 text-center">
                                     <h6>Origem</h6>
                                 </div>
-                                <div class="col-1 text-center">
+                                <div class="col-md-1 text-center">
                                     <h6>Destino/Obs</h6>
                                 </div>
-                                <div class="col-2 text-center">
+                                <div class="col-md-1 text-center">
                                     <h6>Chofér</h6>
                                 </div>
-                                <div class="col-2 text-center">
+                                <div class="col-md-1 text-center">
+                                    <h6>Acompañante</h6>
+                                </div>
+                                <div class="col-md-2 text-center">
                                     <h6>Camion</h6>
                                 </div>
-                                <div class="col-1 text-center">
+                                <div class="col-md-1 text-center">
                                     <h6>Furgon</h6>
                                 </div>
-                                <div class="col-1 text-center">
+                                <div class="col-md-1 text-center">
                                     <h6>Capacidad</h6>
                                 </div>
-                                <div class="col-2 text-center">
+                                <div class="col-md-2 text-center">
                                     <h6>Fecha</h6>
                                 </div>
                             </div>
@@ -323,10 +331,10 @@
                     <div class="card shadow mb-4">
                         <div class="card-header">
                             <div class="form-row">
-                                <div class="form-group col-1">
+                                <div class="form-group col-md-1">
                                     <h6 class="m-0 font-weight-bold text-danger">Listado de Vehículos</h6>
                                 </div>
-                                <div class="form-group col-2 text-center">
+                                <div class="form-group col-md-2 text-center">
                                     <select class="form-select" data-filter-truck-type>
                                         <option value="TODOS" selected>Todos los vehiculos</option>
                                         <option value="AUTOMOVIL">AUTOMOVIL</option>
@@ -339,7 +347,7 @@
                                         <option value="SEMI REMOLQUE">SEMI REMOLQUE</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-2 text-center">
+                                <div class="form-group col-md-2 text-center">
                                     <select class="form-select" data-filter-truck-status>
                                         <option value="TODOS" selected>Todos los status</option>
                                         <option value="1">Disponible</option>
@@ -347,7 +355,7 @@
                                         <option value="3">Mantenimiento</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-2 text-center">
+                                <div class="form-group col-md-2 text-center">
                                     <select class="form-select" data-filter-truck-sede>
                                         <option value="TODOS" selected>Todos las sedes</option>
                                         <option value="KM 28">Km28</option>
@@ -355,7 +363,7 @@
                                         <option value="CDE">CDE</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-2 text-center">
+                                <div class="form-group col-md-2 text-center">
                                     <select class="form-select" data-filter-truck-brand>
                                         <option value="TODOS" selected>Todos las marcas</option>
                                         <option value="NISSAN">NISSAN</option>
@@ -379,7 +387,7 @@
                                         <option value="GOODYEAR">GOODYEAR</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-3 text-right">
+                                <div class="form-group col-md-3 text-right">
                                     <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                         data-bs-target="#addcar"><i class="fas fa-plus"></i> Nuevo</button>
                                     <button data-btn-collapse type="button" data-bs-toggle="collapse"
@@ -408,10 +416,10 @@
                     <div class="card shadow mb-4">
                         <div class="card-header">
                             <div class="form-row">
-                                <div class="form-group col-1">
+                                <div class="form-group col-md-1">
                                     <h6 class="m-0 font-weight-bold text-danger">Listado de Chofér</h6>
                                 </div>
-                                <div class="form-group col-2 text-center">
+                                <div class="form-group col-md-2 text-center">
                                     <select class="form-select" data-filter-driver-status>
                                         <option value="TODOS" selected>Todos los status</option>
                                         <option value="1">Disponible</option>
@@ -419,7 +427,7 @@
                                         <option value="3">Temporalmente no disponible</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-2 text-center">
+                                <div class="form-group col-md-2 text-center">
                                     <select class="form-select" data-filter-driver-local>
                                         <option value="TODOS" selected>Todos los locales</option>
                                         <option value="KM 1">KM 1</option>
@@ -427,7 +435,7 @@
                                         <option value="YPANE">YPANE</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-7 text-right">
+                                <div class="form-group col-md-7 text-right">
                                     <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                         data-bs-target="#adddriver"><i class="fas fa-plus"></i> Nuevo</button>
                                     <button data-btn-collapse type="button" data-bs-toggle="collapse"
@@ -462,11 +470,11 @@
                                 <input id="plate" name="plate" placeholder="Plaqueta" type="text" class="form-control"
                                     required>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <input id="brand" name="brand" placeholder="Marca" type="text" class="form-control"
                                     required>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <input id="model" name="model" placeholder="Modelo" type="text" class="form-control">
                             </div>
                             <div class="form-group col-md-6">
@@ -482,22 +490,22 @@
                                     <option value="SEMI REMOLQUE">SEMI REMOLQUE</option>
                                 </select>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <input id="color" name="color" placeholder="Color" type="text" class="form-control"
                                     required>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <input id="year" name="year" placeholder="Año" type="date" class="form-control">
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <input id="chassis" name="chassis" placeholder="Chassis" type="text"
                                     class="form-control">
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <input id="capacity" name="capacity" placeholder="Capacidad" type="number"
                                     class="form-control">
                             </div>
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-md-6">
                                 <select name="fuel" id="fuel" class="form-select">
                                     <option value="" selected disabled>Combustible</option>
                                     <option value="N/A">N/A</option>
@@ -522,7 +530,7 @@
                                     <option value="CDE">CDE</option>
                                 </select>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <input id="obs" name="obs" placeholder="Observación" type="text" class="form-control">
                             </div>
                         </div>
@@ -549,11 +557,11 @@
                             <div class="form-group col-md-6">
                                 <input name="name" placeholder="Nombre" type="text" class="form-control" required>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <input id="idcard" name="idcard" placeholder="ID Card" type="text" class="form-control"
                                     required>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <input id="phone" name="phone" placeholder="Teléfono" type="text" class="form-control">
                             </div>
                             <div class="form-group col-md-6">

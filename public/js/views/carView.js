@@ -52,28 +52,31 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
     <span class="visually-hidden"></span>
 </span></a>
  </div>
-    <div class="form-group col-1" data-date>
+    <div class="form-group col-md-1" data-date>
     <input value="${travel.type}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-1">
+                                        <div class="form-group text-center col-md-1">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-1">
+                                        <div class="form-group text-center col-md-1">
                                         <input value="${travel.routedesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group col-2">
+                                        <div class="form-group col-md-1">
                                             <input value="${travel.driverdesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-2">
+                                        <div class="form-group col-md-1">
+                                            <input value="${travel.company_name ? travel.company_name: ""}" type="text" class="form-control" disabled>
+                                        </div>
+                                        <div class="form-group text-center col-md-2">
                                             <input value="${plate}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-1">
+                                        <div class="form-group text-center col-md-1">
                                             <input value="${chestdesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-1">
+                                        <div class="form-group text-center col-md-1">
                                         <input value="${travel.capacity}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-2">
+                                        <div class="form-group text-center col-md-2">
                                         <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
                                         <a><span data-id_travel="${travel.id}" data-chest="${chestdesc}" data-type="${travel.typecode}" data-id_car="${travel.cars[0].id_car}" data-truck="${plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-btn-generate
                                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
@@ -88,7 +91,7 @@ const addtravel = (travel, plate, chest, platedesc, chestdesc) => {
     div.classList.add('form-row')
 
     div.innerHTML = `
-    <div class="form-group text-center col-1">
+    <div class="form-group text-center col-md-1">
     <input value="${travel.name}" type="text" class="form-control" disabled>
     <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
@@ -96,28 +99,31 @@ const addtravel = (travel, plate, chest, platedesc, chestdesc) => {
     <span class="visually-hidden"></span>
 </span></a>
  </div>
-    <div class="form-group col-1" data-date>
+    <div class="form-group col-md-1" data-date>
     <input value="${travel.typedesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-1 text-center">
+                                        <div class="form-group text-center col-md-1 text-center">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-1 text-center">
+                                        <div class="form-group text-center col-md-1 text-center">
                                         <input value="${travel.routedesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group col-2">
+                                        <div class="form-group col-md-1">
                                             <input value="${travel.driverdesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-2">
+                                        <div class="form-group col-md-1">
+                                            <input value="${travel.companydesc ? travel.companydesc : ""}" type="text" class="form-control" disabled>
+                                        </div>
+                                        <div class="form-group text-center col-md-2">
                                             <input value="${plate}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-1">
+                                        <div class="form-group text-center col-md-1">
                                             <input value="${chestdesc}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-1">
+                                        <div class="form-group text-center col-md-1">
                                         <input value="${travel.capacity}" type="text" class="form-control" disabled>
                                         </div>
-                                        <div class="form-group text-center col-2 text-center">
+                                        <div class="form-group text-center col-md-2 text-center">
                                         <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
                                         <a><span data-id="${travel.id}" data-type="${travel.type}" data-id_car="${travel.plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-date="${travel.date}" data-driver="${travel.driver}" data data-btn-generate
                                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
@@ -374,21 +380,25 @@ const modalGenerate = (obj, content) => {
                                 <label>Chofér</label>
                                 <input data-idcard="${obj.travel.idcard}" value="${obj.travel.driverdesc}" name="driver" placeholder="driver" type="text" class="form-control" disabled required>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
+                                <label>Acompañante</label>
+                                <input data-idcard="${obj.travel.company_idcard}" value="${obj.travel.company_name}" id="companion" name="companion" type="text" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
                                 <label>Truck</label>
                                 <input value="${obj.travel.truck}" id="truck" name="truck" type="text" class="form-control"
                                 disabled required>
                             </div>
-                            <div class="form-group col-12">
+                            <div class="form-group col-md-6">
                                 <label>Fecha de Salida</label>
                                 <input value="${obj.travel.datedesc} - ${obj.travel.perioddesc}" id="date" name="date" type="text" class="form-control"
                                 disabled required>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <label>Origen</label>
                                 <input value="${obj.travel.origindesc}" id="origin" name="origin" type="text" class="form-control" disabled required>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group col-md-6">
                                 <label>Destino</label>
                                 <input value="${obj.travel.routedesc}" id="route" name="route" type="text" class="form-control" disabled required>
                             </div>

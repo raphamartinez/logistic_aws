@@ -1,14 +1,14 @@
-require('dotenv').config({ path: __dirname + '\\.env', encoding: 'utf8' })
+require('dotenv').config({ path: __dirname + '\\.env', encoding: 'utf8' });
 require('events').EventEmitter.prototype._maxListeners = 100;
 
-const customExpress = require('./api/config/customExpress')
+const customExpress = require('./api/config/customExpress');
 const appLocals = require("./api/config/app.locals");
-const express = require('express')
-const path = require('path')
-const jwt = require('jsonwebtoken')
+const express = require('express');
+const path = require('path');
+const jwt = require('jsonwebtoken');
 const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = require('./api/models/error');
 const Middleware = require('./api/infrastructure/auth/middleware');
-const Web = require('./api/models/webscraping');
+const Movias = require('./api/models/movias');
 
 // const Purchase = require('./api/repositories/purchase')
 // Purchase.getOrders()
@@ -20,7 +20,11 @@ const app = customExpress();
 
 app.locals = appLocals;
 
-app.listen(3000, () => {
+app.listen(80, async () => {
+
+  // const id_token = await Movias.Login()
+  // const cars = await Movias.Cars(id_token)
+  // await Movias.Tracking(cars, id_token)
 
   app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])
   app.set('view engine', 'ejs');

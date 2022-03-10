@@ -6,7 +6,7 @@ class Travel {
     async list(date, lastdate, period, id_login) {
         try {
             let sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
-            IF(dr.name is null, "", dr.name) as driverdesc, tr.origin, tr.route, us.name,
+            IF(dr.name is null, "", dr.name) as driverdesc, tr.origin, tr.route, us.name, tr.company_name, tr.company_idcard,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
                         WHEN tr.type = 2 THEN "Retiro Contenedor"
@@ -163,9 +163,9 @@ class Travel {
 
     async insert(car, id_login) {
         try {
-            const sql = `INSERT INTO travel (date, period, origin, route, id_driver, id_login, type, obs, datereg)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, now() - interval 4 hour  )`
+            const sql = `INSERT INTO travel (date, period, origin, route, id_driver, company_name, company_idcard, id_login, type, obs, datereg)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now() - interval 4 hour  )`
 
-            await query(sql, [car.date, car.period, car.origin, car.route, car.driver, id_login, car.type, car.obs])
+            await query(sql, [car.date, car.period, car.origin, car.route, car.driver, car.companydesc, car.companyidcard, id_login, car.type, car.obs])
 
             const sqlId = 'select LAST_INSERT_ID() as id from api.travel LIMIT 1'
             const obj = await query(sqlId)
@@ -204,7 +204,7 @@ class Travel {
     async view(id_travel) {
         try {
             const sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
-            IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, us.name,
+            IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, us.name, tr.company_name, tr.company_idcard,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
                         WHEN tr.type = 2 THEN "Retiro Contenedor"

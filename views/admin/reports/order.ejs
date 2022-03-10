@@ -125,7 +125,7 @@
                 </h5>
             </div>
             <div class="form-group col-md-12">
-                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>RUC:</strong> <%= order.provider_cnpj %>
+                <h5 style="font-family: Arial; line-height: 0.5rem"><strong>RUC:</strong><% if(order.provider_cnpj != 82534819000101) {%>  <%= order.provider_cnpj %><% }else{ %> 80028071-1<% } %> 
                 </h5>
             </div>
             <div class="form-group col-md-6">

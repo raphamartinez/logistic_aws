@@ -46,24 +46,6 @@ class Movias {
 
             const cars = await data.json();
 
-            // for (let car of cars) {
-            //    // const id = await Repositorie.insert(car);
-
-            //     let inputs = car.inputs.reduce(function (r, a) {
-            //         r[a[`${search.group}`]] = r[a[`${search.group}`]] || [];
-            //         r[a[`${search.group}`]].push(a);
-            //         return r;
-            //     }, Object.create({}));
-
-            //     for (let input of inputs) {
-            //         await Repositorie.insertAccessorie(input, 1, id);
-            //     }
-
-            //     for (let input of inputs) {
-            //         await Repositorie.insertAccessorie(input, 1, id);
-            //     }
-            // }
-
             return cars
         } catch (error) {
             console.log(error);
@@ -72,32 +54,52 @@ class Movias {
 
     async Tracking(cars, id_token) {
 
-        const startDh = new Date("03/07/22 00:00:00");
-        const endDh = new Date("03/07/22 23:59:59");
+        const startDh = new Date("01/12/22 00:00:00");
+        const endDh = new Date("01/12/22 23:59:59");
+
+        const now = new Date("03/16/22 23:59:59");
 
         try {
 
+            while (endDh.getTime() < now.getTime()) {
+                for (let car of cars) {
+                    console.log(car.licensePlate);
 
-            for (let car of cars) {
-                console.log(car.licensePlate);
+                    const data = await fetch(`https://www.movias.com.br:8443/ws/v1/telemetry/day?startDh=${startDh.toLocaleDateString('pt-BR')} 00:00:00&endDh=${endDh.toLocaleDateString('pt-BR')} 23:59:59&licensePlate=${car.licensePlate}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${id_token}`
+                        }
+                    })
 
-                const data = await fetch(`https://www.movias.com.br:8443/ws/v1/tracking?startDh=${startDh.toLocaleDateString('pt-BR')} 00:00:00&endDh=${endDh.toLocaleDateString('pt-BR')} 23:59:59&licensePlate=${car.licensePlate}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${id_token}`
+                    const history = await data.json();
+
+                    for (let obj of history) {
+                        let tracking = obj.telemetry[0];
+
+                        tracking.licensePlate = obj.licensePlate;
+                        tracking.idVeiculo = obj.idVeiculo;
+
+                        const stDate = tracking.startDate.split("/")
+                        const startDate = new Date(`${stDate[1]}-${stDate[0]}-${stDate[2]}`)
+                        tracking.startDate = `${startDate.getFullYear()}-${startDate.getMonth() + 1}-${startDate.getDate()} ${startDate.getHours()}:${startDate.getMinutes()}:${startDate.getSeconds()}`
+
+                        const enDate = tracking.endDate.split("/")
+                        const endDate = new Date(`${enDate[1]}-${enDate[0]}-${enDate[2]}`)
+                        console.log(endDate);
+                        tracking.endDate = `${endDate.getFullYear()}-${endDate.getMonth() + 1}-${endDate.getDate()} ${endDate.getHours()}:${endDate.getMinutes()}:${endDate.getSeconds()}`
+
+                        console.log(tracking);
+
+                        await Repositorie.insert(tracking);
                     }
-                })
 
-                const history = await data.json();
-                console.log(history);
-                for (let tracking of history) {
-                    await Repositorie.insert(tracking);
                 }
-            }
 
-            // startDh.setDate(startDh.getDate() + 2);
-            // endDh.setDate(endDh.getDate() + 2);
+                startDh.setDate(startDh.getDate() + 1);
+                endDh.setDate(endDh.getDate() + 1);
+            }
 
             console.log("finish");
             return cars

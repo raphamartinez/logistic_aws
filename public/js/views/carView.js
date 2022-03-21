@@ -382,7 +382,7 @@ const modalGenerate = (obj, content) => {
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Acompañante</label>
-                                <input data-idcard="${obj.travel.company_idcard}" value="${obj.travel.company_name}" id="companion" name="companion" type="text" class="form-control">
+                                <input data-idcard="${obj.travel.company_idcard ? obj.travel.company_idcard : ""}" value="${obj.travel.company_name ? obj.travel.company_name : ""}" id="companion" name="companion" type="text" class="form-control" disabled>
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Truck</label>

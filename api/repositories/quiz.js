@@ -1,5 +1,4 @@
 const query = require('../infrastructure/database/queries')
-const querytwo = require('../infrastructure/database/queriestwo')
 
 const { InvalidArgumentError, InternalServerError, NotFound } = require('../models/error')
 

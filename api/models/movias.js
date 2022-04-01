@@ -54,14 +54,14 @@ class Movias {
 
     async Tracking(cars, id_token) {
 
-        const startDh = new Date("01/12/22 00:00:00");
-        const endDh = new Date("01/12/22 23:59:59");
+        const startDh = new Date("01/01/22 00:00:00");
+        const endDh = new Date("01/01/22 23:59:59");
 
-        const now = new Date("03/16/22 23:59:59");
+        const now = new Date("03/29/22 23:59:59");
 
         try {
 
-            while (endDh.getTime() < now.getTime()) {
+            while (endDh.getTime() <= now.getTime()) {
                 for (let car of cars) {
                     console.log(car.licensePlate);
 

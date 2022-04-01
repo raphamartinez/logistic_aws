@@ -8,12 +8,12 @@ class Movias {
             const sql = `INSERT INTO moviastracking (idVeiculo, licensePlate, totalKmPLitro, totalLitroPhora, totalKmPPorcente, totalPorcentePhora, startDate, endDate,
                 odometerEnd, maxSpeedOverallValue, maxRpmValue, distanceTraveled, timingsIdleTime, timeReport, odometerStart, 
                 timingsOnTime, timingsTripTime, timingsOffTime, timingsOverSpeed, maxFuelEconomyValue, averagesSpeed,
-                averagesRpm, timeTotalViagemSeg ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+                averagesRpm, timeTotalViagemSeg, fuelUsedLiters) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
             const obj = await query(sql, [tracking.idVeiculo, tracking.licensePlate, tracking.totalKmPLitro, tracking.totalLitroPhora, tracking.totalKmPPorcente, tracking.totalPorcentePhora, tracking.startDate, tracking.endDate,
                 tracking.odometerEnd, tracking.maxSpeedOverallValue, tracking.maxRpmValue, tracking.distanceTraveled, tracking.timingsIdleTime, tracking.timeReport, tracking.odometerStart,
                 tracking.timingsOnTime, tracking.timingsTripTime, tracking.timingsOffTime, tracking.timingsOverSpeed, tracking.maxFuelEconomyValue, tracking.averagesSpeed, 
-                tracking.averagesRpm, tracking.timeTotalViagemSeg]);
+                tracking.averagesRpm, tracking.timeTotalViagemSeg, tracking.fuelUsedLiters]);
 
             return obj.insertId;
         } catch (error) {

@@ -1615,7 +1615,7 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
   Array.from(travels.children).forEach(travel => {
     let car = travel.children[6].children[0].value.split('-')
     if (travel.style.display == 'flex' || travel.style.display == '') {
-      input.value += `- 𝐓𝐢𝐩𝐨: ${travel.children[1].children[0].value}\n `
+      input.value += `- 𝐓𝐢𝐩𝐨: ${travel.children[1].children[0].value}\n`
       if (travel.children[2].children[0].value) input.value += `- 𝐎𝐫𝐢𝐠𝐞𝐧: ${travel.children[2].children[0].value} - `
       if (travel.children[3].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[3].children[0].value}\n`
       if (travel.children[4].children[0].value) {

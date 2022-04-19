@@ -1234,7 +1234,7 @@ const generate = async (event) => {
     $("#generate").modal('hide');
     try {
       const objres = await Connection.backFile('travelreport', { travel }, 'POST');
-      let xlsFile = objres.blob()
+      let xlsFile = await objres.blob()
       let a = document.createElement('a');
       a.href = window.URL.createObjectURL(xlsFile);
       a.target = "_blank";

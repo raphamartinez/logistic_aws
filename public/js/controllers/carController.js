@@ -1613,18 +1613,18 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
 
   const travels = document.querySelector('[data-row-travel]')
   Array.from(travels.children).forEach(travel => {
+    let car = travel.children[6].children[0].value.split('-')
     if (travel.style.display == 'flex' || travel.style.display == '') {
-      input.value += `𝐓𝐢𝐩𝐨: ${travel.children[1].children[0].value} - `
-      if (travel.children[2].children[0].value) input.value += `𝐎𝐫𝐢𝐠𝐞𝐧: ${travel.children[2].children[0].value} - `
-      if (travel.children[3].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[3].children[0].value} - `
+      input.value += `- 𝐓𝐢𝐩𝐨: ${travel.children[1].children[0].value}\n `
+      if (travel.children[2].children[0].value) input.value += `- 𝐎𝐫𝐢𝐠𝐞𝐧: ${travel.children[2].children[0].value} - `
+      if (travel.children[3].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[3].children[0].value}\n`
       if (travel.children[4].children[0].value) {
         input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[4].children[0].value} - `
-        input.value += `𝐂𝐈: ${travel.children[4].children[0].getAttribute('data-ci')} - `
+        input.value += `𝐂𝐈: ${travel.children[4].children[0].getAttribute('data-ci')}\n`
       }
-      input.value += `𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${travel.children[6].children[0].value} - `
+      input.value += `𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${car[0]} - ${car[1]}\n`
       if (travel.children[7].children[0].value) input.value += `𝐅𝐮𝐫𝐠𝐨𝐧: ${travel.children[7].children[0].value} - `
-      input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${travel.children[8].children[0].value} cubiertas - `
-      input.value += `𝐅𝐞𝐜𝐡𝐚: ${travel.children[9].children[0].value} \n\n`
+      input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${travel.children[8].children[0].value} cubiertas \n\n\n`
     }
   })
 

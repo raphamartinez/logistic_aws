@@ -1089,21 +1089,21 @@ const generate = async (event) => {
       if (document.querySelectorAll('#addvalue').length == 1) {
         amount = document.querySelector('#addvalue').value
       } else {
-          amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
-            if (x.value === "") x.value = 0;
-            if (y.value === "") y.value = 0;
-            let a = 0.000
-            let b = 0.000
-            if (x.value) {
-              a = parseFloat(x.value.toLocaleString('es')) 
-            } else {
-              a = x
-            }
+        amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
+          if (x.value === "") x.value = 0;
+          if (y.value === "") y.value = 0;
+          let a = 0.000
+          let b = 0.000
+          if (x.value) {
+            a = parseFloat(x.value.toLocaleString('es'))
+          } else {
+            a = x
+          }
 
-            if(y.value) b = parseFloat(y.value.toLocaleString('es'))
+          if (y.value) b = parseFloat(y.value.toLocaleString('es'))
 
-            return a + b
-          })
+          return a + b
+        })
       }
 
       document.querySelector('#amount').value = parseFloat(amount).toFixed(3)
@@ -1122,20 +1122,20 @@ const generate = async (event) => {
       if (document.querySelectorAll('#addvalue').length == 1) {
         amount = document.querySelector('#addvalue').value
       } else {
-          amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
-            let a = 0.000
-            let b = 0.000
+        amount = Array.from(document.querySelectorAll('#addvalue')).reduce((x, y) => {
+          let a = 0.000
+          let b = 0.000
 
-            if (x.value) {
-              a = parseFloat(x.value)
-            } else {
-              a = x
-            }
+          if (x.value) {
+            a = parseFloat(x.value)
+          } else {
+            a = x
+          }
 
-            if (y.value) b = parseFloat(y.value)
+          if (y.value) b = parseFloat(y.value)
 
-            return a + b
-          })
+          return a + b
+        })
       }
 
       document.querySelector('#amount').value = parseFloat(amount).toFixed(3)
@@ -1175,7 +1175,7 @@ const generate = async (event) => {
     let date = new Date();
 
     obj.travel.typecode == 1 ? name = "Viatico" : name = "Contenedor";
-      
+
     let selectconcept = document.querySelectorAll('#addconcept');
     concepts = Array.from(selectconcept).map(el => {
       let id = 0;
@@ -1234,9 +1234,9 @@ const generate = async (event) => {
     $("#generate").modal('hide');
     try {
       const objres = await Connection.backFile('travelreport', { travel }, 'POST');
-
+      let xlsFile = objres.blob()
       let a = document.createElement('a');
-      a.href = window.URL.createObjectURL(objres);
+      a.href = window.URL.createObjectURL(xlsFile);
       a.target = "_blank";
       a.download = `${name}_${plateTruck[0]}_${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}.docx`
       document.body.appendChild(a);
@@ -1617,7 +1617,7 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
       input.value += `𝐓𝐢𝐩𝐨: ${travel.children[1].children[0].value} - `
       if (travel.children[2].children[0].value) input.value += `𝐎𝐫𝐢𝐠𝐞𝐧: ${travel.children[2].children[0].value} - `
       if (travel.children[3].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[3].children[0].value} - `
-      if (travel.children[4].children[0].value){
+      if (travel.children[4].children[0].value) {
         input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[4].children[0].value} - `
         input.value += `𝐂𝐈: ${travel.children[4].children[0].getAttribute('data-ci')} - `
       }

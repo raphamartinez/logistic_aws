@@ -62,10 +62,10 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
                                         <input value="${travel.routedesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-1">
-                                            <input value="${travel.driverdesc}" type="text" class="form-control" disabled>
+                                            <input value="${travel.driverdesc}" data-ci="${travel.idcard}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-1">
-                                            <input value="${travel.company_name ? travel.company_name: ""}" type="text" class="form-control" disabled>
+                                            <input value="${travel.company_name ? travel.company_name: ""}" data-ci="${travel.company_idcard ? travel.company_idcard : ""}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group text-center col-md-2">
                                             <input value="${plate}" type="text" class="form-control" disabled>
@@ -109,10 +109,10 @@ const addtravel = (travel, plate, chest, platedesc, chestdesc) => {
                                         <input value="${travel.routedesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-1">
-                                            <input value="${travel.driverdesc}" type="text" class="form-control" disabled>
+                                            <input value="${travel.driverdesc}" data-ci="${travel.idcard}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-1">
-                                            <input value="${travel.companydesc ? travel.companydesc : ""}" type="text" class="form-control" disabled>
+                                            <input value="${travel.companydesc ? travel.companydesc : ""}" data-ci="${travel.company_idcard ? travel.company_idcard : ""}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group text-center col-md-2">
                                             <input value="${plate}" type="text" class="form-control" disabled>

@@ -27,6 +27,9 @@ class Purchase {
             ,[oc].[DS_MOTIVO_CANCELAMENTO]
             ,[cc].[DESCRICAO] as centro_custo
             ,[ed].[MDA_SIMBOL] as coin
+            ,fa.DESCRICAO as model_product
+            ,pc.[PESCONTATO_TELEFONE] as phone
+            ,pc.[PESCONTATO_NOME] as name
             ,CASE [oc].[FG_STATUS]
             WHEN 3 THEN 'En processo'
             WHEN 5 THEN 'Concluido'
@@ -37,6 +40,7 @@ class Purchase {
             INNER JOIN [G8BD].[dbo].[ORDEMCOMPRA_ITENS] as [oi] ON [oc].[SEQ_ORDEMCOMPRA] = [oi].[ID_ORDEMCOMPRA]
             LEFT JOIN [G8BD].[dbo].[ITENSPRECOCOMPRAS_FORNEC] as ipf ON oi.ID_ITEM_COTACAOPRECO = ipf.SEQ_ITENSPRECOCOMPRAS_FORNEC 
             LEFT JOIN [G8BD].[dbo].[PRODUTOSERVICO] as [ps] ON [oi].[ID_PRODUTOSERVICO] = [ps].[SEQPRODUTOSERVICO]
+            LEFT JOIN [G8BD].[dbo].[FABRICANTES] as fa on ps.IDT_FABRICANTE =  fa.SEQFABRICANTES
             LEFT JOIN [G8BD].[dbo].[VEICULOS] as [ve] ON [oi].ID_VEICULOS =  [ve].[SEQVEICULOS]
             LEFT JOIN [G8BD].[dbo].[CATEGORIASVEI] as [ca] ON [ve].[IDTCATEGORIASVEI] = [ca].[SEQCATEGORIASVEI]
             LEFT JOIN [G8BD].[dbo].[MODELOSFAB] as [mo] ON [ve].[IDTMODELOSFAB] = [mo].[SEQMODELOSFAB]
@@ -44,16 +48,27 @@ class Purchase {
             LEFT JOIN [G8BD].[dbo].[CONDICAO_FATURAMENTO] as [co] on [oc].[ID_CONDICAOFATURAMENTO] = [co].SEQ_CONDFATURAMENTO
             LEFT JOIN [G8BD].[dbo].[CENTRORECDES] as [cc] on [oi].[ID_CENTROCUSTO] = [cc].SEQCENTRORECDES
             LEFT JOIN [G8BD].[dbo].[PESSOAS] as [pe] on [oc].[ID_FORNECEDOR] = [pe].[PES_CODIGO]
+            LEFT JOIN [G8BD].[dbo].[PESSOAS_CONTATOS] as pc on pe.[PES_CODIGO] = pc.[PES_CODIGO]
             LEFT JOIN [G8BD].[dbo].[MOEDA] as ed on oc.ID_MOEDA = ed.[MDA_CODIGO]
             WHERE CONVERT(date,[oc].[DT_EMISSAO] ) BETWEEN '${search.datestart}' AND '${search.dateend}' `
 
-      if (search.numberstart) query += ` AND [oc].[NR_ORDEMCOMPRA] BETWEEN '${search.numberstart}' AND '${search.numberend}' `
+      if (search.purchaseorders && search.purchaseorders[0] !== '' && search.purchaseorders.length > 0) query += ` AND [oc].[NR_ORDEMCOMPRA] IN (${search.purchaseorders}) `
 
-      if (search.status) query += ` AND [oc].[FG_STATUS] IN (${search.status})`
+      if (search.status && search.status[0] !== '' && search.status.length > 0) query += ` AND [oc].[FG_STATUS] IN (${search.status})`
 
       if (search.model) query += ` AND [mo].[DESCRICAO] = '${search.model}' `
 
       if (search.category) query += ` AND [ca].[DESCRICAO] = '${search.category}'`
+
+      if (search.provider) query += ` AND pe.PES_CODIGO = '${search.provider}'`
+
+      if (search.nature) query += ` AND [na].SEQNATTRANSACAO IN (${search.nature}) `
+
+      if (search.centerCost) query += ` AND [oi].[ID_CENTROCUSTO] = ${search.centerCost} `
+
+      if (search.truck) query += ` AND ip.ID_VEICULO IN (${search.truck}) `
+
+      query += ` ORDER BY [oc].[NR_ORDEMCOMPRA] DESC`
 
       await sql.connect(config);
 
@@ -149,6 +164,7 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
       ,ip.SEQ_ITENSCOTACAOPRECOCOMPRA as id_itenscotacao
       ,cp.[DT_EMISSAO] as dt_emissao
       ,[pe].[PES_RAZAOSOCIAL]  as proveedor
+      ,[pe].[PES_CODIGO]  as provider_code
       ,UPPER(LEFT([na].[DESCRICAO], 12)) as naturaleza
       ,ps.SEQPRODUTOSERVICO as codproduct
       ,ps.DESCRICAO as product
@@ -158,6 +174,9 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
       ,UPPER([ca].[DESCRICAO]) as category
       ,UPPER([mo].[DESCRICAO]) as model
       ,ipf.[VR_PRODUTO] as valor_unit
+      ,oi.[QT_PRODUTO] as qt_productoc
+      ,oi.[VR_UNITARIO] as vlr_unitariooc
+      ,oi.[VR_TOTAL] as vlr_totaloc
       ,ipf.VR_UNITARIO_ORIG as desconto
       ,ipf.[PC_DESCONTO] as descu
       ,ipf.ID_OPER_APROVACAO as stt_aprov
@@ -197,13 +216,17 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
 
       if (search.provider) query += ` AND cf.[ID_FORNECEDOR] IN (${search.provider}) `
 
+      if (search.nature) query += ` AND [na].SEQNATTRANSACAO IN (${search.nature}) `
+
+      if (search.purchaseorders && search.purchaseorders[0] !== '' && search.purchaseorders.length > 0) query += ` AND [oc].NR_ORDEMCOMPRA IN (${search.purchaseorders}) `
+
+      if (search.centerCost) query += ` AND [oi].[ID_CENTROCUSTO] = ${search.centerCost} `
+
       if (search.product) query += ` AND ip.[ID_PRODUTOSERVICO] IN (${search.product}) `
 
       if (search.truck) query += ` AND ip.ID_VEICULO IN (${search.truck}) `
 
       if (search.quotation && search.quotation.length > 0) query += ` AND cp.SEQ_COTACAOPRECOCOMPRA IN (${search.quotation}) `
-
-      if (search.purchaseorder) query += ` AND oc.NR_ORDEMCOMPRA IN (${search.purchaseorder}) `
 
       switch (search.status) {
         case '1':
@@ -228,7 +251,7 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
           break;
       };
 
-      query+= ` ORDER BY SEQ_COTACAOPRECOCOMPRA, pg.DESCRICAO `
+      query += ` ORDER BY SEQ_COTACAOPRECOCOMPRA DESC, pg.DESCRICAO `
 
       await sql.connect(config);
 
@@ -459,6 +482,44 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
     }
   }
 
+  async getNatures() {
+    try {
+
+      let query = `SELECT DISTINCT([na].SEQNATTRANSACAO) as code, [na].[DESCRICAO] as name 
+      FROM [G8BD].[dbo].[NATTRANSACAO] as [na]
+      ORDER BY [na].[DESCRICAO] ASC`
+
+      await sql.connect(config);
+
+      let request = new sql.Request();
+
+      const obj = await request.query(query);
+
+      return obj.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getCenterCosts() {
+    try {
+
+      let query = `SELECT DISTINCT([cc].SEQCENTRORECDES) as code, [cc].[DESCRICAO] as name 
+      FROM [G8BD].[dbo].[CENTRORECDES] as [cc]
+      ORDER BY [cc].[DESCRICAO] ASC`
+
+      await sql.connect(config);
+
+      let request = new sql.Request();
+
+      const obj = await request.query(query);
+
+      return obj.recordset;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async getQuotationOrders() {
     try {
 
@@ -485,6 +546,7 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
       [oc].[NR_ORDEMCOMPRA] as nr_oc
       ,[oc].[DT_ENTREGA] as date
       ,[ps].[DESCRICAO] as product
+      ,[cp].SEQ_COTACAOPRECOCOMPRA as id_quotation
       ,CASE   
       WHEN [ps].[TIPO_PRODUTOSERVICO] = 'S' THEN 'SERVICIO'
       WHEN [ps].[TIPO_PRODUTOSERVICO] = 'P' THEN 'PRODUCTO'
@@ -506,7 +568,7 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
       LEFT JOIN [G8BD].[dbo].[ABASTECIMENTO] as ab ON ve.PLACA = ab.PLACA_VEI AND ( IIF(cp.[DT_EMISSAO] IS NOT NULL , CAST(cp.[DT_EMISSAO] AS DATE) , CAST([oc].[DT_ENTREGA] AS DATE)) >= CAST(ab.DATA_AFERICAO AS DATE))
       WHERE [oc].[FG_STATUS] = 5
       AND ve.placa = '${plate}'
-      GROUP BY [oc].[NR_ORDEMCOMPRA], [oc].[DT_ENTREGA],pg.[DESCRICAO], [ps].[DESCRICAO], ca.DESCRICAO, [ps].[TIPO_PRODUTOSERVICO] ,[oi].[VR_TOTAL], ve.PLACA 
+      GROUP BY [oc].[NR_ORDEMCOMPRA], [oc].[DT_ENTREGA],pg.[DESCRICAO], [ps].[DESCRICAO], [cp].SEQ_COTACAOPRECOCOMPRA, ca.DESCRICAO, [ps].[TIPO_PRODUTOSERVICO] ,[oi].[VR_TOTAL], ve.PLACA 
       ORDER BY ROW_NUMBER() OVER ( ORDER BY [oc].[DT_ENTREGA] ASC) DESC`
 
       await sql.connect(config);

@@ -22,7 +22,7 @@
                         <form target="_blank" action="/purchaseorders" method="POST" data-form-generate>
                             <div class="card-body">
                                 <div class="form-row">
-                                    <div class="form-group col-6">
+                                    <div class="form-group col-md-6">
                                         <label for="numberstart">Status</label>
                                         <select data-select-status id="status" name="status" type="text" multiple
                                             class="form-control">
@@ -32,7 +32,7 @@
                                             <option value="'6'">Cancelado</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-6">
+                                    <div class="form-group col-md-6">
                                         <label for="group">Agrupar por: </label>
                                         <select data-select-group id="group" name="group" class="form-control" required>
                                             <option value="" selected disabled>Grupo</option>
@@ -43,31 +43,87 @@
                                             <option value="nr_oc">Orden de Compra</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-6">
+                                    <div class="form-group col-md-6">
                                         <label for="datestart">Fecha Inicial</label>
                                         <input id="datestart" name="datestart" placeholder="Fecha Inicial" type="date"
                                             class="form-control" required>
                                     </div>
-                                    <div class="form-group col-6">
+                                    <div class="form-group col-md-6">
                                         <label for="dateend">Fecha Final</label>
                                         <input id="dateend" name="dateend" placeholder="Fecha Final" type="date"
                                             class="form-control" required>
                                     </div>
-                                    <div class="form-group col-6">
-                                        <label for="numberstart">Numero Inicial</label>
-                                        <input id="numberstart" name="numberstart" placeholder="Número Ordem Inicial"
-                                            type="number" class="form-control">
+                                    <div class="form-group col-12">
+                                        <label for="purchaseorder">Nr Orden de Compra</label>
+                                        <select data-select-purchaseorder id="purchaseorders" name="purchaseorders"
+                                            class="form-control" multiple>
+                                            <option value="" selected disabled>Seleccione las ordenes</option>
+                                            <% purchaseOrders.forEach(order => { %>
+                                                <option value="<%= order.code %>">
+                                                    <%= order.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
                                     </div>
-                                    <div class="form-group col-6">
-                                        <label for="numberend">Numero Final</label>
-                                        <input id="numberend" name="numberend" placeholder="Número Ordem Final"
-                                            type="number" class="form-control">
+                                    <div class="form-group col-md-6">
+                                        <label for="provider">Proveedor</label>
+                                        <select id="provider" name="provider" class="form-control">
+                                            <option value="" selected disabled>Seleccione uno proveedor</option>
+                                            <% providers.forEach(provider=> { %>
+                                                <option value="<%= provider.code %>">
+                                                    <%= provider.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
                                     </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="car">Vehiculo</label>
+                                        <select id="car" name="car" class="form-control">
+                                            <option value="" selected disabled>Seleccione uno vehiculo</option>
+                                            <% cars.forEach(car=> { %>
+                                                <option value="<%= car.code %>">
+                                                    <%= car.PLACA %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="nature">Naturaleza</label>
+                                        <select id="nature" name="nature" class="form-control">
+                                            <option value="" selected disabled>Seleccione una naturaleza</option>
+                                            <% natures.forEach(nature=> { %>
+                                                <option value="<%= nature.code %>">
+                                                    <%= nature.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="centerCost">Centro de Costo</label>
+                                        <select id="centerCost" name="centerCost" class="form-control">
+                                            <option value="" selected disabled>Seleccione uno centro de costo</option>
+                                            <% centerCosts.forEach(centerCost => { %>
+                                                <option value="<%= centerCost.code %>">
+                                                    <%= centerCost.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
+
+                                    
                                 </div>
                             </div>
                             <div class="text-center">
+                                <button type="reset"
+                                    class="btn btn-warning align-items-center text-white justify-content-md-center mb-2">Borrar</button>
                                 <button data-modal-search type="submit"
-                                    class="btn btn-info align-items-center text-white justify-content-md-center mb-2">Generar</button>
+                                    class="btn btn-info align-items-center text-white justify-content-md-center mb-2">Generar
+                                    Informe</button>
+                                <button data-generate-excel type="button"
+                                    class="btn btn-success align-items-center text-white justify-content-md-center mb-2">Generar
+                                    Excel</button>
                             </div>
                         </form>
                     </div>

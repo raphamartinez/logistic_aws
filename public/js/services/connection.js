@@ -239,20 +239,18 @@ const refresh = async () => {
 }
 
 const backFile = async (url, data, method) => {
-    const accessToken = JSON.parse(localStorage.getItem('accessToken'))
-
+    
     try {
         const result = await fetch(`${protocol}//${host}/${url}`, {
             method: method,
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
 
         if (result.ok) {
-            return result.blob()
+            return result
         } else {
             if (result.status === 401) {
                 const valid = await refresh()

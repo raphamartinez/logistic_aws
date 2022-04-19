@@ -274,7 +274,7 @@
                                     <% }) %>
                                     <% amountMin =order[1].reduce(function (previous, key) { return previous +
                                         key.min; }, 0); %>
-                                        <% }) %>
+                    <% }) %>
                                         <tr class="bg-secondary mb-2">
                                             <td></td>
                                             <td></td>
@@ -364,7 +364,7 @@
                                                 <tr>
                                                     <td><strong><%= zhistory.id %> - </strong></td>
                                                     <td> <strong>Fecha:</strong> <%= date.getDate()%>/<%= date.getMonth() + 1 %>/
-                                                        <%= date.getFullYear()%> - <strong>Grupo:</strong> <%= zhistory.grupo %> - <strong><%= zhistory.type %></strong>: <%= zhistory.product %> - <strong>OC:</strong> <%= zhistory.nr_oc %> 
+                                                        <%= date.getFullYear()%> - <strong>Grupo:</strong> <%= zhistory.grupo %> - <strong><%= zhistory.type %></strong>: <%= zhistory.product %> - <strong>OC:</strong> <%= zhistory.nr_oc %><%if(zhistory.id_quotation) {%> - <strong>COT:</strong> <%= zhistory.id_quotation %> <% } %>
                                                         <%if(zhistory.km) {%> - <strong>KM: </strong><% } %> <% if(zhistory.category == 'SEMI REBOQUE 3 EIXOS' || zhistory.category == 'FURGON 3 EJES' || zhistory.category == 'FURGON 3 EJES ') {%> Vehiculo sin Control de Kilometraje <%}else{%><%if(zhistory.km) {%><%= zhistory.km.toLocaleString('es')  %><% }} %>  </td>
                                                         <td style="text-align: right;">Gs </td>
                                                         <td style="text-align: right;"><strong> <strong> <%= zhistory.vlr_total.toLocaleString('es') %> </strong></td>
@@ -378,11 +378,6 @@
                                                 amountproduct.toLocaleString('es'); %>
                                         </h4>
                                         <br>
-                                        
-                                        <% }%>
-                                    
-                                        <% }) %>
-
                                         <br>
                                         <h3 style="text-align:center;float:inline-start;">Vendedores </h3>
                                         <table>
@@ -394,21 +389,49 @@
                                                </tr>
                                             </thead>
                                                <tbody>
-                                        <% sellers.forEach(seller => { %>
                                             <tr>
                                                 <td>
-                                                    <%= seller.proveedor %> 
+                                                    <%= order[1][0][1][0][0].proveedor %> 
                                                 </td>
                                                 <td>
-                                                    <%= seller.name %> 
+                                                    <%= order[1][0][1][0][0].name %> 
                                                 </td>
                                                 <td>
-                                                    <strong> <%= seller.phone %>  </strong>
+                                                    <strong> <%= order[1][0][1][0][0].phone %>  </strong>
                                                 </td>
                                             </tr>
-                                            <% }) %>
+                                            <% if(order[1][0][1][0][0]) { %>
+                                            <tr>
+                                                <td>
+                                                    <%= order[1][0][1][0][0].proveedor %> 
+                                                </td>
+                                                <td>
+                                                    <%= order[1][0][1][0][0].name %> 
+                                                </td>
+                                                <td>
+                                                    <strong> <%= order[1][0][1][0][0].phone %>  </strong>
+                                                </td>
+                                            </tr>
+                                            <% } %>
+                                            <% if(order[1][0][1][0][0]) { %>
+                                            <tr>
+                                                <td>
+                                                    <%= order[1][0][1][0][0].proveedor %> 
+                                                </td>
+                                                <td>
+                                                    <%= order[1][0][1][0][0].name %> 
+                                                </td>
+                                                <td>
+                                                    <strong> <%= order[1][0][1][0][0].phone %>  </strong>
+                                                </td>
+                                            </tr>
+                                            <% } %>
                                         </tbody>
                                     </table>
+                                    
+                                        
+                                        <% }%>
+                                        <% }) %>
 
                                     <br>
                                     <h3 style="text-align:center;float:inline-start;">Indice de las naturalezas </h3>

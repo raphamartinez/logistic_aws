@@ -1,6 +1,6 @@
 const { InvalidArgumentError, InternalServerError, NotFound } = require('./error')
 const Repositorie = require('../repositories/purchase')
-const puppeteer = require('puppeteer')
+const xl = require('excel4node');
 
 class Purchase {
 
@@ -22,7 +22,7 @@ class Purchase {
                 }
 
                 return a;
-            },{
+            }, {
                 vlr_totalRs: 0,
                 vlr_totalUsd: 0,
                 vlr_totalGs: 0
@@ -103,7 +103,6 @@ class Purchase {
                     return r;
                 }, Object.create(obj));
 
-
                 for (let index = 0; index < Object.keys(groups).length; index++) {
 
                     groups[`${Object.keys(groups)[index]}`] = groups[`${Object.keys(groups)[index]}`].reduce(function (r, a) {
@@ -115,7 +114,6 @@ class Purchase {
 
                     if (search.history == '1') {
                         let quotation = groups[`${Object.keys(groups)[index]}`]
-
                         let plate = quotation[`${Object.keys(quotation)[0]}`][0].truck
 
                         if (plate) {
@@ -126,7 +124,6 @@ class Purchase {
                             groups[Object.keys(groups)[index]].zhistory = history
                         }
                     }
-
                 }
             }
 
@@ -189,6 +186,135 @@ class Purchase {
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')
+        }
+    }
+
+    async listExcel(search) {
+
+        try {
+            let quotations = await Repositorie.getOrders(search)
+
+            const titles = [
+                'ID',
+                'FECHA',
+                'NR OC',
+                'NR COTIZACION',
+                'CAMIÓN',
+                'CATEGORIA',
+                'MODELO',
+                'CONCAT',
+                'PRODUCTO',
+                'MODELO PRODUCTO',
+                'CANT',
+                'VALOR UNIT',
+                'DESCUENTO',
+                'VALOR TOTALE',
+                'PROVEEDOR',
+                'VENDEDOR',
+                'TELÉFONO',
+                'GRUPO',
+                'NATURALEZA',
+                'STATUS'
+            ]
+
+            const wb = new xl.Workbook({
+                author: 'OLLA - Logistica',
+            });
+
+            const headerStyle = wb.createStyle({
+                fill: {
+                    type: 'pattern',
+                    patternType: 'solid',
+                    fgColor: '#dc3545',
+                },
+                font: {
+                    color: '#FFFFFF',
+                    size: 14,
+                }
+            });
+
+            const ws = wb.addWorksheet('Cotizacion');
+
+            const date = new Date();
+            const date2 = new Date(date.getTime() - 14400000);
+            const now = `${date2.getHours()}:${date2.getMinutes()} ${date2.getDate()}/${date2.getMonth() + 1}/${date2.getFullYear()}`;
+
+            // ws.addImage({
+            //     path: './public/img/launch.png',
+            //     type: 'picture',
+            //     position: {
+            //         type: 'absoluteAnchor',
+            //         from: {
+            //             col: 1,
+            //             row: 1,
+            //             rowOff: 0,
+            //         },
+            //     },
+            // });
+
+            ws.cell(1, 2, 2, 9, true).string('COTIZACION DE PRECIOS').style(wb.createStyle({
+                font: {
+                    bold: true,
+                    color: '#000000',
+                    size: 21,
+                }
+            }));
+
+            let filters = "Filtros: "
+            if (search.provider) filters += `Proveedor: ${search.provider}, `
+            if (search.datestart && search.dateend) filters += `Período: ${search.datestart} hasta ${search.dateend}, `
+            if (search.truck) filters += `Vehiculo: ${search.truck}, `
+            if (search.nature) filters += `Naturaleza: ${search.nature}, `
+            if (search.centerCost) filters += `Centro de Costo: ${search.centerCost}, `
+            if (search.purchaseorders.length > 0) filters += `OC: ${search.purchaseorders}`
+            if (search.status && search.status[0] !== '') filters += `Status: ${search.status}`
+
+
+            ws.cell(3, 2, 3, 9, true).string(`Fecha de Registro: ${now}`);
+            ws.cell(4, 2, 4, 9, true).string(filters);
+
+            let headerIndex = 1;
+            titles.forEach(title => {
+                ws.cell(6, headerIndex++).string(title).style(headerStyle);
+            })
+
+            let rowIndex = 7;
+
+            var moneyStyle = wb.createStyle({
+                numberFormat: '#,##0; (#,##0); -',
+            });
+
+
+            quotations.forEach((quotation, index) => {
+
+                ws.cell(rowIndex, 1).number(index + 1)
+                ws.cell(rowIndex, 2).date(new Date(quotation.dt_emission)).style({ numberFormat: 'hh:mm dd/mm/yyyy' });
+                ws.cell(rowIndex, 3).string(quotation.nr_oc ? `${quotation.nr_oc}` : '')
+                ws.cell(rowIndex, 4).string(quotation.nr_quotation ? `${quotation.nr_quotation}` : '')
+                ws.cell(rowIndex, 5).string(quotation.placa ? quotation.placa : '')
+                ws.cell(rowIndex, 6).string(quotation.categoria ? quotation.categoria : '')
+                ws.cell(rowIndex, 7).string(quotation.modelo ? quotation.modelo : '')
+                ws.cell(rowIndex, 8).string(quotation.modelo && quotation.placa ? `${quotation.placa} - ${quotation.modelo}` : '')
+                ws.cell(rowIndex, 9).string(`${quotation.product ? quotation.product : ''}`)
+                ws.cell(rowIndex, 10).string(quotation.type == "SERVICIO" ? 'SERVICIO' : `${quotation.model_product ? quotation.model_product : ''}`)
+                ws.cell(rowIndex, 11).number(quotation.qt_product ? quotation.qt_product : '')
+                ws.cell(rowIndex, 12).number(quotation.vlr_unitario ? parseFloat(quotation.vlr_unitario) : 0).style(moneyStyle)
+                ws.cell(rowIndex, 13).number(quotation.descu ? parseFloat(quotation.descu) : 0).style(moneyStyle)
+                ws.cell(rowIndex, 14).number(quotation.vlr_total ? quotation.vlr_total : 0).style(moneyStyle)
+                ws.cell(rowIndex, 15).string(quotation.proveedor)
+                ws.cell(rowIndex, 16).string(`${quotation.name ? quotation.name : ''}`)
+                ws.cell(rowIndex, 17).string(`${quotation.phone ? quotation.phone : ''}`)
+                ws.cell(rowIndex, 18).string(quotation.centro_custo)
+                ws.cell(rowIndex, 19).string(quotation.naturaleza)
+                ws.cell(rowIndex, 20).string(quotation.status_oc)
+
+                rowIndex++;
+            })
+
+            return wb
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError(error)
         }
     }
 
@@ -273,6 +399,24 @@ class Purchase {
     getQuotationOrders() {
         try {
             return Repositorie.getQuotationOrders()
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
+    getNatures() {
+        try {
+            return Repositorie.getNatures()
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
+    getCenterCosts() {
+        try {
+            return Repositorie.getCenterCosts()
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')

@@ -9,7 +9,20 @@ module.exports = app => {
 
     app.get('/ordenesCompra', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
-            res.render('purchaseorders')
+
+            let providers = await Purchase.getProviders()
+            let cars = await Purchase.getCars()
+            let natures = await Purchase.getNatures()
+            let centerCosts = await Purchase.getCenterCosts()
+            let purchaseOrders = await Purchase.getPurchaseOrders()
+           
+            res.render('purchaseorders', {
+                providers,
+                cars,
+                natures,
+                centerCosts,
+                purchaseOrders
+            })
         } catch (err) {
             next(err)
         }
@@ -154,6 +167,19 @@ module.exports = app => {
         }
     })
 
+    app.post('/quotation/excel', async (req, res, next) => {
+        try {
+            const { status, group, datestart, dateend, numberstart, numberend, provider, truck, nature, centerCost, purchaseorders } = req.body;
+
+            const search = { status, group, datestart, dateend, numberstart, numberend, provider, truck, nature, centerCost, purchaseorders }
+            const wb = await Purchase.listExcel(search)
+            wb.write('meta.xlsx', res)
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
     app.post('/history', async (req, res, next) => {
         try {
             const search = req.body;
@@ -206,7 +232,7 @@ module.exports = app => {
 
             let { details, orders } = await Purchase.getOrderModel(search);
 
-            res.json({details, orders})
+            res.json({ details, orders })
         } catch (error) {
             console.log(err);
             next(err)
@@ -223,7 +249,7 @@ module.exports = app => {
 
             let { details, orders } = await Purchase.getOrderPlate(search);
 
-            res.json({details, orders})
+            res.json({ details, orders })
         } catch (error) {
             console.log(err);
             next(err)

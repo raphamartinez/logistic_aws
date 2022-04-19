@@ -756,6 +756,7 @@ const travel = (travels, drivers) => {
     const option = document.createElement('option')
     option.value = driver.id
     option.innerHTML = driver.name
+    option.setAttribute('data-idcard', driver.idcard)
     if (driver.name !== "SIN ASIGNACION") document.querySelector('[data-driver]').appendChild(option)
 
     const option2 = document.createElement('option')
@@ -850,6 +851,7 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
     route: Number(event.currentTarget.route.value),
     routedesc: document.querySelector('[data-route] option:checked').innerHTML,
     driver: event.currentTarget.driver.value,
+    idcard: document.querySelector('[data-driver] option:checked').getAttribute('data-idcard'),
     type: event.currentTarget.type.value,
     typedesc: document.querySelector('#type option:checked').innerHTML,
     driverdesc: document.querySelector('[data-driver] option:checked').innerHTML,
@@ -1615,7 +1617,10 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
       input.value += `𝐓𝐢𝐩𝐨: ${travel.children[1].children[0].value} - `
       if (travel.children[2].children[0].value) input.value += `𝐎𝐫𝐢𝐠𝐞𝐧: ${travel.children[2].children[0].value} - `
       if (travel.children[3].children[0].value) input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨/𝐎𝐛𝐬: ${travel.children[3].children[0].value} - `
-      if (travel.children[4].children[0].value) input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[4].children[0].value} - `
+      if (travel.children[4].children[0].value){
+        input.value += `𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[4].children[0].value} - `
+        input.value += `𝐂𝐈: ${travel.children[4].children[0].getAttribute('data-ci')} - `
+      }
       input.value += `𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${travel.children[6].children[0].value} - `
       if (travel.children[7].children[0].value) input.value += `𝐅𝐮𝐫𝐠𝐨𝐧: ${travel.children[7].children[0].value} - `
       input.value += `𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${travel.children[8].children[0].value} cubiertas - `

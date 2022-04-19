@@ -2,7 +2,7 @@
 const config = {
     server: "192.168.201.254",
     user: 'G8_CONSULTA',
-    password: 'Pa$$wOrd',
+    password: '##consulta##2022',
     database: 'G8BD',
     options: {
         encrypt: false, 

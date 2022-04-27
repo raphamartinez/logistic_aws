@@ -12,6 +12,7 @@ function verifyLogin(login) {
 
 async function verifyPassword(password, passwordHash) {
   const passwordValid = await bcrypt.compare(password, passwordHash)
+
   if (!passwordValid) {
     throw new NotAuthorized()
   }

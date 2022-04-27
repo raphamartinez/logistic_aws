@@ -15,7 +15,7 @@ module.exports = app => {
             let natures = await Purchase.getNatures()
             let centerCosts = await Purchase.getCenterCosts()
             let purchaseOrders = await Purchase.getPurchaseOrders()
-           
+
             res.render('purchaseorders', {
                 providers,
                 cars,
@@ -36,6 +36,14 @@ module.exports = app => {
         }
     })
 
+    app.get('/orderPhoto', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+            res.render('orderphoto')
+        } catch (err) {
+            next(err)
+        }
+    })
+
     app.get('/ordenGestran', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
             res.render('ordergestran')
@@ -51,6 +59,26 @@ module.exports = app => {
             next(err)
         }
     })
+
+    app.get('/purchaseOrder/json', Middleware.authenticatedMiddleware, async (req, res, next) => {
+        try {
+
+            const cached = await cachelist.searchValue(`purchaseOrder/json`)
+
+            if (cached) {
+                return res.json(JSON.parse(cached))
+            }
+
+            // const orders = await Purchase.getOrders()
+
+            // cachelist.addCache(`purchaseOrder/json`, JSON.stringify(orders), 60 * 60 * 60)
+
+            // res.json(orders)
+        } catch (err) {
+            next(err)
+        }
+    })
+
 
     app.post('/purchaseorders', async (req, res, next) => {
         try {

@@ -166,7 +166,7 @@
     <% }%>
 
         <div style="padding-left: 20px; padding-right: 20px; ">
-            <% orders.forEach(order=> { %>
+            <% orders.forEach(order => { %>
 
                 <h3
                     style="text-align:center;float:inline-start; padding-top: 20px; text-decoration: underline; background-color: #ffffa6; grid-row: 1 / 2; margin-top: 70px;">
@@ -294,10 +294,64 @@
                             amountMin.toLocaleString('es'); %>
                     </h4>
                     <% let dt=new Date(order[1][0][1][0][0].dt_emissao); dt.setTime(dt.getTime() +
-                        dt.getTimezoneOffset()*60*1000 ); %>
-                        <h4 style="text-align:left;float:left;display: inline; "> Fecha: <%= dt.getDate() %>/<%=
-                                    dt.getMonth() + 1%>/<%= dt.getFullYear() %>
-                        </h4>
+                    dt.getTimezoneOffset()*60*1000 ); %>
+                    <h4 style="text-align:left;float:left;display: inline; "> Fecha: <%= dt.getDate() %>/<%=
+                                dt.getMonth() + 1%>/<%= dt.getFullYear() %>
+                    </h4>
+                    <br>
+                    <br>
+                    <h3
+                    style="text-align:center;float:inline-start; padding-top: 20px; margin-top: 20px;">
+                    Vendedores
+                    </h3>
+                    <table>
+                        <thead>
+                           <tr>
+                               <th>Proveedor</th>
+                               <th>Nombre</th>
+                               <th>Teléfono</th>
+                           </tr>
+                        </thead>
+                           <tbody>          
+<% let provider = order[1][0][1].providers %>
+    <tr>
+        <td>
+            <%= provider[0].providerName %> 
+        </td>
+        <td>
+            <%= provider[0].providerSalesman %> 
+        </td>
+        <td>
+            <%= provider[0].providerPhone %> 
+        </td>
+    </tr>
+    <% if(provider[1]) {%> 
+    <tr>
+        <td>
+            <%= provider[1].providerName %> 
+        </td>
+        <td>
+            <%= provider[1].providerSalesman %> 
+        </td>
+        <td>
+            <%= provider[1].providerPhone %> 
+        </td>
+    </tr>
+    <% }if(provider[2]) { %> 
+    <tr>
+        <td>
+            <%= provider[2].providerName %> 
+        </td>
+        <td>
+            <%= provider[2].providerSalesman %> 
+        </td>
+        <td>
+            <%= provider[2].providerPhone %> 
+        </td>
+    </tr>
+    <% } %> 
+</tbody>
+</table>
 
                         <br>
                         <% let amountproduct = 0; %> 
@@ -378,58 +432,6 @@
                                                 amountproduct.toLocaleString('es'); %>
                                         </h4>
                                         <br>
-                                        <br>
-                                        <h3 style="text-align:center;float:inline-start;">Vendedores </h3>
-                                        <table>
-                                            <thead>
-                                               <tr>
-                                                   <th>Proveedor</th>
-                                                   <th>Nombre</th>
-                                                   <th>Teléfono</th>
-                                               </tr>
-                                            </thead>
-                                               <tbody>
-                                            <tr>
-                                                <td>
-                                                    <%= order[1][0][1][0][0].proveedor %> 
-                                                </td>
-                                                <td>
-                                                    <%= order[1][0][1][0][0].name %> 
-                                                </td>
-                                                <td>
-                                                    <strong> <%= order[1][0][1][0][0].phone %>  </strong>
-                                                </td>
-                                            </tr>
-                                            <% if(order[1][0][1][0][0]) { %>
-                                            <tr>
-                                                <td>
-                                                    <%= order[1][0][1][0][0].proveedor %> 
-                                                </td>
-                                                <td>
-                                                    <%= order[1][0][1][0][0].name %> 
-                                                </td>
-                                                <td>
-                                                    <strong> <%= order[1][0][1][0][0].phone %>  </strong>
-                                                </td>
-                                            </tr>
-                                            <% } %>
-                                            <% if(order[1][0][1][0][0]) { %>
-                                            <tr>
-                                                <td>
-                                                    <%= order[1][0][1][0][0].proveedor %> 
-                                                </td>
-                                                <td>
-                                                    <%= order[1][0][1][0][0].name %> 
-                                                </td>
-                                                <td>
-                                                    <strong> <%= order[1][0][1][0][0].phone %>  </strong>
-                                                </td>
-                                            </tr>
-                                            <% } %>
-                                        </tbody>
-                                    </table>
-                                    
-                                        
                                         <% }%>
                                         <% }) %>
 

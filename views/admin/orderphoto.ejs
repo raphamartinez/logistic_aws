@@ -1,0 +1,94 @@
+<%- include(partials + 'header.ejs' ) %>
+<link href="../css/file.css" rel="stylesheet">
+
+    <div id="content">
+        <div class="container-fluid">
+            <div class="col-lg-12 text-center">
+                <div class="d-sm-flex align-items-center justify-content-md-center mb-4" data-title>
+                    <h1 class="h3 mb-0 text-gray-800">Orden de Compra - Imagen</h1>
+                </div>
+            </div>
+
+            <div class="row col-md-12 mb-2 align-items-center">
+                <div class="d-flex justify-content-center align-items-center" data-loading></div>
+            </div>
+
+            <div class="row justify-content-md-center">
+                <div class="col-lg-10">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">Tabla
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group col-12">
+                                    <table class="table table-bordered table-hover table-striped" id="table" width="100%"
+                                        cellspacing="0"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalImage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Imagen</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="form-row">
+                      <div class="container-image">
+                        <div class="drag-area">
+                            <div class="icon">
+                              <i class="fas fa-images"></i>
+                          </div>
+                          <span class="header">Arrastrar y soltar</span>
+                          <span class="header">o <span class="button btn-upload">navegar</span></span>
+                          <input class="input-upload" type="file" hidden>
+                          <span class="support">Suporta: JPEG, JPG, PNG</span>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="form-row pt-4">
+                    <div class="container-image">
+                        <div class="form-group">
+                            <div class="wrapScroll" data-images></div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-image" modal-image>
+        <span class="close" data-image-span>&times;</span>
+        <img class="modal-image-content mb-2" data-image-content>
+        <div class="text-center text-white" data-image-description></div>
+        <div class="text-center text-white" data-image-date></div>
+        <div class="text-center text-white" data-image-actions>
+            <a data-key-delete><i class="btn-delete fas fa-trash" ></i></a>
+        </div>
+        <div class="text-center text-white" data-image-option>
+            <h6>¿Realmente quieres borrar esta imagen?</h6>
+            <button data-back class="btn btn-secondary">Cancelar</button>
+            <button data-erase class="btn btn-danger">Borrar</button>
+        </div>
+    </div>
+
+    <%- include(partials + 'script.ejs' ) %>
+    
+        <script type="module" src="../js/controllers/loginController.js"></script>
+        <script type="module" src="../js/controllers/menuController.js"></script>
+        <script type="module" src="../js/controllers/orderPhotoController.js"></script>
+
+        <%- include(partials + 'footer.ejs' ) %>

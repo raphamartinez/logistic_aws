@@ -4,6 +4,15 @@ const xl = require('excel4node');
 
 class Purchase {
 
+    async getOrders() {
+        try {
+            return Repositorie.getAllPurchaseOrder()
+         } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
+    }
+
     async list(search) {
         try {
             const obj = {}
@@ -95,11 +104,9 @@ class Purchase {
 
                     search.status = '2'
                 }
-
                 groups = quotations.reduce(function (r, a) {
                     r[a[`id_cotacao`]] = r[a[`id_cotacao`]] || [];
                     r[a[`id_cotacao`]].push(a);
-
                     return r;
                 }, Object.create(obj));
 
@@ -137,6 +144,8 @@ class Purchase {
 
                 ar[1] = ar[1].map(ar3 => {
                     let arrvalues;
+                    let providers = []
+
                     ar3.min = 0;
 
                     if (ar3[0] != "hgroups" && ar3[0] != "zhistory") arrvalues = ar3[1].map(a => a.qtd_product * a.valor_unit)
@@ -162,16 +171,27 @@ class Purchase {
                     ar3[1] = Object.keys(ar3[1]).map((key) => ar3[1][key]);
 
                     ar3[1].forEach(min => {
-                        if (parseFloat(min[0].qtd_product * min[0].valor_unit) > 0 && minprovider1 > parseFloat(min[0].qtd_product * min[0].valor_unit)) minprovider1 = parseFloat(min[0].qtd_product * min[0].valor_unit);
-                        if (min[1] && parseFloat(min[1].qtd_product * min[1].valor_unit) > 0 && minprovider2 > parseFloat(min[1].qtd_product * min[1].valor_unit)) minprovider2 = parseFloat(min[1].qtd_product * min[1].valor_unit);
-                        if (min[2] && parseFloat(min[2].qtd_product * min[2].valor_unit) > 0 && minprovider3 > parseFloat(min[2].qtd_product * min[2].valor_unit)) minprovider3 = parseFloat(min[2].qtd_product * min[2].valor_unit);
-                    })
+                        if (parseFloat(min[0].qtd_product * min[0].valor_unit) > 0 && minprovider1 > parseFloat(min[0].qtd_product * min[0].valor_unit)) minprovider1 = parseFloat(min[0].qtd_product * min[0].valor_unit)
+                        if (min[1] && parseFloat(min[1].qtd_product * min[1].valor_unit) > 0 && minprovider2 > parseFloat(min[1].qtd_product * min[1].valor_unit)) minprovider2 = parseFloat(min[1].qtd_product * min[1].valor_unit)
+                        if (min[2] && parseFloat(min[2].qtd_product * min[2].valor_unit) > 0 && minprovider3 > parseFloat(min[2].qtd_product * min[2].valor_unit)) minprovider3 = parseFloat(min[2].qtd_product * min[2].valor_unit)
 
+                        min.forEach(cot => {
+                            let provider = providers.find(provider => provider == cot.provider_code)
+                            if(!provider){
+                                providers.push({
+                                   providerCode: cot.provider_code, 
+                                   providerName: cot.proveedor, 
+                                   providerSalesman: cot.name ? cot.name : "No informado", 
+                                   providerPhone: cot.phone ? cot.phone : "No informado"
+                                })
+                            }
+                        })
+                    })
 
                     ar3[1].minprovider1 = minprovider1 == 99999999999 ? 0 : minprovider1;
                     ar3[1].minprovider2 = minprovider2 == 99999999999 ? 0 : minprovider2;
                     ar3[1].minprovider3 = minprovider3 == 99999999999 ? 0 : minprovider3;
-
+                    ar3[1].providers = providers
                     return ar3
                 })
 

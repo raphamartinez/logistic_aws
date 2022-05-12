@@ -73,14 +73,14 @@
                                     </div>
                                     <% if(page.url) {%> 
                                     <div class="form-group col-md-2">
-                                        <a class="btn btn-primary" href="https://sistema.olla.com.py/<%= page.token %>" target="_blank">Navegar</a>
+                                        <a class="btn btn-primary" href="https://sistema.olla.com.py/encurtador/<%= page.token %>" target="_blank">Navegar</a>
                                     </div>
                                     <% } %> 
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="url">URL</label>
-                                        <input data-url type="url" name="url" id="url" value="https://sistema.olla.com.py/<%= page.token %>"
+                                        <input data-url type="url" name="url" id="url" value="https://sistema.olla.com.py/encurtador/<%= page.token %>"
                                             class="form-control" required disabled>
                                     </div>
                                     <div class="form-group col-md-3">
@@ -92,8 +92,8 @@
                                         <label for="authenticate">Autenticación</label>
                                         <select class="form-select" id="authenticate" name="authenticate" required
                                             value="<%= page.authenticate %>" disabled>
-                                            <option value="1" selected>Si</option>
-                                            <option value="2">No</option>
+                                            <option value="0" selected>No</option>
+                                            <option value="1">Si</option>
                                         </select>
                                     </div>
                                 </div>

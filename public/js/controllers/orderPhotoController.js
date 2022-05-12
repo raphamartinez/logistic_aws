@@ -26,7 +26,6 @@ const init = async () => {
       order.placa ? `${order.placa} - ${order.categoria} - ${order.modelo}` : 'ADM o Taller',
       order.proveedor,
       order.naturaleza,
-      order.centro_custo,
       order.coin,
       money,
       order.status_oc
@@ -42,12 +41,11 @@ const init = async () => {
       { title: "Vehículo" },
       { title: "Proveedor" },
       { title: "Naturaleza" },
-      { title: "Centro Costo" },
       { title: "Moneda" },
       { title: "Valor Totale" },
       { title: "Status" },
     ],
-    responsive: true,
+    responsive: false,
     paging: true,
     ordering: true,
     info: true,
@@ -73,9 +71,16 @@ const init = async () => {
 
 init()
 
-const trClick = (event) => {
-  let tr = event.target
+const getArchives = async (purchaseorder) => {
+  const archives = await Connection.noBody(`file/order/${purchaseorder}`, 'GET')
+  document.querySelector('[data-images]').innerHTML = ''
+  archives.forEach(archive => {
+    addUrlToHtml(archive)
+  })
+}
 
+const trClick = async (event) => {
+  let tr = event.target
   if (tr.className === 'sorting_1 dtr-control') return null
 
   if (tr.className === 'child') {
@@ -97,6 +102,15 @@ const trClick = (event) => {
   if (!haveClass) {
     tr.classList.add('bg-success')
     tr.dataset.active = '1'
+
+    if (tr.children[0].className === 'sorting_1') {
+      const modalAttr = document.querySelector('#modalImage')
+      const plate = tr.children[3].textContent.split(' ')
+      modalAttr.setAttribute('purchaseorder', tr.children[0].textContent)
+      modalAttr.setAttribute('quotation', tr.children[1].textContent)
+      modalAttr.setAttribute('plate', plate[0])
+      await getArchives(tr.children[0].textContent)
+    }
     modal.show()
   }
 }
@@ -106,10 +120,14 @@ document.querySelector('#table').addEventListener('click', trClick)
 $("#modalImage").on('hidden.bs.modal', function () {
   const rowActive = document.querySelector('[data-active]')
   if (rowActive) {
+    const modalAttr = document.querySelector('#modalImage')
+    modalAttr.removeAttribute('purchaseorder')
+    modalAttr.removeAttribute('quotation')
+    modalAttr.removeAttribute('plate')
     rowActive.classList.remove('bg-success')
     rowActive.removeAttribute('data-active')
   }
-});
+})
 
 const dragArea = document.querySelector('.drag-area')
 const dragText = document.querySelector('.header')
@@ -117,24 +135,73 @@ let button = document.querySelector('.btn-upload')
 let input = document.querySelector('.input-upload')
 let file
 
-const upload = (file) => {
-  const validExtensions = ['image/jpeg', 'image/jpg', 'image/png']
-  if (!validExtensions.includes(file.type)) return alert('Este archivo no es una imagen válida')
+const addUrlToHtml = (file) => {
 
+  const imgTag = document.createElement('a')
+  imgTag.innerHTML = `<div class="col-md-4 d-inline">
+                        <img data-image-id="${file.id}" class="img-fluid full-view" style="width:250px; height:250px; max-width:250px; max-height:250px;" src="${file.type.includes('video/mp4') || file.type.includes('video/webm') ? './img/video.png' : file.url}" alt="">
+                      </div>`
+
+  document.querySelector('[data-images]').prepend(imgTag)
+}
+
+const toast = (status, file) => {
+  switch (status) {
+    case 1: {
+      const date = new Date(file.lastModifiedDate)
+      toastr.success(`Nombre: ${file.name}<br>Última fecha de modificación: ${date.toLocaleDateString()}`, "¡Imagen añadida con éxito!", {
+        progressBar: true
+      })
+      addUrlToHtml(file)
+    }
+      break;
+    case 2: {
+      toastr.error(`Verifique los datos insertados, uno erro fue generado.`, "Erro ao guardar!", {
+        progressBar: true
+      })
+    }
+      break;
+  }
+}
+
+const resetFormImage = () => {
+  document.querySelector('[data-loading-image]').className = 'fas fa-images'
+  document.querySelector('[data-span-image]').innerHTML = 'o <span class="button btn-upload">navegar</span>'
+  dragArea.classList.remove('active')
+}
+
+const upload = async (file) => {
+  const validExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'video/mp4', 'video/webm']
+  const modalAttr = document.querySelector('#modalImage')
+  const order = {
+    purchaseorder: modalAttr.getAttribute('purchaseorder'),
+    quotation: modalAttr.getAttribute('quotation'),
+    plate: modalAttr.getAttribute('plate')
+  }
+  if (!validExtensions.includes(file.type)) return alert('Este archivo no es una imagen válida')
   let fileReader = new FileReader()
   fileReader.onload = () => {
-    let fileUrl = fileReader.result
-
-    const imgTag = document.createElement('a')
-    imgTag.innerHTML = `<div class="col-md-4 d-inline">
-                    <img class="img-fluid full-view" width="250" height="250" src="${fileUrl}" alt="">
-                    </div>`
-
-    document.querySelector('[data-images]').prepend(imgTag)
+    let url = fileReader.result
+    file.url = url
   }
   fileReader.readAsDataURL(file)
-
-  dragArea.classList.remove('active')
+  const form = new FormData()
+  form.append('file', file)
+  form.append('purchaseorder', order.purchaseorder)
+  form.append('quotation', order.quotation)
+  form.append('plate', order.plate)
+  form.append('lastModifiedDate', file.lastModifiedDate)
+  dragText.textContent = 'Cargando el archivo'
+  document.querySelector('[data-loading-image]').className = 'fas fa-spinner fa-pulse'
+  document.querySelector('[data-span-image]').innerHTML = ''
+  if (!order.purchaseorder && !order.quotation) {
+    resetFormImage()
+    return toastr.warning(`Intente agregar nuevamente, no se encontró ninguna referencia (OC o Cotización).`, "¡Sin referencia!")
+  }
+  const { status, id } = await Connection.bodyMultipart('file/order', form, 'POST')
+  file.id = id
+  resetFormImage()
+  toast(status, file)
 }
 
 button.addEventListener('click', (event) => {
@@ -167,15 +234,14 @@ dragArea.addEventListener('drop', (event) => {
 
 const images = document.querySelector('[data-images]')
 images.addEventListener('click', async (event) => {
-  const date = new Date()
   if (event.target.className === 'img-fluid full-view') {
-    const modal = bootstrap.Modal.getInstance(document.getElementById("modalImage"));
-    modal.hide()
+    const id = event.target.getAttribute('data-image-id')
+    // const modal = bootstrap.Modal.getInstance(document.getElementById("modalImage"));
+    // modal.hide()
 
     document.querySelector('[modal-image]').style.display = "block"
     document.querySelector('[data-image-content]').src = event.target.currentSrc
-    document.querySelector('[data-image-description]').innerHTML = event.target.alt
-    document.querySelector('[data-image-date]').innerHTML = date.toLocaleDateString()
+    document.querySelector('[data-key-delete]').setAttribute('data-id', id)
   }
 })
 
@@ -183,44 +249,51 @@ const span = document.querySelector('[data-image-span]')
 
 span.addEventListener('click', async () => {
   document.querySelector('[modal-image]').style.display = "none"
-  document.querySelector('[data-image-content]').src = ""
-  document.querySelector('[data-image-description]').innerHTML = ""
+  document.querySelector('[data-image-content]').src = ''
+  document.querySelector('[data-key-delete]').removeAttribute('data-id')
 })
 
 
 const btnDelete = document.querySelector('[data-key-delete]')
 
 btnDelete.addEventListener('click', async () => {
-    document.querySelector('[data-image-date]').innerHTML = ""
-    document.querySelector('[data-image-option]').innerHTML = `<h6>¿Realmente quieres borrar esta imagen?</h6>
-    <button data-back class="btn btn-secondary">Cancelar</button>
-    <button data-erase class="btn btn-danger">Borrar</button>`
+  document.querySelector('[data-key-delete]').innerHTML = ''
+  document.querySelector('[data-image-option]').innerHTML = `<h6>¿Realmente quieres borrar esta imagen?</h6>
+    <button onclick="back(event)" class="btn btn-secondary">Cancelar</button>
+    <button type="button" onclick="eraseImage(event)" data-erase class="btn btn-danger">Borrar</button>`
 })
 
-const erase = document.querySelector('[data-erase]')
-erase.addEventListener('click', async () => {
-    image.offsetParent.remove()
 
-    document.querySelector('[modal-image]').style.display = "none"
-    document.querySelector('[data-image-content]').src = ""
-    document.querySelector('[data-image-description]').innerHTML = ""
+const back = (event) => {
+  document.querySelector('[data-image-option]').innerHTML = ``
+  document.querySelector('[data-image-actions]').style.display = "block"
+  document.querySelector('[data-key-delete]').innerHTML = '<i class="btn-delete fas fa-trash" ></i>'
+}
+window.back = back
 
-    const obj = await Connection.noBody(`file/${event.target.getAttribute("data-key")}`, 'DELETE')
+const eraseImage = async (event) => {
+  event.preventDefault()
+  document.querySelector('[data-image-option]').innerHTML = ''
+  document.querySelector('[data-key-delete]').innerHTML = '<i class="btn-delete fas fa-trash" ></i>'
+  const id = document.querySelector('[data-key-delete]').getAttribute('data-id')
+  const result = await Connection.noBody(`file/order/${id}`, 'DELETE')
 
-    document.querySelector('[data-image-option]').innerHTML = ``
-    document.querySelector('[data-image-actions]').style.display = "block"
+  if(result.ok){
+    toastr.success(result.msg, {
+      progressBar: true
+    })  
+    const images = document.querySelectorAll('[data-image-id]')
+    Array.from(images).forEach(image => {
+      if (image.getAttribute('data-image-id') == id) {
+        image.parentElement.parentElement.remove()
+      }
+    })
+    span.click()
+  }else{
+    toastr.error(`Erro ao borrar la imagen.`, {
+      progressBar: true
+    })  
+  }
 
-    alert(obj.msg)
-})
-
-const back = document.querySelector('[data-back]')
-back.addEventListener('click', async () => {
-    document.querySelector('[data-image-option]').innerHTML = ``
-    document.querySelector('[data-image-actions]').style.display = "block"
-    document.querySelector('[data-image-description]').innerHTML = event.target.alt
-    document.querySelector('[data-image-size]').innerHTML = `${event.target.getAttribute("data-size")} Mb`
-    document.querySelector('[data-image-date]').innerHTML = event.target.getAttribute("data-date")
-    document.querySelector('[data-key-delete]').setAttribute("data-key-delete", event.target.getAttribute("data-id"))
-    document.querySelector('[data-key-edit]').setAttribute("data-key-edit", event.target.getAttribute("data-id"))
-    document.querySelector('[data-key-edit]').setAttribute("data-description", event.target.alt)
-})
+}
+window.eraseImage = eraseImage

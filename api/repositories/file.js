@@ -26,6 +26,50 @@ class File {
         }
     }
 
+    async insertOrderImage(file, details, id_login) {
+        try {
+            const sql = `INSERT INTO api.orderimage (filename, purchaseorder, quotation, plate, mimetype, path, size, id_login, lastModifiedDate, datereg) values (?, ?, ?, ?, ?, ?, ?, ?, ?, now() - interval 4 hour )`
+            const result = await query(sql, [file.key, details.purchaseorder, details.quotation, details.plate, file.mimetype, file.location, file.size, id_login, details.lastDate])
+
+            return result.insertId
+        } catch (error) {
+            console.log(error);
+            throw new InvalidArgumentError('No se pudo insertar el archivo en la base de datos')
+        }
+    }
+
+    listOrders(purchaseorder) {
+        try {
+            let sql = `SELECT id, path as url, mimetype as type, size, lastModifiedDate from orderimage where purchaseorder = ? `
+
+            return query(sql, purchaseorder)
+        } catch (error) {
+            throw new InternalServerError('No se pudo borrar el archivo en la base de datos')
+        }
+    }
+
+    listOrdersDelete(id) {
+        try {
+            let sql = `SELECT id, filename, path as url, mimetype as type, size, lastModifiedDate from api.orderimage where id = ?` 
+
+            const result = query(sql, id)
+
+            return result
+        } catch (error) {
+            throw new InternalServerError('No se pudo borrar el archivo en la base de datos')
+        }
+    }
+
+    deleteOrder(id) {
+        try {
+            const sql = `DELETE from api.orderimage WHERE id = ?`
+
+            return query(sql, id)
+        } catch (error) {
+            throw new InternalServerError('No se pudo borrar el archivo en la base de datos')
+        }
+    }
+
     list(type, id) {
         try {
             let sql = `SELECT id, name, type, download, filename, path, mimetype, size, id_login, IFNULL(description, "No hay descripción") as description, DATE_FORMAT(datereg, '%H:%i %d/%m/%Y') as date from api.file `

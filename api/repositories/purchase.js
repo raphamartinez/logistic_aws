@@ -15,7 +15,6 @@ class Purchase {
       ,LEFT([pe].[PES_RAZAOSOCIAL], 11)  as proveedor
       ,LEFT([na].[DESCRICAO], 11) as naturaleza
       ,SUM([oi].[VR_TOTAL]) as vlr_total
-      ,[cc].[DESCRICAO] as centro_custo
       ,[ed].[MDA_SIMBOL] as coin
       ,pc.[PESCONTATO_TELEFONE] as phone
       ,pc.[PESCONTATO_NOME] as name
@@ -41,7 +40,7 @@ class Purchase {
       LEFT JOIN [G8BD].[dbo].[MOEDA] as ed on oc.ID_MOEDA = ed.[MDA_CODIGO]
       WHERE [oc].[NR_ORDEMCOMPRA] > 330 and [oc].[FG_STATUS] <> 6
       GROUP BY [oc].[NR_ORDEMCOMPRA], [oc].[DT_ENTREGA], [ipf].ID_COTACAOPRECO, [oc].[DT_EMISSAO], [co].[DESCRICAO], [ve].[PLACA], [ca].[DESCRICAO], [mo].[DESCRICAO], [pe].[PES_RAZAOSOCIAL]
-      ,[na].[DESCRICAO], [cc].[DESCRICAO], [ed].[MDA_SIMBOL], pc.[PESCONTATO_TELEFONE], pc.[PESCONTATO_NOME], [oc].[FG_STATUS]
+      ,[na].[DESCRICAO], [ed].[MDA_SIMBOL], pc.[PESCONTATO_TELEFONE], pc.[PESCONTATO_NOME], [oc].[FG_STATUS]
       ORDER BY [oc].[NR_ORDEMCOMPRA] DESC `
 
       await sql.connect(config);

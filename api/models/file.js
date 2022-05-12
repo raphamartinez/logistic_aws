@@ -15,7 +15,7 @@ class File {
 
             if (details.typeFile == 1) {
                 let file = files[0];
-                
+
                 if (file.name) file.key = file.name
                 if (!file.location) file.location = `${process.env.BASE_URL}/files/${file.key}`
 
@@ -39,6 +39,42 @@ class File {
         }
     }
 
+    async insertOrder(file, details, id_login) {
+        try {
+            if (file.name) file.key = file.name
+            if (!file.location) file.location = `${process.env.BASE_URL}/files/${file.key}`
+
+            file.size = file.size / 1024 / 1024
+
+            const date = new Date(details.lastModifiedDate)
+            details.lastDate = date
+
+            const id = await Repositorie.insertOrderImage(file, details, id_login)
+
+            return {status: 1, id}
+        } catch (error) {
+            console.log(error);
+            return {status: 2, id: false}
+        }
+    }
+
+    listOrders(purchaseorder, id) {
+        try {
+            return Repositorie.listOrders(purchaseorder, id)
+        } catch (error) {
+            throw new InvalidArgumentError('No se pudo guardar el archivo.')
+        }
+    }
+
+    async deleteOrder(id) {
+        try {
+        const file = await Repositorie.listOrdersDelete(id)
+        await Repositorie.deleteOrder(file[0].id)
+        return file[0].filename
+        } catch (error) {
+            throw new InvalidArgumentError('Se produjo un error al intentar eliminar el archivo.')
+        }
+    }
 
     async save(file, details, id_login) {
         try {

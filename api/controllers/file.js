@@ -27,7 +27,47 @@ module.exports = app => {
 
             await File.insert(files, details, req.login.id_login)
 
-            res.json({ msg: `Imagem agregada con éxito.` })
+            res.json({ msg: `Imagen agregada con éxito.` })
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
+    app.post('/file/order', [Middleware.authenticatedMiddleware, Authorization('file', 'create')], multer(multerConfig).single('file'), async (req, res, next) => {
+        try {
+            const file = req.file
+            const details = req.body
+
+            const {status, id} = await File.insertOrder(file, details, req.login.id_login)
+            res.json({status, id})
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
+    app.get('/file/order/:purchaseorder', [Middleware.authenticatedMiddleware, Authorization('file', 'create')], multer(multerConfig).single('file'), async (req, res, next) => {
+        try {
+            const purchaseorder = req.params.purchaseorder
+            const archives = await File.listOrders(purchaseorder)
+            res.json(archives)
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
+    app.delete('/file/order/:id', [Middleware.authenticatedMiddleware, Authorization('file', 'create')], multer(multerConfig).single('file'), async (req, res, next) => {
+        try {
+            const id = req.params.id
+            const filename = await File.deleteOrder(id)
+            s3.deleteObject({
+                Bucket: 'logisticrepositorie',
+                Key: filename
+            }).promise()
+
+            res.json({ ok: true, msg: `¡Archivo eliminado con éxito!` })
         } catch (err) {
             console.log(err);
             next(err)

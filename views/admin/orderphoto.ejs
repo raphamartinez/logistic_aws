@@ -1,5 +1,6 @@
 <%- include(partials + 'header.ejs' ) %>
 <link href="../css/file.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
 
     <div id="content">
         <div class="container-fluid">
@@ -46,12 +47,12 @@
                       <div class="container-image">
                         <div class="drag-area">
                             <div class="icon">
-                              <i class="fas fa-images"></i>
+                              <i data-loading-image class="fas fa-images"></i>
                           </div>
                           <span class="header">Arrastrar y soltar</span>
-                          <span class="header">o <span class="button btn-upload">navegar</span></span>
+                          <span data-span-image class="header">o <span class="button btn-upload">navegar</span></span>
                           <input class="input-upload" type="file" hidden>
-                          <span class="support">Suporta: JPEG, JPG, PNG</span>
+                          <span class="support">Suporta: JPEG, JPG, PNG, MP4</span>
                         </div>
                       </div>
                   </div>
@@ -70,19 +71,13 @@
         </div>
     </div>
 
-    <div class="modal-image" modal-image>
+    <div class="modal-image" modal-image style="z-index: 999999;">
         <span class="close" data-image-span>&times;</span>
         <img class="modal-image-content mb-2" data-image-content>
-        <div class="text-center text-white" data-image-description></div>
-        <div class="text-center text-white" data-image-date></div>
         <div class="text-center text-white" data-image-actions>
             <a data-key-delete><i class="btn-delete fas fa-trash" ></i></a>
         </div>
-        <div class="text-center text-white" data-image-option>
-            <h6>¿Realmente quieres borrar esta imagen?</h6>
-            <button data-back class="btn btn-secondary">Cancelar</button>
-            <button data-erase class="btn btn-danger">Borrar</button>
-        </div>
+        <div class="text-center text-white" data-image-option></div>
     </div>
 
     <%- include(partials + 'script.ejs' ) %>
@@ -90,5 +85,5 @@
         <script type="module" src="../js/controllers/loginController.js"></script>
         <script type="module" src="../js/controllers/menuController.js"></script>
         <script type="module" src="../js/controllers/orderPhotoController.js"></script>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
         <%- include(partials + 'footer.ejs' ) %>

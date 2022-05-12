@@ -20,7 +20,9 @@ const storageTypes = {
         }
     }),
     s3: multerS3({
-        s3: new aws.S3(),
+        s3: new aws.S3({
+            correctClockSkew: true
+        }),
         bucket: 'logisticrepositorie',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         acl: 'public-read',
@@ -51,6 +53,8 @@ module.exports = {
             'image/png',
             'image/gif',
             'image/svg+xml',
+            'video/webm',
+            'video/mp4'
         ]
 
         if (allowedMimes.includes(file.mimetype)) {

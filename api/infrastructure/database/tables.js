@@ -27,9 +27,55 @@ class Tables {
     this.createTableReportView()
     this.createTableMoviasCar()
     this.createTableMoviasCarAccessories()
+    this.createTableOrderImage()
+    this.createTableShortUrl()
 
     return true
   }
+
+  createTableShortUrl() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.shorturl (
+      id int NOT NULL AUTO_INCREMENT, 
+      title VARCHAR(250) NOT NULL, 
+      url VARCHAR(250), 
+      authenticate boolean, 
+      expiration DATETIME,
+      token VARCHAR(250),
+      datereg DATETIME,
+      PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTableOrderImage() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.orderimage (
+      id int NOT NULL AUTO_INCREMENT, 
+      purchaseorder int, 
+      quotation int, 
+      plate int, 
+      filename VARCHAR(250) NOT NULL, 
+      mimetype VARCHAR(20), 
+      path VARCHAR(250), 
+      size DOUBLE, 
+      id_login int, 
+      lastdatemodified DATETIME, 
+      datereg DATETIME,
+      FOREIGN KEY (id_login) REFERENCES login (id), 
+      PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
 
   createTableMoviasCarTracking() {
     const sql = `CREATE TABLE IF NOT EXISTS api.moviastracking (id int NOT NULL AUTO_INCREMENT, idVeiculo int NOT NULL, licensePlate VARCHAR(10) NOT NULL, 

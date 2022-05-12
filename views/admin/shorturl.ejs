@@ -73,14 +73,14 @@
                                     </div>
                                     <% if(page.url) {%> 
                                     <div class="form-group col-md-2">
-                                        <a class="btn btn-primary" href="<%= page.url %>" target="_blank">Navegar</a>
+                                        <a class="btn btn-primary" href="https://sistema.olla.com.py/<%= page.token %>" target="_blank">Navegar</a>
                                     </div>
                                     <% } %> 
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="url">URL</label>
-                                        <input data-url type="url" name="url" id="url" value="<%= page.url %>"
+                                        <input data-url type="url" name="url" id="url" value="https://sistema.olla.com.py/<%= page.token %>"
                                             class="form-control" required disabled>
                                     </div>
                                     <div class="form-group col-md-3">

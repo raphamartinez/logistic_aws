@@ -1,6 +1,6 @@
 const Repositorie = require('../repositories/shorturl')
-const bcrypt = require('bcrypt')
 const { InvalidArgumentError, InternalServerError, NotFound } = require('./error')
+const crypto = require('crypto');
 
 class ShortUrl {
 
@@ -34,9 +34,8 @@ class ShortUrl {
     }
 
     async insert(page) {
-        const date = new Date()
-        const token = await bcrypt.hash(`${date.getTime()}`, 10)
-        page.token = token.replace('/', '-')
+        const token = `https://sistema.olla.com.py/e/${crypto.randomBytes(3).toString('hex')}`
+        page.token = token
         return Repositorie.insert(page)
     }
 

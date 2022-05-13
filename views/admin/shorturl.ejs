@@ -54,7 +54,7 @@
                 </div>
             </div>
 
-            <div class="row justify-content-md-center">
+            <div data-pages class="row justify-content-md-center">
                 <div class="col-lg-10">
                     <% pages.map(page=> {%>
                         <div class="card border-success shadow mb-2">
@@ -66,21 +66,21 @@
                                         </h5>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <a class="btn btn-danger" href="<%= page.url %>" data-delete="<%= page.id %>">Excluir</a>
+                                        <a class="btn btn-danger text-white" data-delete="<%= page.id %>">Excluir</a>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <a class="btn btn-success text-white" data-edit="<%= page.id %>" >Editar</a>
                                     </div>
                                     <% if(page.url) {%> 
-                                    <div class="form-group col-md-2">
-                                        <a class="btn btn-primary" href="https://sistema.olla.com.py/encurtador/<%= page.token %>" target="_blank">Navegar</a>
-                                    </div>
+                                        <div class="form-group col-md-2">
+                                            <a class="btn btn-primary" href="<%= page.token %>" target="_blank">Navegar</a>
+                                        </div>
                                     <% } %> 
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="url">URL</label>
-                                        <input data-url type="url" name="url" id="url" value="https://sistema.olla.com.py/encurtador/<%= page.token %>"
+                                        <input data-url type="url" name="url" id="url" value="<%= page.token %>"
                                             class="form-control" required disabled>
                                     </div>
                                     <div class="form-group col-md-3">

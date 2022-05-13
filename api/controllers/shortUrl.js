@@ -14,7 +14,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/encurtador/:token', async (req, res, next) => {
+    app.get('/e/:token', async (req, res, next) => {
         try {
             const token = req.params.token
             const page = await ShortUrl.verify(token)
@@ -26,7 +26,7 @@ module.exports = app => {
                     msg: page.msg
                 })
             }
-            
+
         } catch (err) {
             next(err)
         }
@@ -57,7 +57,7 @@ module.exports = app => {
         try {
             const id = req.params.id
             await ShortUrl.delete(id)
-            res.redirect('/encurtador')
+            res.json({ ok: true, msg: 'Url borrada con éxito.' })
         } catch (err) {
             next(err)
         }

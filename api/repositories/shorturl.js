@@ -25,7 +25,7 @@ class ShortUrl {
 
     list() {
         try {
-            let sql = `SELECT * FROM api.shorturl`
+            let sql = `SELECT id, url, title, token, authenticate, DATE_FORMAT(expiration, '%Y-%m-%dT%H:%i') as expiration FROM api.shorturl`
 
             return query(sql)
         } catch (error) {

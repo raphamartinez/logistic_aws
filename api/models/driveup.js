@@ -7,7 +7,7 @@ class DriveUp {
     async vehicleAlerts() {
 
         const endDate = new Date()
-        const startDate = new Date(endDate.getTime() + (-1 * 60000))
+        const startDate = new Date(endDate.getTime() + (-4 * 60000))
         const month = endDate.getMonth() + 1 > 9 ? endDate.getMonth() + 1 : `0${endDate.getMonth() + 1}`
         const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
         const hours = startDate.getHours() > 9 ? startDate.getHours() : `0${startDate.getHours()}`

@@ -8,7 +8,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = require('./api/models/error');
 const Middleware = require('./api/infrastructure/auth/middleware');
-const Movias = require('./api/models/movias');
+const { jobAlert } = require('./api/models/job')
 
 // const Purchase = require('./api/repositories/purchase')
 // Purchase.getOrders()
@@ -21,6 +21,21 @@ const app = customExpress();
 app.locals = appLocals;
 
 app.listen(3000, async () => {
+
+  if (process.env.NODE_ENV !== 'x') {
+    jobAlert.start()
+  }
+
+  // const accountSid = 'ACb4c65c28be97beefef37739144f2908a'
+  // const authToken = 'ada5c3e9da927de130c0d8225cddc6aa'
+  // const client = require('twilio')(accountSid, authToken)
+  // client.messages.create(
+  //   {
+  //     body: 'esta funcionando ok ',
+  //     from: 'whatsapp:+14155238886',
+  //     to: 'whatsapp:+5511971570063'
+  //   })
+  //   .then(message => console.log(message)).done();
 
   // const id_token = await Movias.Login()
   // const cars = await Movias.Cars(id_token)
@@ -35,7 +50,7 @@ app.listen(3000, async () => {
     "/files",
     express.static(path.resolve(__dirname, 'tmp', 'uploads'))
   );
-  
+
   app.get('/', Middleware.authenticatedMiddleware, async function (req, res) {
     try {
       res.render('dashboard', {

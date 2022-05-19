@@ -23,7 +23,7 @@ function sleep(milliseconds) {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);
 }
-
+//t
 process.title = "whatsapp-node-api"
 global.client = new Client({
   authStrategy: new LocalAuth(),

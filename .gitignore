@@ -1,3 +1,6 @@
 node_modules
 .env
 .vscode
+session.json
+./last.qr
+.wwebjs_auth/

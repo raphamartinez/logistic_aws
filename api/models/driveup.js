@@ -1,6 +1,10 @@
 const { InvalidArgumentError, InternalServerError, NotFound } = require('./error')
 const Twilio = require('./twilio')
 const fetch = require('node-fetch')
+const { MessageMedia, Location } = require("whatsapp-web.js");
+const request = require('request')
+const vuri = require('valid-url');
+const fs = require('fs');
 
 class DriveUp {
 
@@ -121,31 +125,31 @@ class DriveUp {
                 let message = `*${vehicleAlert.alert}*\n${vehicleAlert.car.plate} - ${vehicleAlert.car.category}\nSin informacion del Chofer\n`
                 message += `${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
 
-                const resultMsg = await fetch(`http://localhost:5000/group/sendmessage/${group}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        'message': message
-                    })
-                })
+                client.getChats().then((data) => {
+                    data.forEach(chat => {
+                        if (chat.id.server === "g.us" && chat.name === group) {
+                            client.sendMessage(chat.id._serialized, message).then((response) => {
+                                if (response.id.fromMe) {
+                                    
+                                    client.getChats().then((data) => {
+                                        data.some(chat => {
+                                            if (chat.id.server === "g.us" && chat.name === group) {
+                                                let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "");
+                                                client.sendMessage(chat.id._serialized, loc).then((response) => {
+                                                    if (response.id.fromMe) {
+                                                        console.log(`Message successfully send to ${group}`);
+                                                    }
+                                                });
+                                                return true;
+                                            }
+                                        });     
+                                    });
 
-
-                if (resultMsg) {
-                    const data = await fetch(`http://localhost:5000/group/sendlocation/${group}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            'latitude': vehicleAlert.geom.coordinates[1],
-                            'longitude': vehicleAlert.geom.coordinates[0],
-                            'description': vehicleAlert.alert
-                        })
-                    })
-                    console.log(data);
-                }
+                                }
+                            });
+                        }
+                    });     
+                });
             }
         }
     }

@@ -10,15 +10,73 @@ const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = r
 const Middleware = require('./api/infrastructure/auth/middleware');
 const { jobAlert } = require('./api/models/job')
 
-// const Purchase = require('./api/repositories/purchase')
-// Purchase.getOrders()
-// Quiz.answer()
+const fs = require("fs");
+const config = require("./config.json");
+const axios = require("axios");
 
-process.setMaxListeners(100);
+const { Client, Location, List, Buttons, LocalAuth } = require('whatsapp-web.js');
+
+
+process.title = "whatsapp-node-api"
+global.client = new Client({
+  authStrategy: new LocalAuth(),
+  puppeteer: { headless: false, args: ['--no-sandbox']  },
+});
+
+global.authed = false;
 
 const app = customExpress();
 
 app.locals = appLocals;
+
+client.on('qr', (qr) => {
+  console.log('QR RECEIVED', qr);
+  fs.writeFileSync("./last.qr", qr);
+})
+
+client.on("authenticated", () => {
+  console.log("AUTH!");
+  authed = true;
+
+  try {
+    fs.unlinkSync("./last.qr");
+  } catch (err) { }
+})
+
+client.on("auth_failure", () => {
+  console.log("AUTH Failed !")
+  process.exit()
+})
+
+client.on('ready', () => {
+  console.log('Client is ready!');
+})
+
+client.on('message', async msg => {
+  if (config.webhook.enabled) {
+    if (msg.hasMedia) {
+      const attachmentData = await msg.downloadMedia();
+      msg.attachmentData = attachmentData;
+    }
+    axios.post(config.webhook.path, { msg });
+  }
+})
+
+client.on("disconnected", () => {
+  console.log("disconnected");
+})
+
+client.initialize();
+
+const chatRoute = require("./components/chatting");
+const groupRoute = require("./components/group");
+const authRoute = require("./components/auth");
+const contactRoute = require("./components/contact");
+
+app.use("/chat", chatRoute);
+app.use("/group", groupRoute);
+app.use("/auth", authRoute);
+app.use("/contact", contactRoute);
 
 app.listen(3000, async () => {
 

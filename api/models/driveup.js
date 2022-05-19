@@ -6,6 +6,14 @@ const request = require('request')
 const vuri = require('valid-url');
 const fs = require('fs');
 
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+}
+
 class DriveUp {
 
     async vehicleAlerts() {
@@ -87,13 +95,13 @@ class DriveUp {
 
             let alertType = ''
             let group = ''
-            console.log(vehicleAlert.customer);
+
             alerts.find(alert => {
                 alert.types.forEach(type => {
                     if (type.ideventtype === vehicleAlert.idEventType) {
                         const idgroup = alert.ideventtypegroup
                         if (idgroup === 9 || idgroup === 10 || idgroup === 12) {
-                            group = 'Manutenção' 
+                            group = 'Manutenção'
                             alertType = type.description
                         }
 
@@ -101,7 +109,7 @@ class DriveUp {
                             group = 'Operação'
                             alertType = type.description
                         }
-                        
+
                         if (idgroup === 2) {
                             group = 'Cliente'
                             switch (type.ideventtype) {
@@ -130,25 +138,20 @@ class DriveUp {
                         if (chat.id.server === "g.us" && chat.name === group) {
                             client.sendMessage(chat.id._serialized, message).then((response) => {
                                 if (response.id.fromMe) {
-                                    
-                                    client.getChats().then((data) => {
-                                        data.some(chat => {
-                                            if (chat.id.server === "g.us" && chat.name === group) {
-                                                let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "");
-                                                client.sendMessage(chat.id._serialized, loc).then((response) => {
-                                                    if (response.id.fromMe) {
-                                                        console.log(`Message successfully send to ${group}`);
-                                                    }
-                                                });
-                                                return true;
-                                            }
-                                        });     
-                                    });
+                                    sleep(1000)
 
+                                    let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "");
+                                    client.sendMessage(chat.id._serialized, loc).then((response) => {
+                                        if (response.id.fromMe) {
+                                            console.log(`Message successfully send to ${group}`);
+                                            sleep(1000)
+                                        }
+                                    });
+                                    return true
                                 }
                             });
                         }
-                    });     
+                    });
                 });
             }
         }

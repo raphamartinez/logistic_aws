@@ -5,7 +5,7 @@ const jobAlert = new CronJob('1 * * * * *', async () => {
     try {
         console.log('Executed Job!');
         const vehicleAlerts = await DriveUp.vehicleAlerts()
-        if(vehicleAlerts && vehicleAlerts.length > 0){
+        if (vehicleAlerts && vehicleAlerts.length > 0) {
             const cars = await DriveUp.cars()
             const alertTypes = await DriveUp.alertTypes()
             const customers = await DriveUp.customers()

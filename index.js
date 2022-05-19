@@ -16,11 +16,18 @@ const axios = require("axios");
 
 const { Client, Location, List, Buttons, LocalAuth } = require('whatsapp-web.js');
 
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
 
 process.title = "whatsapp-node-api"
 global.client = new Client({
   authStrategy: new LocalAuth(),
-  puppeteer: { headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']  },
+  puppeteer: { headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'] },
 });
 
 global.authed = false;
@@ -30,12 +37,11 @@ const app = customExpress();
 app.locals = appLocals;
 
 client.on('qr', (qr) => {
-  console.log('QR RECEIVED', qr);
   fs.writeFileSync("./last.qr", qr);
 })
 
 client.on("authenticated", () => {
-  console.log("AUTH!");
+  console.log("Autenticado!");
   authed = true;
 
   try {
@@ -44,18 +50,39 @@ client.on("authenticated", () => {
 })
 
 client.on("auth_failure", () => {
-  console.log("AUTH Failed !")
+  console.log("Autenticação falhou!")
   process.exit()
 })
 
 client.on('ready', () => {
-  console.log('Client is ready!');
+  console.log('Pronto para uso!');
 })
 
 client.on('message', async msg => {
+  sleep(1000)
+
+  switch (msg.from) {
+    case '120363024113373482@g.us':
+      if (msg.body == 1) {
+        client.sendMessage(msg.from, 'Lista de veículos')
+
+      } else {
+        client.sendMessage(msg.from, 'Comando não identificado.')
+      }
+      break;
+
+    case '120363042760809190@g.us':
+      client.sendMessage(msg.from, 'Comando não identificado.')
+      break;
+
+    case '120363024386228914@g.us':
+      client.sendMessage(msg.from, 'Comando não identificado.')
+      break;
+  }
+
   if (config.webhook.enabled) {
     if (msg.hasMedia) {
-      const attachmentData = await msg.downloadMedia();
+      const attachmentData = await msg.downloadrsMedia();
       msg.attachmentData = attachmentData;
     }
     axios.post(config.webhook.path, { msg });
@@ -63,7 +90,7 @@ client.on('message', async msg => {
 })
 
 client.on("disconnected", () => {
-  console.log("disconnected");
+  console.log("Disconectado!");
 })
 
 client.initialize();
@@ -80,7 +107,7 @@ app.use("/contact", contactRoute);
 
 app.listen(3000, async () => {
 
-  if (process.env.NODE_ENV !== 'x') {
+  if (process.env.NODE_ENV !== 'development') {
     jobAlert.start()
   }
 

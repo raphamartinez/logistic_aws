@@ -31,13 +31,13 @@ class DriveUp {
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
             },
             body: JSON.stringify({
-                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T03:${minutes}:00Z`,
-                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T21:${minutes}:59Z`
+                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:00Z`,
+                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:59Z`
             })
         })
 
         const vehicleAlerts = await data.json();
-        return vehicleAlerts[8]
+        return vehicleAlerts
     }
 
     async cars() {

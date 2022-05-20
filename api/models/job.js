@@ -5,12 +5,11 @@ const jobAlert = new CronJob('1 * * * * *', async () => {
     try {
         console.log('Executed Job!');
         const vehicleAlerts = await DriveUp.vehicleAlerts()
-        if (vehicleAlerts && vehicleAlerts.length > 0) {
-            const cars = await DriveUp.cars()
-            const alertTypes = await DriveUp.alertTypes()
-            const customers = await DriveUp.customers()
-            DriveUp.saveAlerts(vehicleAlerts, cars, alertTypes, customers)
-        }
+        const cars = await DriveUp.cars()
+        const alertTypes = await DriveUp.alertTypes()
+        const customers = await DriveUp.customers()
+        await DriveUp.saveAlerts(vehicleAlerts, cars, alertTypes, customers)
+
 
     } catch (error) {
         console.log(`Error when consulting the alerts - ${error}`);

@@ -31,13 +31,13 @@ class DriveUp {
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
             },
             body: JSON.stringify({
-                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:00Z`,
-                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:59Z`
+                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T03:${minutes}:00Z`,
+                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T21:${minutes}:59Z`
             })
         })
 
         const vehicleAlerts = await data.json();
-        return vehicleAlerts
+        return vehicleAlerts[8]
     }
 
     async cars() {
@@ -139,14 +139,9 @@ class DriveUp {
                             client.sendMessage(chat.id._serialized, message).then((response) => {
                                 if (response.id.fromMe) {
                                     sleep(1000)
-
                                     let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "");
-                                    client.sendMessage(chat.id._serialized, loc).then((response) => {
-                                        if (response.id.fromMe) {
-                                            console.log(`Message successfully send to ${group}`);
-                                            sleep(1000)
-                                        }
-                                    });
+                                    client.sendMessage(chat.id._serialized, loc)
+                                    sleep(1000)
                                     return true
                                 }
                             });

@@ -24,6 +24,7 @@ class DriveUp {
         const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
         const hours = startDate.getHours() > 9 ? startDate.getHours() : `0${startDate.getHours()}`
 
+        console.log(`${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}`);
         const data = await fetch(`https://api.driveup.info/rest/vehicle/alerts`, {
             method: 'POST',
             headers: {
@@ -37,6 +38,7 @@ class DriveUp {
         })
 
         const vehicleAlerts = await data.json();
+        console.log(vehicleAlerts);
         return vehicleAlerts
     }
 
@@ -128,7 +130,7 @@ class DriveUp {
 
             if (vehicleAlert.geom.coordinates.length === 2) {
                 const date = new Date(vehicleAlert.recordedat)
-                date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-1) * 60 * 60 * 1000);
+                date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000);
 
                 let message = `*${vehicleAlert.alert}*\n${vehicleAlert.car.plate} - ${vehicleAlert.car.category}\nSin informacion del Chofer\n`
                 message += `${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`

@@ -67,7 +67,7 @@ client.on('message', async msg => {
         client.sendMessage(msg.from, 'Lista de veículos')
 
       } else {
-        client.sendMessage(msg.from, 'Comando não identificado.')
+        client.sendMessage(msg.from, 'Comando não identificado.\nSegue abaixo lista de comandos.\n\nDigite 1 - Listagem de Veículos KM28')
       }
       break;
 
@@ -107,7 +107,7 @@ app.use("/contact", contactRoute);
 
 app.listen(3000, async () => {
 
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== 'x') {
     jobAlert.start()
   }
 

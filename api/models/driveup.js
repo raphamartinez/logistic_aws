@@ -21,11 +21,12 @@ class DriveUp {
         const endDate = new Date()
         const startDate = new Date(endDate.getTime() + (-1 * 60000))
         const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
+        const day = startDate.getDate() > 9 ? startDate.getDate() : `0${startDate.getDate()}`
         const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
         const hours = startDate.getHours() > 9 ? startDate.getHours() : `0${startDate.getHours()}`
 
         console.log({now: endDate.toLocaleString()});
-        console.log(`${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}`);
+        console.log(`${startDate.getFullYear()}-${month}-${day}T${hours}:${minutes}`);
         const data = await fetch(`https://api.driveup.info/rest/vehicle/alerts`, {
             method: 'POST',
             headers: {

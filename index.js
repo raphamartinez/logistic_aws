@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = require('./api/models/error');
 const Middleware = require('./api/infrastructure/auth/middleware');
 const { jobAlert } = require('./api/models/job')
+// const DriveUp = require('./api/models/driveup')
 
 const fs = require("fs");
 const config = require("./config.json");
@@ -63,11 +64,15 @@ client.on('message', async msg => {
 
   switch (msg.from) {
     case '120363024113373482@g.us':
-      if (msg.body == 1) {
+      const listPlaces = [1,2,3]
+      if (msg.body.includes(listPlaces)) {
         client.sendMessage(msg.from, 'Lista de veículos')
-
       } else {
-        client.sendMessage(msg.from, 'Comando não identificado.\nSegue abaixo lista de comandos.\n\nDigite 1 - Listagem de Veículos KM28')
+        client.sendMessage(msg.from, `*Comando não identificado*\nSegue abaixo lista de comandos.\n\n
+        Digite 1 - Listagem de Veículos KM1\n
+        Digite 2 - Listagem de Veículos KM28\n
+        Digite 3 - Listagem de Veículos Ypane\n
+        Digite 4 - Listagem de Veículos em Manutenção`)
       }
       break;
 
@@ -107,7 +112,13 @@ app.use("/contact", contactRoute);
 
 app.listen(3000, async () => {
 
-  if (process.env.NODE_ENV !== 'x') {
+  // const vehicleAlerts = await DriveUp.vehicleAlerts()
+  // const cars = await DriveUp.cars()
+  // const alertTypes = await DriveUp.alertTypes()
+  // const customers = await DriveUp.customers()
+  // await DriveUp.saveAlerts(vehicleAlerts, cars, alertTypes, customers)
+  
+  if (process.env.NODE_ENV !== 'development') {
     jobAlert.start()
   }
 

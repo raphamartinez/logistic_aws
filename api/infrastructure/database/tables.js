@@ -33,6 +33,17 @@ class Tables {
     return true
   }
 
+  createTableDriveUp() {
+    const sql = ``
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
   createTableShortUrl() {
     const sql = `CREATE TABLE IF NOT EXISTS api.shorturl (
       id int NOT NULL AUTO_INCREMENT, 

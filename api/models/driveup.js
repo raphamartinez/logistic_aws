@@ -1,10 +1,7 @@
 const { InvalidArgumentError, InternalServerError, NotFound } = require('./error')
-const Twilio = require('./twilio')
 const fetch = require('node-fetch')
-const { MessageMedia, Location } = require("whatsapp-web.js");
-const request = require('request')
-const vuri = require('valid-url');
-const fs = require('fs');
+const { Location } = require("whatsapp-web.js");
+const Repositorie = require('../repositories/driveup')
 
 function sleep(milliseconds) {
     const date = Date.now();
@@ -19,28 +16,32 @@ class DriveUp {
     async vehicleAlerts() {
 
         const endDate = new Date()
-        const startDate = new Date(endDate.getTime() + (-1 * 60000))
+        const startDate = new Date(endDate.getTime() + (-60 * 60000))
         const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
         const day = startDate.getDate() > 9 ? startDate.getDate() : `0${startDate.getDate()}`
         const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
         const hours = startDate.getHours() > 9 ? startDate.getHours() : `0${startDate.getHours()}`
 
-        console.log({now: endDate.toLocaleString()});
-        console.log(`${startDate.getFullYear()}-${month}-${day}T${hours}:${minutes}`);
+        console.log({ now: endDate.toLocaleString() })
+        console.log(`${startDate.getFullYear()}-${month}-${day}T${hours}:${minutes}`)
         const data = await fetch(`https://api.driveup.info/rest/vehicle/alerts`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
             },
+            // body: JSON.stringify({
+            //     'from': `${startDate.getFullYear()}-04-20T00:00:00Z`,
+            //     'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:59:59Z`
+            // })
+
             body: JSON.stringify({
-                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:00Z`,
-                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:59Z`
+                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:00:00Z`,
+                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:59:59Z`
             })
         })
 
-        const vehicleAlerts = await data.json();
-        console.log(vehicleAlerts);
+        const vehicleAlerts = await data.json()
         return vehicleAlerts
     }
 
@@ -90,9 +91,9 @@ class DriveUp {
         for (let vehicleAlert of vehicleAlerts) {
             let customer = vehicleAlert.data ? customers.find(customer => customer.id === vehicleAlert.data.idzona) : ''
             let car = cars.find(car => car.vehicleId === vehicleAlert.idVehicle)
-            vehicleAlert.customer = customer.name
+            if (customer) { vehicleAlert.customer = customer.name }
             vehicleAlert.car = {
-                plate: car.plate,
+                plate: car.plate.replace(/\s+/g, ''),
                 model: car.modelDescription,
                 category: car.kind
             }
@@ -129,30 +130,38 @@ class DriveUp {
                 })
             })
             vehicleAlert.alert = alertType
+            vehicleAlert.successend = 0
+            vehicleAlert.successendloc = 0
+            const date = new Date(vehicleAlert.recordedat)
+            date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000);
 
-            if (vehicleAlert.geom.coordinates.length === 2) {
-                const date = new Date(vehicleAlert.recordedat)
-                date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000);
-
-                let message = `*${vehicleAlert.alert}*\n${vehicleAlert.car.plate} - ${vehicleAlert.car.category}\nSin informacion del Chofer\n`
-                message += `${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
-
-                client.getChats().then((data) => {
-                    data.forEach(chat => {
-                        if (chat.id.server === "g.us" && chat.name === group) {
-                            client.sendMessage(chat.id._serialized, message).then((response) => {
-                                if (response.id.fromMe) {
-                                    sleep(1000)
-                                    let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "");
-                                    client.sendMessage(chat.id._serialized, loc)
-                                    sleep(1000)
-                                    return true
-                                }
-                            });
-                        }
-                    });
-                });
+            let message = `*${vehicleAlert.alert}*\n${vehicleAlert.car.plate} - ${vehicleAlert.car.category}\nSin informacion del Chofer\n`
+            message += `${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
+            vehicleAlert.message = message
+            vehicleAlert.group = group
+            if (vehicleAlert.data) {
+                vehicleAlert.idzona = vehicleAlert.data.idzona
+                vehicleAlert.odometer = vehicleAlert.data.odometer
             }
+            client.getChats().then((data) => {
+                data.forEach(chat => {
+                    if (chat.id.server === "g.us" && chat.name === group) {
+                        client.sendMessage(chat.id._serialized, message).then((response) => {
+                            if (response.id.fromMe) {
+                                vehicleAlert.successend = 1
+                                sleep(1000)
+                                let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "");
+                                client.sendMessage(chat.id._serialized, loc).then(() => vehicleAlert.successendloc = 1)
+                                sleep(1000)
+                                return true
+                            }
+                        });
+                    }
+                });
+            });
+
+            await Repositorie.insert(vehicleAlert)
+
         }
     }
 

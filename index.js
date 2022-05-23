@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = require('./api/models/error');
 const Middleware = require('./api/infrastructure/auth/middleware');
 const { jobAlert } = require('./api/models/job')
-// const DriveUp = require('./api/models/driveup')
+const DriveUp = require('./api/models/driveup')
 
 const fs = require("fs");
 const config = require("./config.json");
@@ -38,7 +38,7 @@ process.title = "whatsapp-node-api"
 global.client = new Client({
   authStrategy: authStrategy,
   puppeteer: {
-    headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '', takeoverOnConflict: true,
+    headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '', takeoverOnConflict: true,
     takeoverTimeoutMs: 10
   },
 });
@@ -76,15 +76,19 @@ client.on('message', async msg => {
 
   switch (msg.from) {
     case '120363024113373482@g.us':
-      const listPlaces = [1, 2, 3]
+      const listPlaces = [1, 2, 3, 4]
+      let autoMsg = ''
       if (msg.body.includes(listPlaces)) {
-        client.sendMessage(msg.from, 'Lista de veículos')
+        autoMsg = DriveUp.countInthePlace(msg.body)
+        client.sendMessage(autoMsg)
       } else {
-        client.sendMessage(msg.from, `*Comando não identificado*\nSegue abaixo lista de comandos.\n\n
-        Digite 1 - Listagem de Veículos KM1\n
-        Digite 2 - Listagem de Veículos KM28\n
-        Digite 3 - Listagem de Veículos Ypane\n
-        Digite 4 - Listagem de Veículos em Manutenção`)
+        autoMsg = '*Comando não identificado*\n'
+        autoMsg += 'Segue abaixo lista de comandos.\n\n'
+        autoMsg += 'Digite 1 - Listagem de Veículos KM1\n'
+        autoMsg += 'Digite 2 - Listagem de Veículos KM28\n'
+        autoMsg += 'Digite 3 - Listagem de Veículos Ypane\n'
+        autoMsg += 'Digite 4 - Listagem de Veículos em Manutenção'
+        client.sendMessage(msg.from, autoMsg)
       }
       break;
 

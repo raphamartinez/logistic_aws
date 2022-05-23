@@ -30,11 +30,6 @@ class DriveUp {
                 'Content-Type': 'application/json',
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
             },
-            // body: JSON.stringify({
-            //     "from": "2022-05-21T17:59:59Z",
-            //     "to":"2022-05-23T17:59:59Z"
-            // })
-
             body: JSON.stringify({
                 'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:00:00Z`,
                 'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:59:59Z`
@@ -134,7 +129,7 @@ class DriveUp {
             vehicleAlert.successend = 0
             vehicleAlert.successendloc = 0
             const date = new Date(vehicleAlert.recordedat)
-            date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000);
+            date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
 
             let message = `*${vehicleAlert.alert}*\n${vehicleAlert.car.plate} - ${vehicleAlert.car.category}\nSin informacion del Chofer\n`
             message += `${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
@@ -156,15 +151,12 @@ class DriveUp {
                                 sleep(1000)
                                 return true
                             }
-                        }).catch(err => console.log({msg: 'envio erro', err}))
+                        }).catch(err => console.log({ msg: 'envio erro', err }))
                     }
-                });
-            }).catch(err => console.log({msg: `listagem erro`, err}));
-
-            console.log(vehicleAlert);
+                })
+            }).catch(err => console.log({ msg: `listagem erro`, err }))
 
             await Repositorie.insert(vehicleAlert)
-
         }
     }
 
@@ -177,6 +169,37 @@ class DriveUp {
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
             }
         })
+    }
+
+    async countInthePlace(place) {
+        try {
+
+            switch (place) {
+                case 1:
+                    place = '5523'
+                    break
+                case 2:
+                    place = '5436'
+                    break
+                case 3:
+                    place = '5524'
+                    break
+                case 4:
+                    place = '00'
+                    break
+            }
+
+            const cars = await Repositorie.countInthePlace(place)
+
+            let message = cars.length === 0 ? 'No hay vehículos disponibles en esta sucursal.' : '*Sigue abajo listado de veiculos*\n\n'
+            if(cars.length === 0){
+                cars.forEach(car => message += `${car}\n`)
+            }
+
+            return message
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }

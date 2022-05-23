@@ -16,6 +16,21 @@ class DriveUp {
         }
     }
 
+    async countInthePlace(place) {
+        try {
+            const sql = `SELECT distinct(car) as plate, idVehicle, idEventType, MAX(recordedat) as date, idzona
+            FROM api.driveup 
+            GROUP BY car 
+            HAVING idzona = ?
+            ORDER BY date DESC`
+
+            const result = await query(sql, place)
+            return result
+        } catch (error) {
+            throw new InvalidArgumentError(error)
+        }
+    }
+
 }
 
 module.exports = new DriveUp()

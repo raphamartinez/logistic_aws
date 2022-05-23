@@ -175,16 +175,16 @@ class DriveUp {
         try {
 
             switch (place) {
-                case 1:
+                case '1':
                     place = '5523'
                     break
-                case 2:
+                case '2':
                     place = '5436'
                     break
-                case 3:
+                case '3':
                     place = '5524'
                     break
-                case 4:
+                case '4':
                     place = '00'
                     break
             }

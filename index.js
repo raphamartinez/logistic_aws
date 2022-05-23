@@ -25,10 +25,22 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
+const myCustomId = '33'
+
+const authStrategy = new LocalAuth({ clientId: myCustomId })
+
+const worker = `${authStrategy.dataPath}/session-${myCustomId}/Default/Service Worker`
+if (fs.existsSync(worker)) {
+  fs.rmdirSync(worker, { recursive: true })
+}
+
 process.title = "whatsapp-node-api"
 global.client = new Client({
-  authStrategy: new LocalAuth(),
-  puppeteer: { headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] },
+  authStrategy: authStrategy,
+  puppeteer: {
+    headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '', takeoverOnConflict: true,
+    takeoverTimeoutMs: 10
+  },
 });
 
 global.authed = false;
@@ -64,7 +76,7 @@ client.on('message', async msg => {
 
   switch (msg.from) {
     case '120363024113373482@g.us':
-      const listPlaces = [1,2,3]
+      const listPlaces = [1, 2, 3]
       if (msg.body.includes(listPlaces)) {
         client.sendMessage(msg.from, 'Lista de veículos')
       } else {
@@ -98,7 +110,14 @@ client.on("disconnected", () => {
   console.log("Disconectado!");
 })
 
-client.initialize();
+client.initialize()
+  .then(async () => {
+    const version = await this._client.getWWebVersion()
+    console.log(`WHATSAPP WEB version: v${version}`)
+  })
+  .catch((err) => {
+    console.error(err)
+  })
 
 const chatRoute = require("./components/chatting");
 const groupRoute = require("./components/group");
@@ -117,7 +136,7 @@ app.listen(3000, async () => {
   // const alertTypes = await DriveUp.alertTypes()
   // const customers = await DriveUp.customers()
   // await DriveUp.saveAlerts(vehicleAlerts, cars, alertTypes, customers)
-  
+
   if (process.env.NODE_ENV !== 'development') {
     jobAlert.start()
   }

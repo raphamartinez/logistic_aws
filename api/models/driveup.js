@@ -30,15 +30,15 @@ class DriveUp {
                 'Content-Type': 'application/json',
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
             },
-            body: JSON.stringify({
-                "from": "2022-05-21T17:59:59Z",
-                "to":"2022-05-23T17:59:59Z"
-            })
-
             // body: JSON.stringify({
-            //     'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:00:00Z`,
-            //     'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:59:59Z`
+            //     "from": "2022-05-21T17:59:59Z",
+            //     "to":"2022-05-23T17:59:59Z"
             // })
+
+            body: JSON.stringify({
+                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:00:00Z`,
+                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:59:59Z`
+            })
         })
 
         const vehicleAlerts = await data.json()

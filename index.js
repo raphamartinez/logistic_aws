@@ -28,7 +28,7 @@ function sleep(milliseconds) {
 process.title = "whatsapp-node-api"
 global.client = new Client({
   authStrategy: new LocalAuth(),
-  puppeteer: { headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'] },
+  puppeteer: { headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] },
 });
 
 global.authed = false;

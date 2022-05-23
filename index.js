@@ -76,9 +76,10 @@ client.on('message', async msg => {
 
   switch (msg.from) {
     case '120363024113373482@g.us':
-      const listPlaces = ['1', '2', '3', '4']
+      const listPlaces = [1, 2, 3, 4]
       let autoMsg = ''
-      if (msg.body.includes(listPlaces)) {
+      console.log(msg.body);
+      if (listPlaces.includes(msg.body)) {
         autoMsg = DriveUp.countInthePlace(msg.body)
         client.sendMessage(autoMsg)
       } else {

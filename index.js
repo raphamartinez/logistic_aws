@@ -111,13 +111,6 @@ client.on("disconnected", () => {
 })
 
 client.initialize()
-  .then(async () => {
-    const version = await this._client.getWWebVersion()
-    console.log(`WHATSAPP WEB version: v${version}`)
-  })
-  .catch((err) => {
-    console.error(err)
-  })
 
 const chatRoute = require("./components/chatting");
 const groupRoute = require("./components/group");

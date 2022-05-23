@@ -1,7 +1,7 @@
 const CronJob = require('cron').CronJob
 const DriveUp = require('../models/driveup')
 
-const jobAlert = new CronJob('1 0 * * * *', async () => {
+const jobAlert = new CronJob('1 30 * * * *', async () => {
     try {
         console.log('Executed Job!');
         const vehicleAlerts = await DriveUp.vehicleAlerts()

@@ -30,18 +30,19 @@ class DriveUp {
                 'Content-Type': 'application/json',
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
             },
+            body: JSON.stringify({
+                "from": "2022-05-21T17:59:59Z",
+                "to":"2022-05-23T17:59:59Z"
+            })
+
             // body: JSON.stringify({
-            //     'from': `${startDate.getFullYear()}-04-20T00:00:00Z`,
+            //     'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:00:00Z`,
             //     'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:59:59Z`
             // })
-
-            body: JSON.stringify({
-                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:00:00Z`,
-                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:59:59Z`
-            })
         })
 
         const vehicleAlerts = await data.json()
+        console.log(vehicleAlerts);
         return vehicleAlerts
     }
 
@@ -155,10 +156,12 @@ class DriveUp {
                                 sleep(1000)
                                 return true
                             }
-                        });
+                        }).catch(err => console.log({msg: 'envio erro', err}))
                     }
                 });
-            });
+            }).catch(err => console.log({msg: `listagem erro`, err}));
+
+            console.log(vehicleAlert);
 
             await Repositorie.insert(vehicleAlert)
 

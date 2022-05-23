@@ -209,7 +209,7 @@ class DriveUp {
 
             const cars = await Repositorie.countInthePlace(place)
 
-            message = 'No hay vehículos disponibles en esta sucursal.'
+            message = `*No hay vehículos disponibles en ${descPlace}*\n`
             if (cars.length > 0) {
                 message = `*Sigue abajo listado de vehiculos en ${descPlace}*\n\n`
                 cars.forEach(car => message += `${car.plate}\n`)

@@ -38,7 +38,7 @@ process.title = "whatsapp-node-api"
 global.client = new Client({
   authStrategy: authStrategy,
   puppeteer: {
-    headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '', takeoverOnConflict: true,
+    headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '', takeoverOnConflict: true,
     takeoverTimeoutMs: 10
   },
 });

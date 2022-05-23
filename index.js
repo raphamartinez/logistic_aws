@@ -31,7 +31,7 @@ const authStrategy = new LocalAuth({ clientId: myCustomId })
 
 const worker = `${authStrategy.dataPath}/session-${myCustomId}/Default/Service Worker`
 if (fs.existsSync(worker)) {
-  fs.rmdirSync(worker, { recursive: true })
+  fs.rmSync(worker, { recursive: true })
 }
 
 process.title = "whatsapp-node-api"
@@ -78,9 +78,8 @@ client.on('message', async msg => {
     case '120363024113373482@g.us':
       const listPlaces = [1, 2, 3, 4]
       let autoMsg = ''
-      console.log(msg.body);
-      if (listPlaces.includes(msg.body)) {
-        autoMsg = DriveUp.countInthePlace(msg.body)
+      if (listPlaces.includes(Number.parseInt(msg.body))) {
+        autoMsg = await DriveUp.countInthePlace(msg.body)
         client.sendMessage(autoMsg)
       } else {
         autoMsg = '*Comando não identificado*\n'

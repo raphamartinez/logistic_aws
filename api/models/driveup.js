@@ -174,26 +174,54 @@ class DriveUp {
     async countInthePlace(place) {
         try {
 
+            let descPlace = ''
+            let message = ''
             switch (place) {
-                case 1:
+                case '1':
                     place = '5523'
+                    descPlace = 'KM 1'
                     break
-                case 2:
+                case '2':
                     place = '5436'
+                    descPlace = 'KM 28'
                     break
-                case 3:
+                case '3':
                     place = '5524'
+                    descPlace = 'YPANE'
                     break
-                case 4:
+                case '4':
                     place = '00'
+                    descPlace = 'MANTENIMIENTO'
                     break
+            }
+
+            if(place === '00'){
+                const allCarsMaintenance = await Repositorie.countInMaintenance()
+                if (allCarsMaintenance.length == 0) {
+                    message = `*No hay vehiculos en Mantenimiento*`
+                } else {
+                    message = `*Vehiculos en Mantenimiento*`
+                    allCarsMaintenance.forEach(car => message += `*${car.plate}* - ${car.description}\n`)
+                }
+
+                return message
             }
 
             const cars = await Repositorie.countInthePlace(place)
 
-            let message = cars.length === 0 ? 'No hay vehículos disponibles en esta sucursal.' : '*Sigue abajo listado de veiculos*\n\n'
-            if(cars.length === 0){
-                cars.forEach(car => message += `${car}\n`)
+            message = 'No hay vehículos disponibles en esta sucursal.'
+            if (cars.length > 0) {
+                message = `*Sigue abajo listado de vehiculos en ${descPlace}*\n\n`
+                cars.forEach(car => message += `${car.plate}\n`)
+            }
+
+            const carsMaintenance = await Repositorie.countInMaintenance(descPlace)
+
+            if (carsMaintenance.length == 0) {
+                message += `\n*No hay vehiculos en Mantenimiento en ${descPlace}*`
+            } else {
+                message += `\n*Vehiculos en Mantenimiento en ${descPlace}*\n\n`
+                carsMaintenance.forEach(car => message += `${car.plate}\n`)
             }
 
             return message

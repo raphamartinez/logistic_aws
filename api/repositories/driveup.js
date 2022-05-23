@@ -20,6 +20,7 @@ class DriveUp {
         try {
             const sql = `SELECT distinct(car) as plate, idVehicle, idEventType, MAX(recordedat) as date, idzona
             FROM api.driveup 
+            WHERE idEventType = 3 or idEventType = 4
             GROUP BY car 
             HAVING idzona = ?
             ORDER BY date DESC`
@@ -31,6 +32,23 @@ class DriveUp {
         }
     }
 
+    async countInMaintenance(place) {
+        try {
+            let sql = `SELECT distinct(plate) as plate, thirst, obs as description
+            FROM api.car 
+            WHERE status = 2 `
+
+            if(place) sql+= `and thirst = '${place}' `
+
+            sql+= `GROUP BY plate 
+            ORDER BY plate ASC `
+
+            const result = await query(sql)
+            return result
+        } catch (error) {
+            throw new InvalidArgumentError(error)
+        }
+    }
 }
 
 module.exports = new DriveUp()

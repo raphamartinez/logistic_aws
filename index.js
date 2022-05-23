@@ -80,7 +80,7 @@ client.on('message', async msg => {
       let autoMsg = ''
       if (listPlaces.includes(Number.parseInt(msg.body))) {
         autoMsg = await DriveUp.countInthePlace(msg.body)
-        client.sendMessage(autoMsg)
+        client.sendMessage(msg.from, autoMsg)
       } else {
         autoMsg = '*Comando não identificado*\n'
         autoMsg += 'Segue abaixo lista de comandos.\n\n'

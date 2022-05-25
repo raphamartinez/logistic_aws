@@ -948,13 +948,14 @@ const generate = async (event) => {
   const id_car = event.target.getAttribute('data-id_car')
   const origin = event.target.getAttribute('data-origin')
   const route = event.target.getAttribute('data-route')
+  const delivery = event.target.getAttribute('data-delivery')
   const truck = event.target.getAttribute('data-truck')
   const chest = event.target.getAttribute('data-chest')
 
   const type = event.target.getAttribute('data-type')
   const id_travel = event.target.getAttribute('data-id_travel')
 
-  const obj = await Connection.noBody(`travelreport/${id_car}/${type}/${origin}/${route}/${id_travel}`, 'GET')
+  const obj = await Connection.noBody(`travelreport/${id_car}/${type}/${origin}/${route}/${delivery}/${id_travel}`, 'GET')
   obj.travel.truck = truck
 
   let content = ""
@@ -1165,6 +1166,7 @@ const generate = async (event) => {
     let dateTravel = event2.currentTarget.date.value;
     let origindesc = event2.currentTarget.origin.value;
     let routedesc = event2.currentTarget.route.value;
+    let deliverydesc = event2.currentTarget.delivery.value;
     let truck = event2.currentTarget.truck.value;
     let driver = event2.currentTarget.driver.value;
     let amount = event2.currentTarget.amount.value;
@@ -1214,6 +1216,7 @@ const generate = async (event) => {
       type: obj.travel.typecode,
       origin: obj.travel.origin,
       route: obj.travel.route,
+      delivery: obj.travel.delivery,
       companion_name,
       companion_idcard,
       id_car,
@@ -1226,6 +1229,7 @@ const generate = async (event) => {
       dateTravel,
       origindesc,
       routedesc,
+      deliverydesc,
       truck,
       chest,
       datereg: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`

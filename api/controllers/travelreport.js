@@ -42,7 +42,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/travelreport/:id_car/:type/:origin/:route/:id_travel', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
+    app.get('/travelreport/:id_car/:type/:origin/:route/:delivery/:id_travel', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
 
             const report = {
@@ -50,28 +50,8 @@ module.exports = app => {
                 type: req.params.type,
                 id_car: req.params.id_car,
                 origin: req.params.origin,
-                route: req.params.route
-            }
-            const travel = await Travel.view(report.id_travel)
-
-            const travelreport = await TravelReport.list(report)
-
-            res.json({ travelreport, travel })
-        } catch (err) {
-            console.log(err);
-            next(err)
-        }
-    })
-
-    app.get('/travelreport/:id_car/:type/:origin/:route/:id_travel', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
-        try {
-
-            const report = {
-                id_travel: req.params.id_travel,
-                type: req.params.type,
-                id_car: req.params.id_car,
-                origin: req.params.origin,
-                route: req.params.route
+                route: req.params.route,
+                delivery: req.params.delivery
             }
             const travel = await Travel.view(report.id_travel)
 

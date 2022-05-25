@@ -75,9 +75,9 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
                                         </div>
                                         <div class="form-group text-center col-md-2">
                                         <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
-                                        <a><span data-id_travel="${travel.id}" data-chest="${chestdesc}" data-type="${travel.typecode}" data-id_car="${travel.cars[0].id_car}" data-truck="${plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-btn-generate
+                                        <a><span data-id_travel="${travel.id}" data-chest="${chestdesc}" data-type="${travel.typecode}" data-id_car="${travel.cars[0].id_car}" data-truck="${plate}" data-origin="${travel.origin}" data-delivery="${travel.delivery}" data-route="${travel.route}" data-btn-generate
                                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-                                        <i data-id_car="${travel.cars[0].id_car}" data-chest="${chestdesc}" data-id_travel="${travel.id}" data-type="${travel.typecode}" data-truck="${plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-btn-generate class="fa fa-paper-plane" aria-hidden="true"></i>
+                                        <i data-id_car="${travel.cars[0].id_car}" data-chest="${chestdesc}" data-id_travel="${travel.id}" data-type="${travel.typecode}" data-truck="${plate}" data-origin="${travel.origin}"  data-delivery="${travel.delivery}" data-route="${travel.route}" data-btn-generate class="fa fa-paper-plane" aria-hidden="true"></i>
                                         </span></a>
                                         </div>`
     return div
@@ -122,9 +122,9 @@ const addtravel = (travel, plate, chest, platedesc, chestdesc) => {
                                         </div>
                                         <div class="form-group text-center col-md-2 text-center">
                                         <input type="text" value="${travel.datedesc} - Tiempo ${travel.period}"  class="form-control" disabled>
-                                        <a><span data-id="${travel.id}" data-type="${travel.type}" data-id_car="${travel.plate}" data-origin="${travel.origin}" data-route="${travel.route}" data-date="${travel.date}" data-driver="${travel.driver}" data data-btn-generate
+                                        <a><span data-id="${travel.id}" data-type="${travel.type}" data-id_car="${travel.plate}" data-origin="${travel.origin}" data-delivery="${travel.delivery}" data-route="${travel.route}" data-date="${travel.date}" data-driver="${travel.driver}" data data-btn-generate
                                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
-                                        <i data-id_car="${travel.plate}" data-id="${travel.id}" data-type="${travel.type}" data-origin="${travel.origin}" data-route="${travel.route}" data-date="${travel.date}" data-driver="${travel.driver}" data data-btn-generate class="fa fa-paper-plane" aria-hidden="true"></i>
+                                        <i data-id_car="${travel.plate}" data-id="${travel.id}" data-type="${travel.type}" data-origin="${travel.origin}" data-delivery="${travel.delivery}" data-route="${travel.route}" data-date="${travel.date}" data-driver="${travel.driver}" data data-btn-generate class="fa fa-paper-plane" aria-hidden="true"></i>
                                         </span></a>
                                         </div>`
     return div
@@ -392,12 +392,16 @@ const modalGenerate = (obj, content) => {
                                 disabled required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Origen</label>
+                                <label>Salida</label>
                                 <input value="${obj.travel.origindesc}" id="origin" name="origin" type="text" class="form-control" disabled required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label>Destino</label>
+                                <label>Punto de Retiro</label>
                                 <input value="${obj.travel.routedesc}" id="route" name="route" type="text" class="form-control" disabled required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label>Punto de Entrega</label>
+                                <input value="${obj.travel.deliverydesc}" id="delivery" name="delivery" type="text" class="form-control" disabled required>
                             </div>
                         </div>
                         <div class="form-group text-right col-12">

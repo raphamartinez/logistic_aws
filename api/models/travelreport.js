@@ -476,7 +476,7 @@ class TravelReport {
                                                     alignment: AlignmentType.LEFT,
                                                     children: [
                                                         new TextRun({
-                                                            text: `Origen: `,
+                                                            text: `Salida: `,
                                                             font: "Calibri",
                                                             bold: true,
                                                             allCaps: true,
@@ -494,7 +494,7 @@ class TravelReport {
                                                     alignment: AlignmentType.LEFT,
                                                     children: [
                                                         new TextRun({
-                                                            text: `Destino: `,
+                                                            text: `Punto de Retiro: `,
                                                             font: "Calibri",
                                                             bold: true,
                                                             allCaps: true,
@@ -502,6 +502,24 @@ class TravelReport {
                                                         }),
                                                         new TextRun({
                                                             text: travel.routedesc,
+                                                            font: "Calibri",
+                                                            allCaps: true,
+                                                            size: "5mm"
+                                                        })
+                                                    ]
+                                                }),
+                                                new Paragraph({
+                                                    alignment: AlignmentType.LEFT,
+                                                    children: [
+                                                        new TextRun({
+                                                            text: `Punto de Entrega: `,
+                                                            font: "Calibri",
+                                                            bold: true,
+                                                            allCaps: true,
+                                                            size: "5mm"
+                                                        }),
+                                                        new TextRun({
+                                                            text: travel.deliverydesc,
                                                             font: "Calibri",
                                                             allCaps: true,
                                                             size: "5mm"
@@ -702,7 +720,7 @@ class TravelReport {
                     children: [
                         new Paragraph({
                             spacing: {
-                                after: 400,
+                                after: 300,
                             },
                         }),
                         headerDesc,
@@ -720,8 +738,8 @@ class TravelReport {
                             heading: HeadingLevel.HEADING_1,
                             alignment: AlignmentType.CENTER,
                             spacing: {
-                                before: 1000,
-                                after: 400,
+                                before: 500,
+                                after: 300,
                             },
                         }),
                     ]
@@ -779,7 +797,7 @@ class TravelReport {
                                 }),
                             ],
                             spacing: {
-                                before: 400,
+                                before: 300,
                             },
                         }),
                         new Paragraph(travel.companion_name ? {
@@ -800,7 +818,7 @@ class TravelReport {
                                 })
                             ],
                             spacing: {
-                                before: 150,
+                                before: 400,
                             },
                         } : {}),
                         new Paragraph(travel.companion_idcard ? {

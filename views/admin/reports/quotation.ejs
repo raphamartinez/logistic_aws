@@ -289,6 +289,9 @@
                                         </tr> 
                         </tbody>
                     </table>
+                    <% if(order[1][0][1][0][0].truck) { let car=order[1][0][1][0][0]; %>
+                        <h4 style="text-align:left;float:left;display: inline; "> Ultima Kilometraje registrada de ese vehiculo: <%= car.lastkm  %> </h4>
+                        <% } %>
                     <h4 style="text-align:right;float:right;display: inline; ">
                         Menor monto posible de la cotización: Gs <%=
                             amountMin.toLocaleString('es'); %>
@@ -298,7 +301,7 @@
                     <h4 style="text-align:left;float:left;display: inline; "> Fecha: <%= dt.getDate() %>/<%=
                                 dt.getMonth() + 1%>/<%= dt.getFullYear() %>
                     </h4>
-                    <br>
+                    <br>                                     
                     <br>
                     <h3
                     style="text-align:center;float:inline-start; padding-top: 20px; margin-top: 20px;">

@@ -1,5 +1,6 @@
 const { InvalidArgumentError, InternalServerError, NotFound } = require('./error')
 const Repositorie = require('../repositories/travelreport')
+const RepositorieTravel = require('../repositories/travel')
 const docx = require('docx');
 const { AlignmentType, Document, ShadingType, WidthType, VerticalAlign, BorderStyle, SectionType, Footer, Header, HeadingLevel, Packer, Paragraph, TextRun, UnderlineType, Table, TableCell, TableRow } = docx;
 
@@ -843,6 +844,17 @@ class TravelReport {
         const b64string = await Packer.toBase64String(doc);
 
         return b64string
+    }
+
+    async reportStrategic(date){
+        try {
+            let data = await RepositorieTravel.reportStrategic(date)
+
+            return data
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error.')
+        }
     }
 }
 

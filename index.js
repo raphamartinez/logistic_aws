@@ -25,96 +25,98 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
-const myCustomId = '33'
-
-const authStrategy = new LocalAuth({ clientId: myCustomId })
-
-const worker = `${authStrategy.dataPath}/session-${myCustomId}/Default/Service Worker`
-if (fs.existsSync(worker)) {
-  fs.rmSync(worker, { recursive: true })
-}
-
-process.title = "whatsapp-node-api"
-global.client = new Client({
-  authStrategy: authStrategy,
-  puppeteer: {
-    headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '', takeoverOnConflict: true,
-    takeoverTimeoutMs: 10
-  },
-});
-
-global.authed = false;
-
 const app = customExpress();
 
 app.locals = appLocals;
 
-client.on('qr', (qr) => {
-  fs.writeFileSync("./last.qr", qr);
-})
 
-client.on("authenticated", () => {
-  console.log("Autenticado!");
-  authed = true;
+if (process.env.NODE_ENV !== 'development') {
+  const myCustomId = '33'
 
-  try {
-    fs.unlinkSync("./last.qr");
-  } catch (err) { }
-})
+  const authStrategy = new LocalAuth({ clientId: myCustomId })
 
-client.on("auth_failure", () => {
-  console.log("Autenticação falhou!")
-  process.exit()
-})
-
-client.on('ready', () => {
-  console.log('Pronto para uso!');
-})
-
-client.on('message', async msg => {
-  sleep(1000)
-
-  switch (msg.from) {
-    case '120363024113373482@g.us':
-      const listPlaces = [1, 2, 3, 4]
-      let autoMsg = ''
-      if (listPlaces.includes(Number.parseInt(msg.body))) {
-        autoMsg = await DriveUp.countInthePlace(msg.body)
-        client.sendMessage(msg.from, autoMsg)
-      } else {
-        autoMsg = '*Comando não identificado*\n'
-        autoMsg += 'Segue abaixo lista de comandos.\n\n'
-        autoMsg += 'Digite 1 - Listagem de Veículos KM1\n'
-        autoMsg += 'Digite 2 - Listagem de Veículos KM28\n'
-        autoMsg += 'Digite 3 - Listagem de Veículos Ypane\n'
-        autoMsg += 'Digite 4 - Listagem de Veículos em Manutenção'
-        client.sendMessage(msg.from, autoMsg)
-      }
-      break;
-
-    case '120363042760809190@g.us':
-      client.sendMessage(msg.from, 'Comando não identificado.')
-      break;
-
-    case '120363024386228914@g.us':
-      client.sendMessage(msg.from, 'Comando não identificado.')
-      break;
+  const worker = `${authStrategy.dataPath}/session-${myCustomId}/Default/Service Worker`
+  if (fs.existsSync(worker)) {
+    fs.rmSync(worker, { recursive: true })
   }
 
-  if (config.webhook.enabled) {
-    if (msg.hasMedia) {
-      const attachmentData = await msg.downloadrsMedia();
-      msg.attachmentData = attachmentData;
+  process.title = "whatsapp-node-api"
+  global.client = new Client({
+    authStrategy: authStrategy,
+    puppeteer: {
+      headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '', takeoverOnConflict: true,
+      takeoverTimeoutMs: 10
+    },
+  });
+
+  global.authed = false;
+
+  client.on('qr', (qr) => {
+    fs.writeFileSync("./last.qr", qr);
+  })
+
+  client.on("authenticated", () => {
+    console.log("Autenticado!");
+    authed = true;
+
+    try {
+      fs.unlinkSync("./last.qr");
+    } catch (err) { }
+  })
+
+  client.on("auth_failure", () => {
+    console.log("Autenticação falhou!")
+    process.exit()
+  })
+
+  client.on('ready', () => {
+    console.log('Pronto para uso!');
+  })
+
+  client.on('message', async msg => {
+    sleep(1000)
+''
+    switch (msg.from) {
+      case '120363024113373482@g.us':
+        const listPlaces = [1, 2, 3, 4]
+        let autoMsg = ''
+        if (listPlaces.includes(Number.parseInt(msg.body))) {
+          autoMsg = await DriveUp.countInthePlace(msg.body)
+          client.sendMessage(msg.from, autoMsg)
+        } else {
+          autoMsg = '*Comando não identificado*\n'
+          autoMsg += 'Segue abaixo lista de comandos.\n\n'
+          autoMsg += 'Digite 1 - Listagem de Veículos KM1\n'
+          autoMsg += 'Digite 2 - Listagem de Veículos KM28\n'
+          autoMsg += 'Digite 3 - Listagem de Veículos Ypane\n'
+          client.sendMessage(msg.from, autoMsg)
+        }
+        break;
+
+      case '120363042760809190@g.us':
+        client.sendMessage(msg.from, 'Comando não identificado.')
+        break;
+
+      case '120363024386228914@g.us':
+        client.sendMessage(msg.from, 'Comando não identificado.')
+        break;
     }
-    axios.post(config.webhook.path, { msg });
-  }
-})
 
-client.on("disconnected", () => {
-  console.log("Disconectado!");
-})
+    if (config.webhook.enabled) {
+      if (msg.hasMedia) {
+        const attachmentData = await msg.downloadrsMedia();
+        msg.attachmentData = attachmentData;
+      }
+      axios.post(config.webhook.path, { msg });
+    }
+  })
 
-client.initialize()
+  client.on("disconnected", () => {
+    console.log("Disconectado!");
+  })
+
+  client.initialize()
+}
 
 const chatRoute = require("./components/chatting");
 const groupRoute = require("./components/group");
@@ -127,31 +129,9 @@ app.use("/auth", authRoute);
 app.use("/contact", contactRoute);
 
 app.listen(3000, async () => {
-
-  // const vehicleAlerts = await DriveUp.vehicleAlerts()
-  // const cars = await DriveUp.cars()
-  // const alertTypes = await DriveUp.alertTypes()
-  // const customers = await DriveUp.customers()
-  // await DriveUp.saveAlerts(vehicleAlerts, cars, alertTypes, customers)
-
   if (process.env.NODE_ENV !== 'development') {
     jobAlert.start()
   }
-
-  // const accountSid = 'ACb4c65c28be97beefef37739144f2908a'
-  // const authToken = 'ada5c3e9da927de130c0d8225cddc6aa'
-  // const client = require('twilio')(accountSid, authToken)
-  // client.messages.create(
-  //   {
-  //     body: 'esta funcionando ok ',
-  //     from: 'whatsapp:+14155238886',
-  //     to: 'whatsapp:+5511971570063'
-  //   })
-  //   .then(message => console.log(message)).done();
-
-  // const id_token = await Movias.Login()
-  // const cars = await Movias.Cars(id_token)
-  // await Movias.Tracking(cars, id_token)
 
   app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])
   app.set('view engine', 'ejs');
@@ -189,8 +169,7 @@ app.use((err, req, res, next) => {
   }
 
   if (err instanceof NotAuthorized) {
-    status = 401;
-    body.dateExp = err.dateExp;
+    return res.redirect('login?fail=true')
   }
 
   if (err instanceof InvalidArgumentError) {

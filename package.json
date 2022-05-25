@@ -15,30 +15,25 @@
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
     "consign": "^0.1.6",
-    "convert-excel-to-json": "^1.7.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "cron": "^1.8.2",
     "crypto": "^1.0.1",
     "docx": "^7.1.2",
-    "dotenv": "^9.0.2",
     "ejs": "^3.1.6",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
-    "excel-date-to-js": "^1.0.6",
     "excel4node": "^1.7.2",
     "express": "^4.17.1",
     "express-flash": "^0.0.2",
     "express-session": "^1.17.2",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.95.14",
     "moment": "^2.29.1",
     "mssql": "^7.3.0",
     "multer": "^1.4.3",
     "multer-s3": "^2.9.0",
     "mysql2": "^2.2.5",
     "node-fetch": "^2.6.1",
-    "node-openvpn": "^0.1.1",
     "nodemailer": "^6.6.0",
     "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
@@ -50,6 +45,7 @@
     "whatsapp-web.js": "1.16.6"
   },
   "devDependencies": {
+    "dotenv": "^16.0.1",
     "nodemon": "^2.0.7"
   }
 }

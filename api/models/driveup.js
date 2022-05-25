@@ -16,7 +16,7 @@ class DriveUp {
     async vehicleAlerts() {
 
         const endDate = new Date()
-        const startDate = new Date(endDate.getTime() + (-60 * 60000))
+        const startDate = new Date(endDate.getTime() + (-30 * 60000))
         const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
         const day = startDate.getDate() > 9 ? startDate.getDate() : `0${startDate.getDate()}`
         const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
@@ -97,22 +97,24 @@ class DriveUp {
             let alertType = ''
             let group = ''
 
+            const travel = await Repositorie.findTravel(vehicleAlert.car.plate)
+
             alerts.find(alert => {
                 alert.types.forEach(type => {
                     if (type.ideventtype === vehicleAlert.idEventType) {
                         const idgroup = alert.ideventtypegroup
                         if (idgroup === 9 || idgroup === 10 || idgroup === 12) {
-                            group = 'Manutenção'
+                            group = 'Operación Manten.'
                             alertType = type.description
                         }
 
                         if (idgroup === 3 || idgroup === 4 || idgroup === 5 || idgroup === 11) {
-                            group = 'Operação'
+                            group = 'Operación Disponibilidad'
                             alertType = type.description
                         }
 
                         if (idgroup === 2) {
-                            group = 'Cliente'
+                            group = 'Operación Notific.'
                             switch (type.ideventtype) {
                                 case 3:
                                     alertType = `Llegada al ${vehicleAlert.customer}`
@@ -129,10 +131,12 @@ class DriveUp {
             vehicleAlert.successend = 0
             vehicleAlert.successendloc = 0
             const date = new Date(vehicleAlert.recordedat)
-            date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
+            date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-3) * 60 * 60 * 1000)
 
-            let message = `*${vehicleAlert.alert}*\n${vehicleAlert.car.plate} - ${vehicleAlert.car.category}\nSin informacion del Chofer\n`
+            let message = `*${vehicleAlert.alert}*\n${travel.carConcatenate}\nSin informacion del Chofer\n`
             message += `${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
+            message += `\n@${vehicleAlert.geom.coordinates[1]},${vehicleAlert.geom.coordinates[0]}`
+            message += `Origen: ${travel.origin} - Destino: ${travel.destiny}`
             vehicleAlert.message = message
             vehicleAlert.group = group
             if (vehicleAlert.data) {
@@ -141,14 +145,14 @@ class DriveUp {
             }
             client.getChats().then((data) => {
                 data.forEach(chat => {
-                    if (chat.id.server === "g.us" && chat.name === group) {
+                    if (chat.id.server === "g.us" && chat.id === group) {
                         client.sendMessage(chat.id._serialized, message).then((response) => {
                             if (response.id.fromMe) {
                                 vehicleAlert.successend = 1
-                                sleep(1000)
+                                sleep(1500)
                                 let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "");
                                 client.sendMessage(chat.id._serialized, loc).then(() => vehicleAlert.successendloc = 1)
-                                sleep(1000)
+                                sleep(3000)
                                 return true
                             }
                         }).catch(err => console.log({ msg: 'envio erro', err }))
@@ -195,7 +199,7 @@ class DriveUp {
                     break
             }
 
-            if(place === '00'){
+            if (place === '00') {
                 const allCarsMaintenance = await Repositorie.countInMaintenance()
                 if (allCarsMaintenance.length == 0) {
                     message = `*No hay vehiculos en Mantenimiento*`
@@ -214,6 +218,8 @@ class DriveUp {
                 message = `*Sigue abajo listado de vehiculos en ${descPlace}*\n\n`
                 cars.forEach(car => message += `${car.plate}\n`)
             }
+
+            if (place == '5523') return message
 
             const carsMaintenance = await Repositorie.countInMaintenance(descPlace)
 

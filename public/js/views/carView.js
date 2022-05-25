@@ -4,16 +4,13 @@ const maintenance = (travel, plate, chest, platedesc, chestdesc) => {
     div.classList.add('form-row')
 
     div.innerHTML = `
-    <div class="form-group text-center col-1">
-        <input value="${travel.name}" type="text" class="form-control" disabled>
-        <a><span data-id="${travel.id}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
-        class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
-        X
-        <span class="visually-hidden"></span>
-    </span></a>
-     </div>
     <div class="form-group col-1" data-date>
     <input value="${travel.type}" type="text" class="form-control" disabled>
+    <a><span data-id="${travel.id}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
+    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
+    X
+    <span class="visually-hidden"></span>
+</span></a>
                                         </div>
                                         <div class="form-group text-center col-1">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
@@ -44,22 +41,22 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
     div.classList.add('form-row')
 
     div.innerHTML = `
-    <div class="form-group text-center col-1">
-    <input value="${travel.name}" type="text" class="form-control" disabled>
+    <div class="form-group col-md-1" data-date>
+    <input value="${travel.type}" type="text" class="form-control" disabled>
     <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
     X
     <span class="visually-hidden"></span>
 </span></a>
- </div>
-    <div class="form-group col-md-1" data-date>
-    <input value="${travel.type}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group text-center col-md-1">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group text-center col-md-1">
                                         <input value="${travel.routedesc}" type="text" class="form-control" disabled>
+                                        </div>
+                                        <div class="form-group text-center col-md-1">
+                                        <input value="${travel.deliverydesc}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-1">
                                             <input value="${travel.driverdesc}" data-ci="${travel.idcard}" type="text" class="form-control" disabled>

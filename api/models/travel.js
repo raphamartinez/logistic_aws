@@ -53,7 +53,6 @@ class Travel {
         }
     }
 
-
     async listPeriodCar(date, period, places) {
         try {
             const dateSQL = new Date(date)

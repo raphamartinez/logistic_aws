@@ -1,4 +1,5 @@
 const Car = require('../models/car')
+const Travel = require('../models/travel')
 const Middleware = require('../infrastructure/auth/middleware')
 const Authorization = require('../infrastructure/auth/authorization')
 const cachelist = require('../infrastructure/redis/cache')
@@ -7,6 +8,23 @@ module.exports = app => {
 
     app.get('/vehiculos', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
+            // let cars
+            // let travels
+            // let drivers
+
+            // const date = req.params.date
+            // const period = false
+
+            // if (req.access.all.allowed) {
+            //     drivers = await Driver.list()
+            //     cars = await Car.list(req.params.date)
+            //     travels = await Travel.list(date, period, req.login.id_login)
+            // } else {
+            //     drivers = await Driver.list(req.login.places)
+            //     cars = await Car.list(req.params.date, req.login.places)
+            //     travels = await Travel.list(date, period, req.login.id_login)
+            // }
+
             res.render('vehiculos')
         } catch (err) {
             next(err)

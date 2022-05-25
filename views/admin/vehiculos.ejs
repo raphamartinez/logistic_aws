@@ -21,52 +21,17 @@
                         <div class="card-body">
                             <form data-form-travel>
                                 <div class="form-row">
-                                    <div class="form-group col-md-1">
+                                    <div class="form-group col-md-2">
                                         <select data-origin id="origin" name="origin" class="form-select">
-                                            <option value="" selected disabled>Origen</option>
-                                            <option value="1">KM 1</option>
-                                            <option value="2">KM 28</option>
-                                            <option value="3">YPANÉ</option>
-                                            <option value="4">AC. KM 1</option>
-                                            <option value="5">LOG. HERRAMIENTAS</option>
-                                            <option value="6">LOG. VEHÍCULOS</option>
-                                            <option value="7">LOG. EQUIPOS</option>
-                                            <option value="8">P. Seguro</option>
-                                            <option value="9">P. Terport</option>
-                                            <option value="10">P. Fenix</option>
-                                            <option value="11">PJC</option>
-                                            <option value="12">Itapua</option>
-                                            <option value="13">Salto</option>
-                                            <option value="14">Pindoty</option>
-                                            <option value="15">Santa Rita</option>
-                                            <option value="16">Fernando de la Mora</option>
-                                            <option value="17">MRA</option>
-                                            <option value="18">San Lorenzo</option>
-                                            <option value="19">Ñemby</option>
-                                            <option value="20">Chacoi</option>
-                                            <option value="21">Sobre ruta 2</option>
-                                            <option value="22">Caaguazu</option>
-                                            <option value="23">Campo 9</option>
-                                            <option value="24">Campo 8</option>
-                                            <option value="25">Villarrica</option>
-                                            <option value="26">Chaco</option>
-                                            <option value="27">Villeta</option>
-                                            <option value="28">Eusebio Ayala</option>
-                                            <option value="29">CaacupeMi</option>
-                                            <option value="30">Pillar</option>
-                                            <option value="31">Villa Elisa</option>
-                                            <option value="32">Nasser</option>
-                                            <option value="33">Centrales Ypané</option>
-                                            <option value="34">Canindeyu</option>
-                                            <option value="35">Zona Franca km11</option>
-                                            <option value="36">Hernandarias</option>
+                                            <option value="" selected disabled>Salida</option>
+                                            <%- include(partials + 'select/place.ejs' ) %>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <input data-date type="datetime-local" name="date" id="date"
                                             class="form-control" required>
                                     </div>
-                                    <div class="form-group col-md-1">
+                                    <div class="form-group col-md-2">
                                         <select class="form-select" id="period" name="period" required data-period>
                                             <option value="" selected disabled>Tiempo</option>
                                             <option value="1">1</option>
@@ -74,11 +39,12 @@
                                             <option value="3">3</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-1">
+                                    <div class="form-group col-md-2">
                                         <select class="form-select" id="type" name="type" required data-type>
                                             <option value="" selected disabled>Tipo</option>
                                             <option value="1">Viatico Nacional</option>
                                             <option value="2">Retiro Contenedor</option>
+                                            <option value="7">Devolucion de Contenedor</option>
                                             <option value="3">Mantenimiento</option>
                                             <option value="4">Region Metropolitana</option>
                                             <option value="5">Retorno</option>
@@ -91,7 +57,7 @@
                                             <option value="" selected disabled>Chofér</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-1">
+                                    <div class="form-group col-md-2">
                                         <select data-company class="form-select" id="company" name="company" disabled>
                                             <option value="" selected disabled>Acompañante</option>
                                         </select>
@@ -101,55 +67,27 @@
                                             <option value="" selected disabled>Camion</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-1">
+                                    <div class="form-group col-md-2">
                                         <select data-chest class="form-select" id="chest" name="chest" disabled>
                                             <option value="" selected disabled>Furgon</option>
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-1">
+                                    <div class="form-group col-md-2">
                                         <select data-route id="route" name="route" class="form-select" required
                                             disabled>
-                                            <option value="" selected disabled>Destino</option>
-                                            <option value="1">KM 1</option>
-                                            <option value="2">KM 28</option>
-                                            <option value="3">YPANÉ</option>
-                                            <option value="4">AC. KM 1</option>
-                                            <option value="5">LOG. HERRAMIENTAS</option>
-                                            <option value="6">LOG. VEHÍCULOS</option>
-                                            <option value="7">LOG. EQUIPOS</option>
-                                            <option value="8">P. Seguro</option>
-                                            <option value="9">P. Terport</option>
-                                            <option value="10">P. Fenix</option>
-                                            <option value="11">PJC</option>
-                                            <option value="12">Itapua</option>
-                                            <option value="13">Salto</option>
-                                            <option value="14">Pindoty</option>
-                                            <option value="15">Santa Rita</option>
-                                            <option value="16">Fernando de la Mora</option>
-                                            <option value="17">MRA</option>
-                                            <option value="18">San Lorenzo</option>
-                                            <option value="19">Ñemby</option>
-                                            <option value="20">Chacoi</option>
-                                            <option value="21">Sobre ruta 2</option>
-                                            <option value="22">Caaguazu</option>
-                                            <option value="23">Campo 9</option>
-                                            <option value="24">Campo 8</option>
-                                            <option value="25">Villarrica</option>
-                                            <option value="26">Chaco</option>
-                                            <option value="27">Villeta</option>
-                                            <option value="28">Eusebio Ayala</option>
-                                            <option value="29">CaacupeMi</option>
-                                            <option value="30">Pillar</option>
-                                            <option value="31">Villa Elisa</option>
-                                            <option value="32">Nasser</option>
-                                            <option value="33">Centrales Ypané</option>
-                                            <option value="34">Canindeyu</option>
-                                            <option value="35">Zona Franca km11</option>
-                                            <option value="36">Hernandarias</option>
+                                            <option value="" selected disabled>Punto de Retiro</option>
+                                            <%- include(partials + 'select/place.ejs' ) %>
                                         </select>
                                         <textarea class="form-control" placeholder="Observación del Mantenimiento"
                                             style="display: none;" type="text" name="obs" id="obs" data-obs
                                             required></textarea>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <select data-delivery class="form-select" id="delivery" name="delivery"
+                                            disabled>
+                                            <option value="" selected disabled>Punto de Entrega</option>
+                                            <%- include(partials + 'select/place.ejs' ) %>
+                                        </select>
                                     </div>
                                     <div class="form-group text-center col-md-12">
                                         <button class="btn btn-success" type="submit">Agregar</button>
@@ -174,6 +112,7 @@
                                         <option value="Todos" selected>TODAS LAS VIAJES</option>
                                         <option value="Viatico Nacional">Viatico Nacional</option>
                                         <option value="Retiro Contenedor">Retiro Contenedor</option>
+                                        <option value="Devolucion de Contenedor">Devolucion de Contenedor</option>
                                         <option value="Mantenimiento">Mantenimiento</option>
                                         <option value="Region Metropolitana">Region Metropolitana</option>
                                         <option value="Retorno">Retorno</option>
@@ -183,83 +122,13 @@
                                 <div class="form-group col-md-2">
                                     <select class="form-select" data-filter-travel-origin>
                                         <option value="Todos" selected>TODAS LAS ORIGENS</option>
-                                        <option value="KM 1">KM 1</option>
-                                        <option value="KM 28">KM 28</option>
-                                        <option value="YPANÉ">YPANÉ</option>
-                                        <option value="AC. KM 1">AC. KM 1</option>
-                                        <option value="LOG. HERRAMIENTAS">LOG. HERRAMIENTAS</option>
-                                        <option value="LOG. VEHÍCULOS">LOG. VEHÍCULOS</option>
-                                        <option value="LOG. EQUIPOS">LOG. EQUIPOS</option>
-                                        <option value="P. Seguro">P. Seguro</option>
-                                        <option value="P. Terport">P. Terport</option>
-                                        <option value="P. Fenix">P. Fenix</option>
-                                        <option value="PJC">PJC</option>
-                                        <option value="Itapua">Itapua</option>
-                                        <option value="Salto">Salto</option>
-                                        <option value="Pindoty">Pindoty</option>
-                                        <option value="Santa Rita">Santa Rita</option>
-                                        <option value="Fernando de la Mora">Fernando de la Mora</option>
-                                        <option value="MRA">MRA</option>
-                                        <option value="San Lorenzo">San Lorenzo</option>
-                                        <option value="Ñemby">Ñemby</option>
-                                        <option value="Chacoi">Chacoi</option>
-                                        <option value="Sobre ruta 2">Sobre ruta 2</option>
-                                        <option value="Caaguazu">Caaguazu</option>
-                                        <option value="Campo 9">Campo 9</option>
-                                        <option value="Campo 8">Campo 8</option>
-                                        <option value="Villarrica">Villarrica</option>
-                                        <option value="Chaco">Chaco</option>
-                                        <option value="Villeta">Villeta</option>
-                                        <option value="Eusebio Ayala">Eusebio Ayala</option>
-                                        <option value="CaacupeMi">CaacupeMi</option>
-                                        <option value="Pillar">Pillar</option>
-                                        <option value="Villa Elisa">Villa Elisa</option>
-                                        <option value="Nasser">Nasser</option>
-                                        <option value="Centrales Ypané">Centrales Ypané</option>
-                                        <option value="Canindeyu">Canindeyu</option>
-                                        <option value="Zona Franca km11">Zona Franca km11</option>
-                                        <option value="Hernandarias">Hernandarias</option>
+                                        <%- include(partials + 'select/placeDescription.ejs' ) %>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <select class="form-select" data-filter-travel-route>
                                         <option value="Todos" selected>TODOS LOS DESTINOS</option>
-                                        <option value="KM 1">KM 1</option>
-                                        <option value="KM 28">KM 28</option>
-                                        <option value="YPANÉ">YPANÉ</option>
-                                        <option value="AC. KM 1">AC. KM 1</option>
-                                        <option value="LOG. HERRAMIENTAS">LOG. HERRAMIENTAS</option>
-                                        <option value="LOG. VEHÍCULOS">LOG. VEHÍCULOS</option>
-                                        <option value="LOG. EQUIPOS">LOG. EQUIPOS</option>
-                                        <option value="P. Seguro">P. Seguro</option>
-                                        <option value="P. Terport">P. Terport</option>
-                                        <option value="P. Fenix">P. Fenix</option>
-                                        <option value="PJC">PJC</option>
-                                        <option value="Itapua">Itapua</option>
-                                        <option value="Salto">Salto</option>
-                                        <option value="Pindoty">Pindoty</option>
-                                        <option value="Santa Rita">Santa Rita</option>
-                                        <option value="Fernando de la Mora">Fernando de la Mora</option>
-                                        <option value="MRA">MRA</option>
-                                        <option value="San Lorenzo">San Lorenzo</option>
-                                        <option value="Ñemby">Ñemby</option>
-                                        <option value="Chacoi">Chacoi</option>
-                                        <option value="Sobre ruta 2">Sobre ruta 2</option>
-                                        <option value="Caaguazu">Caaguazu</option>
-                                        <option value="Campo 9">Campo 9</option>
-                                        <option value="Campo 8">Campo 8</option>
-                                        <option value="Villarrica">Villarrica</option>
-                                        <option value="Chaco">Chaco</option>
-                                        <option value="Villeta">Villeta</option>
-                                        <option value="Eusebio Ayala">Eusebio Ayala</option>
-                                        <option value="CaacupeMi">CaacupeMi</option>
-                                        <option value="Pillar">Pillar</option>
-                                        <option value="Villa Elisa">Villa Elisa</option>
-                                        <option value="Nasser">Nasser</option>
-                                        <option value="Centrales Ypané">Centrales Ypané</option>
-                                        <option value="Canindeyu">Canindeyu</option>
-                                        <option value="Zona Franca km11">Zona Franca km11</option>
-                                        <option value="Hernandarias">Hernandarias</option>
+                                        <%- include(partials + 'select/placeDescription.ejs' ) %>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2">
@@ -276,8 +145,18 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-md-2 text-right">
-                                    <button type="button" class="btn btn-secondary" style="cursor:cell;"
-                                        data-print-travel>Copiar Viajes</button>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                            Informes
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><button data-print-travel class="dropdown-item info-button"
+                                                    type="button">Viatico Nacional - Entrega Cliente</button></li>
+                                            <li><button data-print-strategic class="dropdown-item info-button"
+                                                    type="button">Estratégico/Resumen del día</button></li>
+                                        </ul>
+                                    </div>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <input class="form-control" type="date" data-search-date>
@@ -288,16 +167,16 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-1 text-center">
-                                    <h6>Usuario</h6>
-                                </div>
-                                <div class="col-md-1 text-center">
                                     <h6>Tipo</h6>
                                 </div>
                                 <div class="col-md-1 text-center">
-                                    <h6>Origem</h6>
+                                    <h6>Salida</h6>
                                 </div>
                                 <div class="col-md-1 text-center">
-                                    <h6>Destino/Obs</h6>
+                                    <h6>Retiro/Obs</h6>
+                                </div>
+                                <div class="col-md-1 text-center">
+                                    <h6>Entrega</h6>
                                 </div>
                                 <div class="col-md-1 text-center">
                                     <h6>Chofér</h6>
@@ -609,9 +488,6 @@
         <script type="module" src="../js/controllers/carController.js"></script>
         <script type="module" src="../js/controllers/loginController.js"></script>
         <script type="module" src="../js/controllers/menuController.js"></script>
-
-
-        <!-- <script src="../js/libs/geradorarquivo.min.js"></script> -->
         <script src="../js/libs/printThis.js"></script>
 
         <%- include(partials + 'footer.ejs' ) %>

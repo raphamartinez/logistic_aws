@@ -259,19 +259,6 @@ class Purchase {
             const date2 = new Date(date.getTime() - 14400000);
             const now = `${date2.getHours()}:${date2.getMinutes()} ${date2.getDate()}/${date2.getMonth() + 1}/${date2.getFullYear()}`;
 
-            // ws.addImage({
-            //     path: './public/img/launch.png',
-            //     type: 'picture',
-            //     position: {
-            //         type: 'absoluteAnchor',
-            //         from: {
-            //             col: 1,
-            //             row: 1,
-            //             rowOff: 0,
-            //         },
-            //     },
-            // });
-
             ws.cell(1, 2, 2, 9, true).string('COTIZACION DE PRECIOS').style(wb.createStyle({
                 font: {
                     bold: true,

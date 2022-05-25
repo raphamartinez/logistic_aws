@@ -1,4 +1,6 @@
 const Travel = require('../models/travel')
+const TravelReport = require('../models/travelreport')
+
 const Middleware = require('../infrastructure/auth/middleware')
 const Authorization = require('../infrastructure/auth/authorization')
 const cachelist = require('../infrastructure/redis/cache')
@@ -63,6 +65,20 @@ module.exports = app => {
             next(err)
         }
     })
+
+    app.get('/travel/report/strategic/:date', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
+        try {
+            const date = req.params.date
+
+            const history = await TravelReport.reportStrategic(id)
+
+            res.json(history)
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
 
     app.get('/cars/enable/:date/:period', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {

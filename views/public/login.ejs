@@ -29,6 +29,11 @@
                                     <div class="text-center">
                                         <img class="img-fluid mx-auto" src="../img/launch.png" alt="">
                                     </div>
+                                    <% if(messages.error) { %>
+                                        <div class="alert alert-danger">
+                                            <%= messages.error %>
+                                        </div>
+                                        <% } %>
                                     <form id="formLogin" method="POST" action="/login" class="user" data-form>
 
                                         <div class="form-group pt-3">

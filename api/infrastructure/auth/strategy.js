@@ -6,7 +6,7 @@ const { NotAuthorized, InvalidArgumentError } = require('../../models/error')
 
 function verifyLogin(login) {
   if (!login) {
-    throw new NotAuthorized()
+    throw new NotAuthorized('Acceso no autorizado al recurso solicitado.')
   }
 }
 
@@ -14,7 +14,7 @@ async function verifyPassword(password, passwordHash) {
   const passwordValid = await bcrypt.compare(password, passwordHash)
 
   if (!passwordValid) {
-    throw new NotAuthorized()
+    throw new NotAuthorized('Las contraseñas ingresadas no coinciden.')
   }
 }
 

@@ -10498,3 +10498,14 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 } */
+
+.info-button:focus, .info-button:hover {
+  color: #fff;
+  background-color: #7ba4e0 !important;
+}
+
+.info-button.active, .info-button:active {
+  color: #fff;
+  text-decoration: none;
+  background-color: #3084ff !important;
+}

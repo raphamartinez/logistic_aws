@@ -31,8 +31,8 @@ class DriveUp {
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
             },
             body: JSON.stringify({
-                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:00:00Z`,
-                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:59:59Z`
+                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:00Z`,
+                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${endDate}:59Z`
             })
         })
 

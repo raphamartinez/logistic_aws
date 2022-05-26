@@ -76,7 +76,7 @@ module.exports = app => {
             const browser = await puppeteer.launch()
             const page = await browser.newPage()
 
-            await page.goto(`http://localhost:3000/travel/report/strategic/${dt}`, {
+            await page.goto(`https://sistema.olla.com.py/travel/report/strategic/${dt}`, {
                 waitUntil: 'networkidle0'
             })
 

@@ -1575,7 +1575,7 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
       line += `- 𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${car[0]} - ${titleCase(`${car[1]}`)}\n`
       if (travel.children[7].children[0].value) {
         const chestType = travel.children[7].children[0].getAttribute('data-type')
-        line += `- *${chestType}*: ${travel.children[7].children[0].value}\n`
+        line += `- *${titleCase(chestType)}*: ${travel.children[7].children[0].value}\n`
       }
       line += `- 𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${travel.children[8].children[0].value} cubiertas \n\n\n`
       r[`${type}`] = r[`${type}`] || []

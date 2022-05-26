@@ -77,11 +77,10 @@ module.exports = app => {
                 args: ['--no-sandbox']})
             const page = await browser.newPage()
 
-            await page.goto(`https://sistema.olla.com.py/travel/report/strategic/${dt}`, {
+            await page.goto(`http://localhost:3000/travel/report/strategic/${dt}`, {
                 waitUntil: 'networkidle0'
             })
 
-            await page.waitForTimeout(2000)
             const pdf = await page.pdf({
                 printBackground: true,
                 format: 'A4'

@@ -81,6 +81,7 @@ module.exports = app => {
                 waitUntil: 'networkidle0'
             })
 
+            await page.waitForTimeout(2000)
             const pdf = await page.pdf({
                 printBackground: true,
                 format: 'A4'

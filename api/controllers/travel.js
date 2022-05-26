@@ -73,7 +73,7 @@ module.exports = app => {
             const date = req.params.date
             const dt = new Date(date)
 
-            const browser = await puppeteer.launch({headless: false,
+            const browser = await puppeteer.launch({headless: true,
                 args: ['--no-sandbox']})
             const page = await browser.newPage()
 

@@ -105,7 +105,9 @@ module.exports = app => {
 
             const data = await TravelReport.reportStrategic(date)
 
-            const startDate = new Date(date)
+            const startDate = new Date()
+            startDate.setTime(startDate.getTime() + startDate.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
+
             const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
             const day = startDate.getDate() > 9 ? startDate.getDate() : `0${startDate.getDate()}`
             const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`

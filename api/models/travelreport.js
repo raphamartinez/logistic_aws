@@ -888,7 +888,9 @@ class TravelReport {
             const ws = wb.addWorksheet('Informe')
 
             ws.column(1).setWidth(20)
-
+            ws.column(3).setWidth(15)
+            ws.column(4).setWidth(15)
+            ws.column(5).setWidth(15)
 
             const date = new Date();
             const date2 = new Date(date.getTime() - 14400000);
@@ -977,14 +979,14 @@ class TravelReport {
             data.forEach(record => {
                 let columnIndex = 1;
 
-                amount += record.qty
-
                 if (lastType !== record.type) {
                     ws.cell(rowIndex, 2).number(amount).style(borderStyle)
                     lastType = record.type
                     amount = 0
                     rowIndex += 2
                 }
+
+                amount = amount + Number.parseInt(record.qty)
 
                 ws.cell(rowIndex, columnIndex++).string(record.type).style(typeStyle)
                 ws.cell(rowIndex, columnIndex++).number(record.qty).style(borderStyle)

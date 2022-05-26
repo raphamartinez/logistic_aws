@@ -385,7 +385,7 @@ class Travel {
         }
     }
 
-    async reportStrategic(date) {
+    async reportStrategic(day) {
         try {
 
             const sql = `SELECT  CASE
@@ -397,7 +397,49 @@ class Travel {
             WHEN tr.type = 6 THEN "Transferencia"
             WHEN tr.type = 7 THEN "Devolucion de Contenedor"
             ELSE ""
-        END as type,                     CASE
+        END as type, 
+        count(id) as qty,
+        CASE
+        WHEN tr.origin = 1 THEN "KM 1"
+        WHEN tr.origin = 2 THEN "KM 28"
+        WHEN tr.origin = 3 THEN "YPANÉ"
+        WHEN tr.origin = 4 THEN "AC. KM 1"
+        WHEN tr.origin = 5 THEN "LOG. HERRAMIENTAS"
+        WHEN tr.origin = 5 THEN "LOG. HERRAMIENTAS"
+        WHEN tr.origin = 6 THEN "LOG. VEHÍCULOS"
+        WHEN tr.origin = 7 THEN "LOG. EQUIPOS"
+        WHEN tr.origin = 8 THEN "P. Seguro"
+        WHEN tr.origin = 9 THEN "P. Terport"
+        WHEN tr.origin = 10 THEN "P. Fenix"
+        WHEN tr.origin = 11 THEN "PJC"
+        WHEN tr.origin = 12 THEN "Itapua"
+        WHEN tr.origin = 13 THEN "Salto"
+        WHEN tr.origin = 14 THEN "Pindoty"
+        WHEN tr.origin = 15 THEN "Santa Rita"
+        WHEN tr.origin = 16 THEN "Fernando de la Mora"
+        WHEN tr.origin = 17 THEN "MRA"
+        WHEN tr.origin = 18 THEN "San Lorenzo"
+        WHEN tr.origin = 19 THEN "Ñemby"
+        WHEN tr.origin = 20 THEN "Chacoi"
+        WHEN tr.origin = 21 THEN "Sobre ruta 2"
+        WHEN tr.origin = 22 THEN "Caaguacu"
+        WHEN tr.origin = 23 THEN "Campo 9"
+        WHEN tr.origin = 24 THEN "Campo 8"
+        WHEN tr.origin = 25 THEN "Villa Rica"
+        WHEN tr.origin = 26 THEN "Chaco"
+        WHEN tr.origin = 27 THEN "Villeta"
+        WHEN tr.origin = 28 THEN "Eusebio Ayala"
+        WHEN tr.origin = 29 THEN "CaacupeMi"
+        WHEN tr.origin = 30 THEN "Pillar"
+        WHEN tr.origin = 31 THEN "Villalisa"
+        WHEN tr.origin = 32 THEN "Nasser"
+        WHEN tr.origin = 33 THEN "Centrales Ypané"
+        WHEN tr.route = 34 THEN "Canindeyu"
+        WHEN tr.route = 35 THEN "Zona Franca km11"
+        WHEN tr.route = 36 THEN "Hernandarias"
+        ELSE "-"
+        END as origindesc,
+        CASE
             WHEN tr.route = 1 THEN "KM 1"
             WHEN tr.route = 2 THEN "KM 28"
             WHEN tr.route = 3 THEN "YPANÉ"
@@ -435,48 +477,8 @@ class Travel {
             WHEN tr.route = 34 THEN "Canindeyu"
             WHEN tr.route = 35 THEN "Zona Franca km11"
             WHEN tr.route = 36 THEN "Hernandarias"
-            ELSE ""
+            ELSE "-"
         END as routedesc,
-            CASE
-            WHEN tr.origin = 1 THEN "KM 1"
-            WHEN tr.origin = 2 THEN "KM 28"
-            WHEN tr.origin = 3 THEN "YPANÉ"
-            WHEN tr.origin = 4 THEN "AC. KM 1"
-            WHEN tr.origin = 5 THEN "LOG. HERRAMIENTAS"
-            WHEN tr.origin = 5 THEN "LOG. HERRAMIENTAS"
-            WHEN tr.origin = 6 THEN "LOG. VEHÍCULOS"
-            WHEN tr.origin = 7 THEN "LOG. EQUIPOS"
-            WHEN tr.origin = 8 THEN "P. Seguro"
-            WHEN tr.origin = 9 THEN "P. Terport"
-            WHEN tr.origin = 10 THEN "P. Fenix"
-            WHEN tr.origin = 11 THEN "PJC"
-            WHEN tr.origin = 12 THEN "Itapua"
-            WHEN tr.origin = 13 THEN "Salto"
-            WHEN tr.origin = 14 THEN "Pindoty"
-            WHEN tr.origin = 15 THEN "Santa Rita"
-            WHEN tr.origin = 16 THEN "Fernando de la Mora"
-            WHEN tr.origin = 17 THEN "MRA"
-            WHEN tr.origin = 18 THEN "San Lorenzo"
-            WHEN tr.origin = 19 THEN "Ñemby"
-            WHEN tr.origin = 20 THEN "Chacoi"
-            WHEN tr.origin = 21 THEN "Sobre ruta 2"
-            WHEN tr.origin = 22 THEN "Caaguacu"
-            WHEN tr.origin = 23 THEN "Campo 9"
-            WHEN tr.origin = 24 THEN "Campo 8"
-            WHEN tr.origin = 25 THEN "Villa Rica"
-            WHEN tr.origin = 26 THEN "Chaco"
-            WHEN tr.origin = 27 THEN "Villeta"
-            WHEN tr.origin = 28 THEN "Eusebio Ayala"
-            WHEN tr.origin = 29 THEN "CaacupeMi"
-            WHEN tr.origin = 30 THEN "Pillar"
-            WHEN tr.origin = 31 THEN "Villalisa"
-            WHEN tr.origin = 32 THEN "Nasser"
-            WHEN tr.origin = 33 THEN "Centrales Ypané"
-            WHEN tr.route = 34 THEN "Canindeyu"
-            WHEN tr.route = 35 THEN "Zona Franca km11"
-            WHEN tr.route = 36 THEN "Hernandarias"
-            ELSE ""
-            END as origindesc,
             CASE
             WHEN tr.delivery = 1 THEN "KM 1"
             WHEN tr.delivery = 2 THEN "KM 28"
@@ -515,14 +517,14 @@ class Travel {
             WHEN tr.delivery = 34 THEN "Canindeyu"
             WHEN tr.delivery = 35 THEN "Zona Franca km11"
             WHEN tr.delivery = 36 THEN "Hernandarias"
-            ELSE ""
-        END as deliverydesc, count(id) as qty 
+            ELSE "-"
+        END as deliverydesc
         FROM api.travel as tr 
         WHERE DATE(tr.date) = DATE(?)
         GROUP BY type, routedesc, origindesc, deliverydesc
-        ORDER BY type, routedesc, origindesc, deliverydesc ASC;`
+        ORDER BY type, routedesc, origindesc, deliverydesc ASC`
 
-            return query(sql, date)
+            return query(sql, day)
 
         } catch (error) {
             throw new InternalServerError('No se pudieron listar lo informe')

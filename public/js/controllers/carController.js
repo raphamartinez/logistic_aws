@@ -1593,7 +1593,7 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
   alert("¡Contenido copiado con éxito!")
 })
 
-document.querySelector('[data-print-strategic]').addEventListener('click', () => {
+document.querySelector('[data-print-strategic]').addEventListener('click', async () => {
   let input = document.createElement("textarea");
   let now = new Date()
 
@@ -1610,28 +1610,20 @@ document.querySelector('[data-print-strategic]').addEventListener('click', () =>
     input.value += '\n'
   }
 
-  const dateHtml = document.querySelector('[data-search-date]')
+  const dateHtml = document.querySelector('[data-search-date]').value
   const date = new Date(dateHtml)
 
-  // input.value += '---------------------|--------|-----------|----------|------------|\n'
-  // input.value += 'Tipo               Cant  Salida  Retiro  Entrega '
-  // input.value += 'Retiro-----------|--------|-----------|----------|------------|\n'
-  // input.value += 'Entrega--------|--------|-----------|----------|------------|\n'
-  // input.value += 'Devolucion--|--------|-----------|----------|------------|\n'
-  // input.value += 'Manten.-------|--------|-----------|----------|------------|\n'
-  // input.value += 'Retorno-------|--------|-----------|----------|------------|\n'
-  // input.value += 'Transf.---------|--------|-----------|----------|------------|\n'
-  // input.value += '--------------------|        |-----------------------------------|\n'
+  const xls = await Connection.backGetFile(`travel/report/strategic/${date}`, 'GET')
+  if (!xls) return alert('No hay viajes para listar.')
+  const filexls = await xls.blob();
 
-  // const data = await Connection.noBody(`travel/report/strategic/${date}`,'GET')
-
-
-  // document.body.appendChild(input);
-  // input.select();
-  // document.execCommand("copy");
-  // input.remove();
-
-  // alert("¡Contenido copiado con éxito!")
+  let a = document.createElement('a');
+  a.href = window.URL.createObjectURL(filexls);
+  a.target = "_blank";
+  a.download = "informe.xlsx";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 })
 
 document.querySelector('[data-copy-travel]').addEventListener('click', () => {

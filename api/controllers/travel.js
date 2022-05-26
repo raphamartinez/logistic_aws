@@ -70,9 +70,9 @@ module.exports = app => {
         try {
             const date = req.params.date
 
-            const history = await TravelReport.reportStrategic(id)
-
-            res.json(history)
+            const wb = await TravelReport.reportStrategic(date)
+            // if (!wb) return res.json({})
+            wb.write('informe.xlsx', res)
         } catch (err) {
             console.log(err);
             next(err)

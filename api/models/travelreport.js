@@ -3,6 +3,7 @@ const Repositorie = require('../repositories/travelreport')
 const RepositorieTravel = require('../repositories/travel')
 const docx = require('docx');
 const { AlignmentType, Document, ShadingType, WidthType, VerticalAlign, BorderStyle, SectionType, Footer, Header, HeadingLevel, Packer, Paragraph, TextRun, UnderlineType, Table, TableCell, TableRow } = docx;
+const xl = require('excel4node');
 
 class TravelReport {
 
@@ -864,11 +865,142 @@ class TravelReport {
         return b64string
     }
 
-    async reportStrategic(date){
+    async reportStrategic(day) {
         try {
-            let data = await RepositorieTravel.reportStrategic(date)
 
-            return data
+            const dayD = new Date(day)
+
+            let data = await RepositorieTravel.reportStrategic(dayD)
+            if (data.length === 0) return null
+
+            const titles = [
+                'Tipo',
+                'Cant',
+                'Salida',
+                'Retiro',
+                'Entrega'
+            ]
+
+            const wb = new xl.Workbook({
+                author: 'OLA Transportadora',
+            })
+
+            const ws = wb.addWorksheet('Informe')
+
+            ws.column(1).setWidth(20)
+
+
+            const date = new Date();
+            const date2 = new Date(date.getTime() - 14400000);
+
+            const headerStyle = wb.createStyle({
+                fill: {
+                    type: 'pattern',
+                    patternType: 'solid',
+                    fgColor: '#808080',
+                },
+                font: {
+                    color: '#FFFFFF',
+                    size: 14,
+                }
+            });
+
+            const typeStyle = wb.createStyle({
+                border: {
+                    left: {
+                        style: 'thin', 
+                        color: '#000000'  // HTML style hex value
+                    },
+                    right: {
+                        style: 'thin',
+                        color: '#000000'
+                    },
+                    top: {
+                        style: 'thin',
+                        color: '#000000'
+                    },
+                    bottom: {
+                        style: 'thin',
+                        color: '#000000'
+                    },
+                    diagonal: {
+                        style: 'thin',
+                        color: '#000000'
+                    },
+                },
+                font: {
+                    bold: true
+                }
+            });
+
+
+            const borderStyle = wb.createStyle({
+                border: {
+                    left: {
+                        style: 'thin', 
+                        color: '#000000'  // HTML style hex value
+                    },
+                    right: {
+                        style: 'thin',
+                        color: '#000000'
+                    },
+                    top: {
+                        style: 'thin',
+                        color: '#000000'
+                    },
+                    bottom: {
+                        style: 'thin',
+                        color: '#000000'
+                    },
+                    diagonal: {
+                        style: 'thin',
+                        color: '#000000'
+                    },
+                },
+                alignment: { horizontal: ['center'] }
+            });
+
+
+            ws.cell(1, 1).string(`𝐈𝐧𝐟𝐨𝐫𝐦𝐞 𝐄𝐬𝐭𝐫𝐚𝐭é𝐠𝐢𝐜𝐨/𝐑𝐞𝐬𝐮𝐦𝐞𝐧 𝐝𝐞 𝐋𝐨𝐠í𝐬𝐭𝐢𝐜𝐚 𝐝𝐞𝐥 𝐝í𝐚`);
+            ws.cell(3, 1).string(`Viajens do dia ${date2.getDate()}/${date2.getMonth() + 1}/${date2.getFullYear()} - até hora registrada: ${date2.getHours()}:${date2.getMinutes()}`);
+            ws.cell(4, 1).string(`Cliente: Sunset Cubiertas`);
+
+            let headerIndex = 1;
+            titles.forEach(title => {
+                ws.cell(6, headerIndex++).string(title).style(headerStyle)
+            })
+
+            let rowIndex = 7
+            let lastType = data[0].type
+            let amount = 0
+            let lastrow = 7
+            data.forEach(record => {
+                let columnIndex = 1;
+
+                amount += record.qty
+
+                if (lastType !== record.type) {
+                    ws.cell(rowIndex, 2).number(amount).style(borderStyle)
+                    lastType = record.type
+                    amount = 0
+                    rowIndex += 2
+                }
+
+                ws.cell(rowIndex, columnIndex++).string(record.type).style(typeStyle)
+                ws.cell(rowIndex, columnIndex++).number(record.qty).style(borderStyle)
+                ws.cell(rowIndex, columnIndex++).string(record.origindesc).style(borderStyle)
+                ws.cell(rowIndex, columnIndex++).string(record.routedesc).style(borderStyle)
+                ws.cell(rowIndex, columnIndex++).string(record.deliverydesc).style(borderStyle)
+
+                rowIndex++
+                lastrow = rowIndex
+            })
+
+            ws.cell(lastrow, 2).number(amount).style(borderStyle)
+
+            ws.cell(lastrow + 3, 1).string('𝘐𝘯𝘧𝘰𝘳𝘮𝘢𝘤𝘪ó𝘯 𝘨𝘦𝘯𝘦𝘳𝘢𝘥𝘢 𝘱𝘰𝘳 𝘴𝘪𝘴𝘵𝘦𝘮𝘢 𝘖𝘭𝘢 𝘤𝘰𝘯𝘧𝘰𝘳𝘮𝘦 𝘭𝘢𝘯𝘻𝘢𝘮𝘪𝘦𝘯𝘵𝘰𝘴.')
+
+            return wb
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')

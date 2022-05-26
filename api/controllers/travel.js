@@ -1,9 +1,11 @@
 const Travel = require('../models/travel')
 const TravelReport = require('../models/travelreport')
-
+const ejs = require('ejs')
 const Middleware = require('../infrastructure/auth/middleware')
 const Authorization = require('../infrastructure/auth/authorization')
 const cachelist = require('../infrastructure/redis/cache')
+const path = require('path')
+const puppeteer = require('puppeteer')
 
 module.exports = app => {
 
@@ -66,13 +68,56 @@ module.exports = app => {
         }
     })
 
-    app.get('/travel/report/strategic/:date', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
+    app.get('/travel/pdf/strategic/:date', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
+        try {
+            const date = req.params.date
+            const dt = new Date(date)
+
+            const browser = await puppeteer.launch()
+            const page = await browser.newPage()
+
+            await page.goto(`http://localhost:3000/travel/report/strategic/${dt}`, {
+                waitUntil: 'networkidle0'
+            })
+
+            const pdf = await page.pdf({
+                printBackground: true,
+                format: 'A4'
+            })
+
+            await browser.close()
+
+            res.contentType('application/pdf')
+            res.setHeader('Content-Disposition', 'attachment; filename=informe.pdf');
+            return res.send(Buffer.from(pdf, 'base64'));
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
+
+    app.get('/travel/report/strategic/:date', async (req, res, next) => {
         try {
             const date = req.params.date
 
-            const wb = await TravelReport.reportStrategic(date)
-            // if (!wb) return res.json({})
-            wb.write('informe.xlsx', res)
+            const data = await TravelReport.reportStrategic(date)
+
+            const startDate = new Date(date)
+            const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
+            const day = startDate.getDate() > 9 ? startDate.getDate() : `0${startDate.getDate()}`
+            const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
+            const hours = startDate.getHours() > 9 ? startDate.getHours() : `0${startDate.getHours()}`
+    
+
+            const filePath = path.join(__dirname, "../../views/admin/reports/strategic-pdf.ejs")
+            ejs.renderFile(filePath, { data, day: `${day}/${month}/${startDate.getFullYear()}`, time: `${hours}:${minutes}` }, async (err, html) => {
+                if (err) {
+                    return res.send('Erro na leitura do arquivo')
+                }
+
+                return res.send(html)
+            })
         } catch (err) {
             console.log(err);
             next(err)

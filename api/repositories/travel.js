@@ -398,6 +398,16 @@ class Travel {
             WHEN tr.type = 7 THEN "Devolucion de Contenedor"
             ELSE ""
         END as type, 
+        CASE
+            WHEN tr.type = 1 THEN "table-primary"
+            WHEN tr.type = 2 THEN "table-secondary"
+            WHEN tr.type = 3 THEN "table-success"
+            WHEN tr.type = 4 THEN "table-warning"
+            WHEN tr.type = 5 THEN "table-info"
+            WHEN tr.type = 6 THEN "table-danger"
+            WHEN tr.type = 7 THEN "table-light"
+            ELSE ""
+        END as typeClass, 
         count(id) as qty,
         CASE
         WHEN tr.origin = 1 THEN "KM 1"

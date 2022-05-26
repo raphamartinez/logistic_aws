@@ -17,6 +17,7 @@ class DriveUp {
 
         const endDate = new Date()
         const minutesEnd = endDate.getMinutes() > 9 ? endDate.getMinutes() : `0${endDate.getMinutes()}`
+        const hoursEnd = endDate.getHours() > 9 ? endDate.getHours() : `0${endDate.getHours()}`
 
         const startDate = new Date(endDate.getTime() + (-30 * 60000))
         const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
@@ -34,7 +35,7 @@ class DriveUp {
             },
             body: JSON.stringify({
                 'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:00Z`,
-                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutesEnd}:59Z`
+                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hoursEnd}:${minutesEnd}:59Z`
             })
         })
 

@@ -772,7 +772,7 @@ const travel = (travels, drivers) => {
     let chest = ""
     let carchestdesc = ""
     if (travel.cars[1]) carchestdesc = travel.cars[1].plate
-    if (travel.cars[1]) chest = `${travel.cars[1].plate} - ${travel.cars[1].cartype} - ${travel.cars[1].brand} - ${travel.cars[1].model} - ${travel.cars[1].year}`
+    if (travel.cars[1]) chest = travel.cars[1].cartype
 
     if (travel.type === "Mantenimiento" || travel.type === "Region Metropolitana") {
       document.querySelector(`[data-status-${travel.cars[0].plate.toLowerCase()}]`).parentNode.innerHTML = `
@@ -891,7 +891,7 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
   if (`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}` === `${date2.getDate()}/${date2.getMonth() + 1}/${date2.getFullYear()}`) {
     let plate = travel.cardesc
     let chest = ""
-    if (travel.chest) chest = travel.carchestdesc
+    if (travel.chest) chest = travel.carchestdesc.split(' - ')[1].trim()
 
     if (travel.type == 3 || travel.type == 4) {
       travel.type = travel.typedesc
@@ -1436,7 +1436,7 @@ const listTravels = (travels) => {
   travels.forEach(travel => {
     let plate = `${travel.cars[0].plate} - ${travel.cars[0].cartype} - ${travel.cars[0].brand} - ${travel.cars[0].model} - ${travel.cars[0].year}`
     let chest = ""
-    if (travel.cars[1]) chest = `${travel.cars[1].plate} - ${travel.cars[1].cartype} - ${travel.cars[1].brand} - ${travel.cars[1].model} - ${travel.cars[1].year}`
+    if (travel.cars[1]) chest = travel.cars[1].cartype
 
     let platedesc = travel.cars[0].plate
     let chestdesc = ""
@@ -1533,6 +1533,12 @@ document.querySelector('[data-print]').addEventListener('click', () => {
   $("#dataTable").printThis()
 })
 
+function titleCase(string) {
+  let word = string[0].toUpperCase() + string.slice(1).toLowerCase();
+  if (word.length > 30) word = word.substring(0, 30)
+  return word
+}
+
 document.querySelector('[data-print-travel]').addEventListener('click', () => {
   let input = document.createElement("textarea");
   let now = new Date()
@@ -1554,7 +1560,7 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
   const travels = document.querySelector('[data-row-travel]')
 
   let groups = Array.from(travels.children).reduce(function (r, travel) {
-    let type = travel.children[0].children[0].value == 'Viatico Nacional' ? 'Viatico Nacional - Entregas Clientes' : travel.children[0].children[0].value
+    let type = travel.children[0].children[0].value == 'Viatico Nacional' ? 'Viatico N. - Entregas Clientes' : travel.children[0].children[0].value
     let car = travel.children[6].children[0].value.split('-')
     let line = ''
     if (travel.style.display == 'flex' || travel.style.display == '') {
@@ -1563,11 +1569,14 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
       if (travel.children[2].children[0].value) line += `- 𝐑𝐞𝐭𝐢𝐫𝐨/𝐎𝐛𝐬: ${travel.children[2].children[0].value}\n`
       if (travel.children[3].children[0].value) line += `- 𝐄𝐧𝐭𝐫𝐞𝐠𝐚: ${travel.children[3].children[0].value}\n`
       if (travel.children[4].children[0].value) {
-        line += `- 𝐂𝐡𝐨𝐟𝐞𝐫: ${travel.children[4].children[0].value}\n`
+        line += `- 𝐂𝐡𝐨𝐟𝐞𝐫: ${titleCase(travel.children[4].children[0].value)}\n`
         line += `- 𝐂𝐈: ${travel.children[4].children[0].getAttribute('data-ci')}\n`
       }
-      line += `- 𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${car[0]} - ${car[1]}\n`
-      if (travel.children[7].children[0].value) line += `- 𝐅𝐮𝐫𝐠𝐨𝐧: ${travel.children[7].children[0].value}\n`
+      line += `- 𝐂𝐚𝐛𝐚𝐥𝐥𝐢𝐭𝐨: ${car[0]} - ${titleCase(`${car[1]}`)}\n`
+      if (travel.children[7].children[0].value) {
+        const chestType = travel.children[7].children[0].getAttribute('data-type')
+        line += `- *${chestType}*: ${travel.children[7].children[0].value}\n`
+      }
       line += `- 𝐂𝐚𝐩𝐚𝐜𝐢𝐝𝐚𝐝: ${travel.children[8].children[0].value} cubiertas \n\n\n`
       r[`${type}`] = r[`${type}`] || []
       r[`${type}`].push(line);
@@ -1578,7 +1587,7 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
   const keys = Object.keys(groups)
 
   keys.forEach(key => {
-    let message = `*${key}*\n\n`
+    let message = `--------------------------------------------------\n*${key}*\n\n`
     groups[key].forEach(line => message += line)
     input.value += message
   })
@@ -1592,36 +1601,32 @@ document.querySelector('[data-print-travel]').addEventListener('click', () => {
 })
 
 document.querySelector('[data-print-strategic]').addEventListener('click', async () => {
-  let input = document.createElement("textarea");
-  let now = new Date()
 
-  input.value = `𝐈𝐧𝐟𝐨𝐫𝐦𝐞 𝐄𝐬𝐭𝐫𝐚𝐭é𝐠𝐢𝐜𝐨/𝐑𝐞𝐬𝐮𝐦𝐞𝐧 𝐝𝐞 𝐋𝐨𝐠í𝐬𝐭𝐢𝐜𝐚 𝐝𝐞𝐥 𝐝í𝐚\nViajens do dia ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()} até hora registrada: ${now.getHours()}:${now.getMinutes()}\nCliente: Sunset\n\n`
-
-  if (document.querySelector('[data-filter-travel-type] :checked').value != 'Todos' || document.querySelector('[data-filter-travel-route] :checked').value != 'Todos' || document.querySelector('[data-filter-travel-trucktype] :checked').value != 'Todos') {
-    input.value += '𝐅𝐢𝐥𝐭𝐫𝐨𝐬\n'
-    if (document.querySelector('[data-filter-travel-type] :checked').value != 'Todos') input.value += `𝐓𝐢𝐩𝐨 𝐝𝐞𝐥 𝐕𝐢𝐚𝐣𝐞: ${document.querySelector('[data-filter-travel-type] :checked').innerText}\n`
-    if (document.querySelector('[data-filter-travel-route] :checked').value != 'Todos') input.value += `𝐃𝐞𝐬𝐭𝐢𝐧𝐨: ${document.querySelector('[data-filter-travel-route] :checked').innerText}\n`
-    if (document.querySelector('[data-filter-travel-trucktype] :checked').value != 'Todos') input.value += `𝐓𝐢𝐩𝐨 𝐝𝐞𝐥 𝐂𝐚𝐦𝐢𝐨𝐧: ${document.querySelector('[data-filter-travel-trucktype] :checked').innerText}\n`
-
-    input.value += '\n\n'
-  } else {
-    input.value += '\n'
-  }
+  let loading = document.querySelector('[data-loading]')
+  loading.innerHTML = `
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+`
 
   const dateHtml = document.querySelector('[data-search-date]').value
   const date = new Date(dateHtml)
 
-  const xls = await Connection.backGetFile(`travel/report/strategic/${date}`, 'GET')
+  const xls = await Connection.backGetFile(`travel/pdf/strategic/${date}`, 'GET')
   if (!xls) return alert('No hay viajes para listar.')
   const filexls = await xls.blob();
 
   let a = document.createElement('a');
   a.href = window.URL.createObjectURL(filexls);
   a.target = "_blank";
-  a.download = "informe.xlsx";
+  a.download = "informe.pdf";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+
+  loading.innerHTML = ''
 })
 
 document.querySelector('[data-copy-travel]').addEventListener('click', () => {

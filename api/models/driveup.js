@@ -16,6 +16,8 @@ class DriveUp {
     async vehicleAlerts() {
 
         const endDate = new Date()
+        const minutesEnd = endDate.getMinutes() > 9 ? endDate.getMinutes() : `0${endDate.getMinutes()}`
+
         const startDate = new Date(endDate.getTime() + (-30 * 60000))
         const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
         const day = startDate.getDate() > 9 ? startDate.getDate() : `0${startDate.getDate()}`
@@ -32,7 +34,7 @@ class DriveUp {
             },
             body: JSON.stringify({
                 'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:00Z`,
-                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${endDate}:59Z`
+                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutesEnd}:59Z`
             })
         })
 

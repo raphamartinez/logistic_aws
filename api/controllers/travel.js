@@ -73,7 +73,8 @@ module.exports = app => {
             const date = req.params.date
             const dt = new Date(date)
 
-            const browser = await puppeteer.launch()
+            const browser = await puppeteer.launch({headless: true,
+                args: ['--no-sandbox']})
             const page = await browser.newPage()
 
             await page.goto(`https://sistema.olla.com.py/travel/report/strategic/${dt}`, {

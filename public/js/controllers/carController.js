@@ -1328,7 +1328,6 @@ const enable = async () => {
   if (document.querySelector('[data-type]').value == 3 || document.querySelector('[data-type]').value == 4) {
     document.querySelector('[data-obs]').required = true;
     document.querySelector('[data-obs]').style.display = 'block';
-    document.querySelector('[data-route]').required = false;
     document.querySelector('[data-route]').style.display = 'none';
 
     if (document.querySelector('[data-type]').value == 4) {
@@ -1340,7 +1339,6 @@ const enable = async () => {
     }
 
   } else {
-    document.querySelector('[data-route]').required = true;
     document.querySelector('[data-obs]').required = false;
     document.querySelector('[data-driver]').disabled = false;
     document.querySelector('[data-route]').disabled = false;

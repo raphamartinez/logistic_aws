@@ -97,7 +97,7 @@
                                                 <%= cell.origindesc %>
                                             </td>
                                             <td>
-                                                <%= cell.routedesc %>
+                                             <% if(cell.origindesc !== cell.routedesc) {%><%= cell.routedesc %><%}%>
                                             </td>
                                             <td>
                                                 <%= cell.deliverydesc %>

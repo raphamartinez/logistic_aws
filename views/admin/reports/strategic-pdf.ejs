@@ -47,8 +47,8 @@
 
 <body>
     <main>
-        <div class="container-fluid ms-4 mt-4 me-1 pb-5">
-            <h2>𝐈𝐧𝐟𝐨𝐫𝐦𝐞 𝐄𝐬𝐭𝐫𝐚𝐭é𝐠𝐢𝐜𝐨/𝐑𝐞𝐬𝐮𝐦𝐞𝐧 𝐝𝐞 𝐕𝐢𝐚𝐣𝐞𝐬</h2>
+        <div class="container-fluid ms-4 mt-4 me-4">
+            <h2><strong>Informe Estratégico/Resumen de Viajes</strong></h2>
             <p class="h6" style="font-size: 0.9rem;">Fecha: <%= time %>
                     <%= day %>
             </p>
@@ -56,7 +56,7 @@
 
             <div class="mt-4 me-4">
                 <table class="table table-sm">
-                    <thead class="bg-gradient-primary text-white pt-4">
+                    <thead class="bg-gradient-primary text-white">
                         <tr>
                             <th scope="col">Tipo</th>
                             <th scope="col">Cant</th>
@@ -67,13 +67,13 @@
                     </thead>
                     <tbody>
                         <% let lastType=data[0].type; let amount=0; %>
-                            <% data.map(cell=> {
+                            <% data.map((cell, index)=> {
                                 if (lastType !== cell.type) {%>
                                 <tr style="border-color: white;">
                                     <td>
                                         <strong>Total</strong>
                                     </td>
-                                    <td colspan="4">
+                                    <td style="display: block;" colspan="4">
                                         <strong>
                                             <%= amount %>
                                         </strong>
@@ -97,18 +97,20 @@
                                                 <%= cell.origindesc %>
                                             </td>
                                             <td>
-                                             <% if(cell.origindesc !== cell.routedesc) {%><%= cell.routedesc %><%}%>
+                                                <% if(cell.origindesc !==cell.routedesc) {%>
+                                                    <%= cell.routedesc %>
+                                                        <%}%>
                                             </td>
                                             <td>
                                                 <%= cell.deliverydesc %>
                                             </td>
                                         </tr>
                                         <% }) %>
-                                            <tr>
+                                            <tr style="border-color: white;">
                                                 <td>
                                                     <strong>Total</strong>
                                                 </td>
-                                                <td colspan="4">
+                                                <td style="display: block;" colspan="4">
                                                     <strong>
                                                         <%= amount %>
                                                     </strong>
@@ -119,9 +121,9 @@
             </div>
         </div>
     </main>
-    <footer class="fixed-bottom blog-footer sticky-bottom">
+    <footer class="blog-footer">
         <i>
-            <p>Información generada por <a href="https://sistema.olla.com.py/">sistema.olla.com.py</a> conforme
+            <p>Información generada por <a href="https://sistema.olla.com.py/">sistema.ola.com.py</a> conforme
                 lanzamientos operacionales.</p>
         </i>
     </footer>

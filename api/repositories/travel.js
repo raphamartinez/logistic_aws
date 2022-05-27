@@ -14,7 +14,8 @@ class Travel {
                         WHEN tr.type = 4 THEN "Region Metropolitana"
                         WHEN tr.type = 5 THEN "Retorno"
                         WHEN tr.type = 6 THEN "Transferencia"
-                        WHEN tr.type = 7 THEN "Devolucion de Contenedor"
+                        WHEN tr.type = 7 THEN "Devolucion de Contenedor" 
+                        WHEN tr.type = 8 THEN "Cubiertas para Reciclajes" 
                         ELSE ""
                     END as type,
                     CASE
@@ -259,6 +260,7 @@ class Travel {
                         WHEN tr.type = 5 THEN "Retorno"
                         WHEN tr.type = 6 THEN "Transferencia"
                         WHEN tr.type = 7 THEN "Devolucion de Contenedor"
+                        WHEN tr.type = 8 THEN "Cubiertas para Reciclajes" 
                         ELSE ""
                     END as type,
                     CASE
@@ -414,6 +416,7 @@ class Travel {
             WHEN tr.type = 5 THEN "Retorno"
             WHEN tr.type = 6 THEN "Transferencia"
             WHEN tr.type = 7 THEN "Devolucion de Contenedor"
+            WHEN tr.type = 8 THEN "Cubiertas para Reciclajes" 
             ELSE ""
         END as type, 
         CASE

@@ -57,6 +57,7 @@ class Travel {
                         WHEN tr.route = 36 THEN "Hernandarias"
                         WHEN tr.route = 37 THEN "Cap. Bado"
                         WHEN tr.route = 38 THEN "Villa Hayes"
+                        WHEN tr.route = 39 THEN "Saltos/Pindoty"
                         ELSE ""
                     END as routedesc,
                         CASE
@@ -99,6 +100,7 @@ class Travel {
                         WHEN tr.origin = 36 THEN "Hernandarias"
                         WHEN tr.origin = 37 THEN "Cap. Bado"
                         WHEN tr.origin = 38 THEN "Villa Hayes"
+                        WHEN tr.origin = 39 THEN "Saltos/Pindoty"
                         ELSE ""
 						END as origindesc,
                         CASE
@@ -141,6 +143,7 @@ class Travel {
                         WHEN tr.delivery = 36 THEN "Hernandarias"
                         WHEN tr.delivery = 37 THEN "Cap. Bado"
                         WHEN tr.delivery = 38 THEN "Villa Hayes"
+                        WHEN tr.delivery = 39 THEN "Saltos/Pindoty"
                         ELSE ""
                     END as deliverydesc
                         FROM api.travel tr
@@ -298,6 +301,7 @@ class Travel {
                         WHEN tr.route = 36 THEN "Hernandarias"
                         WHEN tr.route = 37 THEN "Cap. Bado"
                         WHEN tr.route = 38 THEN "Villa Hayes"
+                        WHEN tr.route = 39 THEN "Saltos/Pindoty"
                         ELSE ""
                     END as routedesc,
                         CASE
@@ -340,6 +344,7 @@ class Travel {
                         WHEN tr.origin = 36 THEN "Hernandarias"
                         WHEN tr.origin = 37 THEN "Cap. Bado"
                         WHEN tr.origin = 38 THEN "Villa Hayes"
+                        WHEN tr.origin = 39 THEN "Saltos/Pindoty"
                         ELSE ""
 						END as origindesc,
                         CASE
@@ -382,6 +387,7 @@ class Travel {
                         WHEN tr.delivery = 36 THEN "Hernandarias"
                         WHEN tr.delivery = 37 THEN "Cap. Bado"
                         WHEN tr.delivery = 38 THEN "Villa Hayes"
+                        WHEN tr.delivery = 39 THEN "Saltos/Pindoty"
                         ELSE ""
                         END as deliverydesc
                         FROM api.travel tr
@@ -461,6 +467,7 @@ class Travel {
         WHEN tr.origin = 36 THEN "Hernandarias"
         WHEN tr.origin = 37 THEN "Cap. Bado"
         WHEN tr.origin = 38 THEN "Villa Hayes"
+        WHEN tr.origin = 39 THEN "Saltos/Pindoty"
         ELSE "-"
         END as origindesc,
         CASE
@@ -503,6 +510,7 @@ class Travel {
             WHEN tr.route = 36 THEN "Hernandarias"
             WHEN tr.route = 37 THEN "Cap. Bado"
             WHEN tr.route = 38 THEN "Villa Hayes"
+            WHEN tr.route = 39 THEN "Saltos/Pindoty"
             ELSE "-"
         END as routedesc,
             CASE
@@ -545,6 +553,7 @@ class Travel {
             WHEN tr.delivery = 36 THEN "Hernandarias"
             WHEN tr.delivery = 37 THEN "Cap. Bado"
             WHEN tr.delivery = 38 THEN "Villa Hayes"
+            WHEN tr.delivery = 39 THEN "Saltos/Pindoty"
             ELSE "-"
         END as deliverydesc
         FROM api.travel as tr 

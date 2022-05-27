@@ -1621,7 +1621,7 @@ document.querySelector('[data-print-strategic]').addEventListener('click', async
   let a = document.createElement('a');
   a.href = window.URL.createObjectURL(filexls);
   a.target = "_blank";
-  a.download = "informe.pdf";
+  a.download = "fullpage.png";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

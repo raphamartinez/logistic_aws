@@ -6,6 +6,7 @@ const Authorization = require('../infrastructure/auth/authorization')
 const cachelist = require('../infrastructure/redis/cache')
 const path = require('path')
 const puppeteer = require('puppeteer')
+const fs = require('fs')
 
 module.exports = app => {
 
@@ -73,24 +74,32 @@ module.exports = app => {
             const date = req.params.date
             const dt = new Date(date)
 
-            const browser = await puppeteer.launch({headless: true,
-                args: ['--no-sandbox']})
+            const browser = await puppeteer.launch({
+                headless: true,
+                args: ['--no-sandbox']
+            })
             const page = await browser.newPage()
 
-            await page.goto(`https://sistema.olla.com.py/travel/report/strategic/${dt}`, {
+            await page.goto(`https://sistema.olla.com.py//travel/report/strategic/${dt}`, {
                 waitUntil: 'networkidle0'
             })
 
-            const pdf = await page.pdf({
-                printBackground: true,
-                format: 'A4'
-            })
+            await page.screenshot({ path: 'fullpage.png', fullPage: true });
 
             await browser.close()
 
-            res.contentType('application/pdf')
-            res.setHeader('Content-Disposition', 'attachment; filename=informe.pdf');
-            return res.send(Buffer.from(pdf, 'base64'));
+            fs.readFile('fullpage.png', function (err, image) {
+                if (err) throw err
+
+                res.contentType('application/pdf')
+                res.setHeader('Content-Disposition', 'attachment; filename=fullpage.png');
+                res.send(Buffer.from(image, 'base64'));
+
+                fs.unlink('fullpage.png', (err2, call) => {
+                    if (err2) throw err2
+                    console.log(call);
+                })
+            })
         } catch (err) {
             console.log(err);
             next(err)
@@ -111,7 +120,6 @@ module.exports = app => {
             const day = startDate.getDate() > 9 ? startDate.getDate() : `0${startDate.getDate()}`
             const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
             const hours = startDate.getHours() > 9 ? startDate.getHours() : `0${startDate.getHours()}`
-    
 
             const filePath = path.join(__dirname, "../../views/admin/reports/strategic-pdf.ejs")
             ejs.renderFile(filePath, { data, day: `${day}/${month}/${startDate.getFullYear()}`, time: `${hours}:${minutes}` }, async (err, html) => {

@@ -197,21 +197,15 @@ class DriveUp {
                     descPlace = 'YPANE'
                     break
                 case '4':
-                    place = '00'
-                    descPlace = 'MANTENIMIENTO'
-                    break
-            }
-
-            if (place === '00') {
-                const allCarsMaintenance = await Repositorie.countInMaintenance()
-                if (allCarsMaintenance.length == 0) {
-                    message = `*No hay vehiculos en Mantenimiento*`
-                } else {
-                    message = `*Vehiculos en Mantenimiento*`
-                    allCarsMaintenance.forEach(car => message += `*${car.plate}* - ${car.description}\n`)
-                }
-
-                return message
+                    const allCarsMaintenance = await Repositorie.countInMaintenance()
+                    if (allCarsMaintenance.length == 0) {
+                        message = `*No hay vehiculos en Mantenimiento*`
+                    } else {
+                        message = `*Vehiculos en Mantenimiento*`
+                        allCarsMaintenance.forEach(car => message += `*${car.plate}* - ${car.description}\n`)
+                    }
+    
+                    return message
             }
 
             const cars = await Repositorie.countInthePlace(place)

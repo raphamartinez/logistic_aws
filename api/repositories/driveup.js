@@ -49,6 +49,14 @@ class DriveUp {
             throw new InvalidArgumentError(error)
         }
     }
+
+    async findTravel(plate){
+        try {
+            const sql = `SELECT `
+        } catch (error) {
+            
+        }
+    }
 }
 
 module.exports = new DriveUp()

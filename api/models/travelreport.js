@@ -900,39 +900,6 @@ class TravelReport {
             let data = await RepositorieTravel.reportStrategic(dayD)
             if (data.length === 0) return null
 
-
-            // const date = new Date();
-            // const date2 = new Date(date.getTime() - 14400000);
-
-
-            // let rowIndex = 7
-            // let lastType = data[0].type
-            // let amount = 0
-            // let lastrow = 7
-            // data.forEach(record => {
-            //     let columnIndex = 1;
-
-            //     if (lastType !== record.type) {
-            //         ws.cell(rowIndex, 2).number(amount).style(borderStyle)
-            //         lastType = record.type
-            //         amount = 0
-            //         rowIndex += 2
-            //     }
-
-            //     amount = amount + Number.parseInt(record.qty)
-
-            //     ws.cell(rowIndex, columnIndex++).string(record.type).style(typeStyle)
-            //     ws.cell(rowIndex, columnIndex++).number(record.qty).style(borderStyle)
-            //     ws.cell(rowIndex, columnIndex++).string(record.origindesc).style(borderStyle)
-            //     ws.cell(rowIndex, columnIndex++).string(record.routedesc).style(borderStyle)
-            //     ws.cell(rowIndex, columnIndex++).string(record.deliverydesc).style(borderStyle)
-
-            //     rowIndex++
-            //     lastrow = rowIndex
-            // })
-
-            // ws.cell(lastrow, 2).number(amount).style(borderStyle)
-
             return data
         } catch (error) {
             console.log(error);

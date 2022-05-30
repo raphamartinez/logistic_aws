@@ -40,7 +40,6 @@ class DriveUp {
         })
 
         const vehicleAlerts = await data.json()
-        console.log(vehicleAlerts);
         return vehicleAlerts
     }
 
@@ -150,7 +149,7 @@ class DriveUp {
             }
             client.getChats().then((data) => {
                 data.forEach(chat => {
-                    if (chat.id.server === "g.us" && chat.id === group) {
+                    if (chat.id.server === "g.us" && chat.name === group) {
                         client.sendMessage(chat.id._serialized, message).then((response) => {
                             if (response.id.fromMe) {
                                 vehicleAlert.successend = 1

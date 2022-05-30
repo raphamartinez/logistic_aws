@@ -4,7 +4,6 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('../mode
 class DriveUp {
 
     async insert(vehicleAlert) {
-        console.log(vehicleAlert);
         try {
             const lat = vehicleAlert.geom.coordinates[1]
             const long = vehicleAlert.geom.coordinates[0]

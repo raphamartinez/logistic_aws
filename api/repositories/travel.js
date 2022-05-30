@@ -405,10 +405,10 @@ class Travel {
         }
     }
 
-    async reportStrategic(day) {
+    async reportStrategic(day, dayEnd, driver, type) {
         try {
 
-            const sql = `SELECT  CASE
+            let sql = `SELECT  CASE
             WHEN tr.type = 1 THEN "Viatico Nacional"
             WHEN tr.type = 2 THEN "Retiro Contenedor"
             WHEN tr.type = 3 THEN "Mantenimiento"
@@ -559,12 +559,21 @@ class Travel {
             WHEN tr.delivery = 39 THEN "Saltos/Pindoty"
             ELSE "-"
         END as deliverydesc
-        FROM api.travel as tr 
-        WHERE DATE(tr.date) = DATE(?)
-        GROUP BY type, routedesc, origindesc, deliverydesc
+        FROM api.travel as tr `
+
+            if (dayEnd) {
+                sql += ` WHERE tr.date between '${day}' and '${dayEnd}' `
+            } else {
+                sql += ` WHERE DATE(tr.date) = DATE(${day}) `
+            }
+
+            if(driver) sql+= ` AND tr.id_driver = '${driver}'`
+            if(type) sql+= ` AND tr.type = '${type}'`
+
+            sql += ` GROUP BY type, routedesc, origindesc, deliverydesc
         ORDER BY type, routedesc, origindesc, deliverydesc ASC`
 
-            return query(sql, day)
+            return query(sql)
 
         } catch (error) {
             throw new InternalServerError('No se pudieron listar lo informe')

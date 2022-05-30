@@ -162,6 +162,9 @@
                                                     type="button">Viatico Nacional - Entrega Cliente</button></li>
                                             <li><button data-print-strategic class="dropdown-item info-button"
                                                     type="button">Estratégico/Resumen del día</button></li>
+                                            <li><button data-bs-toggle="modal" data-bs-target="#reportStrategic"
+                                                    class="dropdown-item info-button" type="button">Estratégico/Resumen
+                                                    PDF</button></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -487,6 +490,35 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="reportStrategic" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form data-report-pdf>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Informe Estratégico/Resumen PDF</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="datestart">Fecha Inicial:</label>
+                                <input class="form-control" type="date" name="datestart" id="datestart">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="dateend">Fecha Final:</label>
+                                <input class="form-control" type="date" name="dateend" id="dateend">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-primary">Generar</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

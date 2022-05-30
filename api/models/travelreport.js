@@ -888,16 +888,28 @@ class TravelReport {
 
         const b64string = await Packer.toBase64String(pdf);
 
-       
+
         return b64string
     }
 
-    async reportStrategic(day) {
+    async reportStrategic(day, dateend) {
         try {
 
             const dayD = new Date(day)
+            const monthIn = dayD.getMonth() + 1 > 9 ? dayD.getMonth() + 1 : `0${dayD.getMonth() + 1}`
+            const dayIn = dayD.getDate() > 9 ? dayD.getDate() : `0${dayD.getDate()}`
+            const dayInit = `${dayD.getFullYear()}-${monthIn}-${dayIn}`
 
-            let data = await RepositorieTravel.reportStrategic(dayD)
+            let dayEnd = false
+            if (dateend) {
+                const dt = new Date(dateend)
+                const monthEn = dt.getMonth() + 1 > 9 ? dt.getMonth() + 1 : `0${dt.getMonth() + 1}`
+                const dayEn = dt.getDate() > 9 ? dt.getDate() : `0${dt.getDate()}`
+    
+                dayEnd = `${dt.getFullYear()}-${monthEn}-${dayEn}`
+            }
+
+            let data = await RepositorieTravel.reportStrategic(dayInit, dayEnd)
             if (data.length === 0) return null
 
             return data

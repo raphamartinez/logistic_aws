@@ -69,7 +69,7 @@ module.exports = app => {
         }
     })
 
-    app.get('/travel/pdf/strategic/:date', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
+    app.get('/travel/image/strategic/:date', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
             const date = req.params.date
             const dt = new Date(date)
@@ -84,18 +84,18 @@ module.exports = app => {
                 waitUntil: 'networkidle0'
             })
 
-            await page.screenshot({ path: 'fullpage.png', fullPage: true });
+            await page.screenshot({ path: 'informe.png', fullPage: true });
 
             await browser.close()
 
-            fs.readFile('fullpage.png', function (err, image) {
+            fs.readFile('informe.png', function (err, image) {
                 if (err) throw err
 
                 res.contentType('application/pdf')
-                res.setHeader('Content-Disposition', 'attachment; filename=fullpage.png');
+                res.setHeader('Content-Disposition', 'attachment; filename=informe.png');
                 res.send(Buffer.from(image, 'base64'));
 
-                fs.unlink('fullpage.png', (err2, call) => {
+                fs.unlink('informe.png', (err2, call) => {
                     if (err2) throw err2
                     console.log(call);
                 })
@@ -106,12 +106,47 @@ module.exports = app => {
         }
     })
 
+    app.get('/travel/pdf/strategic/:datestart/:dateend', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
+        try {
+            const datestart = req.params.datestart
+            const dateend = req.params.dateend
 
-    app.get('/travel/report/strategic/:date', async (req, res, next) => {
+            const dtStart = new Date(datestart)
+            const dtEnd = new Date(dateend)
+
+            const browser = await puppeteer.launch({
+                headless: true,
+                args: ['--no-sandbox']
+            })
+            const page = await browser.newPage()
+
+            await page.goto(`https://sistema.olla.com.py/travel/report/strategic/${dtStart}/${dtEnd}`, {
+                waitUntil: 'networkidle0'
+            })
+
+            const pdf = await page.pdf({
+                printBackground: true,
+                format: 'A4'
+            })
+
+            await browser.close()
+
+            res.contentType('application/pdf')
+            res.setHeader('Content-Disposition', 'attachment; filename=informe.pdf');
+            return res.send(Buffer.from(pdf, 'base64'));
+
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
+    app.get('/travel/report/strategic/:date/:dateend?', async (req, res, next) => {
         try {
             const date = req.params.date
+            const dateend = req.params.dateend
 
-            const data = await TravelReport.reportStrategic(date)
+            const data = await TravelReport.reportStrategic(date, dateend)
 
             const startDate = new Date()
             startDate.setTime(startDate.getTime() + startDate.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
@@ -124,8 +159,7 @@ module.exports = app => {
             const filePath = path.join(__dirname, "../../views/admin/reports/strategic-pdf.ejs")
             ejs.renderFile(filePath, { data, day: `${day}/${month}/${startDate.getFullYear()}`, time: `${hours}:${minutes}` }, async (err, html) => {
                 if (err) {
-                    return res.send('Erro na leitura do arquivo')
-                }
+                    return res.send('Erro na leitura do arquivo')                }
 
                 return res.send(html)
             })

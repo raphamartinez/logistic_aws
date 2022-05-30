@@ -1614,14 +1614,44 @@ document.querySelector('[data-print-strategic]').addEventListener('click', async
   const dateHtml = document.querySelector('[data-search-date]').value
   const date = new Date(dateHtml)
 
-  const xls = await Connection.backGetFile(`travel/pdf/strategic/${date}`, 'GET')
-  if (!xls) return alert('No hay viajes para listar.')
-  const filexls = await xls.blob();
+  const image = await Connection.backGetFile(`travel/image/strategic/${date}`, 'GET')
+  if (!image) return alert('No hay viajes para listar.')
+  const fileimage = await image.blob();
 
   let a = document.createElement('a');
-  a.href = window.URL.createObjectURL(filexls);
+  a.href = window.URL.createObjectURL(fileimage);
   a.target = "_blank";
-  a.download = "fullpage.png";
+  a.download = "informe.png";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  loading.innerHTML = ''
+})
+
+document.querySelector('[data-report-pdf]').addEventListener('submit', async (event) => {
+  event.preventDefault()
+
+  let loading = document.querySelector('[data-loading]')
+  loading.innerHTML = `
+  <div class="d-flex justify-content-center">
+    <div class="spinner-grow text-danger" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+`
+
+  const datestart = event.target.datestart.value
+  const dateend = event.target.dateend.value
+
+  const pdf = await Connection.backGetFile(`travel/pdf/strategic/${datestart}/${dateend}`, 'GET')
+  if (!pdf) return alert('No hay viajes para listar.')
+  const filepdf = await pdf.blob();
+
+  let a = document.createElement('a');
+  a.href = window.URL.createObjectURL(filepdf);
+  a.target = "_blank";
+  a.download = "informe.pdf";
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

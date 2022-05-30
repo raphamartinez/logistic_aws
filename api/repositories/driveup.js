@@ -51,7 +51,7 @@ class DriveUp {
 
     async findTravel(plate) {
         try {
-            const sql = `SELECT max(tr.id), tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
+            const sql = `SELECT max(tr.id) as id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
             IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard, ca.plate, ca.cartype, ca.model, ca.capacity,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
@@ -187,13 +187,16 @@ class DriveUp {
                         ELSE ""
                     END as deliverydesc
                         FROM api.travel tr
+                        INNER JOIN api.driver dr ON dr.id = tr.id_driver
                         INNER JOIN api.user us ON tr.id_login = us.id_login 
-                        LEFT JOIN api.driver dr ON tr.id_driver = dr.id 
-                        LEFT JOIN api.travelcar tc ON tr.id = tc.id_travel AND tc.id_car = (SELECT id FROM api.car WHERE plate = ?) 
-						LEFT JOIN api.car ca ON tc.id_car = ca.id 
-                        where ca.plate = ?`
+                        INNER JOIN api.travelcar tc ON tr.id = tc.id_travel AND tc.id_car = (SELECT id FROM api.car WHERE plate = ?) 
+						INNER JOIN api.car ca ON tc.id_car = ca.id 
+                        where tr.id = ( SELECT MAX(tr.id) FROM api.travel AS tr
+                        INNER JOIN api.travelcar tc ON tr.id = tc.id_travel AND tc.id_car = (SELECT id FROM api.car WHERE plate = ?) 
+						INNER JOIN api.car ca ON tc.id_car = ca.id 
+                        where ca.plate = ?)`
 
-            const result = await query(sql, [plate, plate])
+            const result = await query(sql, [plate, plate, plate])
             return result[0]
         } catch (error) {
 

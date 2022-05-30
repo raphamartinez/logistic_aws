@@ -86,6 +86,27 @@ class DriveUp {
     }
 
     async saveAlerts(vehicleAlerts, cars, alerts, customers) {
+        let checkAlert = {}
+        vehicleAlerts.slice(0).forEach((alert, index) => {
+            if (alert.idEventType == 3) {
+                alert.index = index
+                checkAlert = alert
+            }
+
+            if (checkAlert && alert.idEventType == 4) {
+                const dtInit = new Date(checkAlert.recordedat)
+                const dtEnd = new Date(alert.recordedat)
+
+                const difference = dtEnd.getTime() - dtInit.getTime()
+                const twoSecondsInMilisseconds = 2 * 60 * 60
+
+                if (difference > twoSecondsInMilisseconds) {
+                    vehicleAlerts.splice(checkAlert.index, 1)
+                    vehicleAlerts.splice(index, 1)
+                    checkAlert = {}
+                }
+            }
+        })
         for (let vehicleAlert of vehicleAlerts) {
             let customer = vehicleAlert.data ? customers.find(customer => customer.id === vehicleAlert.data.idzona) : ''
             let car = cars.find(car => car.vehicleId === vehicleAlert.idVehicle)
@@ -134,8 +155,10 @@ class DriveUp {
             vehicleAlert.successendloc = 0
             const date = new Date(vehicleAlert.recordedat)
             date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-3) * 60 * 60 * 1000)
-            let message = `*${vehicleAlert.alert}* - _${travel.cartype} - ${travel.model} - ${travel.capacity}_\nChofer - ${travel.driverdesc}\n`
-            message += `${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
+            let message = `*${vehicleAlert.alert}*`
+            message += `\n${travel.plate} - _${travel.cartype} - ${travel.model} - ${travel.capacity}_`
+            if (travel.driverdesc) message += `\nChofer - ${travel.driverdesc}`
+            message += `\n${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
             message += `\n@${vehicleAlert.geom.coordinates[1]},${vehicleAlert.geom.coordinates[0]}`
             if (travel.origin) message += `Salida: ${travel.origin}`
             if (travel.route) message += ` - Retiro: ${travel.route}`
@@ -149,7 +172,7 @@ class DriveUp {
             }
             client.getChats().then((data) => {
                 data.forEach(chat => {
-                    if (chat.id.server === "g.us" && chat.id['_serialized'] == group) {
+                    if (chat.id.server === "g.us" && chat.id._serialized == group) {
                         client.sendMessage(chat.id._serialized, message).then((response) => {
                             if (response.id.fromMe) {
                                 vehicleAlert.successend = 1

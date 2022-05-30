@@ -80,7 +80,7 @@ module.exports = app => {
             })
             const page = await browser.newPage()
 
-            await page.goto(`http://localhost:3000/travel/report/strategic/${dt}`, {
+            await page.goto(`https://sistema.olla.com.py/travel/report/strategic/${dt}`, {
                 waitUntil: 'networkidle0'
             })
 
@@ -120,7 +120,7 @@ module.exports = app => {
             })
             const page = await browser.newPage()
 
-            await page.goto(`http://localhost:3000/travel/report/strategic/${dtStart}/${dtEnd}`, {
+            await page.goto(`https://sistema.olla.com.py/travel/report/strategic/${dtStart}/${dtEnd}`, {
                 waitUntil: 'networkidle0'
             })
 

@@ -171,7 +171,7 @@ class DriveUp {
                 vehicleAlert.odometer = vehicleAlert.data.odometer
             }
             client.getChats().then((data) => {
-                data.forEach(chat => {
+                for (let chat of data) {
                     if (chat.id.server === "g.us" && chat.id._serialized == group) {
                         client.sendMessage(chat.id._serialized, message).then((response) => {
                             if (response.id.fromMe) {
@@ -184,7 +184,7 @@ class DriveUp {
                             }
                         }).catch(err => console.log({ msg: 'envio erro', err }))
                     }
-                })
+                }
             }).catch(err => console.log({ msg: `listagem erro`, err }))
 
             await Repositorie.insert(vehicleAlert)

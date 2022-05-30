@@ -38,9 +38,9 @@ class DriveUp {
             FROM api.car 
             WHERE status = 2 `
 
-            if(place) sql+= `and thirst = '${place}' `
+            if (place) sql += `and thirst = '${place}' `
 
-            sql+= `GROUP BY plate 
+            sql += `GROUP BY plate 
             ORDER BY plate ASC `
 
             const result = await query(sql)
@@ -50,10 +50,10 @@ class DriveUp {
         }
     }
 
-    async findTravel(plate){
+    async findTravel(plate) {
         try {
-            const sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
-            IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard,
+            const sql = `SELECT max(tr.id), tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
+            IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard, ca.plate, ca.cartype, ca.model, ca.capacity,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
                         WHEN tr.type = 2 THEN "Retiro Contenedor"
@@ -190,11 +190,14 @@ class DriveUp {
                         FROM api.travel tr
                         INNER JOIN api.user us ON tr.id_login = us.id_login 
                         LEFT JOIN api.driver dr ON tr.id_driver = dr.id 
-                        LEFT JOIN api.travelcar tc ON tc.id_travel = tr.id AND tc.id_car = (SELECT id FROM api.car WHERE plate = 'XBRI007') 
-                        ORDER BY tr.date DESC
-                        LIMIT 1 `
+                        LEFT JOIN api.travelcar tc ON tr.id = tc.id_travel AND tc.id_car = (SELECT id FROM api.car WHERE plate = ?) 
+						LEFT JOIN api.car ca ON tc.id_car = ca.id 
+                        where ca.plate = ?`
+
+            const result = await query(sql, [plate, plate])
+            return result[0]
         } catch (error) {
-            
+
         }
     }
 }

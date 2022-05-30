@@ -135,11 +135,13 @@ class DriveUp {
             vehicleAlert.successendloc = 0
             const date = new Date(vehicleAlert.recordedat)
             date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-3) * 60 * 60 * 1000)
-
-            let message = `*${vehicleAlert.alert}*\n${travel.carConcatenate}\nSin informacion del Chofer\n`
+            let message = `*${vehicleAlert.alert}* - _${travel.cartype} - ${travel.model} - ${travel.capacity}_\nChofer - ${travel.driverdesc}\n`
             message += `${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
             message += `\n@${vehicleAlert.geom.coordinates[1]},${vehicleAlert.geom.coordinates[0]}`
-            message += `Origen: ${travel.origin} - Destino: ${travel.destiny}`
+            if (travel.origin) message += `Salida: ${travel.origin}`
+            if (travel.route) message += ` - Retiro: ${travel.route}`
+            if (travel.delivery) message += ` - Entrega: ${travel.delivery}`
+
             vehicleAlert.message = message
             vehicleAlert.group = group
             if (vehicleAlert.data) {
@@ -204,7 +206,7 @@ class DriveUp {
                         message = `*Vehiculos en Mantenimiento*`
                         allCarsMaintenance.forEach(car => message += `*${car.plate}* - ${car.description}\n`)
                     }
-    
+
                     return message
             }
 

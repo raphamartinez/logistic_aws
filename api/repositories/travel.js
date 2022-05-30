@@ -564,7 +564,7 @@ class Travel {
             if (dayEnd) {
                 sql += ` WHERE tr.date between '${day}' and '${dayEnd}' `
             } else {
-                sql += ` WHERE DATE(tr.date) = DATE(${day}) `
+                sql += ` WHERE DATE(tr.date) = DATE('${day}') `
             }
 
             if(driver) sql+= ` AND tr.id_driver = '${driver}'`

@@ -106,17 +106,17 @@ class DriveUp {
                     if (type.ideventtype === vehicleAlert.idEventType) {
                         const idgroup = alert.ideventtypegroup
                         if (idgroup === 9 || idgroup === 10 || idgroup === 12) {
-                            group = '120363042760809190@g.us'
+                            group = '120363024386228914@g.us' // manten 
                             alertType = type.description
                         }
 
                         if (idgroup === 3 || idgroup === 4 || idgroup === 5 || idgroup === 11) {
-                            group = '120363024113373482@g.us'
+                            group = '120363024113373482@g.us' //op disp
                             alertType = type.description
                         }
 
                         if (idgroup === 2) {
-                            group = '120363024386228914@g.us'
+                            group = '120363042760809190@g.us' // cliente
                             switch (type.ideventtype) {
                                 case 3:
                                     alertType = `Llegada al ${vehicleAlert.customer}`
@@ -149,7 +149,7 @@ class DriveUp {
             }
             client.getChats().then((data) => {
                 data.forEach(chat => {
-                    if (chat.id.server === "g.us" && chat.id == group) {
+                    if (chat.id.server === "g.us" && chat.id['_serialized'] == group) {
                         client.sendMessage(chat.id._serialized, message).then((response) => {
                             if (response.id.fromMe) {
                                 vehicleAlert.successend = 1

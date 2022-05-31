@@ -1326,23 +1326,20 @@ const enable = async () => {
   })
 
   if (document.querySelector('[data-type]').value == 3 || document.querySelector('[data-type]').value == 4) {
-    document.querySelector('[data-obs]').required = true;
-    document.querySelector('[data-obs]').style.display = 'block';
-    document.querySelector('[data-route]').style.display = 'none';
+    document.querySelector('[data-obs]').required = true
+    document.querySelector('[data-route]').style.display = 'none'
 
-    if (document.querySelector('[data-type]').value == 4) {
-      document.querySelector('[data-obs]').placeholder = 'Detalles de la entrega';
-      document.querySelector('[data-driver]').disabled = false;
-
+    if (document.querySelector('[data-type]').value == 3) {
+      document.querySelector('[data-obs]').placeholder = 'Observación del Mantenimiento'
     } else {
-      document.querySelector('[data-obs]').placeholder = 'Observación del Mantenimiento';
+      document.querySelector('[data-obs]').placeholder = 'Detalles de la entrega'
+      document.querySelector('[data-driver]').disabled = false
     }
 
   } else {
     document.querySelector('[data-obs]').required = false;
     document.querySelector('[data-driver]').disabled = false;
     document.querySelector('[data-route]').disabled = false;
-    document.querySelector('[data-obs]').style.display = 'none';
     document.querySelector('[data-route]').style.display = 'block';
   }
 

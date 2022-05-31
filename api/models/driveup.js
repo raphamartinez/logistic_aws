@@ -170,15 +170,17 @@ class DriveUp {
                 vehicleAlert.idzona = vehicleAlert.data.idzona
                 vehicleAlert.odometer = vehicleAlert.data.odometer
             }
-            client.getChats().then((data) => {
+            client.getChats().then(async (data) => {
                 for (let chat of data) {
                     if (chat.id.server === "g.us" && chat.id._serialized == group) {
                         client.sendMessage(chat.id._serialized, message).then((response) => {
                             if (response.id.fromMe) {
                                 vehicleAlert.successend = 1
                                 sleep(1500)
-                                let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "");
-                                client.sendMessage(chat.id._serialized, loc).then(() => vehicleAlert.successendloc = 1)
+                                let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "")
+                                client.sendMessage(chat.id._serialized, loc).then(() => {
+                                    vehicleAlert.successendloc = 1 
+                                })
                                 sleep(3000)
                                 return true
                             }

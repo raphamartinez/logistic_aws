@@ -51,6 +51,7 @@
                                             <option value="" selected disabled>Tipo</option>
                                             <option value="1">Viatico Nacional</option>
                                             <option value="2">Retiro Contenedor</option>
+                                            <option value="9">Retiro de Contenedor del Patio</option>
                                             <option value="7">Devolucion de Contenedor</option>
                                             <option value="3">Mantenimiento</option>
                                             <option value="4">Region Metropolitana</option>
@@ -85,9 +86,6 @@
                                             <option value="" selected disabled>Punto de Retiro</option>
                                             <%- include(partials + 'select/place.ejs' ) %>
                                         </select>
-                                        <textarea class="form-control" placeholder="Observación del Mantenimiento"
-                                            style="display: none;" type="text" name="obs" id="obs" data-obs
-                                            required></textarea>
                                     </div>
                                     <div class="form-group col-md-2">
                                         <select data-delivery class="form-select" id="delivery" name="delivery"
@@ -95,6 +93,10 @@
                                             <option value="" selected disabled>Punto de Entrega</option>
                                             <%- include(partials + 'select/place.ejs' ) %>
                                         </select>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <textarea class="form-control" placeholder="Detalles de la entrega" rows="1" type="text" name="obs" id="obs" data-obs
+                                        required></textarea>
                                     </div>
                                     <div class="form-group text-center col-md-12">
                                         <button class="btn btn-success" type="submit">Agregar</button>

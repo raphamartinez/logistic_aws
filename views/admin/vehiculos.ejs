@@ -95,8 +95,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group col-md-2">
-                                        <textarea class="form-control" placeholder="Detalles de la entrega" rows="1" type="text" name="obs" id="obs" data-obs
-                                        required></textarea>
+                                        <textarea class="form-control" placeholder="Detalles de la entrega" rows="1"
+                                            type="text" name="obs" id="obs" data-obs required></textarea>
                                     </div>
                                     <div class="form-group text-center col-md-12">
                                         <button class="btn btn-success" type="submit">Agregar</button>
@@ -523,6 +523,134 @@
             </form>
         </div>
     </div>
+
+    <div class="modal fade" id="settingsTravel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ajustes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-grid gap-2">
+                        <button data-travel-edit class="btn btn-success" type="button">Editar Viaje</button>
+                        <button data-travel-delete class="btn btn-danger" type="button">Borrar Viaje</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editTravel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Viaje</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form data-form-edit-travel>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="originedit">Salida</label>
+                                <select id="originedit" name="origin" class="form-select">
+                                    <option value="" selected>Salida</option>
+                                    <%- include(partials + 'select/place.ejs' ) %>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="dateedit">Fecha</label>
+                                <input data-date type="datetime-local" name="date" id="dateedit"
+                                    class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="periodedit">Tiempo</label>
+                                <select class="form-select" id="periodedit" name="period" required>
+                                    <option value="" selected>Tiempo</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="typeedit">Tipo</label>
+                                <select class="form-select" id="typeedit" name="type" required data-type>
+                                    <option value="" selected>Tipo</option>
+                                    <option value="1">Viatico Nacional</option>
+                                    <option value="2">Retiro Contenedor</option>
+                                    <option value="9">Retiro de Contenedor del Patio</option>
+                                    <option value="7">Devolucion de Contenedor</option>
+                                    <option value="3">Mantenimiento</option>
+                                    <option value="4">Region Metropolitana</option>
+                                    <option value="5">Retorno</option>
+                                    <option value="6">Transferencia</option>
+                                    <option value="8">Cubiertas para Reciclajes</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="driveredit">Chofér</label>
+                                <select class="form-select" id="driveredit" name="driver" required>
+                                    <option value="" selected>Chofér</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="companyedit">Acompañante</label>
+                                <select class="form-select" id="companyedit" name="company">
+                                    <option value="" selected>Acompañante</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="caredit">Camion</label>
+                                <select class="form-select" id="caredit" name="car" required>
+                                    <option value="" selected >Camion</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="chestedit">Furgon</label>
+                                <select class="form-select" id="chestedit" name="chest">
+                                    <option value="" selected >Furgon</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="routeedit">Punto de Retiro</label>
+                                <select id="routeedit" name="route" class="form-select">
+                                    <option value="" selected>Punto de Retiro</option>
+                                    <%- include(partials + 'select/place.ejs' ) %>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="deliveryedit">Punto de Entrega</label>
+                                <select class="form-select" id="deliveryedit" name="delivery">
+                                    <option value="" selected>Punto de Entrega</option>
+                                    <%- include(partials + 'select/place.ejs' ) %>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="obsedit">Detalles de la entrega</label>
+                                <textarea class="form-control" placeholder="Detalles de la entrega" rows="1"
+                                    type="text" name="obs" id="obsedit" required></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-success">Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <%- include(partials + 'script.ejs' ) %>
 

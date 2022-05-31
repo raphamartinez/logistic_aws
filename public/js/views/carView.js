@@ -4,11 +4,11 @@ const maintenance = (travel, plate, chest, platedesc, chestdesc) => {
     div.classList.add('form-row')
 
     div.innerHTML = `
-    <div class="form-group col-1" data-date>
+    <div class="form-group col-md-1" data-date>
     <input value="${travel.type}" type="text" class="form-control" disabled>
-    <a><span data-id="${travel.id}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
+    <a><span data-btn-cog data-id="${travel.id}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel"
     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
-    X
+    <i data-btn-cog="${travel.id}" data-id="${travel.id}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel" class="fa fa-cog" aria-hidden="true"></i>
     <span class="visually-hidden"></span>
 </span></a>
                                         </div>
@@ -37,17 +37,18 @@ const maintenance = (travel, plate, chest, platedesc, chestdesc) => {
 }
 
 const travel = (travel, plate, chest, platedesc, chestdesc) => {
+    
     const div = document.createElement('div')
     div.classList.add('form-row')
 
     div.innerHTML = `
-    <div class="form-group col-md-1" data-date>
-    <input value="${travel.type}" type="text" class="form-control" disabled>
-    <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
-    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
-    X
-    <span class="visually-hidden"></span>
-</span></a>
+         <div class="form-group col-md-1" data-date>
+     <input value="${travel.type}" type="text" class="form-control" disabled>
+     <a><span data-btn-cog data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel"
+     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
+     <i data-btn-cog="${travel.id}" data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel" class="fa fa-cog" aria-hidden="true"></i>
+     <span class="visually-hidden"></span>
+ </span></a>
                                         </div>
                                         <div class="form-group text-center col-md-1">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
@@ -90,12 +91,12 @@ const addtravel = (travel, plate, chest, platedesc, chestdesc) => {
     div.innerHTML = `
     <div class="form-group col-md-1" data-date>
     <input value="${travel.typedesc}" type="text" class="form-control" disabled>
-    <a><span data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-btn-delete data-car="${platedesc}" data-chest="${chestdesc}"
+    <a><span data-btn-cog data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel"
     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
-    X
+    <i data-btn-cog="${travel.id}" data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel" class="fa fa-cog" aria-hidden="true"></i>
     <span class="visually-hidden"></span>
 </span></a>
-                                        </div>
+                                       </div>
                                         <div class="form-group text-center col-md-1 text-center">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
                                         </div>
@@ -388,7 +389,7 @@ const modalGenerate = (obj, content) => {
                             </div>
                             <div class="form-group col-md-6">
                                 <label>Fecha de Salida</label>
-                                <input value="${obj.travel.datedesc} - ${obj.travel.perioddesc}" id="date" name="date" type="text" class="form-control"
+                                <input value="${obj.travel.datedesc}" id="date" name="date" type="text" class="form-control"
                                 disabled required>
                             </div>
                             <div class="form-group col-md-6">

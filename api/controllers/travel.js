@@ -24,6 +24,20 @@ module.exports = app => {
         }
     })
 
+    app.put('/travel/:id', [Middleware.authenticatedMiddleware, Authorization('travel', 'create')], async (req, res, next) => {
+        try {
+            const travel = req.body.travel
+
+            const id = await Travel.update(id, travel)
+            cachelist.delPrefix(`travel`)
+
+            res.json({ id, msg: `Viaje actualizada con éxito.` })
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
     app.delete('/travel/:id', [Middleware.authenticatedMiddleware, Authorization('travel', 'delete')], async (req, res, next) => {
         try {
             await Travel.delete(req.params.id)
@@ -35,6 +49,20 @@ module.exports = app => {
             next(err)
         }
     })
+
+    app.get('/travel/id/:id', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
+        try {
+            const id = req.params.id
+
+            const travel = await Travel.view(id)
+
+            res.json(travel)
+        } catch (err) {
+            console.log(err);
+            next(err)
+        }
+    })
+
 
     app.get('/travel/:date', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
@@ -159,7 +187,8 @@ module.exports = app => {
             const filePath = path.join(__dirname, "../../views/admin/reports/strategic-pdf.ejs")
             ejs.renderFile(filePath, { data, day: `${day}/${month}/${startDate.getFullYear()}`, time: `${hours}:${minutes}` }, async (err, html) => {
                 if (err) {
-                    return res.send('Erro na leitura do arquivo')                }
+                    return res.send('Erro na leitura do arquivo')
+                }
 
                 return res.send(html)
             })

@@ -857,6 +857,21 @@ class TravelReport {
                                 before: 400,
                             },
                         } : {}),
+                        new Paragraph({
+                            alignment: AlignmentType.CENTER,
+                            children: [
+                                new TextRun({
+                                    text: travel.period,
+                                    bold: true,
+                                    font: "Calibri",
+                                    allCaps: true,
+                                    size: "5mm"
+                                }),
+                            ],
+                            spacing: {
+                                before: 200,
+                            },
+                        })
                     ]
                 }]
 

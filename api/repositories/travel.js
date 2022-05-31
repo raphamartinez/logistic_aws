@@ -224,6 +224,17 @@ class Travel {
         }
     }
 
+    async update(travel, id) {
+        try {
+            const sql = `UPDATE travel set date = ?, period = ?, origin = ?, route = ?, delivery = ?, id_driver = ?, company_name = ?, company_idcard = ?, type = ?, obs = ? WHERE id = ?`
+            const result = await query(sql, [travel.date, travel.period, travel.origin, travel.route, travel.delivery, travel.driver, travel.companydesc, travel.companyidcard, travel.type, travel.obs, id])
+            return result.insertId
+        } catch (error) {
+            console.log(error);
+            throw new InternalServerError('Error')
+        }
+    }
+
     async delete(id) {
         try {
             const sqlcar = `DELETE FROM api.travelcar WHERE id_travel = ?`
@@ -238,6 +249,17 @@ class Travel {
         }
     }
 
+    deleteCars(id) {
+
+        try {
+            const sql = `DELETE FROM travelcar WHERE id_travel = ?`
+
+            return query(sql, id)
+        } catch (error) {
+            throw new InternalServerError('No se pudieron agregar los datos')
+        }
+    }
+
     insertCar(car, id, type) {
 
         try {
@@ -249,9 +271,10 @@ class Travel {
         }
     }
 
-    async view(id_travel) {
+    async view(id) {
         try {
-            const sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
+
+            const sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, tr.date, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
             IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
@@ -399,7 +422,7 @@ class Travel {
                         LEFT JOIN api.driver dr ON tr.id_driver = dr.id 
                         WHERE tr.id = ? `
 
-            const data = await query(sql, id_travel)
+            const data = await query(sql, id)
 
             return data[0]
         } catch (error) {

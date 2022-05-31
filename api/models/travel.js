@@ -3,9 +3,9 @@ const Repositorie = require('../repositories/travel')
 
 class Travel {
 
-    view(id_travel){
+    view(id){
         try {
-            return Repositorie.view(id_travel)
+            return Repositorie.view(id)
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')
@@ -76,6 +76,23 @@ class Travel {
             if (travel.chest) await Repositorie.insertCar(travel.chest, id, 2)
 
             return id
+        } catch (error) {
+            console.log(error);
+            throw new InvalidArgumentError('Error.')
+        }
+    }
+
+    async update(travel, id) {
+        try {
+            const result = await Repositorie.update(travel, id)
+
+            await Repositorie.deleteCars(id)
+
+            await Repositorie.insertCar(travel.car, id, 1)
+
+            if (travel.chest) await Repositorie.insertCar(travel.chest, id, 2)
+
+            return result
         } catch (error) {
             console.log(error);
             throw new InvalidArgumentError('Error.')

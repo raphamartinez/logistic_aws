@@ -893,7 +893,7 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
     let chest = ""
     if (travel.chest) chest = travel.carchestdesc.split(' - ')[1].trim()
 
-    if (travel.type == 3 || travel.type == 4) {
+    if (travel.type == 3) {
       travel.type = travel.typedesc
       document.querySelector('[data-row-travel]').appendChild(View.maintenance(travel, plate, chest, travel.platedesc, travel.chestdesc))
     } else {
@@ -917,32 +917,229 @@ document.querySelector('[data-form-travel]').addEventListener('submit', async (e
   loading.innerHTML = " "
 })
 
+const settingsTravel = async (event) => {
+
+  const travel = {
+    id: event.target.getAttribute('data-id'),
+    driver: event.target.getAttribute('data-iddriver'),
+    car: event.target.getAttribute('data-car'),
+    chest: event.target.getAttribute('data-chest')
+  }
+
+  const edit = document.querySelector('[data-travel-edit]')
+  const drop = document.querySelector('[data-travel-delete]')
+
+  edit.setAttribute('id', travel.id)
+  edit.setAttribute('driver', travel.driver)
+  edit.setAttribute('car', travel.car)
+  edit.setAttribute('chest', travel.chest)
+
+  drop.setAttribute('id', travel.id)
+  drop.setAttribute('driver', travel.driver)
+  drop.setAttribute('car', travel.car)
+  drop.setAttribute('chest', travel.chest)
+}
+
+$("#settingsTravel").on('hidden.bs.modal', function () {
+  const edit = document.querySelector('[data-travel-edit]')
+  const drop = document.querySelector('[data-travel-delete]')
+
+  edit.removeAttribute('id')
+  edit.removeAttribute('driver')
+  edit.removeAttribute('car')
+  edit.removeAttribute('chest')
+
+  drop.removeAttribute('id')
+  drop.removeAttribute('driver')
+  drop.removeAttribute('car')
+  drop.removeAttribute('chest')
+})
+
 const deleteTravel = async (event) => {
-  const id = event.target.getAttribute('data-id')
+  const id = event.currentTarget.getAttribute('id')
+  const plate = event.currentTarget.getAttribute('car')
+  const driver = event.currentTarget.getAttribute('driver')
+  const chest = event.currentTarget.getAttribute('chest')
+
   const obj = await Connection.noBody(`travel/${id}`, 'DELETE')
 
-  event.path[3].remove()
 
-  const plate = event.target.getAttribute('data-car')
-  const id_driver = event.target.getAttribute('data-iddriver')
-  document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
-  <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
+  if (obj) {
+    const lines = document.querySelectorAll('[data-btn-cog]')
+    const line = Array.from(lines).filter((line) => {
+      const l = line.getAttribute('data-btn-cog')
+      if (l == id) return true
+    })
+    line[0].parentElement.parentElement.parentElement.parentElement.remove()
 
-  if (id_driver != "null" && id_driver != null) {
-    document.querySelector(`[data-status-driver-${id_driver}]`).parentNode.innerHTML = `
-    <button data-div-car data-status-driver-${id_driver} data-toggle="popover" title="Chofér disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
+    document.querySelector(`[data-status-${plate.toLowerCase()}]`).parentNode.innerHTML = `
+    <button data-div-car="${plate}" data-status-${plate} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
+
+    if (driver != "null" && driver != null) {
+      document.querySelector(`[data-status-driver-${driver}]`).parentNode.innerHTML = `
+      <button data-div-car data-status-driver-${driver} data-toggle="popover" title="Chofér disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
+    }
+
+    if (chest !== "null" && chest !== "") {
+      document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
+      <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
+    }
+
+    document.querySelector('[data-form-travel]').reset();
   }
-
-  const chest = event.target.getAttribute('data-chest')
-  if (chest !== "null" && chest !== "") {
-    document.querySelector(`[data-status-${chest.toLowerCase()}]`).parentNode.innerHTML = `
-    <button data-div-car="${chest}" data-status-${chest} data-toggle="popover" title="Camion disponible" type="button" style="color:#157347" class="btn btn-success btn-circle btn-sm">1</button>`
-  }
-
-  document.querySelector('[data-form-travel]').reset();
 
   alert(obj.msg)
 }
+
+document.querySelector('[data-travel-delete]').addEventListener('click', deleteTravel)
+
+const editTravel = async (event) => {
+  const id = event.currentTarget.getAttribute('id')
+  const travel = await Connection.noBody(`travel/id/${id}`, 'GET')
+
+  const cars = await Connection.noBody(`cars/enable/${date}/${period}`, 'GET')
+  const drivers = await Connection.noBody(`drivers/enable/${date}/${period}`, 'GET')
+
+  document.querySelector('[data-travel-edit]').setAttribute('id', id)
+  document.querySelector('#dateedit').value = travel.date
+  document.querySelector('#periodedit').value = travel.period
+  document.querySelector('#originedit').value = travel.origin
+  document.querySelector('#typeedit').value = travel.typecode
+  document.querySelector('#routeedit').value = travel.route
+  document.querySelector('#deliveryedit').value = travel.delivery
+  document.querySelector('#driveredit').innerHTML = `<option value="" selected disabled>Chofér</option>`
+  document.querySelector('#companyedit').innerHTML = `<option value="" selected disabled>Acompañante</option>`
+
+  drivers.forEach(driver => {
+    const option = document.createElement('option');
+    option.value = driver.id;
+    option.innerHTML = driver.name;
+    if (driver.name !== "SIN ASIGNACION") document.querySelector('#driveredit').appendChild(option);
+
+    const option2 = document.createElement('option');
+    option2.value = driver.id;
+    option2.innerHTML = driver.name;
+    if (driver.name !== "SIN ASIGNACION") document.querySelector('#companyedit').appendChild(option2);
+  })
+
+  const optDriver = document.createElement('option')
+  optDriver.value = travel.id_driver
+  optDriver.innerHTML = travel.driverdesc
+  document.querySelector('#driveredit').appendChild(optDriver)
+  document.querySelector('#driveredit').value = travel.id_driver
+
+  document.querySelector('#caredit').innerHTML = `<option value="" selected disabled>Camion</option>`;
+  document.querySelector('#chestedit').innerHTML = `<option value="" selected disabled>Furgon</option>`;
+
+  cars.forEach(car => {
+    const option = document.createElement('option');
+    option.value = car.id_car;
+    option.dataset.plate = car.plate;
+    option.innerHTML = `${car.plate} - ${car.cartype} - ${car.brand} - ${car.model} - ${car.year}</option>`;
+
+    if (car.capacity > 0) option.dataset.capacity = car.capacity;
+
+    if (car.cartype === "FURGON" || car.cartype === "SEMI REMOLQUE") {
+      document.querySelector('#chestedit').appendChild(option);
+    } else {
+      document.querySelector('#caredit').appendChild(option);
+    }
+  })
+
+  var modal = new bootstrap.Modal(document.getElementById("editTravel"), {})
+
+  modal.show()
+}
+
+document.querySelector('[data-travel-edit]').addEventListener('click', editTravel)
+
+const submitEditTravel = (event) => {
+  event.preventDefault()
+
+  const id = event.target.getAttribute('id')
+
+  const travel = {
+    id,
+    name: document.querySelector('[data-username]').innerText,
+    plate: event.currentTarget.car.value,
+    cardesc: document.querySelector('[data-truck] option:checked').innerHTML,
+    platedesc: document.querySelector('[data-truck] option:checked').getAttribute('data-plate'),
+    chest: event.currentTarget.chest.value,
+    carchestdesc: document.querySelector('[data-chest] option:checked').innerHTML,
+    chestdesc: document.querySelector('[data-chest] option:checked').getAttribute('data-plate'),
+    capacity: capacity,
+    date: event.currentTarget.date.value,
+    datedesc: `${date.getDate() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
+    period: event.currentTarget.period.value,
+    perioddesc: document.querySelector('[data-period] option:checked').innerHTML,
+    origin: Number(event.currentTarget.origin.value),
+    origindesc: document.querySelector('[data-origin] option:checked').innerHTML,
+    route: Number(event.currentTarget.route.value),
+    routedesc: document.querySelector('[data-route] option:checked').innerHTML,
+    delivery: Number(event.currentTarget.delivery.value),
+    deliverydesc: document.querySelector('[data-delivery] option:checked').innerHTML,
+    driver: event.currentTarget.driver.value,
+    idcard: document.querySelector('[data-driver] option:checked').getAttribute('data-idcard'),
+    type: event.currentTarget.type.value,
+    typedesc: document.querySelector('#type option:checked').innerHTML,
+    driverdesc: document.querySelector('[data-driver] option:checked').innerHTML,
+    company: event.currentTarget.company.value,
+    companydesc: document.querySelector('[data-company] option:checked').innerHTML,
+    companyidcard: document.querySelector('[data-company] option:checked').getAttribute('data-idcard'),
+    obs: event.currentTarget.obs.value
+  }
+
+  if (travel.driverdesc === "Chofér") {
+    travel.driverdesc = ""
+    travel.driver = null
+  }
+
+  if (travel.companydesc === "Acompañante") {
+    travel.companydesc = ""
+    travel.company = null
+  }
+
+  if (travel.routedesc === "Punto de Retiro") {
+    travel.routedesc = ""
+    travel.route = null
+  }
+
+  if (travel.deliverydesc === "Punto de Entrega") {
+    travel.deliverydesc = ""
+    travel.route = null
+  }
+
+  if (travel.chestdesc == "Furgon" || travel.chestdesc == null) {
+    travel.chestdesc = ""
+  }
+
+  const obj = await Connection.noBody(`travel/${id}`, { travel }, 'PUT')
+
+  let plate = travel.cardesc
+  let chest = ""
+  if (travel.chest) chest = travel.carchestdesc.split(' - ')[1].trim()
+
+  document.querySelector('[data-form-edit-travel]').reset()
+
+  const lines = document.querySelectorAll('[data-btn-cog]')
+  const line = Array.from(lines).filter((line) => {
+    const l = line.getAttribute('data-btn-cog')
+    if (l == id) return true
+  })
+  line[0].parentElement.parentElement.parentElement.parentElement.remove()
+
+  if (travel.type == 3) {
+    travel.type = travel.typedesc
+    document.querySelector('[data-row-travel]').appendChild(View.maintenance(travel, plate, chest, travel.platedesc, travel.chestdesc))
+  } else {
+    document.querySelector('[data-row-travel]').appendChild(View.addtravel(travel, plate, chest, travel.platedesc, travel.chestdesc))
+  }
+
+  alert(obj.msg)
+}
+
+
+document.querySelector('[data-form-edit-travel]').addEventListener('submit', submitEditTravel)
 
 const generate = async (event) => {
   const id_car = event.target.getAttribute('data-id_car')
@@ -1169,6 +1366,7 @@ const generate = async (event) => {
     let deliverydesc = event2.currentTarget.delivery.value;
     let truck = event2.currentTarget.truck.value;
     let driver = event2.currentTarget.driver.value;
+    let period = obj.travel.perioddesc
     let amount = event2.currentTarget.amount.value;
     let companion_name = event2.currentTarget.companion.value;
     let companion_idcard = event2.currentTarget.companion.getAttribute('data-idcard');
@@ -1230,6 +1428,7 @@ const generate = async (event) => {
       origindesc,
       routedesc,
       deliverydesc,
+      period,
       truck,
       chest,
       datereg: `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
@@ -1259,9 +1458,11 @@ const generate = async (event) => {
 
 
 document.querySelector('[data-row-travel]').addEventListener('click', async (event) => {
-  if (event.target && event.target.matches("[data-btn-delete]")) return deleteTravel(event);
+  event.preventDefault()
 
-  if (event.target && event.target.matches("[data-btn-generate]")) return generate(event);
+  if (event.target && event.target.matches("[data-btn-cog]")) return settingsTravel(event)
+
+  if (event.target && event.target.matches("[data-btn-generate]")) return generate(event)
 
 })
 

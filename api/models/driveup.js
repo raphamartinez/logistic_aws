@@ -98,9 +98,9 @@ class DriveUp {
                 const dtEnd = new Date(alert.recordedat)
 
                 const difference = dtEnd.getTime() - dtInit.getTime()
-                const twoSecondsInMilisseconds = 2 * 60 * 60
+                const twoSecondsInMilisseconds = 120000
 
-                if (difference > twoSecondsInMilisseconds) {
+                if (difference < twoSecondsInMilisseconds) {
                     vehicleAlerts.splice(checkAlert.index, 1)
                     vehicleAlerts.splice(index, 1)
                     checkAlert = {}

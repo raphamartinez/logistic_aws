@@ -156,13 +156,13 @@ class DriveUp {
             const date = new Date(vehicleAlert.recordedat)
             date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-3) * 60 * 60 * 1000)
             let message = `*${vehicleAlert.alert}*`
-            message += `\n${travel.plate} - _${travel.cartype} - ${travel.model} - ${travel.capacity}_`
+            if (travel.plate) message += `\n${travel.plate} - _${travel.cartype} - ${travel.model} - ${travel.capacity}_`
             if (travel.driverdesc) message += `\nChofer - ${travel.driverdesc}`
             message += `\n${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
             message += `\n@${vehicleAlert.geom.coordinates[1]},${vehicleAlert.geom.coordinates[0]}`
-            if (travel.origin) message += `Salida: ${travel.origin}`
-            if (travel.route) message += ` - Retiro: ${travel.route}`
-            if (travel.delivery) message += ` - Entrega: ${travel.delivery}`
+            if (travel.origin) message += `\nSalida: ${travel.origindesc}`
+            if (travel.route) message += ` - Retiro: ${travel.routedesc}`
+            if (travel.delivery) message += ` - Entrega: ${travel.deliverydesc}`
 
             vehicleAlert.message = message
             vehicleAlert.group = group
@@ -170,21 +170,15 @@ class DriveUp {
                 vehicleAlert.idzona = vehicleAlert.data.idzona
                 vehicleAlert.odometer = vehicleAlert.data.odometer
             }
-            client.getChats().then(async (data) => {
+            client.getChats().then((data) => {
                 for (let chat of data) {
                     if (chat.id.server === "g.us" && chat.id._serialized == group) {
-                        client.sendMessage(chat.id._serialized, message).then((response) => {
-                            if (response.id.fromMe) {
-                                vehicleAlert.successend = 1
-                                sleep(1500)
-                                let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "")
-                                client.sendMessage(chat.id._serialized, loc).then(() => {
-                                    vehicleAlert.successendloc = 1 
-                                })
-                                sleep(3000)
-                                return true
-                            }
-                        }).catch(err => console.log({ msg: 'envio erro', err }))
+                        client.sendMessage(chat.id._serialized, message).then(() => vehicleAlert.successend = 1)
+                        sleep(2000)
+                        let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "")
+                        client.sendMessage(chat.id._serialized, loc).then(() => vehicleAlert.successendloc = 1)
+                        sleep(2000)
+                        return true
                     }
                 }
             }).catch(err => console.log({ msg: `listagem erro`, err }))

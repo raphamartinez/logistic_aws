@@ -1053,7 +1053,7 @@ const editTravel = async (event) => {
 
 document.querySelector('[data-travel-edit]').addEventListener('click', editTravel)
 
-const submitEditTravel = (event) => {
+const submitEditTravel = async (event) => {
   event.preventDefault()
 
   const id = event.target.getAttribute('id')

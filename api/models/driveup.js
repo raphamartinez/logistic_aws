@@ -19,7 +19,7 @@ class DriveUp {
         const minutesEnd = endDate.getMinutes() > 9 ? endDate.getMinutes() : `0${endDate.getMinutes()}`
         const hoursEnd = endDate.getHours() > 9 ? endDate.getHours() : `0${endDate.getHours()}`
         const dayEnd = endDate.getDate() > 9 ? endDate.getDate() : `0${endDate.getDate()}`
-        const monthEnd = endDate.getMonth() > 9 ? endDate.getMonth() + 1  : `0${endDate.getMonth() + 1 }`
+        const monthEnd = endDate.getMonth() > 9 ? endDate.getMonth() + 1 : `0${endDate.getMonth() + 1}`
 
         const startDate = new Date(endDate.getTime() + (-60 * 60000))
         const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
@@ -90,30 +90,32 @@ class DriveUp {
 
     async saveAlerts(vehicleAlerts, cars, alerts, customers) {
         let checkAlert = {}
-        vehicleAlerts.slice(0).forEach((alert, index) => {
-            if (alert.idEventType == 3) {
-                alert.index = index
-                checkAlert = alert
-            }
 
-            if (checkAlert && alert.idVehicle == checkAlert.idVehicle && alert.data && alert.data.idzona == checkAlert.data.idzona && alert.idEventType == 4) {
-                const dtInit = new Date(checkAlert.recordedat)
-                const dtEnd = new Date(alert.recordedat)
+        // vehicleAlerts.slice(0).forEach((alert, index) => {
+        //     if (alert.idEventType == 3) {
+        //         alert.index = index
+        //         checkAlert = alert
+        //     }
 
-                const difference = dtEnd.getTime() - dtInit.getTime()
-                const twoSecondsInMilisseconds = 120000
+        //     if (checkAlert && alert.idVehicle == checkAlert.idVehicle && alert.data && alert.data.idzona == checkAlert.data.idzona && alert.idEventType == 4) {
+        //         const dtInit = new Date(checkAlert.recordedat)
+        //         const dtEnd = new Date(alert.recordedat)
 
-                if (difference < twoSecondsInMilisseconds) {
-                    vehicleAlerts.splice(checkAlert.index, 1)
-                    vehicleAlerts.splice(index, 1)
-                    checkAlert = {}
-                }
-            }
+        //         const difference = dtEnd.getTime() - dtInit.getTime()
+        //         const twoSecondsInMilisseconds = 120000
 
-            if (alert.idEventType == 32) {
-                vehicleAlerts.splice(index, 1)
-            }
-        })
+        //         if (difference < twoSecondsInMilisseconds) {
+        //             vehicleAlerts.splice(checkAlert.index, 1)
+        //             vehicleAlerts.splice(index, 1)
+        //             checkAlert = {}
+        //         }
+        //     }
+
+        //     if (alert.idEventType == 32) {
+        //         vehicleAlerts.splice(index, 1)
+        //     }
+        // })
+
         for (let vehicleAlert of vehicleAlerts) {
             let customer = vehicleAlert.data ? customers.find(customer => customer.id === vehicleAlert.data.idzona) : ''
             let car = cars.find(car => car.vehicleId === vehicleAlert.idVehicle)
@@ -128,6 +130,15 @@ class DriveUp {
             let group = ''
 
             const travel = await Repositorie.findTravel(vehicleAlert.car.plate)
+
+            let carsTravel = await Repositorie.listPlates(travel.id)
+            travel.carsTravel = carsTravel
+
+            if (travel.carsTravel && travel.carsTravel.length == 2) {
+                travel.capacity = travel.cars[1].capacity
+            } else {
+                travel.capacity = travel.cars[0].capacity
+            }
 
             alerts.find(alert => {
                 alert.types.forEach(type => {
@@ -157,14 +168,24 @@ class DriveUp {
                     }
                 })
             })
+
+            function titleCase(str) {
+                var splitStr = str.toLowerCase().split(' ');
+                for (var i = 0; i < splitStr.length; i++) {
+                    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+                }
+                return splitStr.join(' ');
+            }
+
             vehicleAlert.alert = alertType
             vehicleAlert.successend = 0
             vehicleAlert.successendloc = 0
             const date = new Date(vehicleAlert.recordedat)
             date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-3) * 60 * 60 * 1000)
             let message = `*${vehicleAlert.alert}*`
-            if (travel.plate) message += `\n${travel.plate} - _${travel.cartype} - Capacidad ${travel.capacity}_`
-            if (travel.driverdesc) message += `\nChofer - ${travel.driverdesc}`
+            message += `\n${vehicleAlert.car.plate}`
+            if (travel.plate) message += ` - _${titleCase(travel.cartype)} - Capacidad ${travel.capacity}_`
+            if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
             message += `\n${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
             message += `\n@${vehicleAlert.geom.coordinates[1]},${vehicleAlert.geom.coordinates[0]}`
             if (travel.origin) message += `\nSalida: ${travel.origindesc}`

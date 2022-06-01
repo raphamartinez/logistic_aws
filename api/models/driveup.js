@@ -43,6 +43,7 @@ class DriveUp {
         })
 
         const vehicleAlerts = await data.json()
+        console.log(vehicleAlerts)
         return vehicleAlerts
     }
 

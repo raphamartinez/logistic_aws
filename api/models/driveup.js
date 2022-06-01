@@ -21,7 +21,7 @@ class DriveUp {
         const dayEnd = endDate.getDate() > 9 ? endDate.getDate() : `0${endDate.getDate()}`
         const monthEnd = endDate.getMonth() > 9 ? endDate.getMonth() : `0${endDate.getMonth()}`
 
-        const startDate = new Date(endDate.getTime() + (-30 * 60000))
+        const startDate = new Date(endDate.getTime() + (-60 * 60000))
         const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
         const day = startDate.getDate() > 9 ? startDate.getDate() : `0${startDate.getDate()}`
         const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
@@ -44,6 +44,7 @@ class DriveUp {
         const vehicleAlerts = await data.json()
         return vehicleAlerts
     }
+
 
     async cars() {
 
@@ -95,7 +96,7 @@ class DriveUp {
                 checkAlert = alert
             }
 
-            if (checkAlert && alert.idEventType == 4) {
+            if (checkAlert && alert.idVehicle == checkAlert.idVehicle && alert.data && alert.data.idzona == checkAlert.data.idzona && alert.idEventType == 4) {
                 const dtInit = new Date(checkAlert.recordedat)
                 const dtEnd = new Date(alert.recordedat)
 
@@ -107,6 +108,10 @@ class DriveUp {
                     vehicleAlerts.splice(index, 1)
                     checkAlert = {}
                 }
+            }
+
+            if (alert.idEventType == 32) {
+                vehicleAlerts.splice(index, 1)
             }
         })
         for (let vehicleAlert of vehicleAlerts) {
@@ -158,7 +163,7 @@ class DriveUp {
             const date = new Date(vehicleAlert.recordedat)
             date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-3) * 60 * 60 * 1000)
             let message = `*${vehicleAlert.alert}*`
-            if (travel.plate) message += `\n${travel.plate} - _${travel.cartype} - ${travel.model} - ${travel.capacity}_`
+            if (travel.plate) message += `\n${travel.plate} - _${travel.cartype} - Capacidad ${travel.capacity}_`
             if (travel.driverdesc) message += `\nChofer - ${travel.driverdesc}`
             message += `\n${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
             message += `\n@${vehicleAlert.geom.coordinates[1]},${vehicleAlert.geom.coordinates[0]}`

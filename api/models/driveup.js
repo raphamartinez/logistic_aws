@@ -110,7 +110,7 @@ class DriveUp {
                     vehicleAlerts.splice(index, 1)
                     checkAlert = {}
                 }
-            } 
+            }
 
             if (alert.idEventType == 32) {
                 vehicleAlerts.splice(index, 1)
@@ -122,7 +122,7 @@ class DriveUp {
             let car = cars.find(car => car.vehicleId === vehicleAlert.idVehicle)
             if (customer) { vehicleAlert.customer = customer.name }
             vehicleAlert.car = {
-                plate: car.plate.split(' ')[0],
+                plate: car.plate.split(' ')[0] == 'XBRI' ? 'XBRI010' : car.plate.split(' ')[0],
                 model: car.modelDescription,
                 category: car.kind
             }
@@ -133,13 +133,15 @@ class DriveUp {
             console.log(vehicleAlert.car.plate);
             const travel = await Repositorie.findTravel(vehicleAlert.car.plate)
 
-            let carsTravel = await RepositorieTravel.listPlates(travel.id)
-            travel.carsTravel = carsTravel
+            if (travel.id) {
+                let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                travel.carsTravel = carsTravel
 
-            if (travel.carsTravel && travel.carsTravel.length == 2) {
-                travel.capacity = travel.cars[1].capacity
-            } else {
-                travel.capacity = travel.cars[0].capacity
+                if (travel.carsTravel && travel.carsTravel.length == 2) {
+                    travel.capacity = travel.cars[1].capacity
+                } else {
+                    travel.capacity = travel.cars[0].capacity
+                }
             }
 
             alerts.find(alert => {

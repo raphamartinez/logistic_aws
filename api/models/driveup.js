@@ -18,6 +18,8 @@ class DriveUp {
         const endDate = new Date()
         const minutesEnd = endDate.getMinutes() > 9 ? endDate.getMinutes() : `0${endDate.getMinutes()}`
         const hoursEnd = endDate.getHours() > 9 ? endDate.getHours() : `0${endDate.getHours()}`
+        const dayEnd = endDate.getDate() > 9 ? endDate.getDate() : `0${endDate.getDate()}`
+        const monthEnd = endDate.getMonth() > 9 ? endDate.getMonth() : `0${endDate.getMonth()}`
 
         const startDate = new Date(endDate.getTime() + (-30 * 60000))
         const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
@@ -34,8 +36,8 @@ class DriveUp {
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
             },
             body: JSON.stringify({
-                'from': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hours}:${minutes}:00Z`,
-                'to': `${startDate.getFullYear()}-${month}-${startDate.getDate()}T${hoursEnd}:${minutesEnd}:59Z`
+                'from': `${startDate.getFullYear()}-${month}-${day}T${hours}:${minutes}:00Z`,
+                'to': `${startDate.getFullYear()}-${monthEnd}-${dayEnd}T${hoursEnd}:${minutesEnd}:59Z`
             })
         })
 

@@ -210,18 +210,18 @@ class DriveUp {
                 vehicleAlert.idzona = vehicleAlert.data.idzona
                 vehicleAlert.odometer = vehicleAlert.data.odometer
             }
-            // client.getChats().then((data) => {
-            //     for (let chat of data) {
-            //         if (chat.id.server === "g.us" && chat.id._serialized == group) {
-            //             client.sendMessage(chat.id._serialized, message).then(() => vehicleAlert.successend = 1)
-            //             sleep(2000)
-            //             let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "")
-            //             client.sendMessage(chat.id._serialized, loc).then(() => vehicleAlert.successendloc = 1)
-            //             sleep(2000)
-            //             return true
-            //         }
-            //     }
-            // }).catch(err => console.log({ msg: `listagem erro`, err }))
+            client.getChats().then((data) => {
+                for (let chat of data) {
+                    if (chat.id.server === "g.us" && chat.id._serialized == group) {
+                        client.sendMessage(chat.id._serialized, message).then(() => vehicleAlert.successend = 1)
+                        sleep(2000)
+                        let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "")
+                        client.sendMessage(chat.id._serialized, loc).then(() => vehicleAlert.successendloc = 1)
+                        sleep(2000)
+                        return true
+                    }
+                }
+            }).catch(err => console.log({ msg: `listagem erro`, err }))
 
             await Repositorie.insert(vehicleAlert)
         }

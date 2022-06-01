@@ -19,7 +19,7 @@ class DriveUp {
         const minutesEnd = endDate.getMinutes() > 9 ? endDate.getMinutes() : `0${endDate.getMinutes()}`
         const hoursEnd = endDate.getHours() > 9 ? endDate.getHours() : `0${endDate.getHours()}`
         const dayEnd = endDate.getDate() > 9 ? endDate.getDate() : `0${endDate.getDate()}`
-        const monthEnd = endDate.getMonth() > 9 ? endDate.getMonth() : `0${endDate.getMonth()}`
+        const monthEnd = endDate.getMonth() > 9 ? endDate.getMonth() + 1  : `0${endDate.getMonth() + 1 }`
 
         const startDate = new Date(endDate.getTime() + (-60 * 60000))
         const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`

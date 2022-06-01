@@ -88,33 +88,33 @@ class DriveUp {
         return alerts
     }
 
-    async saveAlerts(vehicleAlerts, cars, alerts, customers) {
+    async saveAlerts(vehicleAlertsArr, cars, alerts, customers) {
         let checkAlert = {}
+        let vehicleAlerts = vehicleAlertsArr
+        vehicleAlertsArr.forEach((alert, index) => {
+            if (alert.idEventType == 3) {
+                alert.index = index
+                checkAlert = alert
+            }
 
-        // vehicleAlerts.slice(0).forEach((alert, index) => {
-        //     if (alert.idEventType == 3) {
-        //         alert.index = index
-        //         checkAlert = alert
-        //     }
+            if (checkAlert && alert.idVehicle == checkAlert.idVehicle && alert.data && alert.data.idzona == checkAlert.data.idzona && alert.idEventType == 4) {
+                const dtInit = new Date(checkAlert.recordedat)
+                const dtEnd = new Date(alert.recordedat)
 
-        //     if (checkAlert && alert.idVehicle == checkAlert.idVehicle && alert.data && alert.data.idzona == checkAlert.data.idzona && alert.idEventType == 4) {
-        //         const dtInit = new Date(checkAlert.recordedat)
-        //         const dtEnd = new Date(alert.recordedat)
+                const difference = dtEnd.getTime() - dtInit.getTime()
+                const twoSecondsInMilisseconds = 120000
 
-        //         const difference = dtEnd.getTime() - dtInit.getTime()
-        //         const twoSecondsInMilisseconds = 120000
+                if (difference < twoSecondsInMilisseconds) {
+                    vehicleAlerts.splice(checkAlert.index, 1)
+                    vehicleAlerts.splice(index, 1)
+                    checkAlert = {}
+                }
+            } 
 
-        //         if (difference < twoSecondsInMilisseconds) {
-        //             vehicleAlerts.splice(checkAlert.index, 1)
-        //             vehicleAlerts.splice(index, 1)
-        //             checkAlert = {}
-        //         }
-        //     }
-
-        //     if (alert.idEventType == 32) {
-        //         vehicleAlerts.splice(index, 1)
-        //     }
-        // })
+            if (alert.idEventType == 32) {
+                vehicleAlerts.splice(index, 1)
+            }
+        })
 
         for (let vehicleAlert of vehicleAlerts) {
             let customer = vehicleAlert.data ? customers.find(customer => customer.id === vehicleAlert.data.idzona) : ''

@@ -112,7 +112,7 @@ class DriveUp {
             let car = cars.find(car => car.vehicleId === vehicleAlert.idVehicle)
             if (customer) { vehicleAlert.customer = customer.name }
             vehicleAlert.car = {
-                plate: car.plate.replace(/\s+/g, ''),
+                plate: car.plate.split(' ')[0],
                 model: car.modelDescription,
                 category: car.kind
             }

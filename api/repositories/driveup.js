@@ -8,18 +8,19 @@ class DriveUp {
             const lat = vehicleAlert.geom.coordinates[1]
             const long = vehicleAlert.geom.coordinates[0]
             const sql = 'INSERT INTO driveup (idEvent, idVehicle, idEventType, idzona, odometer, recordedat, latitude, longitude, customer, car, namegroup, alert, message, successend, successendloc, datereg) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now() - interval 4 hour)'
-            await query(sql, [vehicleAlert.idEvent, vehicleAlert.idVehicle, vehicleAlert.idEventType, vehicleAlert.idzona, vehicleAlert.odometer, vehicleAlert.recordedat, lat, long, vehicleAlert.customer, vehicleAlert.car.plate, vehicleAlert.group, vehicleAlert.alert, vehicleAlert.message, vehicleAlert.successend, vehicleAlert.successendloc])
+            const result = await query(sql, [vehicleAlert.idEvent, vehicleAlert.idVehicle, vehicleAlert.idEventType, vehicleAlert.idzona, vehicleAlert.odometer, vehicleAlert.recordedat, lat, long, vehicleAlert.customer, vehicleAlert.car.plate, vehicleAlert.group, vehicleAlert.alert, vehicleAlert.message, vehicleAlert.successend, vehicleAlert.successendloc])
+            console.log(result);
             return true
         } catch (error) {
+            console.log(error);
             throw new InvalidArgumentError(error)
         }
     }
 
     async countInthePlace(place) {
         try {
-            const sql = `SELECT distinct(car) as plate, idVehicle, idEventType, MAX(recordedat) as date, idzona
+            const sql = `SELECT MAX(recordedat) as date, car as plate, idVehicle, idEventType, idzona
             FROM api.driveup 
-            WHERE idEventType = 3 or idEventType = 4
             GROUP BY car 
             HAVING idzona = ?
             ORDER BY date DESC`

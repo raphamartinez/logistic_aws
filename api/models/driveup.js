@@ -2,6 +2,7 @@ const { InvalidArgumentError, InternalServerError, NotFound } = require('./error
 const fetch = require('node-fetch')
 const { Location } = require("whatsapp-web.js");
 const Repositorie = require('../repositories/driveup')
+const RepositorieTravel = require('../repositories/travel')
 
 function sleep(milliseconds) {
     const date = Date.now();
@@ -131,7 +132,7 @@ class DriveUp {
 
             const travel = await Repositorie.findTravel(vehicleAlert.car.plate)
 
-            let carsTravel = await Repositorie.listPlates(travel.id)
+            let carsTravel = await RepositorieTravel.listPlates(travel.id)
             travel.carsTravel = carsTravel
 
             if (travel.carsTravel && travel.carsTravel.length == 2) {

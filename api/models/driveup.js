@@ -130,6 +130,7 @@ class DriveUp {
             let alertType = ''
             let group = ''
 
+            console.log(vehicleAlert.car.plate);
             const travel = await Repositorie.findTravel(vehicleAlert.car.plate)
 
             let carsTravel = await RepositorieTravel.listPlates(travel.id)

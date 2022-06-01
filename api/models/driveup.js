@@ -43,7 +43,6 @@ class DriveUp {
         })
 
         const vehicleAlerts = await data.json()
-        console.log(vehicleAlerts)
         return vehicleAlerts
     }
 
@@ -125,6 +124,8 @@ class DriveUp {
                     break
             }
         })
+
+        console.log({ messages: vehicleAlerts.length })
 
         for (let vehicleAlert of vehicleAlerts) {
             let customer = vehicleAlert.data ? customers.find(customer => customer.id === vehicleAlert.data.idzona) : ''

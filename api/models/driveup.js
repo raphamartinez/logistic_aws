@@ -90,30 +90,38 @@ class DriveUp {
     }
 
     async saveAlerts(vehicleAlertsArr, cars, alerts, customers) {
+
         let checkAlert = {}
-        let vehicleAlerts = vehicleAlertsArr
-        vehicleAlertsArr.forEach((alert, index) => {
-            if (alert.idEventType == 3) {
-                alert.index = index
-                checkAlert = alert
-            }
+        let vehicleAlerts = []
 
-            if (checkAlert && alert.idVehicle == checkAlert.idVehicle && alert.data && alert.data.idzona == checkAlert.data.idzona && alert.idEventType == 4) {
-                const dtInit = new Date(checkAlert.recordedat)
-                const dtEnd = new Date(alert.recordedat)
+        vehicleAlertsArr.forEach(alert => {
+            switch (alert.idEventType) {
+                case 3:
+                    checkAlert = alert
+                    return null
+                case 4:
+                    if (checkAlert && alert.idVehicle == checkAlert.idVehicle && alert.data && alert.data.idzona == checkAlert.data.idzona) {
+                        const dtInit = new Date(checkAlert.recordedat)
+                        const dtEnd = new Date(alert.recordedat)
+                        const difference = dtEnd.getTime() - dtInit.getTime()
+                        const twoSecondsInMilisseconds = 120000
 
-                const difference = dtEnd.getTime() - dtInit.getTime()
-                const twoSecondsInMilisseconds = 120000
-
-                if (difference < twoSecondsInMilisseconds) {
-                    vehicleAlerts.splice(checkAlert.index, 1)
-                    vehicleAlerts.splice(index, 1)
-                    checkAlert = {}
-                }
-            }
-
-            if (alert.idEventType == 32) {
-                vehicleAlerts.splice(index, 1)
+                        if (difference < twoSecondsInMilisseconds) {
+                            checkAlert = {}
+                            return null
+                        } else {
+                            vehicleAlerts.push(checkAlert)
+                            vehicleAlerts.push(alert)
+                            checkAlert = {}
+                            return null
+                        }
+                    }
+                    break
+                case 32:
+                    return null
+                default:
+                    vehicleAlerts.push(alert)
+                    break
             }
         })
 
@@ -138,9 +146,9 @@ class DriveUp {
                 travel.carsTravel = carsTravel
 
                 if (travel.carsTravel && travel.carsTravel.length == 2) {
-                    travel.capacity = travel.cars[1].capacity
+                    travel.capacity = travel.carsTravel[1].capacity
                 } else {
-                    travel.capacity = travel.cars[0].capacity
+                    travel.capacity = travel.carsTravel[0].capacity
                 }
             }
 
@@ -202,18 +210,18 @@ class DriveUp {
                 vehicleAlert.idzona = vehicleAlert.data.idzona
                 vehicleAlert.odometer = vehicleAlert.data.odometer
             }
-            client.getChats().then((data) => {
-                for (let chat of data) {
-                    if (chat.id.server === "g.us" && chat.id._serialized == group) {
-                        client.sendMessage(chat.id._serialized, message).then(() => vehicleAlert.successend = 1)
-                        sleep(2000)
-                        let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "")
-                        client.sendMessage(chat.id._serialized, loc).then(() => vehicleAlert.successendloc = 1)
-                        sleep(2000)
-                        return true
-                    }
-                }
-            }).catch(err => console.log({ msg: `listagem erro`, err }))
+            // client.getChats().then((data) => {
+            //     for (let chat of data) {
+            //         if (chat.id.server === "g.us" && chat.id._serialized == group) {
+            //             client.sendMessage(chat.id._serialized, message).then(() => vehicleAlert.successend = 1)
+            //             sleep(2000)
+            //             let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "")
+            //             client.sendMessage(chat.id._serialized, loc).then(() => vehicleAlert.successendloc = 1)
+            //             sleep(2000)
+            //             return true
+            //         }
+            //     }
+            // }).catch(err => console.log({ msg: `listagem erro`, err }))
 
             await Repositorie.insert(vehicleAlert)
         }

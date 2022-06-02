@@ -8,8 +8,8 @@ class DriveUp {
             const lat = vehicleAlert.geom.coordinates[1]
             const long = vehicleAlert.geom.coordinates[0]
             const sql = 'INSERT INTO driveup (idEvent, idVehicle, idEventType, idzona, odometer, recordedat, latitude, longitude, customer, car, namegroup, alert, message, successend, successendloc, datereg) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now() - interval 4 hour)'
-            const result = await query(sql, [vehicleAlert.idEvent, vehicleAlert.idVehicle, vehicleAlert.idEventType, vehicleAlert.idzona, vehicleAlert.odometer, vehicleAlert.recordedat, lat, long, vehicleAlert.customer, vehicleAlert.car.plate, vehicleAlert.group, vehicleAlert.alert, vehicleAlert.message, vehicleAlert.successend, vehicleAlert.successendloc])
-            console.log(result);
+            await query(sql, [vehicleAlert.idEvent, vehicleAlert.idVehicle, vehicleAlert.idEventType, vehicleAlert.idzona, vehicleAlert.odometer, vehicleAlert.recordedat, lat, long, vehicleAlert.customer, vehicleAlert.car.plate, vehicleAlert.group, vehicleAlert.alert, vehicleAlert.message, vehicleAlert.successend, vehicleAlert.successendloc])
+
             return true
         } catch (error) {
             console.log(error);

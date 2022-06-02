@@ -40,6 +40,10 @@ class DriveUp {
                 'from': `${startDate.getFullYear()}-${month}-${day}T${hours}:${minutes}:00Z`,
                 'to': `${startDate.getFullYear()}-${monthEnd}-${dayEnd}T${hoursEnd}:${minutesEnd}:59Z`
             })
+            // body: JSON.stringify({
+            //     "from": "2022-06-02T00:10:00Z",
+            //     "to":"2022-06-02T11:01:00Z"
+            // })
         })
 
         const vehicleAlerts = await data.json()
@@ -115,6 +119,8 @@ class DriveUp {
                             checkAlert = {}
                             return null
                         }
+                    }else{
+                        vehicleAlerts.push(alert)
                     }
                     break
                 case 32:

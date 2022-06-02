@@ -44,10 +44,10 @@ module.exports = () => {
     }
   }
 
-  if (process.env.NODE_ENV !== 'development') {
-    app.set('trust proxy', 1)
-    sess.cookie.secure = true
-  }
+  // if (process.env.NODE_ENV !== 'development') {
+  //   app.set('trust proxy', 1)
+  //   sess.cookie.secure = true
+  // }
 
   app.use(session(sess))
 

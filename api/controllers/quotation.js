@@ -8,6 +8,8 @@ module.exports = app => {
 
     app.get('/cotizacion', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
+            
+            if (process.env.NODE_ENV !== 'development') return res.render('notGestran')
             res.render('quotation')
         } catch (err) {
             next(err)

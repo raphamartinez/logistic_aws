@@ -9,6 +9,7 @@ module.exports = app => {
 
     app.get('/ordenesCompra', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
+            if (process.env.NODE_ENV !== 'development') return res.render('notGestran')
 
             let providers = await Purchase.getProviders()
             let cars = await Purchase.getCars()
@@ -30,6 +31,8 @@ module.exports = app => {
 
     app.get('/despesasVehiculos', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
+            if (process.env.NODE_ENV !== 'development') return res.render('notGestran')
+
             res.render('expense')
         } catch (err) {
             next(err)
@@ -38,6 +41,8 @@ module.exports = app => {
 
     app.get('/orderPhoto', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
+            if (process.env.NODE_ENV !== 'development') return res.render('notGestran')
+
             res.render('orderphoto')
         } catch (err) {
             next(err)
@@ -46,6 +51,8 @@ module.exports = app => {
 
     app.get('/ordenGestran', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
+            if (process.env.NODE_ENV !== 'development') return res.render('notGestran')
+
             res.render('ordergestran')
         } catch (err) {
             next(err)
@@ -54,6 +61,8 @@ module.exports = app => {
 
     app.get('/historialVehiculos', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
+            if (process.env.NODE_ENV !== 'development') return res.render('notGestran')
+
             res.render('history')
         } catch (err) {
             next(err)

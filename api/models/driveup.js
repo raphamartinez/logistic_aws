@@ -28,8 +28,9 @@ class DriveUp {
         const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
         const hours = startDate.getHours() > 9 ? startDate.getHours() : `0${startDate.getHours()}`
 
-        console.log({ now: endDate.toLocaleString() })
         console.log(`${startDate.getFullYear()}-${month}-${day}T${hours}:${minutes}`)
+        console.log({ now: endDate.toLocaleString() })
+
         const data = await fetch(`https://api.driveup.info/rest/vehicle/alerts`, {
             method: 'POST',
             headers: {
@@ -38,7 +39,7 @@ class DriveUp {
             },
             body: JSON.stringify({
                 'from': `${startDate.getFullYear()}-${month}-${day}T${hours}:${minutes}:00Z`,
-                'to': `${startDate.getFullYear()}-${monthEnd}-${dayEnd}T${hoursEnd}:${minutesEnd}:59Z`
+                'to': `${endDate.getFullYear()}-${monthEnd}-${dayEnd}T${hoursEnd}:${minutesEnd}:59Z`
             })
             // body: JSON.stringify({
             //     "from": "2022-06-02T00:10:00Z",

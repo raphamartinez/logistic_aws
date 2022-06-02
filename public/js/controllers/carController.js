@@ -1731,12 +1731,13 @@ document.querySelector('[data-print]').addEventListener('click', () => {
   $("#dataTable").printThis()
 })
 
-function titleCase(string) {
-  let word = string[0].toUpperCase() + string.slice(1).toLowerCase();
-  if (word.length > 30) word = word.substring(0, 30)
-  return word
+function titleCase(str) {
+  var splitStr = str.toLowerCase().split(' ');
+  for (var i = 0; i < splitStr.length; i++) {
+      splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+  return splitStr.join(' ');
 }
-
 document.querySelector('[data-print-travel]').addEventListener('click', () => {
   let input = document.createElement("textarea");
   let now = new Date()

@@ -101,10 +101,10 @@ class DriveUp {
 
         vehicleAlertsArr.forEach(alert => {
             switch (alert.idEventType) {
-                case 3:
+                case 3: //Llegada
                     checkAlert = alert
                     return null
-                case 4:
+                case 4: //Salida
                     if (checkAlert && alert.idVehicle == checkAlert.idVehicle && alert.data && alert.data.idzona == checkAlert.data.idzona) {
                         const dtInit = new Date(checkAlert.recordedat)
                         const dtEnd = new Date(alert.recordedat)
@@ -124,9 +124,9 @@ class DriveUp {
                         vehicleAlerts.push(alert)
                     }
                     break
-                case 32:
+                case 32: //Inicio de Detencion
                     return null
-                default:
+                default: //Otros
                     vehicleAlerts.push(alert)
                     break
             }

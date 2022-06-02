@@ -6,6 +6,9 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('express-flash')
+const redis = require('redis');
+const RedisStore = require('connect-redis')(session);
+const client = redis.createClient();
 
 module.exports = () => {
 
@@ -31,14 +34,22 @@ module.exports = () => {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
 
-  app.use(session({
+  let sess = {
+    store: new RedisStore({ client }),
     secret: process.env.KEY_JWT,
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 30 * 60 * 1000
     }
-  }));
+  }
+
+  if (process.env.NODE_ENV !== 'development') {
+    app.set('trust proxy', 1)
+    sess.cookie.secure = true
+  }
+
+  app.use(session(sess))
 
   app.use(passport.initialize());
   app.use(passport.session());
@@ -55,11 +66,11 @@ module.exports = () => {
   });
 
   app.use(flash());
-  
+
   consign({ cwd: path.join(__dirname, '../') })
     .include('models')
     .then('controllers')
     .into(app)
-    
+
   return app
 }

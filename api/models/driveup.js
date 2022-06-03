@@ -271,14 +271,19 @@ class DriveUp {
         }
 
         let message = `*${alertType}*`
-        message += `\n${carLocation.plate}`
-        if (travel.plate) message += ` - _${titleCase(travel.cartype)} - Capacidad ${travel.capacity}_`
+        message += `\n${carLocation.plateDesc}`
+
+        if (travel.chest) {
+            message += ` - _Acople: ${travel.chest} - Cap: ${travel.capacity}_`
+        } else {
+            if (travel.plate) message += ` - _Capacidad ${travel.capacity}_`
+        }
         if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
         message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
         message += `\n@${carLocation.lat},${carLocation.lng}`
-        if (travel.origin) message += `\nSalida: ${travel.origindesc}`
-        if (travel.route) message += ` - Retiro: ${travel.routedesc}`
-        if (travel.delivery) message += ` - Entrega: ${travel.deliverydesc}`
+        if (travel.origin) message += `\nSalida: _${travel.origindesc}_`
+        if (travel.route) message += ` - Retiro: _${travel.routedesc}_`
+        if (travel.delivery) message += ` - Entrega: _${travel.deliverydesc}_`
 
         if (process.env.NODE_ENV !== 'development') {
             client.getChats().then((data) => {
@@ -555,6 +560,7 @@ class DriveUp {
             if (car) {
                 carLocation.code = carLocation.plate
                 carLocation.plate = car.plate
+                carLocation.plateDesc = car.description
             } else {
                 carLocation.code = carLocation.plate
             }
@@ -590,6 +596,7 @@ class DriveUp {
 
                         if (travel.carsTravel && travel.carsTravel.length == 2) {
                             travel.capacity = travel.carsTravel[1].capacity
+                            travel.chest = travel.carsTravel[1].plate
                         } else {
                             travel.capacity = travel.carsTravel[0].capacity
                         }

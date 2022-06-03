@@ -71,6 +71,14 @@ if (process.env.NODE_ENV !== 'development') {
 
   client.on('ready', () => {
     console.log('Pronto para uso!');
+
+    DriveUp.stream()
+
+    geoQueue.process(function (job, done) {
+      console.log('executou');
+      DriveUp.queueResponses(job.data.carLocation)
+      done()
+    })
   })
 
   client.on('message', async msg => {
@@ -141,14 +149,6 @@ app.listen(3000, async () => {
   if (process.env.NODE_ENV !== 'development') {
     jobAlert.start()
   }
-
-  DriveUp.stream()
-
-  geoQueue.process(function (job, done) {
-    console.log('executou');
-    DriveUp.queueResponses(job.data.carLocation)
-    done()
-  })
 
   app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])
   app.set('view engine', 'ejs');

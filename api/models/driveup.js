@@ -319,8 +319,6 @@ class DriveUp {
                 const carLocation = JSON.parse(string)
 
                 geoQueue.add({carLocation})
-
-                // this.queueResponses(carLocation)
             })
 
             res.on('close', () => {

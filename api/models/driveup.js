@@ -654,10 +654,23 @@ class DriveUp {
                     if (allCarsMaintenance.length == 0) {
                         message = `*No hay vehiculos en Mantenimiento*`
                     } else {
-                        message = `*Vehiculos en Mantenimiento*`
-                        allCarsMaintenance.forEach(car => message += `*${car.plate}* - ${car.description}\n`)
+                        message = `*Vehiculos en Mantenimiento*\n\n`
+                        let groupsMaintenance = allCarsMaintenance.reduce(function (r, car) {
+                            let typeCar = car.cartype
+                            let line = `*${car.plate}* - ${car.description}\n`
+                            r[`${typeCar}`] = r[`${typeCar}`] || []
+                            r[`${typeCar}`].push(line)
+                            return r
+                        }, Object.create({}))
+        
+                        const keysMaintenance = Object.keys(groupsMaintenance)
+        
+                        keysMaintenance.forEach(key => {
+                            if (key === 'remove') return null
+                            message += `--------------------------------------------------\n*${key}*\n\n`
+                            groupsMaintenance[key].forEach(line => message += line)
+                        })
                     }
-
                     return message
             }
 
@@ -667,7 +680,7 @@ class DriveUp {
             message = `*No hay vehículos disponibles en ${descPlace}*\n`
             if (cars.length > 0) {
                 message = `*Sigue abajo listado de vehiculos disponibles en ${descPlace}*\n\n`
-                let groups = cars.reduce((r, car) => {
+                let groups = cars.reduce(function (r, car) {
                     let typeCar = car.cartype
                     let line = ''
                     let carInMaintenance = carsMaintenance.find(maintenance => maintenance.plate === car.plate)
@@ -675,14 +688,19 @@ class DriveUp {
                     if (!carInMaintenance) {
                         line += `${car.plate}\n`
                         r[`${typeCar}`] = r[`${typeCar}`] || []
-                        r[`${typeCar}`].push(line);
+                        r[`${typeCar}`].push(line)
+                        return r
                     }
-                })
+                    r[`remove`] = r[`remove`] || []
+                    r[`remove`].push(line)
+                    return r
+                }, Object.create({}))
 
                 const keys = Object.keys(groups)
 
                 keys.forEach(key => {
-                    message = `--------------------------------------------------\n*${key}*\n\n`
+                    if (key === 'remove') return null
+                    message += `--------------------------------------------------\n*${key}*\n\n`
                     groups[key].forEach(line => message += line)
                 })
             }
@@ -694,9 +712,22 @@ class DriveUp {
                 message += `\n*No hay vehiculos en Mantenimiento en ${descPlace}*`
             } else {
                 message += `\n*Vehiculos en Mantenimiento en ${descPlace}*\n\n`
-                carsMaintenance.forEach(car => message += `${car.plate}\n`)
-            }
+                let groupsMaintenance = carsMaintenance.reduce(function (r, car) {
+                    let typeCar = car.cartype
+                    let line = `${car.plate}\n`
+                    r[`${typeCar}`] = r[`${typeCar}`] || []
+                    r[`${typeCar}`].push(line)
+                    return r
+                }, Object.create({}))
 
+                const keysMaintenance = Object.keys(groupsMaintenance)
+
+                keysMaintenance.forEach(key => {
+                    if (key === 'remove') return null
+                    message += `--------------------------------------------------\n*${key}*\n\n`
+                    groupsMaintenance[key].forEach(line => message += line)
+                })
+            }
             return message
         } catch (error) {
             console.log(error)

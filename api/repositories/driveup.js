@@ -62,7 +62,7 @@ class DriveUp {
 
     async countInMaintenance(place) {
         try {
-            let sql = `SELECT distinct(plate) as plate, thirst, obs as description
+            let sql = `SELECT distinct(plate) as plate, thirst, obs as description, cartype
             FROM api.car 
             WHERE status = 2 `
 

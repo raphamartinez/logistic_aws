@@ -695,7 +695,7 @@ class DriveUp {
 
                         keysMaintenance.forEach(key => {
                             if (key === 'remove') return null
-                            message += `--------------------------------------------------\n*${key}*\n\n`
+                            message += `--------------------------------------------------\n*${key}* - ${groupsMaintenance[key].length} Un\n\n`
                             groupsMaintenance[key].forEach(line => message += line)
                         })
                     }
@@ -732,7 +732,7 @@ class DriveUp {
 
                 keys.forEach(key => {
                     if (key === 'remove') return null
-                    message += `--------------------------------------------------\n*${key}*\n\n`
+                    message += `--------------------------------------------------\n*${key}* - ${groups[key].length} Un\n\n`
                     groups[key].forEach(line => message += line)
                 })
             }
@@ -760,7 +760,7 @@ class DriveUp {
 
                 keysMaintenance.forEach(key => {
                     if (key === 'remove') return null
-                    message += `--------------------------------------------------\n*${key}*\n\n`
+                    message += `--------------------------------------------------\n*${key}*  - ${groupsMaintenance[key].length} Un\n\n`
                     groupsMaintenance[key].forEach(line => message += line)
                 })
             }

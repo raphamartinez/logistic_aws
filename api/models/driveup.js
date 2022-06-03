@@ -169,6 +169,26 @@ const listCars = [
         description: 'XBRI008 TRA SCAN'
     },
     {
+        code: 'XBRI010TRASCAN',
+        plate: 'XBRI010',
+        description: 'XBRI010 TRA SCAN'
+    },
+    {
+        code: 'XBRI006TRASCAN',
+        plate: 'XBRI006',
+        description: 'XBRI006 TRA SCAN'
+    },
+    {
+        code: 'XBRI009TRASCAN',
+        plate: 'XBRI009',
+        description: 'XBRI009 TRA SCAN'
+    },
+    {
+        code: 'XBRI011TRASCAN',
+        plate: 'XBRI011',
+        description: 'XBRI011 TRA SCAN'
+    },
+    {
         code: 'CCP584DOBLESCAN',
         plate: 'CCP584',
         description: 'CCP584 DOBLE SCAN'

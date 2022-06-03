@@ -728,7 +728,7 @@ class DriveUp {
                     let findCar = listCars.find(findCar => findCar.plate === car.plate)
                     if (findCar) car.plate = findCar.description
                     let typeCar = car.cartype
-                    let line = `*${car.plate}`
+                    let line = `*${car.plate}*`
                     if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
                     line += '\n'
                     r[`${typeCar}`] = r[`${typeCar}`] || []

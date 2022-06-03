@@ -45,7 +45,7 @@ class DriveUp {
 
     async countInthePlace(place) {
         try {
-            const sql = `SELECT dr.recordedat as date, dr.plate, dr.isInside, dr.location, ca.cartype
+            const sql = `SELECT dr.recordedat as date, dr.plate, dr.isInside, dr.location, ca.cartype, ca.capacity
             FROM api.driveuplocation dr
             INNER JOIN api.car ca on dr.plate = ca.plate
             WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveuplocation drr WHERE drr.plate = dr.plate)
@@ -62,14 +62,14 @@ class DriveUp {
 
     async countInMaintenance(place) {
         try {
-            let sql = `SELECT distinct(plate) as plate, thirst, obs as description, cartype
-            FROM api.car 
-            WHERE status = 2 `
+            let sql = `SELECT distinct(ca.plate) as plate, ca.thirst, ca.obs as description, ca.cartype, ca.capacity
+            FROM api.car ca
+            WHERE ca.status = 2 `
 
             if (place) sql += `and thirst = '${place}' `
 
-            sql += `GROUP BY plate 
-            ORDER BY plate ASC `
+            sql += `GROUP BY ca.plate 
+            ORDER BY ca.plate ASC `
 
             const result = await query(sql)
             return result

@@ -17,6 +17,199 @@ function sleep(milliseconds) {
     } while (currentDate - date < milliseconds);
 }
 
+const listCars = [
+    {
+        code: 'XBRI106TRASCAN',
+        plate: 'XBRI106',
+        description: 'XBRI006 TRA SCAN'
+    },
+    {
+        code: 'XBRI106TRA',
+        plate: 'XBRI106',
+        description: 'XBRI006 TRA SCAN'
+    },
+    {
+        code: 'XBRI107TRASCAN',
+        plate: 'XBRI107',
+        description: 'XBRI107 TRA SCAN'
+    },
+    {
+        code: 'BAT633CAMHYUN',
+        plate: 'BAT633',
+        description: 'BAT633 CAM HYUN'
+    },
+    {
+        code: 'CEO412CAMFOTO',
+        plate: 'CEO412',
+        description: 'CEO412 CAM FOTO'
+    },
+    {
+        code: 'CEV932CAMFUSO',
+        plate: 'CEV932',
+        description: 'CEV932 CAM FUSO'
+    },
+    {
+        code: 'XBRI005TRASCAN',
+        plate: 'XBRI005',
+        description: 'XBRI005 TRA SCAN'
+    },
+    {
+        code: 'XBRI007TRASCAN',
+        plate: 'XBRI007',
+        description: 'XBRI007 TRA SCAN'
+    },
+    {
+        code: 'XBRI002TRASCAN',
+        plate: 'XBRI002',
+        description: 'XBRI002 TRA SCAN'
+    },
+    {
+        code: 'CEO411CAMFOTO',
+        plate: 'CEO411',
+        description: 'CEO411 CAM FOTO'
+    },
+    {
+        code: 'CAS702CAMHYUN',
+        plate: 'CAS702',
+        description: 'CAS702 CAM HYUN'
+    },
+    {
+        code: 'CEU784CAMFUSO',
+        plate: 'CEU784',
+        description: 'CEU784 CAM FUSO'
+    },
+    {
+        code: 'CEV912CAMFUSO',
+        plate: 'CEV912',
+        description: 'CEV912 CAM FUSO'
+    },
+    {
+        code: 'BLA554CAMVOLK',
+        plate: 'BLA554',
+        description: 'BLA554 CAM VOLK'
+    },
+    {
+        code: 'XBRI003TRASCAN',
+        plate: 'XBRI003',
+        description: 'XBRI003 TRA SCAN'
+    },
+    {
+        code: 'CFP306TRAFAW',
+        plate: 'CFP306',
+        description: 'CFP306 TRA FAW'
+    },
+    {
+        code: 'AYD885CAMVOLK',
+        plate: 'AYD885',
+        description: 'AYD885 CAM VOLK'
+    },
+    {
+        code: 'AEA217CAMMERC',
+        plate: 'AEA217',
+        description: 'AEA217 CAM MERC'
+    },
+    {
+        code: 'CEO407CAMFOTO',
+        plate: 'CEO407',
+        description: 'CEO407 CAM FOTO'
+    },
+    {
+        code: 'CAB977AUTOKIA',
+        plate: 'CAB977',
+        description: 'CAB977 AUTO KIA'
+    },
+    {
+        code: 'CAS594CAMHYUN',
+        plate: 'CAS594',
+        description: 'CAS594 CAM HYUN'
+    },
+    {
+        code: 'BFH923DOBLEVOLK',
+        plate: 'BFH923',
+        description: 'BFH923 DOBLE VOLK'
+    },
+    {
+        code: 'CEV933TRAMERC',
+        plate: 'CEV933',
+        description: 'CEV933 TRA MERC'
+    },
+    {
+        code: 'CFP304TRAFAW',
+        plate: 'CFP304',
+        description: 'CFP304 TRA FAW'
+    },
+    {
+        code: 'CFC349TRAVOLK',
+        plate: 'CFC349',
+        description: 'CFC349 TRA VOLK'
+    },
+    {
+        code: 'CFN459TRAFAW',
+        plate: 'CFN459',
+        description: 'CFN459 TRA FAW'
+    },
+    {
+        code: 'CFP305TRAFAW',
+        plate: 'CFP305',
+        description: 'CFP305 TRA FAW'
+    },
+    {
+        code: 'CFN458TRAFAW',
+        plate: 'CFN458',
+        description: 'CFN458 TRA FAW'
+    },
+    {
+        code: 'XBRI006TRASCAN',
+        plate: 'XBRI106',
+        description: 'XBRI106 TRA SCAN'
+    },
+    {
+        code: 'XBRI008TRASCAN',
+        plate: 'XBRI008',
+        description: 'XBRI008 TRA SCAN'
+    },
+    {
+        code: 'CCP584DOBLESCAN',
+        plate: 'CCP584',
+        description: 'CCP584 DOBLE SCAN'
+    },
+    {
+        code: 'XBRI004TRASCAN',
+        plate: 'XBRI004',
+        description: 'XBRI004 TRA SCAN'
+    },
+    {
+        code: 'XBRI001TRASCAN',
+        plate: 'XBRI001',
+        description: 'XBRI001 TRA SCAN'
+    },
+    {
+        code: 'CAS025TRASCAN',
+        plate: 'CAS025',
+        description: 'CAS025 TRA SCAN'
+    },
+    {
+        code: 'CEV934TRAMERC',
+        plate: 'CEV934',
+        description: 'CEV934 TRA MERC'
+    },
+    {
+        code: 'CEU782CAMFUSO',
+        plate: 'CEU782',
+        description: 'CEU782 CAM FUSO'
+    },
+    {
+        code: 'CFP302TRAFAW',
+        plate: 'CFP302',
+        description: 'CFP302 TRA FAW'
+    },
+    {
+        code: 'CEV913CAMFUSO',
+        plate: 'CEV913',
+        description: 'CEV913 CAM FUSO'
+    }
+]
+
 class DriveUp {
 
     async vehicleAlerts() {
@@ -276,7 +469,7 @@ class DriveUp {
         if (travel.chest) {
             message += ` - _Acople: ${travel.chest} - Cap: ${travel.capacity}_`
         } else {
-            if (travel.plate) message += ` - _Capacidad ${travel.capacity}_`
+            if (travel.plate) message += ` - _Cap: ${travel.capacity}_`
         }
         if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
         message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
@@ -349,199 +542,6 @@ class DriveUp {
                 }
             ]
 
-            const cars = [
-                {
-                    code: 'XBRI106TRASCAN',
-                    plate: 'XBRI106',
-                    description: 'XBRI006 TRA SCAN'
-                },
-                {
-                    code: 'XBRI106TRA',
-                    plate: 'XBRI106',
-                    description: 'XBRI006 TRA SCAN'
-                },
-                {
-                    code: 'XBRI107TRASCAN',
-                    plate: 'XBRI107',
-                    description: 'XBRI107 TRA SCAN'
-                },
-                {
-                    code: 'BAT633CAMHYUN',
-                    plate: 'BAT633',
-                    description: 'BAT633 CAM HYUN'
-                },
-                {
-                    code: 'CEO412CAMFOTO',
-                    plate: 'CEO412',
-                    description: 'CEO412 CAM FOTO'
-                },
-                {
-                    code: 'CEV932CAMFUSO',
-                    plate: 'CEV932',
-                    description: 'CEV932 CAM FUSO'
-                },
-                {
-                    code: 'XBRI005TRASCAN',
-                    plate: 'XBRI005',
-                    description: 'XBRI005 TRA SCAN'
-                },
-                {
-                    code: 'XBRI007TRASCAN',
-                    plate: 'XBRI007',
-                    description: 'XBRI007 TRA SCAN'
-                },
-                {
-                    code: 'XBRI002TRASCAN',
-                    plate: 'XBRI002',
-                    description: 'XBRI002 TRA SCAN'
-                },
-                {
-                    code: 'CEO411CAMFOTO',
-                    plate: 'CEO411',
-                    description: 'CEO411 CAM FOTO'
-                },
-                {
-                    code: 'CAS702CAMHYUN',
-                    plate: 'CAS702',
-                    description: 'CAS702 CAM HYUN'
-                },
-                {
-                    code: 'CEU784CAMFUSO',
-                    plate: 'CEU784',
-                    description: 'CEU784 CAM FUSO'
-                },
-                {
-                    code: 'CEV912CAMFUSO',
-                    plate: 'CEV912',
-                    description: 'CEV912 CAM FUSO'
-                },
-                {
-                    code: 'BLA554CAMVOLK',
-                    plate: 'BLA554',
-                    description: 'BLA554 CAM VOLK'
-                },
-                {
-                    code: 'XBRI003TRASCAN',
-                    plate: 'XBRI003',
-                    description: 'XBRI003 TRA SCAN'
-                },
-                {
-                    code: 'CFP306TRAFAW',
-                    plate: 'CFP306',
-                    description: 'CFP306 TRA FAW'
-                },
-                {
-                    code: 'AYD885CAMVOLK',
-                    plate: 'AYD885',
-                    description: 'AYD885 CAM VOLK'
-                },
-                {
-                    code: 'AEA217CAMMERC',
-                    plate: 'AEA217',
-                    description: 'AEA217 CAM MERC'
-                },
-                {
-                    code: 'CEO407CAMFOTO',
-                    plate: 'CEO407',
-                    description: 'CEO407 CAM FOTO'
-                },
-                {
-                    code: 'CAB977AUTOKIA',
-                    plate: 'CAB977',
-                    description: 'CAB977 AUTO KIA'
-                },
-                {
-                    code: 'CAS594CAMHYUN',
-                    plate: 'CAS594',
-                    description: 'CAS594 CAM HYUN'
-                },
-                {
-                    code: 'BFH923DOBLEVOLK',
-                    plate: 'BFH923',
-                    description: 'BFH923 DOBLE VOLK'
-                },
-                {
-                    code: 'CEV933TRAMERC',
-                    plate: 'CEV933',
-                    description: 'CEV933 TRA MERC'
-                },
-                {
-                    code: 'CFP304TRAFAW',
-                    plate: 'CFP304',
-                    description: 'CFP304 TRA FAW'
-                },
-                {
-                    code: 'CFC349TRAVOLK',
-                    plate: 'CFC349',
-                    description: 'CFC349 TRA VOLK'
-                },
-                {
-                    code: 'CFN459TRAFAW',
-                    plate: 'CFN459',
-                    description: 'CFN459 TRA FAW'
-                },
-                {
-                    code: 'CFP305TRAFAW',
-                    plate: 'CFP305',
-                    description: 'CFP305 TRA FAW'
-                },
-                {
-                    code: 'CFN458TRAFAW',
-                    plate: 'CFN458',
-                    description: 'CFN458 TRA FAW'
-                },
-                {
-                    code: 'XBRI006TRASCAN',
-                    plate: 'XBRI106',
-                    description: 'XBRI106 TRA SCAN'
-                },
-                {
-                    code: 'XBRI008TRASCAN',
-                    plate: 'XBRI008',
-                    description: 'XBRI008 TRA SCAN'
-                },
-                {
-                    code: 'CCP584DOBLESCAN',
-                    plate: 'CCP584',
-                    description: 'CCP584 DOBLE SCAN'
-                },
-                {
-                    code: 'XBRI004TRASCAN',
-                    plate: 'XBRI004',
-                    description: 'XBRI004 TRA SCAN'
-                },
-                {
-                    code: 'XBRI001TRASCAN',
-                    plate: 'XBRI001',
-                    description: 'XBRI001 TRA SCAN'
-                },
-                {
-                    code: 'CAS025TRASCAN',
-                    plate: 'CAS025',
-                    description: 'CAS025 TRA SCAN'
-                },
-                {
-                    code: 'CEV934TRAMERC',
-                    plate: 'CEV934',
-                    description: 'CEV934 TRA MERC'
-                },
-                {
-                    code: 'CEU782CAMFUSO',
-                    plate: 'CEU782',
-                    description: 'CEU782 CAM FUSO'
-                },
-                {
-                    code: 'CFP302TRAFAW',
-                    plate: 'CFP302',
-                    description: 'CFP302 TRA FAW'
-                },
-                {
-                    code: 'CEV913CAMFUSO',
-                    plate: 'CEV913',
-                    description: 'CEV913 CAM FUSO'
-                }
-            ]
-
             customers.forEach(customer => {
                 const isInside = classifyPoint(customer.coordinates, [carLocation.lng, carLocation.lat])
                 if (isInside !== 1) {
@@ -556,7 +556,7 @@ class DriveUp {
 
             if (carLocation.isInside === 0) return null
 
-            let car = cars.find(car => car.code === carLocation.plate)
+            let car = listCars.find(car => car.code === carLocation.plate)
             if (car) {
                 carLocation.code = carLocation.plate
                 carLocation.plate = car.plate
@@ -656,15 +656,17 @@ class DriveUp {
                     } else {
                         message = `*Vehiculos en Mantenimiento*\n\n`
                         let groupsMaintenance = allCarsMaintenance.reduce(function (r, car) {
+                            let findCar = listCars.find(findCar => findCar.plate === car.plate)
+                            if (findCar) car.plate = findCar.description
                             let typeCar = car.cartype
-                            let line = `*${car.plate}* - ${car.description}\n`
+                            let line = `*${car.plate}* - Cap. ${car.capacity} - ${car.description}\n`
                             r[`${typeCar}`] = r[`${typeCar}`] || []
                             r[`${typeCar}`].push(line)
                             return r
                         }, Object.create({}))
-        
+
                         const keysMaintenance = Object.keys(groupsMaintenance)
-        
+
                         keysMaintenance.forEach(key => {
                             if (key === 'remove') return null
                             message += `--------------------------------------------------\n*${key}*\n\n`
@@ -684,9 +686,11 @@ class DriveUp {
                     let typeCar = car.cartype
                     let line = ''
                     let carInMaintenance = carsMaintenance.find(maintenance => maintenance.plate === car.plate)
+                    let findCar = listCars.find(findCar => findCar.plate === car.plate)
+                    if (findCar) car.plate = findCar.description
 
                     if (!carInMaintenance) {
-                        line += `${car.plate}\n`
+                        line += `${car.plate} - Cap. ${car.capacity}\n`
                         r[`${typeCar}`] = r[`${typeCar}`] || []
                         r[`${typeCar}`].push(line)
                         return r
@@ -713,8 +717,10 @@ class DriveUp {
             } else {
                 message += `\n*Vehiculos en Mantenimiento en ${descPlace}*\n\n`
                 let groupsMaintenance = carsMaintenance.reduce(function (r, car) {
+                    let findCar = listCars.find(findCar => findCar.plate === car.plate)
+                    if (findCar) car.plate = findCar.description
                     let typeCar = car.cartype
-                    let line = `${car.plate}\n`
+                    let line = `*${car.plate}* - Cap. ${car.capacity}\n`
                     r[`${typeCar}`] = r[`${typeCar}`] || []
                     r[`${typeCar}`].push(line)
                     return r

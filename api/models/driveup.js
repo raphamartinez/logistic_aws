@@ -512,11 +512,15 @@ class DriveUp {
             let data = '';
 
             res.on('data', (chunk) => {
-                const buffer = Buffer.from(chunk)
-                const string = buffer.toString()
-                const carLocation = JSON.parse(string)
+                try {
+                    const buffer = Buffer.from(chunk)
+                    const string = buffer.toString()
+                    const carLocation = JSON.parse(string)
 
-                geoQueue.add({ carLocation })
+                    geoQueue.add({ carLocation })
+                } catch (error) {
+                    console.log(error)
+                }
             })
 
             res.on('close', () => {
@@ -659,7 +663,9 @@ class DriveUp {
                             let findCar = listCars.find(findCar => findCar.plate === car.plate)
                             if (findCar) car.plate = findCar.description
                             let typeCar = car.cartype
-                            let line = `*${car.plate}* - Cap. ${car.capacity} - ${car.description}\n`
+                            let line = `*${car.plate}*`
+                            if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
+                            line += ` - ${car.description}\n`
                             r[`${typeCar}`] = r[`${typeCar}`] || []
                             r[`${typeCar}`].push(line)
                             return r
@@ -690,7 +696,9 @@ class DriveUp {
                     if (findCar) car.plate = findCar.description
 
                     if (!carInMaintenance) {
-                        line += `${car.plate} - Cap. ${car.capacity}\n`
+                        line += `${car.plate}`
+                        if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
+                        line += '\n'
                         r[`${typeCar}`] = r[`${typeCar}`] || []
                         r[`${typeCar}`].push(line)
                         return r
@@ -720,7 +728,9 @@ class DriveUp {
                     let findCar = listCars.find(findCar => findCar.plate === car.plate)
                     if (findCar) car.plate = findCar.description
                     let typeCar = car.cartype
-                    let line = `*${car.plate}* - Cap. ${car.capacity}\n`
+                    let line = `*${car.plate}`
+                    if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
+                    line += '\n'
                     r[`${typeCar}`] = r[`${typeCar}`] || []
                     r[`${typeCar}`].push(line)
                     return r

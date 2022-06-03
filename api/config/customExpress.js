@@ -59,8 +59,6 @@ module.exports = () => {
     res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
     res.header('Access-Control-Allow-Credentials', true);
     res.header("Access-Control-Allow-Headers", 'Origin, Accept, Accept-Version, Content-Security-Policy, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Frame-Options, X-Response-Time, X-PINGOTHER, X-CSRF-Token,Authorization');
-    res.header('Content-Security-Policy', "frame-ancestors 'self' https://i9techx.movias.com.br");
-    res.header('X-Frame-Options', "ALLOW-FROM https://i9techx.movias.com.br");
     next();
   });
 

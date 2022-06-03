@@ -102,6 +102,7 @@ class DriveUp {
         vehicleAlertsArr.forEach(alert => {
             switch (alert.idEventType) {
                 case 3: //Llegada
+                    if (checkAlert.data) vehicleAlerts.push(checkAlert)
                     checkAlert = alert
                     return null
                 case 4: //Salida
@@ -120,7 +121,8 @@ class DriveUp {
                             checkAlert = {}
                             return null
                         }
-                    }else{
+                    } else {
+                        if (checkAlert.data) vehicleAlerts.push(checkAlert)
                         vehicleAlerts.push(alert)
                     }
                     break

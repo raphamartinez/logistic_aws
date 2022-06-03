@@ -47,7 +47,7 @@ class DriveUp {
         try {
             const sql = `SELECT dr.recordedat as date, dr.plate, dr.isInside, dr.location
             FROM api.driveuplocation dr
-            WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveup drr WHERE drr.plate = dr.plate)
+            WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveuplocation drr WHERE drr.plate = dr.plate)
             GROUP BY dr.plate 
             HAVING location = ? and isInside = -1
             ORDER BY dr.plate ASC`

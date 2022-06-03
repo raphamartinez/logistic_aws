@@ -246,7 +246,6 @@ class DriveUp {
         }
     }
 
-
     sendMessage(carLocation, travel) {
         let groupId = '120363042760809190@g.us'
         let alertType = ''
@@ -254,7 +253,7 @@ class DriveUp {
         switch (carLocation.isInside) {
             case -1:
                 alertType = `Llegada al ${carLocation.location}`
-                enterGeoQueue.add({carLocation}, {
+                enterGeoQueue.add({ carLocation }, {
                     delay: 30000
                 })
                 break
@@ -348,155 +347,193 @@ class DriveUp {
             const cars = [
                 {
                     code: 'XBRI106TRASCAN',
-                    plate: 'XBRI106'
+                    plate: 'XBRI106',
+                    description: 'XBRI006 TRA SCAN'
                 },
                 {
                     code: 'XBRI106TRA',
-                    plate: 'XBRI106'
+                    plate: 'XBRI106',
+                    description: 'XBRI006 TRA SCAN'
                 },
                 {
                     code: 'XBRI107TRASCAN',
-                    plate: 'XBRI107'
+                    plate: 'XBRI107',
+                    description: 'XBRI107 TRA SCAN'
                 },
                 {
                     code: 'BAT633CAMHYUN',
-                    plate: 'BAT633'
+                    plate: 'BAT633',
+                    description: 'BAT633 CAM HYUN'
                 },
                 {
                     code: 'CEO412CAMFOTO',
-                    plate: 'CEO412'
+                    plate: 'CEO412',
+                    description: 'CEO412 CAM FOTO'
                 },
                 {
                     code: 'CEV932CAMFUSO',
-                    plate: 'CEV932'
+                    plate: 'CEV932',
+                    description: 'CEV932 CAM FUSO'
                 },
                 {
                     code: 'XBRI005TRASCAN',
-                    plate: 'XBRI005'
+                    plate: 'XBRI005',
+                    description: 'XBRI005 TRA SCAN'
                 },
                 {
                     code: 'XBRI007TRASCAN',
-                    plate: 'XBRI007'
+                    plate: 'XBRI007',
+                    description: 'XBRI007 TRA SCAN'
                 },
                 {
                     code: 'XBRI002TRASCAN',
-                    plate: 'XBRI002'
+                    plate: 'XBRI002',
+                    description: 'XBRI002 TRA SCAN'
                 },
                 {
                     code: 'CEO411CAMFOTO',
-                    plate: 'CEO411'
+                    plate: 'CEO411',
+                    description: 'CEO411 CAM FOTO'
                 },
                 {
                     code: 'CAS702CAMHYUN',
-                    plate: 'CAS702'
+                    plate: 'CAS702',
+                    description: 'CAS702 CAM HYUN'
                 },
                 {
                     code: 'CEU784CAMFUSO',
-                    plate: 'CEU784'
+                    plate: 'CEU784',
+                    description: 'CEU784 CAM FUSO'
                 },
                 {
                     code: 'CEV912CAMFUSO',
-                    plate: 'CEV912'
+                    plate: 'CEV912',
+                    description: 'CEV912 CAM FUSO'
                 },
                 {
                     code: 'BLA554CAMVOLK',
-                    plate: 'BLA554'
+                    plate: 'BLA554',
+                    description: 'BLA554 CAM VOLK'
                 },
                 {
                     code: 'XBRI003TRASCAN',
-                    plate: 'XBRI003'
+                    plate: 'XBRI003',
+                    description: 'XBRI003 TRA SCAN'
                 },
                 {
                     code: 'CFP306TRAFAW',
-                    plate: 'CFP306'
+                    plate: 'CFP306',
+                    description: 'CFP306 TRA FAW'
                 },
                 {
                     code: 'AYD885CAMVOLK',
-                    plate: 'AYD885'
+                    plate: 'AYD885',
+                    description: 'AYD885 CAM VOLK'
                 },
                 {
                     code: 'AEA217CAMMERC',
-                    plate: 'AEA217'
+                    plate: 'AEA217',
+                    description: 'AEA217 CAM MERC'
                 },
                 {
                     code: 'CEO407CAMFOTO',
-                    plate: 'CEO407'
+                    plate: 'CEO407',
+                    description: 'CEO407 CAM FOTO'
                 },
                 {
                     code: 'CAB977AUTOKIA',
-                    plate: 'CAB977'
+                    plate: 'CAB977',
+                    description: 'CAB977 AUTO KIA'
                 },
                 {
                     code: 'CAS594CAMHYUN',
-                    plate: 'CAS594'
+                    plate: 'CAS594',
+                    description: 'CAS594 CAM HYUN'
                 },
                 {
                     code: 'BFH923DOBLEVOLK',
-                    plate: 'BFH923'
+                    plate: 'BFH923',
+                    description: 'BFH923 DOBLE VOLK'
                 },
                 {
                     code: 'CEV933TRAMERC',
-                    plate: 'CEV933'
+                    plate: 'CEV933',
+                    description: 'CEV933 TRA MERC'
                 },
                 {
                     code: 'CFP304TRAFAW',
-                    plate: 'CFP304'
+                    plate: 'CFP304',
+                    description: 'CFP304 TRA FAW'
                 },
                 {
                     code: 'CFC349TRAVOLK',
-                    plate: 'CFC349'
+                    plate: 'CFC349',
+                    description: 'CFC349 TRA VOLK'
                 },
                 {
                     code: 'CFN459TRAFAW',
-                    plate: 'CFN459'
+                    plate: 'CFN459',
+                    description: 'CFN459 TRA FAW'
                 },
                 {
                     code: 'CFP305TRAFAW',
-                    plate: 'CFP305'
+                    plate: 'CFP305',
+                    description: 'CFP305 TRA FAW'
                 },
                 {
                     code: 'CFN458TRAFAW',
-                    plate: 'CFN458'
+                    plate: 'CFN458',
+                    description: 'CFN458 TRA FAW'
                 },
                 {
                     code: 'XBRI006TRASCAN',
-                    plate: 'XBRI106'
+                    plate: 'XBRI106',
+                    description: 'XBRI106 TRA SCAN'
                 },
                 {
                     code: 'XBRI008TRASCAN',
-                    plate: 'XBRI008'
+                    plate: 'XBRI008',
+                    description: 'XBRI008 TRA SCAN'
                 },
                 {
                     code: 'CCP584DOBLESCAN',
-                    plate: 'CCP584'
+                    plate: 'CCP584',
+                    description: 'CCP584 DOBLE SCAN'
                 },
                 {
                     code: 'XBRI004TRASCAN',
-                    plate: 'XBRI004'
+                    plate: 'XBRI004',
+                    description: 'XBRI004 TRA SCAN'
                 },
                 {
                     code: 'XBRI001TRASCAN',
-                    plate: 'XBRI001'
+                    plate: 'XBRI001',
+                    description: 'XBRI001 TRA SCAN'
                 },
                 {
                     code: 'CAS025TRASCAN',
-                    plate: 'CAS025'
+                    plate: 'CAS025',
+                    description: 'CAS025 TRA SCAN'
                 },
                 {
                     code: 'CEV934TRAMERC',
-                    plate: 'CEV934'
+                    plate: 'CEV934',
+                    description: 'CEV934 TRA MERC'
                 },
                 {
                     code: 'CEU782CAMFUSO',
-                    plate: 'CEU782'
+                    plate: 'CEU782',
+                    description: 'CEU782 CAM FUSO'
                 },
                 {
                     code: 'CFP302TRAFAW',
-                    plate: 'CFP302'
+                    plate: 'CFP302',
+                    description: 'CFP302 TRA FAW'
                 },
                 {
                     code: 'CEV913CAMFUSO',
-                    plate: 'CEV913'
+                    plate: 'CEV913',
+                    description: 'CEV913 CAM FUSO'
                 }
             ]
 
@@ -508,12 +545,11 @@ class DriveUp {
                 }
             })
 
-            if(carLocation.isInside === 0) return null
+            const now = new Date(carLocation.recordedat)
+            now.setTime(now.getTime() + now.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
+            carLocation.recordedat = now
 
-            if (!carLocation.isInside) {
-                carLocation.isInside = 1
-                carLocation.location = ''
-            }
+            if (carLocation.isInside === 0) return null
 
             let car = cars.find(car => car.code === carLocation.plate)
             if (car) {
@@ -523,11 +559,26 @@ class DriveUp {
                 carLocation.code = carLocation.plate
             }
 
-            const now = new Date(carLocation.recordedat)
-            now.setTime(now.getTime() + now.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
-            carLocation.recordedat = now
+            // if (carLocation.isInside === -1 && carLocation.location === 'SUNSET KM1') {
+            //     const index = delayArrivalInTheZone.findIndex(obj => obj.code === carLocation.code)
+            //     if(index){
+            //         const firstArrival = delayArrivalInTheZone[index].carLocation.recordedat
+
+            //         const lastDate = new Date(check[0].recordedat)
+            //         const difference = now.getTime() - lastDate.getTime()
+            //         const twoMinutesInMilisseconds = 120000
+            //     }else{
+            //         delayArrivalInTheZone.push(carLocation)
+            //     }
+            // }
 
             const check = await Repositorie.checkIntheLocation(carLocation.plate)
+
+            if (!carLocation.isInside) {
+                carLocation.isInside = 1
+                carLocation.location = check.length > 0 ? check[0].location : 'Sin Locale - ERROR'
+            }
+
             if (check.length === 0) {
                 await Repositorie.insertLocation(carLocation)
                 if (carLocation.isInside !== 1) {

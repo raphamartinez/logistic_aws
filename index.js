@@ -147,7 +147,7 @@ app.use("/contact", contactRoute);
 
 app.listen(3000, async () => {
   if (process.env.NODE_ENV !== 'development') {
-    jobAlert.start()
+    // jobAlert.start()
   }
 
   app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])

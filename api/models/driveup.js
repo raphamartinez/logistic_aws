@@ -275,7 +275,7 @@ class DriveUp {
         if (travel.plate) message += ` - _${titleCase(travel.cartype)} - Capacidad ${travel.capacity}_`
         if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
         message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
-        message += `\n@${carLocation.lat},${carLocation.long}`
+        message += `\n@${carLocation.lat},${carLocation.lng}`
         if (travel.origin) message += `\nSalida: ${travel.origindesc}`
         if (travel.route) message += ` - Retiro: ${travel.routedesc}`
         if (travel.delivery) message += ` - Entrega: ${travel.deliverydesc}`

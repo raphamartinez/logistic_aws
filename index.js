@@ -96,6 +96,7 @@ if (process.env.NODE_ENV !== 'development') {
           autoMsg += 'Digite 1 - Listagem de Veículos KM1\n'
           autoMsg += 'Digite 2 - Listagem de Veículos KM28\n'
           autoMsg += 'Digite 3 - Listagem de Veículos Ypane\n'
+          autoMsg += 'Digite 4 - Listagem de Veículos em Manutenção\n'
           client.sendMessage(msg.from, autoMsg)
         }
         break;

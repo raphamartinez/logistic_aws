@@ -667,14 +667,27 @@ class DriveUp {
             message = `*No hay vehículos disponibles en ${descPlace}*\n`
             if (cars.length > 0) {
                 message = `*Sigue abajo listado de vehiculos disponibles en ${descPlace}*\n\n`
-                cars.forEach(car => {
+                let groups = cars.reduce((r, car) => {
+                    let typeCar = car.cartype
+                    let line = ''
                     let carInMaintenance = carsMaintenance.find(maintenance => maintenance.plate === car.plate)
 
-                    if (!carInMaintenance) message += `${car.plate}\n`
+                    if (!carInMaintenance) {
+                        line += `${car.plate}\n`
+                        r[`${typeCar}`] = r[`${typeCar}`] || []
+                        r[`${typeCar}`].push(line);
+                    }
+                })
+
+                const keys = Object.keys(groups)
+
+                keys.forEach(key => {
+                    message = `--------------------------------------------------\n*${key}*\n\n`
+                    groups[key].forEach(line => message += line)
                 })
             }
 
-            if (place == '5523') return message
+            if (place == 'KM 1') return message
 
 
             if (carsMaintenance.length == 0) {

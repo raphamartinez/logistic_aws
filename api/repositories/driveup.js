@@ -45,12 +45,13 @@ class DriveUp {
 
     async countInthePlace(place) {
         try {
-            const sql = `SELECT dr.recordedat as date, dr.plate, dr.isInside, dr.location
+            const sql = `SELECT dr.recordedat as date, dr.plate, dr.isInside, dr.location, ca.cartype
             FROM api.driveuplocation dr
+            INNER JOIN api.car ca on dr.plate = ca.plate
             WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveuplocation drr WHERE drr.plate = dr.plate)
             GROUP BY dr.plate 
             HAVING location = ? and isInside = -1
-            ORDER BY dr.plate ASC`
+            ORDER BY dr.recordedat ASC`
 
             const result = await query(sql, place)
             return result

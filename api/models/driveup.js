@@ -249,7 +249,7 @@ class DriveUp {
     sendMessage(carLocation, travel) {
         let groupId = '120363042760809190@g.us'
         let alertType = ''
-        let now = new Date(travel.recordedat)
+        const now = new Date(carLocation.recordedat)
         switch (carLocation.isInside) {
             case -1:
                 alertType = `Llegada al ${carLocation.location}`
@@ -260,6 +260,18 @@ class DriveUp {
             case 1:
                 alertType = `Acerca del ${carLocation.location}`
                 break
+        }
+
+
+        if (travel.id) {
+            let carsTravel = await RepositorieTravel.listPlates(travel.id)
+            travel.carsTravel = carsTravel
+
+            if (travel.carsTravel && travel.carsTravel.length == 2) {
+                travel.capacity = travel.carsTravel[1].capacity
+            } else {
+                travel.capacity = travel.carsTravel[0].capacity
+            }
         }
 
         function titleCase(str) {
@@ -286,7 +298,7 @@ class DriveUp {
                     if (chat.id.server === "g.us" && chat.id._serialized == groupId) {
                         client.sendMessage(chat.id._serialized, message)
                         sleep(2000)
-                        let loc = new Location(carLocation.lat, carLocation.long, alertType || "")
+                        let loc = new Location(carLocation.lat, carLocation.lng, alertType || "")
                         client.sendMessage(chat.id._serialized, loc)
                         sleep(2000)
                         return true

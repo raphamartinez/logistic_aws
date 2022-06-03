@@ -29,12 +29,30 @@ class Tables {
     this.createTableMoviasCarAccessories()
     this.createTableOrderImage()
     this.createTableShortUrl()
+    this.createTableDriveUpLocation()
 
     return true
   }
 
-  createTableDriveUp() {
-    const sql = ``
+  createTableDriveUpLocation() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.driveuplocation (id int NOT NULL AUTO_INCREMENT, acceleratorPedalPosition DOUBLE, actualGear INT, avgFuelEco int,
+      brakeSwitch BOOLEAN, catalystTankLevel DOUBLE, clutchSwitch BOOLEAN, cruiseActive BOOLEAN, ecoDriving BOOLEAN, engineSpeed DOUBLE, engineTemperature int,
+      engineTorque int, fuelLevel DOUBLE, fuelRate DOUBLE, instantFuelEco DOUBLE, lat FLOAT, lng FLOAT, odometer DOUBLE, plate VARCHAR(10), ptoState int, 
+      recordedat datetime, retarderPercentTorque int, speed DOUBLE, turboPressure int, code VARCHAR(50), isInside int, location VARCHAR(50), PRIMARY KEY (id))`
+
+    this.connection.query(sql, (error) => {
+      if (error) {
+        console.log(error)
+      } else {
+      }
+    })
+  }
+
+  createTableDriveUpBi() {
+    const sql = `CREATE TABLE IF NOT EXISTS api.driveuplocation (id int NOT NULL AUTO_INCREMENT, acceleratorPedalPosition DOUBLE, actualGear INT, avgFuelEco int,
+      brakeSwitch BOOLEAN, catalystTankLevel DOUBLE, clutchSwitch BOOLEAN, cruiseActive BOOLEAN, ecoDriving BOOLEAN, engineSpeed DOUBLE, engineTemperature int,
+      engineTorque int, fuelLevel DOUBLE, fuelRate DOUBLE, instantFuelEco DOUBLE, lat FLOAT, lng FLOAT, odometer DOUBLE, plate VARCHAR(10), ptoState int, 
+      recordedat datetime, retarderPercentTorque int, speed DOUBLE, turboPressure int, code VARCHAR(50), isInside int, location VARCHAR(50), PRIMARY KEY (id))`
 
     this.connection.query(sql, (error) => {
       if (error) {

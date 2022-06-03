@@ -10,10 +10,11 @@ const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = r
 const Middleware = require('./api/infrastructure/auth/middleware');
 const { jobAlert } = require('./api/models/job')
 const DriveUp = require('./api/models/driveup')
-
 const fs = require("fs");
 const config = require("./config.json");
 const axios = require("axios");
+const Queue = require('bull');
+const geoQueue = new Queue('geo transcoding', 'redis://127.0.0.1:6379');
 
 const { Client, Location, List, Buttons, LocalAuth } = require('whatsapp-web.js');
 
@@ -28,7 +29,6 @@ function sleep(milliseconds) {
 const app = customExpress();
 
 app.locals = appLocals;
-
 
 if (process.env.NODE_ENV !== 'development') {
   const myCustomId = '33'
@@ -75,11 +75,11 @@ if (process.env.NODE_ENV !== 'development') {
 
   client.on('message', async msg => {
     sleep(1000)
-''
+    let autoMsg = ''
+    let listPlaces = []
     switch (msg.from) {
       case '120363024113373482@g.us':
-        const listPlaces = [1, 2, 3, 4]
-        let autoMsg = ''
+        listPlaces = [1, 2, 3, 4]
         if (listPlaces.includes(Number.parseInt(msg.body))) {
           autoMsg = await DriveUp.countInthePlace(msg.body)
           client.sendMessage(msg.from, autoMsg)
@@ -94,11 +94,20 @@ if (process.env.NODE_ENV !== 'development') {
         break;
 
       case '120363042760809190@g.us':
-        client.sendMessage(msg.from, 'Comando não identificado.')
+        client.sendMessage(msg.from, '*Comando não identificado*')
         break;
 
       case '120363024386228914@g.us':
-        client.sendMessage(msg.from, 'Comando não identificado.')
+        listPlaces = [1, 2, 3, 4]
+        if (listPlaces.includes(Number.parseInt(msg.body))) {
+          autoMsg = await DriveUp.countInthePlace(msg.body)
+          client.sendMessage(msg.from, autoMsg)
+        } else {
+          autoMsg = '*Comando não identificado*\n'
+          autoMsg += 'Segue abaixo lista de comandos.\n\n'
+          autoMsg += 'Digite 1 - Listagem de Veículos em Manutenção\n'
+          client.sendMessage(msg.from, autoMsg)
+        }
         break;
     }
 
@@ -132,6 +141,14 @@ app.listen(3000, async () => {
   if (process.env.NODE_ENV !== 'development') {
     jobAlert.start()
   }
+
+  DriveUp.stream()
+
+  geoQueue.process(function (job, done) {
+    console.log('executou');
+    DriveUp.queueResponses(job.data.carLocation)
+    done()
+  })
 
   app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])
   app.set('view engine', 'ejs');

@@ -15,15 +15,42 @@ class DriveUp {
             console.log(error);
             throw new InvalidArgumentError(error)
         }
+    } 
+
+    async insertLocation(car) {
+        try {
+        
+            const sql = 'INSERT INTO driveuplocation set ?'
+            await query(sql, car)
+
+            return true
+        } catch (error) {
+            console.log(error);
+            throw new InvalidArgumentError(error)
+        }
+    }
+
+    async checkIntheLocation(plate) {
+        try {
+            const sql = `SELECT dr.recordedat, dr.plate, dr.code, dr.location, dr.isInside
+            FROM api.driveuplocation dr
+            WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveuplocation drr WHERE drr.plate = dr.plate) and plate = ?`
+
+            const result = await query(sql, plate)
+            return result
+        } catch (error) {
+            throw new InvalidArgumentError(error)
+        }
     }
 
     async countInthePlace(place) {
         try {
-            const sql = `SELECT MAX(recordedat) as date, car as plate, idVehicle, idEventType, idzona
-            FROM api.driveup 
-            GROUP BY car 
-            HAVING idzona = ?
-            ORDER BY date DESC`
+            const sql = `SELECT dr.recordedat as date, dr.plate, dr.isInside, dr.location
+            FROM api.driveuplocation dr
+            WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveup drr WHERE drr.plate = dr.plate)
+            GROUP BY dr.plate 
+            HAVING location = ? and isInside = -1
+            ORDER BY dr.plate ASC`
 
             const result = await query(sql, place)
             return result

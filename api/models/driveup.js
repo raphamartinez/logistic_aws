@@ -262,18 +262,6 @@ class DriveUp {
                 break
         }
 
-
-        if (travel.id) {
-            let carsTravel = await RepositorieTravel.listPlates(travel.id)
-            travel.carsTravel = carsTravel
-
-            if (travel.carsTravel && travel.carsTravel.length == 2) {
-                travel.capacity = travel.carsTravel[1].capacity
-            } else {
-                travel.capacity = travel.carsTravel[0].capacity
-            }
-        }
-
         function titleCase(str) {
             var splitStr = str.toLowerCase().split(' ');
             for (var i = 0; i < splitStr.length; i++) {
@@ -330,7 +318,7 @@ class DriveUp {
                 const string = buffer.toString()
                 const carLocation = JSON.parse(string)
 
-                geoQueue.add({carLocation})
+                geoQueue.add({ carLocation })
             })
 
             res.on('close', () => {
@@ -535,6 +523,17 @@ class DriveUp {
                 await Repositorie.insertLocation(carLocation)
                 if (carLocation.isInside !== 1) {
                     const travel = await Repositorie.findTravel(carLocation.plate)
+
+                    if (travel.id) {
+                        let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                        travel.carsTravel = carsTravel
+
+                        if (travel.carsTravel && travel.carsTravel.length == 2) {
+                            travel.capacity = travel.carsTravel[1].capacity
+                        } else {
+                            travel.capacity = travel.carsTravel[0].capacity
+                        }
+                    }
                     return this.sendMessage(carLocation, travel)
                 }
                 return null
@@ -546,6 +545,17 @@ class DriveUp {
             if (difference > twoSecondsInMilisseconds && carLocation.isInside !== check[0].isInside) {
                 await Repositorie.insertLocation(carLocation)
                 const travel = await Repositorie.findTravel(carLocation.plate)
+
+                if (travel.id) {
+                    let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                    travel.carsTravel = carsTravel
+
+                    if (travel.carsTravel && travel.carsTravel.length == 2) {
+                        travel.capacity = travel.carsTravel[1].capacity
+                    } else {
+                        travel.capacity = travel.carsTravel[0].capacity
+                    }
+                }
                 return this.sendMessage(carLocation, travel)
             }
         } catch (error) {

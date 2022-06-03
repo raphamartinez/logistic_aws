@@ -72,13 +72,12 @@ if (process.env.NODE_ENV !== 'development') {
   client.on('ready', () => {
     console.log('Pronto para uso!');
 
-    // DriveUp.stream()
+    DriveUp.stream()
 
-    // geoQueue.process(function (job, done) {
-    //   console.log('executou');
-    //   DriveUp.queueResponses(job.data.carLocation)
-    //   done()
-    // })
+    geoQueue.process(function (job, done) {
+      DriveUp.queueResponses(job.data.carLocation)
+      done()
+    })
   })
 
   client.on('message', async msg => {

@@ -346,6 +346,10 @@ class DriveUp {
 
             const cars = [
                 {
+                    code: 'XBRI106TRASCAN',
+                    plate: 'XBRI106'
+                },
+                {
                     code: 'XBRI106TRA',
                     plate: 'XBRI106'
                 },
@@ -512,6 +516,8 @@ class DriveUp {
             if (car) {
                 carLocation.code = carLocation.plate
                 carLocation.plate = car.plate
+            } else {
+                carLocation.code = carLocation.plate
             }
 
             const now = new Date(carLocation.recordedat)

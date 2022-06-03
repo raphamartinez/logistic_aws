@@ -7,6 +7,7 @@ const https = require('https');
 const classifyPoint = require("robust-point-in-polygon")
 const Queue = require('bull');
 const geoQueue = new Queue('geo transcoding', 'redis://127.0.0.1:6379');
+const enterGeoQueue = new Queue('Enter in the geozone', 'redis://127.0.0.1:6379');
 
 function sleep(milliseconds) {
     const date = Date.now();
@@ -253,12 +254,12 @@ class DriveUp {
         switch (carLocation.isInside) {
             case -1:
                 alertType = `Llegada al ${carLocation.location}`
-                break
-            case 0:
-                alertType = `Salída del ${carLocation.location}`
+                enterGeoQueue.add({carLocation}, {
+                    delay: 30000
+                })
                 break
             case 1:
-                alertType = `Acerca del ${carLocation.location}`
+                alertType = `Salída del ${carLocation.location}`
                 break
         }
 
@@ -463,7 +464,7 @@ class DriveUp {
                 },
                 {
                     code: 'XBRI008TRASCAN',
-                    plate: 'XBRI108'
+                    plate: 'XBRI008'
                 },
                 {
                     code: 'CCP584DOBLESCAN',
@@ -507,6 +508,8 @@ class DriveUp {
                 }
             })
 
+            if(carLocation.isInside === 0) return null
+
             if (!carLocation.isInside) {
                 carLocation.isInside = 1
                 carLocation.location = ''
@@ -521,7 +524,7 @@ class DriveUp {
             }
 
             const now = new Date(carLocation.recordedat)
-            now.setTime(now.getTime() + now.getTimezoneOffset() * 60 * 1000 + (-3) * 60 * 60 * 1000)
+            now.setTime(now.getTime() + now.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
             carLocation.recordedat = now
 
             const check = await Repositorie.checkIntheLocation(carLocation.plate)
@@ -547,8 +550,8 @@ class DriveUp {
 
             const lastDate = new Date(check[0].recordedat)
             const difference = now.getTime() - lastDate.getTime()
-            const twoSecondsInMilisseconds = 120000
-            if (difference > twoSecondsInMilisseconds && carLocation.isInside !== check[0].isInside) {
+            const twoMinutesInMilisseconds = 120000
+            if (difference > twoMinutesInMilisseconds && carLocation.isInside !== check[0].isInside) {
                 await Repositorie.insertLocation(carLocation)
                 const travel = await Repositorie.findTravel(carLocation.plate)
 

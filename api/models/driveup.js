@@ -227,8 +227,35 @@ const listCars = [
         code: 'CEV913CAMFUSO',
         plate: 'CEV913',
         description: 'CEV913 CAM FUSO'
+    },
+    {
+        code: 'NR051967',
+        plate: 'NR051967',
+        description: 'VW 9150 - 1967'
+    },
+    {
+        code: 'PR001604',
+        plate: 'PR001604',
+        description: 'VW 9150 - 1604'
+    },
+    {
+        code: 'PR005985',
+        plate: 'PR005985',
+        description: 'VW 9150 - 5985'
+    },
+    {
+        code: 'PR005969',
+        plate: 'PR005969',
+        description: 'VW 9150 - 5969'
+    },
+    {
+        code: '05147027',
+        plate: '05147027',
+        description: 'XBRI011 TRA SCAN'
     }
 ]
+
+let lastCarLocation = {}
 
 class DriveUp {
 
@@ -422,7 +449,7 @@ class DriveUp {
             vehicleAlert.successend = 0
             vehicleAlert.successendloc = 0
             const date = new Date(vehicleAlert.recordedat)
-            date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-3) * 60 * 60 * 1000)
+            date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
             let message = `*${vehicleAlert.alert}*`
             message += `\n${vehicleAlert.car.plate}`
             if (travel.plate) message += ` - _${titleCase(travel.cartype)} - Capacidad ${travel.capacity}_`
@@ -517,7 +544,7 @@ class DriveUp {
 
     async stream() {
 
-        let request = https.get('https://api.driveup.info/stream', {
+        https.get('https://api.driveup.info/stream', {
             headers: {
                 'Content-Type': 'application/json',
                 'x-driveup-token': process.env.DRIVEUP_TOKEN
@@ -529,14 +556,11 @@ class DriveUp {
                 return;
             }
 
-            let data = '';
-
             res.on('data', (chunk) => {
                 try {
                     const buffer = Buffer.from(chunk)
                     const string = buffer.toString()
                     const carLocation = JSON.parse(string)
-
                     geoQueue.add({ carLocation })
                 } catch (error) {
                     console.log(error)
@@ -574,6 +598,12 @@ class DriveUp {
                 }
             })
 
+            if (lastCarLocation && lastCarLocation.plate === carLocation.plate && lastCarLocation.isInside === carLocation.isInside) {
+                return null
+            } else {
+                lastCarLocation = carLocation
+            }
+
             const now = new Date(carLocation.recordedat)
             now.setTime(now.getTime() + now.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
             carLocation.recordedat = now
@@ -610,7 +640,6 @@ class DriveUp {
             }
 
             if (check.length === 0) {
-                console.log({ noCheck: carLocation });
                 await Repositorie.insertLocation(carLocation)
                 if (carLocation.isInside !== 1) {
                     const travel = await Repositorie.findTravel(carLocation.plate)
@@ -635,7 +664,6 @@ class DriveUp {
             const difference = now.getTime() - lastDate.getTime()
             const twoMinutesInMilisseconds = 120000
             if (difference > twoMinutesInMilisseconds && carLocation.isInside !== check[0].isInside) {
-                console.log({ check: carLocation });
                 await Repositorie.insertLocation(carLocation)
                 const travel = await Repositorie.findTravel(carLocation.plate)
 

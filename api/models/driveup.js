@@ -610,6 +610,7 @@ class DriveUp {
             }
 
             if (check.length === 0) {
+                console.log({ noCheck: carLocation });
                 await Repositorie.insertLocation(carLocation)
                 if (carLocation.isInside !== 1) {
                     const travel = await Repositorie.findTravel(carLocation.plate)
@@ -634,6 +635,7 @@ class DriveUp {
             const difference = now.getTime() - lastDate.getTime()
             const twoMinutesInMilisseconds = 120000
             if (difference > twoMinutesInMilisseconds && carLocation.isInside !== check[0].isInside) {
+                console.log({ check: carLocation });
                 await Repositorie.insertLocation(carLocation)
                 const travel = await Repositorie.findTravel(carLocation.plate)
 

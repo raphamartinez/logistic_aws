@@ -220,10 +220,10 @@ class DriveUp {
                         INNER JOIN api.user us ON tr.id_login = us.id_login 
                         INNER JOIN api.travelcar tc ON tr.id = tc.id_travel AND tc.id_car = (SELECT id FROM api.car WHERE plate = ?) 
 						INNER JOIN api.car ca ON tc.id_car = ca.id 
-                        where tr.id = ( SELECT MAX(tr.id) FROM api.travel AS tr
-                        INNER JOIN api.travelcar tc ON tr.id = tc.id_travel AND tc.id_car = (SELECT id FROM api.car WHERE plate = ?) 
+                        where tr.id = (SELECT MAX(trr.id) FROM api.travel trr 
+                        INNER JOIN api.travelcar tc ON trr.id = tc.id_travel AND tc.id_car = (SELECT id FROM api.car WHERE plate = ?) 
 						INNER JOIN api.car ca ON tc.id_car = ca.id 
-                        where ca.plate = ?)`
+                        where ca.plate = ? and trr.date between (now() - interval 4 day) and now())`
 
             const result = await query(sql, [plate, plate, plate])
             return result[0]

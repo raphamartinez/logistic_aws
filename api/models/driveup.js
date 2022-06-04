@@ -21,12 +21,7 @@ const listCars = [
     {
         code: 'XBRI106TRASCAN',
         plate: 'XBRI106',
-        description: 'XBRI006 TRA SCAN'
-    },
-    {
-        code: 'XBRI106TRA',
-        plate: 'XBRI106',
-        description: 'XBRI006 TRA SCAN'
+        description: 'XBRI106 TRA SCAN'
     },
     {
         code: 'XBRI107TRASCAN',
@@ -160,8 +155,8 @@ const listCars = [
     },
     {
         code: 'XBRI006TRASCAN',
-        plate: 'XBRI106',
-        description: 'XBRI106 TRA SCAN'
+        plate: 'XBRI006',
+        description: 'XBRI006 TRA SCAN'
     },
     {
         code: 'XBRI008TRASCAN',
@@ -172,11 +167,6 @@ const listCars = [
         code: 'XBRI010TRASCAN',
         plate: 'XBRI010',
         description: 'XBRI010 TRA SCAN'
-    },
-    {
-        code: 'XBRI006TRASCAN',
-        plate: 'XBRI006',
-        description: 'XBRI006 TRA SCAN'
     },
     {
         code: 'XBRI009TRASCAN',
@@ -708,7 +698,7 @@ class DriveUp {
                     if (allCarsMaintenance.length == 0) {
                         message = `*No hay vehiculos en Mantenimiento*`
                     } else {
-                        message = `*Vehiculos en Mantenimiento*\n\n`
+                        message = `*Vehiculos en Mantenimiento*\n`
                         let groupsMaintenance = allCarsMaintenance.reduce(function (r, car) {
                             let findCar = listCars.find(findCar => findCar.plate === car.plate)
                             if (findCar) car.plate = findCar.description
@@ -725,7 +715,9 @@ class DriveUp {
 
                         keysMaintenance.forEach(key => {
                             if (key === 'remove') return null
-                            message += `--------------------------------------------------\n*${key}* - ${groupsMaintenance[key].length} Un\n\n`
+                            const noTracking = ['PORTER', 'FURGON', 'SEMI REMOLQUE']
+                            const isNoTracking = noTracking.includes(key)
+                            message += `--------------------------------------------------\n*${key}* - ${groupsMaintenance[key].length} Un ${isNoTracking ? '(Sin rastreo)' : ''}\n`
                             groupsMaintenance[key].forEach(line => message += line)
                         })
                     }
@@ -737,7 +729,7 @@ class DriveUp {
 
             message = `*No hay vehículos disponibles en ${descPlace}*\n`
             if (cars.length > 0) {
-                message = `*Sigue abajo listado de vehiculos disponibles en ${descPlace}*\n\n`
+                message = `*Sigue abajo listado de vehiculos disponibles en ${descPlace}*\n`
                 let groups = cars.reduce(function (r, car) {
                     let typeCar = car.cartype
                     let line = ''
@@ -759,10 +751,11 @@ class DriveUp {
                 }, Object.create({}))
 
                 const keys = Object.keys(groups)
-
                 keys.forEach(key => {
                     if (key === 'remove') return null
-                    message += `--------------------------------------------------\n*${key}* - ${groups[key].length} Un\n\n`
+                    const noTracking = ['PORTER', 'FURGON', 'SEMI REMOLQUE']
+                    const isNoTracking = noTracking.includes(key)
+                    message += `--------------------------------------------------\n*${key}* - ${groups[key].length} Un ${isNoTracking ? '(Sin rastreo)' : ''}\n`
                     groups[key].forEach(line => message += line)
                 })
             }
@@ -773,7 +766,7 @@ class DriveUp {
             if (carsMaintenance.length == 0) {
                 message += `\n*No hay vehiculos en Mantenimiento en ${descPlace}*`
             } else {
-                message += `\n*Vehiculos en Mantenimiento en ${descPlace}*\n\n`
+                message += `\n*Vehiculos en Mantenimiento en ${descPlace}*\n`
                 let groupsMaintenance = carsMaintenance.reduce(function (r, car) {
                     let findCar = listCars.find(findCar => findCar.plate === car.plate)
                     if (findCar) car.plate = findCar.description
@@ -790,7 +783,9 @@ class DriveUp {
 
                 keysMaintenance.forEach(key => {
                     if (key === 'remove') return null
-                    message += `--------------------------------------------------\n*${key}*  - ${groupsMaintenance[key].length} Un\n\n`
+                    const noTracking = ['PORTER', 'FURGON', 'SEMI REMOLQUE']
+                    const isNoTracking = noTracking.includes(key)
+                    message += `--------------------------------------------------\n*${key}*  - ${groupsMaintenance[key].length} Un ${isNoTracking ? '(Sin rastreo)' : ''}\n`
                     groupsMaintenance[key].forEach(line => message += line)
                 })
             }
@@ -799,7 +794,6 @@ class DriveUp {
             console.log(error)
         }
     }
-
 }
 
 module.exports = new DriveUp

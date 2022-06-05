@@ -516,18 +516,12 @@ class DriveUp {
         if (travel.delivery) message += ` - Entrega: _${travel.deliverydesc}_`
 
         if (process.env.NODE_ENV !== 'development') {
-            client.getChats().then((data) => {
-                for (let chat of data) {
-                    if (chat.id.server === "g.us" && chat.id._serialized == groupId) {
-                        client.sendMessage(chat.id._serialized, message)
-                        sleep(2000)
-                        let loc = new Location(carLocation.lat, carLocation.lng, alertType || "")
-                        client.sendMessage(chat.id._serialized, loc)
-                        sleep(2000)
-                        return true
-                    }
-                }
-            }).catch(err => console.log({ msg: `listagem erro`, err }))
+            client.sendMessage(groupId, message)
+            sleep(2000)
+            let loc = new Location(carLocation.lat, carLocation.lng, alertType || "")
+            client.sendMessage(groupId, loc)
+            sleep(2000)
+            return true
         }
     }
 

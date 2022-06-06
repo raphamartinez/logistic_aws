@@ -22,227 +22,227 @@ const listCars = [
     {
         code: 'XBRI106TRASCAN',
         plate: 'XBRI106',
-        description: '*XBRI106* TRA SCAN'
+        description: 'XBRI106 TRA SCAN'
     },
     {
         code: 'XBRI107TRASCAN',
         plate: 'XBRI107',
-        description: '*XBRI107* TRA SCAN'
+        description: 'XBRI107 TRA SCAN'
     },
     {
         code: 'BAT633CAMHYUN',
         plate: 'BAT633',
-        description: '*BAT633* CAM HYUN'
+        description: 'BAT633 CAM HYUN'
     },
     {
         code: 'CEO412CAMFOTO',
         plate: 'CEO412',
-        description: '*CEO412* CAM FOTO'
+        description: 'CEO412 CAM FOTO'
     },
     {
         code: 'CEV932CAMFUSO',
         plate: 'CEV932',
-        description: '*CEV932* CAM FUSO'
+        description: 'CEV932 CAM FUSO'
     },
     {
         code: 'XBRI005TRASCAN',
         plate: 'XBRI005',
-        description: '*XBRI005* TRA SCAN'
+        description: 'XBRI005 TRA SCAN'
     },
     {
         code: 'XBRI007TRASCAN',
         plate: 'XBRI007',
-        description: '*XBRI007* TRA SCAN'
+        description: 'XBRI007 TRA SCAN'
     },
     {
         code: 'XBRI002TRASCAN',
         plate: 'XBRI002',
-        description: '*XBRI002* TRA SCAN'
+        description: 'XBRI002 TRA SCAN'
     },
     {
         code: 'CEO411CAMFOTO',
         plate: 'CEO411',
-        description: '*CEO411* CAM FOTO'
+        description: 'CEO411 CAM FOTO'
     },
     {
         code: 'CAS702CAMHYUN',
         plate: 'CAS702',
-        description: '*CAS702* CAM HYUN'
+        description: 'CAS702 CAM HYUN'
     },
     {
         code: 'CEU784CAMFUSO',
         plate: 'CEU784',
-        description: '*CEU784* CAM FUSO'
+        description: 'CEU784 CAM FUSO'
     },
     {
         code: 'CEV912CAMFUSO',
         plate: 'CEV912',
-        description: '*CEV912* CAM FUSO'
+        description: 'CEV912 CAM FUSO'
     },
     {
         code: 'BLA554CAMVOLK',
         plate: 'BLA554',
-        description: '*BLA554* CAM VOLK'
+        description: 'BLA554 CAM VOLK'
     },
     {
         code: 'XBRI003TRASCAN',
         plate: 'XBRI003',
-        description: '*XBRI003* TRA SCAN'
+        description: 'XBRI003 TRA SCAN'
     },
     {
         code: 'CFP306TRAFAW',
         plate: 'CFP306',
-        description: '*CFP306* TRA FAW'
+        description: 'CFP306 TRA FAW'
     },
     {
         code: 'AYD885CAMVOLK',
         plate: 'AYD885',
-        description: '*AYD885* CAM VOLK'
+        description: 'AYD885 CAM VOLK'
     },
     {
         code: 'AEA217CAMMERC',
         plate: 'AEA217',
-        description: '*AEA217* CAM MERC'
+        description: 'AEA217 CAM MERC'
     },
     {
         code: 'CEO407CAMFOTO',
         plate: 'CEO407',
-        description: '*CEO407* CAM FOTO'
+        description: 'CEO407 CAM FOTO'
     },
     {
         code: 'CAB977AUTOKIA',
         plate: 'CAB977',
-        description: '*CAB977* AUTO KIA'
+        description: 'CAB977 AUTO KIA'
     },
     {
         code: 'CAS594CAMHYUN',
         plate: 'CAS594',
-        description: '*CAS594* CAM HYUN'
+        description: 'CAS594 CAM HYUN'
     },
     {
         code: 'BFH923DOBLEVOLK',
         plate: 'BFH923',
-        description: '*BFH923* DOBLE VOLK'
+        description: 'BFH923 DOBLE VOLK'
     },
     {
         code: 'CEV933TRAMERC',
         plate: 'CEV933',
-        description: '*CEV933* TRA MERC'
+        description: 'CEV933 TRA MERC'
     },
     {
         code: 'CFP304TRAFAW',
         plate: 'CFP304',
-        description: '*CFP304* TRA FAW'
+        description: 'CFP304 TRA FAW'
     },
     {
         code: 'CFC349TRAVOLK',
         plate: 'CFC349',
-        description: '*CFC349* TRA VOLK'
+        description: 'CFC349 TRA VOLK'
     },
     {
         code: 'CFN459TRAFAW',
         plate: 'CFN459',
-        description: '*CFN459* TRA FAW'
+        description: 'CFN459 TRA FAW'
     },
     {
         code: 'CFP305TRAFAW',
         plate: 'CFP305',
-        description: '*CFP305* TRA FAW'
+        description: 'CFP305 TRA FAW'
     },
     {
         code: 'CFN458TRAFAW',
         plate: 'CFN458',
-        description: '*CFN458* TRA FAW'
+        description: 'CFN458 TRA FAW'
     },
     {
         code: 'XBRI006TRASCAN',
         plate: 'XBRI006',
-        description: '*XBRI006* TRA SCAN'
+        description: 'XBRI006 TRA SCAN'
     },
     {
         code: 'XBRI008TRASCAN',
         plate: 'XBRI008',
-        description: '*XBRI008* TRA SCAN'
+        description: 'XBRI008 TRA SCAN'
     },
     {
         code: 'XBRI010TRASCAN',
         plate: 'XBRI010',
-        description: '*XBRI010* TRA SCAN'
+        description: 'XBRI010 TRA SCAN'
     },
     {
         code: 'XBRI009TRASCAN',
         plate: 'XBRI009',
-        description: '*XBRI009* TRA SCAN'
+        description: 'XBRI009 TRA SCAN'
     },
     {
         code: 'XBRI011TRASCAN',
         plate: 'XBRI011',
-        description: '*XBRI011* TRA SCAN'
+        description: 'XBRI011 TRA SCAN'
     },
     {
         code: 'CCP584DOBLESCAN',
         plate: 'CCP584',
-        description: '*CCP584* DOBLE SCAN'
+        description: 'CCP584 DOBLE SCAN'
     },
     {
         code: 'XBRI004TRASCAN',
         plate: 'XBRI004',
-        description: '*XBRI004* TRA SCAN'
+        description: 'XBRI004 TRA SCAN'
     },
     {
         code: 'XBRI001TRASCAN',
         plate: 'XBRI001',
-        description: '*XBRI001* TRA SCAN'
+        description: 'XBRI001 TRA SCAN'
     },
     {
         code: 'CAS025TRASCAN',
         plate: 'CAS025',
-        description: '*CAS025* TRA SCAN'
+        description: 'CAS025 TRA SCAN'
     },
     {
         code: 'CEV934TRAMERC',
         plate: 'CEV934',
-        description: '*CEV934* TRA MERC'
+        description: 'CEV934 TRA MERC'
     },
     {
         code: 'CEU782CAMFUSO',
         plate: 'CEU782',
-        description: '*CEU782* CAM FUSO'
+        description: 'CEU782 CAM FUSO'
     },
     {
         code: 'CFP302TRAFAW',
         plate: 'CFP302',
-        description: '*CFP302* TRA FAW'
+        description: 'CFP302 TRA FAW'
     },
     {
         code: 'CEV913CAMFUSO',
         plate: 'CEV913',
-        description: '*CEV913* CAM FUSO'
+        description: 'CEV913 CAM FUSO'
     },
     {
         code: 'NR051967',
         plate: 'NR051967',
-        description: '*VW 9150* - 1967'
+        description: 'VW 9150 - 1967'
     },
     {
         code: 'PR001604',
         plate: 'PR001604',
-        description: '*VW 9150* - 1604'
+        description: 'VW 9150 - 1604'
     },
     {
         code: 'PR005985',
         plate: 'PR005985',
-        description: '*VW 9150* - 5985'
+        description: 'VW 9150 - 5985'
     },
     {
         code: 'PR005969',
         plate: 'PR005969',
-        description: '*VW 9150* - 5969'
+        description: 'VW 9150 - 5969'
     },
     {
         code: '05147027',
         plate: '05147027',
-        description: '*XBRI011* TRA SCAN'
+        description: 'XBRI011 TRA SCAN'
     }
 ]
 
@@ -478,6 +478,7 @@ class DriveUp {
     sendMessage(carLocation, travel) {
         let groupId = '120363042760809190@g.us'
         let alertType = ''
+        let car = carLocation.plateDesc.split(' ')
         const now = new Date(carLocation.recordedat)
         carLocation.location = carLocation.location.replace('SUNSET', '').trim()
         switch (carLocation.isInside) {
@@ -500,8 +501,8 @@ class DriveUp {
             return splitStr.join(' ');
         }
 
-        let message = `${alertType}`
-        message += `\n${carLocation.plateDesc}`
+        let message = `${alertType}\n`
+        car.forEach((c,i) => message += i == 0 ? `*${c}*` : `${c}`)
 
         if (travel.chest) {
             message += ` - _Acople: ${travel.chest} - Cap: ${travel.capacity}_`

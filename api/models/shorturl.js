@@ -34,10 +34,10 @@ class ShortUrl {
     }
 
     async insert(page) {
-        const token = `https://sistema.olla.com.py/e/${crypto.randomBytes(3).toString('hex')}`
+        const token = crypto.randomBytes(3).toString('hex')
         page.token = token
         await Repositorie.insert(page)
-        return token
+        return `https://sistema.olla.com.py/e/${crypto.randomBytes(3).toString('hex')}`
     }
 
     update(page, id) {

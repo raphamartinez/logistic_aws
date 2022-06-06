@@ -511,7 +511,7 @@ class DriveUp {
         message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
         if (travel.origin) message += `\nSalida: _${travel.origindesc}_`
         if (travel.route) message += `\nRetiro: _${travel.routedesc}_`
-        if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\N`
+        if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\n`
         message += `\nLat. Long: ${carLocation.lat},${carLocation.lng}`
         message += `\nURL: ${carLocation.url}`
 

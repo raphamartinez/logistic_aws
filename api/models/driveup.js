@@ -725,16 +725,14 @@ class DriveUp {
                             if (findCar) car.plate = findCar.description
                             let typeCar = car.cartype
                             let line = `*${car.plate}*`
-                            if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
+                            if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}\n`
                             r[`${typeCar}`] = r[`${typeCar}`] || []
                             r[`${typeCar}`].push(line)
                             return r
                         }, Object.create({}))
 
                         const keysTravel = Object.keys(groupsTravel)
-
                         keysTravel.forEach(key => {
-                            if (key === 'remove') return null
                             const noTracking = ['PORTER', 'FURGON', 'SEMI REMOLQUE']
                             const isNoTracking = noTracking.includes(key)
                             message += `--------------------------------------------------\n*${key}* - ${groupsTravel[key].length} Un ${isNoTracking ? '(Sin rastreo)' : ''}\n`

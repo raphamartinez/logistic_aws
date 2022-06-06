@@ -715,7 +715,33 @@ class DriveUp {
                     }
                     return message
                 case '5':
-                    const cars = await Repositorie.countNotInthePlace()
+                    const carsTravel = await Repositorie.countNotInthePlace()
+                    if (carsTravel.length == 0) {
+                        message = `*No hay vehiculos en Viaje*`
+                    } else {
+                        message = `*Vehiculos en Viaje*\n`
+                        let groupsTravel = carsTravel.reduce(function (r, car) {
+                            let findCar = listCars.find(findCar => findCar.plate === car.plate)
+                            if (findCar) car.plate = findCar.description
+                            let typeCar = car.cartype
+                            let line = `*${car.plate}*`
+                            if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
+                            line += ` - ${car.description}\n\n`
+                            r[`${typeCar}`] = r[`${typeCar}`] || []
+                            r[`${typeCar}`].push(line)
+                            return r
+                        }, Object.create({}))
+
+                        const keysTravel = Object.keys(groupsTravel)
+
+                        keysTravel.forEach(key => {
+                            if (key === 'remove') return null
+                            const noTracking = ['PORTER', 'FURGON', 'SEMI REMOLQUE']
+                            const isNoTracking = noTracking.includes(key)
+                            message += `--------------------------------------------------\n*${key}* - ${groupsTravel[key].length} Un ${isNoTracking ? '(Sin rastreo)' : ''}\n`
+                            groupsTravel[key].forEach(line => message += line)
+                        })
+                    }
                     return cars
             }
 

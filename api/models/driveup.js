@@ -742,7 +742,7 @@ class DriveUp {
                             groupsTravel[key].forEach(line => message += line)
                         })
                     }
-                    return cars
+                    return message
             }
 
             const cars = await Repositorie.countInthePlace(descPlace)

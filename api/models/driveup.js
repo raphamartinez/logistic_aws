@@ -502,12 +502,12 @@ class DriveUp {
         }
 
         let message = `${alertType}\n`
-        car.forEach((c,i) => message += i == 0 ? `*${c}*` : `${c}`)
+        car.forEach((c,i) => message += i == 0 ? `*${c}* ` : `${c} `)
 
         if (travel.chest) {
             message += ` - _Acople: ${travel.chest} - Cap: ${travel.capacity}_`
         } else {
-            if (travel.plate) message += ` - _Cap: ${travel.capacity}_`
+            if (travel.plate) message += `- _Cap: ${travel.capacity}_`
         }
         if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
         message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`

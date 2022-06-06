@@ -533,17 +533,14 @@ class DriveUp {
                 res.resume();
                 return;
             }
-            let shit = ''
 
             res.on('data', (chunk) => {
                 try {
                     const buffer = Buffer.from(chunk)
                     const string = buffer.toString()
-                    shit = string
                     const carLocation = JSON.parse(string)
                     geoQueue.add({ carLocation })
                 } catch (error) {
-                    console.log(shit);
                     console.log(error)
                 }
             })

@@ -8,6 +8,7 @@ const classifyPoint = require("robust-point-in-polygon")
 const Queue = require('bull')
 const geoQueue = new Queue('geo transcoding', 'redis://127.0.0.1:6379')
 const enterGeoQueue = new Queue('Enter in the geozone', 'redis://127.0.0.1:6379')
+const ShortUrl = require('./shorturl')
 
 function sleep(milliseconds) {
     const date = Date.now();
@@ -480,13 +481,13 @@ class DriveUp {
         const now = new Date(carLocation.recordedat)
         switch (carLocation.isInside) {
             case -1:
-                alertType = `Llegada al ${carLocation.location}`
+                alertType = `*Llegada* al SUNSET *${carLocation.location}*`
                 enterGeoQueue.add({ carLocation }, {
                     delay: 30000
                 })
                 break
             case 1:
-                alertType = `Salída del ${carLocation.location}`
+                alertType = `*Salída* del SUNSET *${carLocation.location}*`
                 break
         }
 
@@ -510,8 +511,9 @@ class DriveUp {
         message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
         if (travel.origin) message += `\nSalida: _${travel.origindesc}_`
         if (travel.route) message += `\nRetiro: _${travel.routedesc}_`
-        if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_`
+        if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\N`
         message += `\nLat. Long: ${carLocation.lat},${carLocation.lng}`
+        message += `\nURL: ${carLocation.url}`
 
         if (process.env.NODE_ENV !== 'development') {
             client.sendMessage(groupId, message)
@@ -555,15 +557,15 @@ class DriveUp {
         try {
             const customers = [
                 {
-                    name: 'SUNSET KM1',
+                    name: 'KM1',
                     coordinates: [[-54.616398, -25.509047], [-54.616398, -25.5082], [-54.615883, -25.5082], [-54.615883, -25.509047], [-54.616398, -25.509047]]
                 },
                 {
-                    name: 'SUNSET KM28',
+                    name: 'KM28',
                     coordinates: [[-54.882118, -25.489083], [-54.883994, -25.488989], [-54.883932, -25.487659], [-54.882599, -25.487702], [-54.882546, -25.486518], [-54.882535, -25.485993], [-54.882138, -25.486012], [-54.882131, -25.48611], [-54.881739, -25.486128], [-54.881831, -25.487478], [-54.881921, -25.487604], [-54.881966, -25.488418], [-54.882009, -25.489081], [-54.882118, -25.489083]]
                 },
                 {
-                    name: 'SUNSET YPANE',
+                    name: 'YPANE',
                     coordinates: [[-57.487952, -25.485618], [-57.489485, -25.484621], [-57.491094, -25.486364], [-57.487952, -25.485618]]
                 }
             ]
@@ -603,6 +605,16 @@ class DriveUp {
                 carLocation.isInside = 1
                 carLocation.location = check.length > 0 ? check[0].location : 'Sin Locale - ERROR'
             }
+
+            const page = {
+                url: `https://www.google.com.br/maps/place/${carLocation.lat},${carLocation.lng}`,
+                title: `Telemetria ${carLocation.plate} - ${carLocation.recordedat}`,
+                authenticate: false,
+                expiration: false
+            }
+
+            const url = await ShortUrl.insert(page)
+            carLocation.url = url
 
             if (check.length === 0) {
                 await Repositorie.insertLocation(carLocation)

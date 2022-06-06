@@ -87,23 +87,24 @@ if (process.env.NODE_ENV !== 'development') {
     let listPlaces = []
     switch (msg.from) {
       case '120363024113373482@g.us':
-        listPlaces = [1, 2, 3, 4]
+        listPlaces = [1, 2, 3, 4, 5]
         if (listPlaces.includes(Number.parseInt(msg.body))) {
           autoMsg = await DriveUp.countInthePlace(msg.body)
           client.sendMessage(msg.from, autoMsg)
         } else {
-          autoMsg = '*Comando não identificado*\n'
-          autoMsg += 'Segue abaixo lista de comandos.\n\n'
-          autoMsg += 'Digite 1 - Listagem de Veículos KM1\n'
-          autoMsg += 'Digite 2 - Listagem de Veículos KM28\n'
-          autoMsg += 'Digite 3 - Listagem de Veículos Ypane\n'
-          autoMsg += 'Digite 4 - Listagem de Veículos em Manutenção\n'
+          autoMsg = '*Comando no identificado*\n'
+          autoMsg += 'Sigue abajo listado de comandos.\n\n'
+          autoMsg += 'Digite 1 – Listado de Vehículos KM1\n'
+          autoMsg += 'Digite 2 – Listado de Vehículos KM28\n'
+          autoMsg += 'Digite 3 – Listado de Vehículos Ypane\n'
+          autoMsg += 'Digite 4 – Listado de Vehículos en Mantenimiento\n'
+          autoMsg += 'Digite 5 - Listado de Vehiculos en Ruta\n'
           client.sendMessage(msg.from, autoMsg)
         }
         break;
 
       case '120363042760809190@g.us':
-        client.sendMessage(msg.from, '*Comando não identificado*')
+        client.sendMessage(msg.from, '*Comando no identificado*')
         break;
 
       case '120363024386228914@g.us':
@@ -112,9 +113,9 @@ if (process.env.NODE_ENV !== 'development') {
           autoMsg = await DriveUp.countInthePlace(msg.body)
           client.sendMessage(msg.from, autoMsg)
         } else {
-          autoMsg = '*Comando não identificado*\n'
-          autoMsg += 'Segue abaixo lista de comandos.\n\n'
-          autoMsg += 'Digite 1 - Listagem de Veículos em Manutenção\n'
+          autoMsg = '*Comando no identificado*\n'
+          autoMsg += 'Sigue abajo listado de comandos.\n\n'
+          autoMsg += 'Digite 1 - Listado de Vehículos en Mantenimiento\n'
           client.sendMessage(msg.from, autoMsg)
         }
         break;

@@ -726,7 +726,6 @@ class DriveUp {
                             let typeCar = car.cartype
                             let line = `*${car.plate}*`
                             if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
-                            line += ` - ${car.description}\n\n`
                             r[`${typeCar}`] = r[`${typeCar}`] || []
                             r[`${typeCar}`].push(line)
                             return r

@@ -8,7 +8,6 @@ const classifyPoint = require("robust-point-in-polygon")
 const Queue = require('bull')
 const geoQueue = new Queue('geo transcoding', 'redis://127.0.0.1:6379')
 const enterGeoQueue = new Queue('Enter in the geozone', 'redis://127.0.0.1:6379')
-const shortUrl = require('node-url-shortener')
 
 function sleep(milliseconds) {
     const date = Date.now();

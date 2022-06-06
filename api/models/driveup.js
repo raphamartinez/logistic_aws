@@ -502,7 +502,7 @@ class DriveUp {
         }
 
         let message = `${alertType}\n`
-        car.forEach((c,i) => message += i == 0 ? `*${c}* ` : `${c} `)
+        car.forEach((c,i) => message += i == 0 ? `*${c}* ` : ` ${c} `)
 
         if (travel.chest) {
             message += ` - _Acople: ${travel.chest} - Cap: ${travel.capacity}_`

@@ -108,7 +108,7 @@ if (process.env.NODE_ENV !== 'development') {
         break;
 
       case '120363024386228914@g.us':
-        listPlaces = [1, 2, 3, 4]
+        listPlaces = [1, 2, 3, 4, 5]
         if (listPlaces.includes(Number.parseInt(msg.body))) {
           autoMsg = await DriveUp.countInthePlace(msg.body)
           client.sendMessage(msg.from, autoMsg)

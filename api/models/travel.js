@@ -3,9 +3,19 @@ const Repositorie = require('../repositories/travel')
 
 class Travel {
 
-    view(id){
+    async view(id) {
         try {
-            return Repositorie.view(id)
+            let travel = await Repositorie.view(id)
+            let cars = await Repositorie.listPlates(travel.id)
+            travel.cars = cars
+
+            if (travel.cars && travel.cars.length == 2) {
+                travel.capacity = travel.cars[1].capacity
+            } else {
+                travel.capacity = travel.cars[0].capacity
+            }
+
+            return travel
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error.')
@@ -16,8 +26,8 @@ class Travel {
     async list(date, period, id_login) {
         try {
             const dateSQL = new Date(date)
-            let firstdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() }`
-            let lastdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate() } 23:59:59`
+            let firstdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate()}`
+            let lastdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate()} 23:59:59`
 
             let travels = await Repositorie.list(firstdate, lastdate, period, id_login)
 
@@ -29,7 +39,7 @@ class Travel {
                 if (travel.cars && travel.cars.length == 2) {
                     travel.capacity = travel.cars[1].capacity
                 } else {
-                    travel.capacity = travel.cars[0].capacity
+                   if(travel.cars[0]) travel.capacity = travel.cars[0].capacity
                 }
 
                 data.push(travel)
@@ -82,7 +92,7 @@ class Travel {
         }
     }
 
-    async update(travel, id) {
+    async update(id, travel) {
         try {
             const result = await Repositorie.update(travel, id)
 

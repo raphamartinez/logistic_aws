@@ -547,12 +547,12 @@
     <div class="modal fade" id="editTravel" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Editar Viaje</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form data-form-edit-travel>
+                <form data-form-edit-travel>
+                    <div class="modal-header">
+                        <h5 class="modal-title">Editar Viaje</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="originedit">Salida</label>
@@ -563,8 +563,8 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="dateedit">Fecha</label>
-                                <input data-date type="datetime-local" name="date" id="dateedit"
-                                    class="form-control" required>
+                                <input data-date type="datetime-local" name="date" id="dateedit" class="form-control"
+                                    required>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="periodedit">Tiempo</label>
@@ -612,13 +612,13 @@
                             <div class="form-group col-md-6">
                                 <label for="caredit">Camion</label>
                                 <select class="form-select" id="caredit" name="car" required>
-                                    <option value="" selected >Camion</option>
+                                    <option value="" selected>Camion</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="chestedit">Furgon</label>
                                 <select class="form-select" id="chestedit" name="chest">
-                                    <option value="" selected >Furgon</option>
+                                    <option value="" selected>Furgon</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
@@ -637,20 +637,19 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="obsedit">Detalles de la entrega</label>
-                                <textarea class="form-control" placeholder="Detalles de la entrega" rows="1"
-                                    type="text" name="obs" id="obsedit" required></textarea>
+                                <textarea class="form-control" placeholder="Detalles de la entrega" rows="1" type="text"
+                                    name="obs" id="obsedit"></textarea>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-success">Editar</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="submit" class="btn btn-success">Editar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
 
     <%- include(partials + 'script.ejs' ) %>
 

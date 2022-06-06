@@ -60,6 +60,23 @@ class DriveUp {
         }
     }
 
+    async countNotInthePlace() {
+        try {
+            const sql = `SELECT dr.recordedat as date, dr.plate, dr.isInside, dr.location, ca.cartype, ca.capacity
+            FROM api.driveuplocation dr
+            INNER JOIN api.car ca on dr.plate = ca.plate
+            WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveuplocation drr WHERE drr.plate = dr.plate)
+            GROUP BY dr.plate 
+            HAVING isInside = 1
+            ORDER BY dr.recordedat ASC`
+
+            const result = await query(sql)
+            return result
+        } catch (error) {
+            throw new InvalidArgumentError(error)
+        }
+    }
+
     async countInMaintenance(place) {
         try {
             let sql = `SELECT distinct(ca.plate) as plate, ca.thirst, ca.obs as description, ca.cartype, ca.capacity

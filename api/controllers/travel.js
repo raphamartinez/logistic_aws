@@ -26,12 +26,13 @@ module.exports = app => {
 
     app.put('/travel/:id', [Middleware.authenticatedMiddleware, Authorization('travel', 'create')], async (req, res, next) => {
         try {
+            const id = req.params.id
             const travel = req.body.travel
 
-            const id = await Travel.update(id, travel)
+            const result = await Travel.update(id, travel)
             cachelist.delPrefix(`travel`)
 
-            res.json({ id, msg: `Viaje actualizada con éxito.` })
+            res.json({ result, msg: `Viaje actualizada con éxito.` })
         } catch (err) {
             console.log(err);
             next(err)

@@ -5,6 +5,7 @@ class Travel {
 
     async list(date, lastdate, period, id_login) {
         try {
+            
             let sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
             IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard,
                     CASE
@@ -228,7 +229,7 @@ class Travel {
         try {
             const sql = `UPDATE travel set date = ?, period = ?, origin = ?, route = ?, delivery = ?, id_driver = ?, company_name = ?, company_idcard = ?, type = ?, obs = ? WHERE id = ?`
             const result = await query(sql, [travel.date, travel.period, travel.origin, travel.route, travel.delivery, travel.driver, travel.companydesc, travel.companyidcard, travel.type, travel.obs, id])
-            return result.insertId
+            return result
         } catch (error) {
             console.log(error);
             throw new InternalServerError('Error')

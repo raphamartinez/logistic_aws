@@ -994,19 +994,20 @@ const deleteTravel = async (event) => {
 document.querySelector('[data-travel-delete]').addEventListener('click', deleteTravel)
 
 const editTravel = async (event) => {
+
   const id = event.currentTarget.getAttribute('id')
   const travel = await Connection.noBody(`travel/id/${id}`, 'GET')
-
+  
   const cars = await Connection.noBody(`cars/enable/${date}/${period}`, 'GET')
   const drivers = await Connection.noBody(`drivers/enable/${date}/${period}`, 'GET')
 
-  document.querySelector('[data-travel-edit]').setAttribute('id', id)
+  document.querySelector('[data-form-edit-travel]').setAttribute('id', id)
   document.querySelector('#dateedit').value = travel.date
-  document.querySelector('#periodedit').value = travel.period
-  document.querySelector('#originedit').value = travel.origin
+  if(travel.period) document.querySelector('#periodedit').value = travel.period
+  if(travel.origin) document.querySelector('#originedit').value = travel.origin
   document.querySelector('#typeedit').value = travel.typecode
-  document.querySelector('#routeedit').value = travel.route
-  document.querySelector('#deliveryedit').value = travel.delivery
+  if(travel.route) document.querySelector('#routeedit').value = travel.route
+  if(travel.delivery) document.querySelector('#deliveryedit').value = travel.delivery
   document.querySelector('#driveredit').innerHTML = `<option value="" selected disabled>Chofér</option>`
   document.querySelector('#companyedit').innerHTML = `<option value="" selected disabled>Acompañante</option>`
 
@@ -1022,11 +1023,13 @@ const editTravel = async (event) => {
     if (driver.name !== "SIN ASIGNACION") document.querySelector('#companyedit').appendChild(option2);
   })
 
-  const optDriver = document.createElement('option')
-  optDriver.value = travel.id_driver
-  optDriver.innerHTML = travel.driverdesc
-  document.querySelector('#driveredit').appendChild(optDriver)
-  document.querySelector('#driveredit').value = travel.id_driver
+  if(travel.id_driver){
+    const optDriver = document.createElement('option')
+    optDriver.value = travel.id_driver
+    optDriver.innerHTML = travel.driverdesc
+    document.querySelector('#driveredit').appendChild(optDriver)
+    document.querySelector('#driveredit').value = travel.id_driver
+  }
 
   document.querySelector('#caredit').innerHTML = `<option value="" selected disabled>Camion</option>`;
   document.querySelector('#chestedit').innerHTML = `<option value="" selected disabled>Furgon</option>`;
@@ -1046,8 +1049,22 @@ const editTravel = async (event) => {
     }
   })
 
-  var modal = new bootstrap.Modal(document.getElementById("editTravel"), {})
+  const optionCar = document.createElement('option')
+  optionCar.value = travel.cars[0].id_car
+  optionCar.dataset.plate = travel.cars[0].plate
+  optionCar.innerHTML = `${travel.cars[0].plate} - ${travel.cars[0].cartype} - ${travel.cars[0].brand} - ${travel.cars[0].model} - ${travel.cars[0].year}`;
+  optionCar.selected = true
+  document.querySelector('#caredit').appendChild(optionCar)
 
+  if (travel.cars[1]) {
+    const optionChest = document.createElement('option')
+    optionChest.value = travel.cars[1].id_car
+    optionChest.innerHTML = travel.cars[1].plate
+    optionChest.selected = true
+    document.querySelector('#chestedit').appendChild(optionCar)
+  }
+
+  let modal = new bootstrap.Modal(document.getElementById("editTravel"), {})
   modal.show()
 }
 
@@ -1057,35 +1074,36 @@ const submitEditTravel = async (event) => {
   event.preventDefault()
 
   const id = event.target.getAttribute('id')
+  const date = new Date()
 
   const travel = {
     id,
     name: document.querySelector('[data-username]').innerText,
-    plate: event.currentTarget.car.value,
-    cardesc: document.querySelector('[data-truck] option:checked').innerHTML,
-    platedesc: document.querySelector('[data-truck] option:checked').getAttribute('data-plate'),
+    car: event.currentTarget.car.value,
+    cardesc: document.querySelector('#caredit option:checked').innerHTML,
+    platedesc: document.querySelector('#caredit option:checked').getAttribute('data-plate'),
     chest: event.currentTarget.chest.value,
-    carchestdesc: document.querySelector('[data-chest] option:checked').innerHTML,
-    chestdesc: document.querySelector('[data-chest] option:checked').getAttribute('data-plate'),
+    carchestdesc: document.querySelector('#chestedit option:checked').innerHTML,
+    chestdesc: document.querySelector('#chestedit option:checked').getAttribute('data-plate'),
     capacity: capacity,
     date: event.currentTarget.date.value,
     datedesc: `${date.getDate() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
     period: event.currentTarget.period.value,
-    perioddesc: document.querySelector('[data-period] option:checked').innerHTML,
+    perioddesc: document.querySelector('#periodedit option:checked').innerHTML,
     origin: Number(event.currentTarget.origin.value),
-    origindesc: document.querySelector('[data-origin] option:checked').innerHTML,
+    origindesc: document.querySelector('#originedit option:checked').innerHTML,
     route: Number(event.currentTarget.route.value),
-    routedesc: document.querySelector('[data-route] option:checked').innerHTML,
+    routedesc: document.querySelector('#routeedit option:checked').innerHTML,
     delivery: Number(event.currentTarget.delivery.value),
-    deliverydesc: document.querySelector('[data-delivery] option:checked').innerHTML,
+    deliverydesc: document.querySelector('#deliveryedit option:checked').innerHTML,
     driver: event.currentTarget.driver.value,
-    idcard: document.querySelector('[data-driver] option:checked').getAttribute('data-idcard'),
+    idcard: document.querySelector('#driveredit option:checked').getAttribute('data-idcard'),
     type: event.currentTarget.type.value,
     typedesc: document.querySelector('#type option:checked').innerHTML,
-    driverdesc: document.querySelector('[data-driver] option:checked').innerHTML,
+    driverdesc: document.querySelector('#driveredit option:checked').innerHTML,
     company: event.currentTarget.company.value,
-    companydesc: document.querySelector('[data-company] option:checked').innerHTML,
-    companyidcard: document.querySelector('[data-company] option:checked').getAttribute('data-idcard'),
+    companydesc: document.querySelector('#companyedit option:checked').innerHTML,
+    companyidcard: document.querySelector('#companyedit option:checked').getAttribute('data-idcard'),
     obs: event.currentTarget.obs.value
   }
 
@@ -1113,11 +1131,11 @@ const submitEditTravel = async (event) => {
     travel.chestdesc = ""
   }
 
-  const obj = await Connection.noBody(`travel/${id}`, { travel }, 'PUT')
+  const obj = await Connection.body(`travel/${id}`, { travel }, 'PUT')
 
   let plate = travel.cardesc
   let chest = ""
-  if (travel.chest) chest = travel.carchestdesc.split(' - ')[1].trim()
+  if (travel.chest) chest = travel.carchestdesc
 
   document.querySelector('[data-form-edit-travel]').reset()
 
@@ -1734,7 +1752,7 @@ document.querySelector('[data-print]').addEventListener('click', () => {
 function titleCase(str) {
   var splitStr = str.toLowerCase().split(' ');
   for (var i = 0; i < splitStr.length; i++) {
-      splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
   }
   return splitStr.join(' ');
 }

@@ -502,7 +502,7 @@ class DriveUp {
         }
 
         let message = `${alertType}\n`
-        car.forEach((c,i) => message += i == 0 ? `*${c}* ` : ` ${c} `)
+        car.forEach((c, i) => message += i == 0 ? `*${c}* ` : ` ${c} `)
 
         if (travel.chest) {
             message += ` - _Acople: ${travel.chest} - Cap: ${travel.capacity}_`
@@ -714,6 +714,9 @@ class DriveUp {
                         })
                     }
                     return message
+                case '5':
+                    const cars = await Repositorie.countNotInthePlace()
+                    return cars
             }
 
             const cars = await Repositorie.countInthePlace(descPlace)

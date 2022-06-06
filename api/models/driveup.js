@@ -614,7 +614,6 @@ class DriveUp {
             }
 
             const url = await ShortUrl.insert(page)
-            carLocation.url = url
 
             if (check.length === 0) {
                 await Repositorie.insertLocation(carLocation)
@@ -632,6 +631,8 @@ class DriveUp {
                             travel.capacity = travel.carsTravel[0].capacity
                         }
                     }
+                    
+                    carLocation.url = url
                     return this.sendMessage(carLocation, travel)
                 }
                 return null
@@ -654,6 +655,8 @@ class DriveUp {
                         travel.capacity = travel.carsTravel[0].capacity
                     }
                 }
+
+                carLocation.url = url
                 return this.sendMessage(carLocation, travel)
             }
         } catch (error) {

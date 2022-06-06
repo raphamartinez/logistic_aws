@@ -613,10 +613,9 @@ class DriveUp {
                 expiration: false
             }
 
-            const url = await ShortUrl.insert(page)
-
             if (check.length === 0) {
                 await Repositorie.insertLocation(carLocation)
+                const url = await ShortUrl.insert(page)
                 if (carLocation.isInside !== 1) {
                     const travel = await Repositorie.findTravel(carLocation.plate)
 
@@ -644,6 +643,7 @@ class DriveUp {
             if (difference > twoMinutesInMilisseconds && carLocation.isInside !== check[0].isInside) {
                 await Repositorie.insertLocation(carLocation)
                 const travel = await Repositorie.findTravel(carLocation.plate)
+                const url = await ShortUrl.insert(page)
 
                 if (travel.id) {
                     let carsTravel = await RepositorieTravel.listPlates(travel.id)

@@ -499,7 +499,7 @@ class DriveUp {
             return splitStr.join(' ');
         }
 
-        let message = `*${alertType}*`
+        let message = `${alertType}`
         message += `\n${carLocation.plateDesc}`
 
         if (travel.chest) {
@@ -631,7 +631,7 @@ class DriveUp {
                             travel.capacity = travel.carsTravel[0].capacity
                         }
                     }
-                    
+
                     carLocation.url = url
                     return this.sendMessage(carLocation, travel)
                 }

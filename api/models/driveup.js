@@ -3,11 +3,12 @@ const fetch = require('node-fetch')
 const { Location } = require("whatsapp-web.js");
 const Repositorie = require('../repositories/driveup')
 const RepositorieTravel = require('../repositories/travel')
-const https = require('https');
+const https = require('https')
 const classifyPoint = require("robust-point-in-polygon")
-const Queue = require('bull');
-const geoQueue = new Queue('geo transcoding', 'redis://127.0.0.1:6379');
-const enterGeoQueue = new Queue('Enter in the geozone', 'redis://127.0.0.1:6379');
+const Queue = require('bull')
+const geoQueue = new Queue('geo transcoding', 'redis://127.0.0.1:6379')
+const enterGeoQueue = new Queue('Enter in the geozone', 'redis://127.0.0.1:6379')
+const shortUrl = require('node-url-shortener')
 
 function sleep(milliseconds) {
     const date = Date.now();
@@ -369,8 +370,6 @@ class DriveUp {
             }
         })
 
-        console.log({ messages: vehicleAlerts.length })
-
         for (let vehicleAlert of vehicleAlerts) {
             let customer = vehicleAlert.data ? customers.find(customer => customer.id === vehicleAlert.data.idzona) : ''
             let car = cars.find(car => car.vehicleId === vehicleAlert.idVehicle)
@@ -510,21 +509,17 @@ class DriveUp {
         }
         if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
         message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
-        message += `\n@${carLocation.lat},${carLocation.lng}`
         if (travel.origin) message += `\nSalida: _${travel.origindesc}_`
-        if (travel.route) message += ` - Retiro: _${travel.routedesc}_`
-        if (travel.delivery) message += ` - Entrega: _${travel.deliverydesc}_`
+        if (travel.route) message += `\nRetiro: _${travel.routedesc}_`
+        if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_`
+        message += `\nLat. Long: ${carLocation.lat},${carLocation.lng}`
 
         if (process.env.NODE_ENV !== 'development') {
             client.sendMessage(groupId, message)
             sleep(2000)
-            let loc = new Location(carLocation.lat, carLocation.lng, alertType || "")
-            client.sendMessage(groupId, loc)
-            sleep(2000)
             return true
         }
     }
-
 
     async stream() {
 
@@ -539,14 +534,17 @@ class DriveUp {
                 res.resume();
                 return;
             }
+            let shit = ''
 
             res.on('data', (chunk) => {
                 try {
                     const buffer = Buffer.from(chunk)
                     const string = buffer.toString()
+                    shit = string
                     const carLocation = JSON.parse(string)
                     geoQueue.add({ carLocation })
                 } catch (error) {
+                    console.log(shit);
                     console.log(error)
                 }
             })
@@ -602,19 +600,6 @@ class DriveUp {
             } else {
                 carLocation.code = carLocation.plate
             }
-
-            // if (carLocation.isInside === -1 && carLocation.location === 'SUNSET KM1') {
-            //     const index = delayArrivalInTheZone.findIndex(obj => obj.code === carLocation.code)
-            //     if(index){
-            //         const firstArrival = delayArrivalInTheZone[index].carLocation.recordedat
-
-            //         const lastDate = new Date(check[0].recordedat)
-            //         const difference = now.getTime() - lastDate.getTime()
-            //         const twoMinutesInMilisseconds = 120000
-            //     }else{
-            //         delayArrivalInTheZone.push(carLocation)
-            //     }
-            // }
 
             const check = await Repositorie.checkIntheLocation(carLocation.plate)
 

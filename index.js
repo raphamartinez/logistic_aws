@@ -81,6 +81,7 @@ if (process.env.NODE_ENV !== 'development') {
   })
 
   client.on('message', async msg => {
+    if (process.env.NODE_ENV === 'development') return null
     sleep(1000)
     let autoMsg = ''
     let listPlaces = []
@@ -146,10 +147,6 @@ app.use("/auth", authRoute);
 app.use("/contact", contactRoute);
 
 app.listen(3000, async () => {
-  if (process.env.NODE_ENV !== 'development') {
-    // jobAlert.start()
-  }
-
   app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])
   app.set('view engine', 'ejs');
 

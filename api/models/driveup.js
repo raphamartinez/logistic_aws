@@ -478,7 +478,7 @@ class DriveUp {
     sendMessage(carLocation, travel) {
         let groupId = '120363042760809190@g.us'
         let alertType = ''
-        let car = carLocation.plateDesc.split(' ')
+        let car = carLocation.plateDesc ? carLocation.plateDesc.split(' ') : carLocation.plate
         const now = new Date(carLocation.recordedat)
         carLocation.location = carLocation.location.replace('SUNSET', '').trim()
         switch (carLocation.isInside) {

@@ -763,7 +763,7 @@ class DriveUp {
                                 if (carsReparto.includes(plate)) {
                                     type = 'Vehiculos en Reparto local'
                                     const carbd = carsBd.find(bd => bd.plate === plate)
-                                    if (carbd) line += ` - Cap. ${carbd.capacity} - (Vehíc. ${carbd.thirst == 'CDE' ? 'KM1' : carbd.thirst})\n`
+                                    if (carbd) line += ` - (Vehíc. ${carbd.thirst == 'CDE' ? 'KM1' : carbd.thirst})\n`
                                 }
                                 line += '\n'
                             }

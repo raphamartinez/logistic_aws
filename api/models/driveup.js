@@ -757,7 +757,9 @@ class DriveUp {
                             }
                             if (car.travel.type) {
                                 type = car.travel.type
-                                line += ` - ${car.travel.origindesc} /${car.travel.routedesc ? car.travel.routedesc : car.travel.routedesc} /${car.travel.deliverydesc ? car.travel.deliverydesc : car.travel.origindesc}\n`
+                                line += ` - ${car.travel.origindesc}`
+                                if (car.travel.routedesc) line += ` /${car.travel.routedesc}`
+                                if (car.travel.origindesc) line += ` /${car.travel.origindesc}\n`
                             } else {
                                 let carsReparto = ['CEO412', 'CAS702', 'CAS594', 'CAB977', 'CEO407', 'CEO411', 'CEO408', 'CEO414', 'BAT633', 'CCP584', 'BFH923', 'CEV913', 'CEV932', 'CEV912', 'CEU784', 'CEU782', 'VW91501604', 'VW91505985', 'VW91505969', 'VW91501967']
                                 if (carsReparto.includes(plate)) {

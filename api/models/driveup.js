@@ -112,7 +112,7 @@ const listCars = [
     {
         code: 'CAB977AUTOKIA',
         plate: 'CAB977',
-        description: 'CAB977 AUTO KIA'
+        description: 'CAB977 CAM KIA'
     },
     {
         code: 'CAS594CAMHYUN',

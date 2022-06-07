@@ -98,7 +98,8 @@ if (process.env.NODE_ENV !== 'development') {
           autoMsg += 'Digite 2 – Listado de Vehículos KM28\n'
           autoMsg += 'Digite 3 – Listado de Vehículos Ypane\n'
           autoMsg += 'Digite 4 – Listado de Vehículos en Mantenimiento\n'
-          autoMsg += 'Digite 5 - Listado de Vehiculos en Ruta\n'
+          autoMsg += 'Digite 5 - Listado de Vehiculos en Ruta\n\n'
+          autoMsg += 'Se puede acceder a la información a través del portal OLA - https://sistema.olla.com.py/disponibilidad'
           client.sendMessage(msg.from, autoMsg)
         }
         break;

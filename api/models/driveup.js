@@ -542,8 +542,8 @@ class DriveUp {
                 try {
                     const buffer = Buffer.from(chunk)
                     const string = buffer.toString()
-                    const carLocation = JSON.parse(string)
-                    geoQueue.add({ carLocation })
+                    const json = JSON.parse(`[${string}]`)
+                    json.forEach(carLocation => geoQueue.add({ carLocation }))
                 } catch (error) {
                     console.log(error)
                 }

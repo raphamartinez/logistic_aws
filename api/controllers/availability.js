@@ -5,7 +5,7 @@ const cachelist = require('../infrastructure/redis/cache')
 
 module.exports = app => {
 
-    app.get('/disponibilidad', Middleware.authenticatedMiddleware, async (req, res, next) => {
+    app.get('/disponibilidad', async (req, res, next) => {
         try {
             const {carsLocation, listCars, carsTravel} = await Availability.list()
             res.render('availability', {

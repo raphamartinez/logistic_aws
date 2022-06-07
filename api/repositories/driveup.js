@@ -50,10 +50,10 @@ class DriveUp {
             INNER JOIN api.car ca on dr.plate = ca.plate
             WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveuplocation drr WHERE drr.plate = dr.plate)
             GROUP BY dr.plate 
-            HAVING location = ? and isInside = -1
+            HAVING location LIKE ? and isInside = -1
             ORDER BY dr.recordedat ASC`
 
-            const result = await query(sql, place)
+            const result = await query(sql, `%${place}%`)
             return result
         } catch (error) {
             throw new InvalidArgumentError(error)

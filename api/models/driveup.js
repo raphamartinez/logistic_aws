@@ -675,15 +675,15 @@ class DriveUp {
             switch (place) {
                 case '1':
                     place = 'KM 1'
-                    descPlace = 'SUNSET KM1'
+                    descPlace = 'KM1'
                     break
                 case '2':
                     place = 'KM 28'
-                    descPlace = 'SUNSET KM28'
+                    descPlace = 'KM28'
                     break
                 case '3':
                     place = 'YPANE'
-                    descPlace = 'SUNSET YPANE'
+                    descPlace = 'YPANE'
                     break
                 case '4':
                     const allCarsMaintenance = await Repositorie.countInMaintenance()
@@ -715,20 +715,46 @@ class DriveUp {
                     }
                     return message
                 case '5':
-                    const carsTravel = await Repositorie.countNotInthePlace()
+                    const dataCars = await Repositorie.countNotInthePlace()
+                    let carsTravel = []
                     if (carsTravel.length == 0) {
                         message = `*No hay vehiculos en Viaje*`
                     } else {
+                        for (let car of dataCars) {
+                            const travel = await Repositorie.findTravel(car.plate)
+                            if (travel.id) {
+                                let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                                travel.carsTravel = carsTravel
+
+                                if (travel.carsTravel && travel.carsTravel.length == 2) {
+                                    travel.capacity = travel.carsTravel[1].capacity
+                                } else {
+                                    travel.capacity = travel.carsTravel[0].capacity
+                                }
+                            }
+                            car.travel = travel
+                            carsTravel.push(car)
+                        }
                         message = `*Vehiculos en Viaje*\n`
                         let groupsTravel = carsTravel.reduce(function (r, car) {
+                            let type = 'No definido en sistema.ola'
                             let findCar = listCars.find(findCar => findCar.plate === car.plate)
                             if (findCar) car.plate = findCar.description
-                            let typeCar = car.cartype
                             let line = `*${car.plate}*`
-                            if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
-                            line += '\n'
-                            r[`${typeCar}`] = r[`${typeCar}`] || []
-                            r[`${typeCar}`].push(line)
+                            if (car.travel.capacity) {
+                                line += ` - Cap. ${car.travel.capacity}`
+                            } else {
+                                if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
+                            }
+                            if (car.travel) {
+                                type = travel.type
+                                line += ` - (${travel.origindesc} para ${travel.deliverydesc ? travel.deliverydesc : travel.origindesc})\n`
+                            } else {
+                                line += '\n'
+                            }
+
+                            r[`${type}`] = r[`${type}`] || []
+                            r[`${type}`].push(line)
                             return r
                         }, Object.create({}))
 

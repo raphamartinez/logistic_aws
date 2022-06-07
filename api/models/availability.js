@@ -237,15 +237,15 @@ class Availability {
             const customers = [
                 {
                     place: 'KM 1',
-                    name: 'SUNSET KM1',
+                    name: 'KM1',
                 },
                 {
                     place: 'KM 28',
-                    name: 'SUNSET KM28',
+                    name: 'KM28',
                 },
                 {
                     place: 'YPANE',
-                    name: 'SUNSET YPANE',
+                    name: 'YPANE',
                 }
             ]
 

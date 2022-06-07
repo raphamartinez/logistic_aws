@@ -225,7 +225,7 @@ const listCars = [
     },
     {
         code: '05147027',
-        plate: '05147027',
+        plate: 'XBRI011',
         description: 'XBRI011 TRA SCAN'
     }
 ]

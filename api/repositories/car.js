@@ -17,8 +17,7 @@ class Car {
             const sql = `SELECT IF(it.status = 0,COUNT(it.id),0) as amountPending, IF(qt.status = 1,COUNT(it.id),0) as amountQuoted, 
             IF(qt.status = 2,COUNT(it.id),0) as amountApproved, IF(qt.status = 3,COUNT(it.id),0) as amountPurchased, IF(qt.status = 4,COUNT(it.id),0) as amountFinished
             FROM api.item it 
-            LEFT JOIN api.quotation qt ON it.id = qt.id_item
-            `
+            LEFT JOIN api.quotation qt ON it.id = qt.id_item`
 
             return query(sql)
         } catch (error) {

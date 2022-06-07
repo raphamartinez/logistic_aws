@@ -476,6 +476,7 @@ class DriveUp {
     }
 
     sendMessage(carLocation, travel) {
+       try {
         let groupId = '120363042760809190@g.us'
         let alertType = ''
         let car = carLocation.plateDesc ? carLocation.plateDesc.split(' ') : carLocation.plate
@@ -522,6 +523,10 @@ class DriveUp {
             sleep(2000)
             return true
         }
+       } catch (error) {
+           console.log(carLocation);
+           console.log(error);
+       }
     }
 
     async stream() {

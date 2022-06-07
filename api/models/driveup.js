@@ -717,7 +717,7 @@ class DriveUp {
                 case '5':
                     const dataCars = await Repositorie.countNotInthePlace()
                     let carsTravel = []
-                    if (carsTravel.length == 0) {
+                    if (dataCars.length == 0) {
                         message = `*No hay vehiculos en Viaje*`
                     } else {
                         for (let car of dataCars) {

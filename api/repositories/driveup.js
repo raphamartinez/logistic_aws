@@ -47,7 +47,7 @@ class DriveUp {
         try {
             const sql = `SELECT dr.recordedat as date, dr.plate, dr.isInside, dr.location, ca.cartype, ca.capacity, now() as now
             FROM api.driveuplocation dr
-            INNER JOIN api.car ca on dr.plate = ca.plate
+            LEFT JOIN api.car ca on dr.plate = ca.plate
             WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveuplocation drr WHERE drr.plate = dr.plate)
             GROUP BY dr.plate 
             HAVING location LIKE ? and isInside = -1
@@ -64,7 +64,7 @@ class DriveUp {
         try {
             const sql = `SELECT dr.recordedat as date, dr.plate, dr.isInside, dr.location, ca.cartype, ca.capacity
             FROM api.driveuplocation dr
-            INNER JOIN api.car ca on dr.plate = ca.plate
+            LEFT JOIN api.car ca on dr.plate = ca.plate
             WHERE dr.recordedat = (SELECT MAX(drr.recordedat) FROM api.driveuplocation drr WHERE drr.plate = dr.plate)
             GROUP BY dr.plate 
             HAVING isInside = 1

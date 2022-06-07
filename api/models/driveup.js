@@ -476,57 +476,57 @@ class DriveUp {
     }
 
     sendMessage(carLocation, travel) {
-       try {
-        let groupId = '120363042760809190@g.us'
-        let alertType = ''
-        let car = carLocation.plateDesc ? carLocation.plateDesc.split(' ') : carLocation.plate
-        const now = new Date(carLocation.recordedat)
-        carLocation.location = carLocation.location.replace('SUNSET', '').trim()
-        switch (carLocation.isInside) {
-            case -1:
-                alertType = `*Llegada* al SUNSET *${carLocation.location}*`
-                enterGeoQueue.add({ carLocation }, {
-                    delay: 30000
-                })
-                break
-            case 1:
-                alertType = `*Salída* del SUNSET *${carLocation.location}*`
-                break
-        }
-
-        function titleCase(str) {
-            var splitStr = str.toLowerCase().split(' ');
-            for (var i = 0; i < splitStr.length; i++) {
-                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+        try {
+            let groupId = '120363042760809190@g.us'
+            let alertType = ''
+            let car = carLocation.plateDesc ? carLocation.plateDesc.split(' ') : carLocation.plate
+            const now = new Date(carLocation.recordedat)
+            carLocation.location = carLocation.location.replace('SUNSET', '').trim()
+            switch (carLocation.isInside) {
+                case -1:
+                    alertType = `*Llegada* al SUNSET *${carLocation.location}*`
+                    enterGeoQueue.add({ carLocation }, {
+                        delay: 30000
+                    })
+                    break
+                case 1:
+                    alertType = `*Salída* del SUNSET *${carLocation.location}*`
+                    break
             }
-            return splitStr.join(' ');
-        }
 
-        let message = `${alertType}\n`
-        car.forEach((c, i) => message += i == 0 ? `*${c}* ` : ` ${c} `)
+            function titleCase(str) {
+                var splitStr = str.toLowerCase().split(' ');
+                for (var i = 0; i < splitStr.length; i++) {
+                    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+                }
+                return splitStr.join(' ');
+            }
 
-        if (travel.chest) {
-            message += ` - _Acople: ${travel.chest} - Cap: ${travel.capacity}_`
-        } else {
-            if (travel.plate) message += `- _Cap: ${travel.capacity}_`
-        }
-        if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
-        message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
-        if (travel.origin) message += `\nSalida: _${travel.origindesc}_`
-        if (travel.route) message += `\nRetiro: _${travel.routedesc}_`
-        if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\n`
-        message += `\nLat. Long: ${carLocation.lat},${carLocation.lng}`
-        message += `\nURL: ${carLocation.url}`
+            let message = `${alertType}\n`
+            car.forEach((c, i) => message += i == 0 ? `*${c}* ` : ` ${c} `)
 
-        if (process.env.NODE_ENV !== 'development') {
-            client.sendMessage(groupId, message)
-            sleep(2000)
-            return true
+            if (travel.chest) {
+                message += ` - _Acople: ${travel.chest} - Cap: ${travel.capacity}_`
+            } else {
+                if (travel.plate) message += `- _Cap: ${travel.capacity}_`
+            }
+            if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
+            message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
+            if (travel.origin) message += `\nSalida: _${travel.origindesc}_`
+            if (travel.route) message += `\nRetiro: _${travel.routedesc}_`
+            if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\n`
+            message += `\nLat. Long: ${carLocation.lat},${carLocation.lng}`
+            message += `\nURL: ${carLocation.url}`
+
+            if (process.env.NODE_ENV !== 'development') {
+                client.sendMessage(groupId, message)
+                sleep(2000)
+                return true
+            }
+        } catch (error) {
+            console.log(carLocation);
+            console.log(error);
         }
-       } catch (error) {
-           console.log(carLocation);
-           console.log(error);
-       }
     }
 
     async stream() {
@@ -742,6 +742,7 @@ class DriveUp {
                         }
                         message = `*Vehiculos en Viaje*\n`
                         let groupsTravel = carsTravel.reduce(function (r, car) {
+                            let plate = car.plate
                             let type = 'No definido en sistema.ola'
                             let findCar = listCars.find(findCar => findCar.plate === car.plate)
                             if (findCar) car.plate = findCar.description
@@ -755,6 +756,8 @@ class DriveUp {
                                 type = car.travel.type
                                 line += ` - (${car.travel.origindesc} para ${car.travel.deliverydesc ? car.travel.deliverydesc : car.travel.origindesc})\n`
                             } else {
+                                let carsReparto = ['CEO412', 'CAS702', 'CAS594', 'CAB977', 'CEO407', 'CEO411', 'CEO408', 'CEO414', 'BAT633']
+                                if (carsReparto.includes(plate)) type = 'Vehiculos en Reparto local'
                                 line += '\n'
                             }
 

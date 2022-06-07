@@ -746,7 +746,7 @@ class DriveUp {
                             } else {
                                 if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
                             }
-                            if (car.travel) {
+                            if (car.travel.type) {
                                 type = car.travel.type
                                 line += ` - (${car.travel.origindesc} para ${car.travel.deliverydesc ? car.travel.deliverydesc : car.travel.origindesc})\n`
                             } else {

@@ -699,7 +699,7 @@ class DriveUp {
                         let groupsMaintenance = allCarsMaintenance.reduce(function (r, car) {
                             let findCar = listCars.find(findCar => findCar.plate === car.plate)
                             if (findCar) car.plate = findCar.description
-                            let typeCar = car.cartype
+                            let typeCar = car.cartype ? car.cartype : 'CAMIÓN'
                             let line = `*${car.plate}*`
                             if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
                             line += ` - ${car.description}\n\n`
@@ -781,7 +781,7 @@ class DriveUp {
             if (cars.length > 0) {
                 message = `*Sigue abajo listado de vehiculos disponibles en ${descPlace}*\n`
                 let groups = cars.reduce(function (r, car) {
-                    let typeCar = car.cartype
+                    let typeCar = car.cartype ? car.cartype : 'CAMIÓN'
                     let line = ''
                     let carInMaintenance = carsMaintenance.find(maintenance => maintenance.plate === car.plate)
                     let findCar = listCars.find(findCar => findCar.plate === car.plate)
@@ -820,7 +820,7 @@ class DriveUp {
                 let groupsMaintenance = carsMaintenance.reduce(function (r, car) {
                     let findCar = listCars.find(findCar => findCar.plate === car.plate)
                     if (findCar) car.plate = findCar.description
-                    let typeCar = car.cartype
+                    let typeCar = car.cartype ? car.cartype : 'CAMIÓN'
                     let line = `${car.plate}`
                     if (car.capacity && car.capacity > 0) line += ` - Cap. ${car.capacity}`
                     line += '\n'

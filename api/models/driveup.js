@@ -667,6 +667,8 @@ class DriveUp {
                 carLocation.url = url
                 return this.sendMessage(carLocation, travel)
             }
+
+            return null
         } catch (error) {
             console.log(error)
         }

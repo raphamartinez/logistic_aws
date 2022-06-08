@@ -73,8 +73,8 @@ if (process.env.NODE_ENV !== 'development') {
 
     DriveUp.stream()
 
-    geoQueue.process(function (job, done) {
-      DriveUp.queueResponses(job.data.carLocation)
+    geoQueue.process(async function (job, done) {
+      await DriveUp.queueResponses(job.data.carLocation)
       done()
     })
   })

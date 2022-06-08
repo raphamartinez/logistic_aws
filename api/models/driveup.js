@@ -548,15 +548,15 @@ class DriveUp {
                 try {
                     const buffer = Buffer.from(chunk)
                     const string = buffer.toString()
-                    const json = JSON.parse(`[${string}]`)
-                    json.forEach(carLocation => geoQueue.add({ carLocation }))
+                    const carLocation = JSON.parse(string)
+                    geoQueue.add({ carLocation })
                 } catch (error) {
                     console.log(error)
                 }
             })
 
             res.on('close', () => {
-                console.log('Closed connection');
+                console.log('Closed connection')
             });
         })
     }

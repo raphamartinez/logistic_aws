@@ -8,7 +8,6 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const { InvalidArgumentError, NotFound, NotAuthorized, InternalServerError } = require('./api/models/error');
 const Middleware = require('./api/infrastructure/auth/middleware');
-const { jobAlert } = require('./api/models/job')
 const DriveUp = require('./api/models/driveup')
 const fs = require("fs");
 const config = require("./config.json");

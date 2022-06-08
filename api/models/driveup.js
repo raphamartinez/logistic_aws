@@ -816,7 +816,7 @@ class DriveUp {
                 const keys = Object.keys(groups)
                 keys.forEach(key => {
                     if (key === 'remove') return null
-                    const noTracking = ['PORTER', 'FURGON', 'SEMI REMOLQUE']
+                    const noTracking = ['FURGON', 'SEMI REMOLQUE']
                     const isNoTracking = noTracking.includes(key)
                     message += `--------------------------------------------------\n*${key}* - ${groups[key].length} Un ${isNoTracking ? '(Sin rastreo)' : ''}\n`
                     groups[key].forEach(line => message += line)

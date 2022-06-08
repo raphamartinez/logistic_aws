@@ -543,15 +543,17 @@ class DriveUp {
                 res.resume();
                 return;
             }
-
+            let teste = ''
             res.on('data', (chunk) => {
                 try {
                     const buffer = Buffer.from(chunk)
                     const string = buffer.toString()
+                    teste = string
                     const carLocation = JSON.parse(string)
-                    geoQueue.add({ carLocation })
+                    console.log(carLocation)
+                    // geoQueue.add({ carLocation })
                 } catch (error) {
-                    console.log(error)
+                    console.log(teste)
                 }
             })
 
@@ -566,7 +568,7 @@ class DriveUp {
             const customers = [
                 {
                     name: 'KM1',
-                    coordinates: [[-54.616398, -25.509047], [-54.616398, -25.5082], [-54.615883, -25.5082], [-54.615883, -25.509047], [-54.616398, -25.509047]]
+                    coordinates: [[-54.617956,-25.509451],[-54.618058,-25.508014],[-54.61602,-25.508038],[-54.615494,-25.508352],[-54.615338,-25.508372],[-54.615312,-25.509113],[-54.615473,-25.509243],[-54.615746,-25.509234],[-54.617956,-25.509451]]
                 },
                 {
                     name: 'KM28',
@@ -574,7 +576,7 @@ class DriveUp {
                 },
                 {
                     name: 'YPANE',
-                    coordinates: [[-57.487952, -25.485618], [-57.489485, -25.484621], [-57.491094, -25.486364], [-57.487952, -25.485618]]
+                    coordinates: [[-57.487485,-25.485866],[-57.489341,-25.48452],[-57.491133,-25.486351],[-57.491241,-25.48668],[-57.487485,-25.485866]]
                 }
             ]
 
@@ -762,7 +764,7 @@ class DriveUp {
                                 line += ` - ${car.travel.origindesc}`
                                 if (car.travel.routedesc && car.travel.routedesc != car.travel.origindesc) line += ` /${car.travel.routedesc}`
                                 if (car.travel.deliverydesc) line += ` /${car.travel.deliverydesc}`
-                                line+= '\n'
+                                line += '\n'
                             } else {
                                 let carsReparto = ['CEO412', 'CAS702', 'CAS594', 'CAB977', 'CEO407', 'CEO411', 'CEO408', 'CEO414', 'BAT633', 'CCP584', 'BFH923', 'CEV913', 'CEV932', 'CEV912', 'CEU784', 'CEU782', 'VW91501604', 'VW91505985', 'VW91505969', 'VW91501967']
                                 if (carsReparto.includes(plate)) {

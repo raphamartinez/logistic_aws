@@ -551,7 +551,7 @@ class DriveUp {
                     const carLocation = JSON.parse(string)
                     geoQueue.add({ carLocation })
                 } catch (error) {
-                    console.log(teste)
+                    console.log(error)
                 }
             })
 

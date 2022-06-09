@@ -32,13 +32,14 @@ class DriveUp {
 
     async updateLocation(obs, id){
         try {
-        
+            console.log({obs, id});
+
             const sql = 'UPDATE driveuplocation set container = ? where id = ?'
             await query(sql, [obs, id])
 
             return true
         } catch (error) {
-            console.log('error container');
+            console.log("teste");
             throw new InvalidArgumentError(error)
         }
     }
@@ -408,7 +409,7 @@ class DriveUp {
             const result = await query(sql, [plate, plate, plate])
             return result[0]
         } catch (error) {
-
+console.log(error);
         }
     }
 }

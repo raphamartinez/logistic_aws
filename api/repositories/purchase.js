@@ -205,6 +205,7 @@ LEFT JOIN [G8BD].[dbo].[EMPRESAS] as em on oc.ID_EMPRESA = em.EMP_CODIGO WHERE [
 
       return obj.recordset;
     } catch (error) {
+      console.log(error);
     }
   }
 

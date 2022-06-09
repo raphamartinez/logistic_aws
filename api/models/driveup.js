@@ -476,22 +476,20 @@ class DriveUp {
         }
     }
 
-    sendMessage(carLocation, travel) {
+    sendMessage(carLocation, travel, groupId) {
         try {
-            let groupId = '120363042760809190@g.us'
             let alertType = ''
             let car = carLocation.plateDesc ? carLocation.plateDesc.split(' ') : carLocation.plate
             const now = new Date(carLocation.recordedat)
-            carLocation.location = carLocation.location.replace('SUNSET', '').trim()
             switch (carLocation.isInside) {
                 case -1:
-                    alertType = `*Llegada* al SUNSET *${carLocation.location}*`
+                    alertType = `*Llegada* al *${carLocation.location}*`
                     enterGeoQueue.add({ carLocation }, {
                         delay: 30000
                     })
                     break
                 case 1:
-                    alertType = `*Salída* del SUNSET *${carLocation.location}*`
+                    alertType = `*Salída* del *${carLocation.location}*`
                     break
             }
 
@@ -513,6 +511,7 @@ class DriveUp {
             }
             if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
             message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
+            if (groupId == '120363023896820238@g.us') message += `Contenedor: ${travel.obs}\n`
             if (travel.origin) message += `\nSalida: _${travel.origindesc}_`
             if (travel.route) message += `\nRetiro: _${travel.routedesc}_`
             if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\n`
@@ -525,7 +524,6 @@ class DriveUp {
                 return true
             }
         } catch (error) {
-            console.log(carLocation);
             console.log(error);
         }
     }
@@ -541,7 +539,7 @@ class DriveUp {
             if (res.statusCode !== 200) {
                 console.error(`Invalid Response of DriveUp - Code: ${res.statusCode}`);
                 res.resume();
-                return;
+                return
             }
 
             res.on('data', (chunk) => {
@@ -565,18 +563,32 @@ class DriveUp {
 
     async queueResponses(carLocation) {
         try {
+            let groupId = ''
             const customers = [
                 {
                     name: 'KM1',
-                    coordinates: [[-54.617956, -25.509451], [-54.618058, -25.508014], [-54.61602, -25.508038], [-54.615494, -25.508352], [-54.615338, -25.508372], [-54.615312, -25.509113], [-54.615473, -25.509243], [-54.615746, -25.509234], [-54.617956, -25.509451]]
+                    coordinates: [[-54.617956, -25.509451], [-54.618058, -25.508014], [-54.61602, -25.508038], [-54.615494, -25.508352], [-54.615338, -25.508372], [-54.615312, -25.509113], [-54.615473, -25.509243], [-54.615746, -25.509234], [-54.617956, -25.509451]],
+                    chat: '120363042760809190@g.us'
                 },
                 {
                     name: 'KM28',
-                    coordinates: [[-54.882118, -25.489083], [-54.883994, -25.488989], [-54.883932, -25.487659], [-54.882599, -25.487702], [-54.882546, -25.486518], [-54.882535, -25.485993], [-54.882138, -25.486012], [-54.882131, -25.48611], [-54.881739, -25.486128], [-54.881831, -25.487478], [-54.881921, -25.487604], [-54.881966, -25.488418], [-54.882009, -25.489081], [-54.882118, -25.489083]]
+                    coordinates: [[-54.882118, -25.489083], [-54.883994, -25.488989], [-54.883932, -25.487659], [-54.882599, -25.487702], [-54.882546, -25.486518], [-54.882535, -25.485993], [-54.882138, -25.486012], [-54.882131, -25.48611], [-54.881739, -25.486128], [-54.881831, -25.487478], [-54.881921, -25.487604], [-54.881966, -25.488418], [-54.882009, -25.489081], [-54.882118, -25.489083]],
+                    chat: '120363042760809190@g.us'
                 },
                 {
                     name: 'YPANE',
-                    coordinates: [[-57.487485, -25.485866], [-57.489341, -25.48452], [-57.491133, -25.486351], [-57.491241, -25.48668], [-57.487485, -25.485866]]
+                    coordinates: [[-57.487485, -25.485866], [-57.489341, -25.48452], [-57.491133, -25.486351], [-57.491241, -25.48668], [-57.487485, -25.485866]],
+                    chat: '120363042760809190@g.us'
+                },
+                {
+                    name: 'PUERTO -  Seguro Fluvial S.A.',
+                    coordinates: [[-57.551193, -25.548095], [-57.549112, -25.547978], [-57.549455, -25.548675], [-57.549927, -25.549372], [-57.549949, -25.549372], [-57.558239, -25.549325], [-57.55826, -25.545976], [-57.553725, -25.545965], [-57.551215, -25.546139], [-57.551193, -25.548095]],
+                    chat: '120363023896820238@g.us'
+                },
+                {
+                    name: 'PUERTO - Terport S.A. Villeta',
+                    coordinates: [[-57.605167, -25.615033], [-57.602456, -25.613957], [-57.601005, -25.612982], [-57.604172, -25.611713], [-57.607549, -25.610679], [-57.610896, -25.613581], [-57.605167, -25.615033]],
+                    chat: '120363023896820238@g.us'
                 }
             ]
 
@@ -584,7 +596,8 @@ class DriveUp {
                 const isInside = classifyPoint(customer.coordinates, [carLocation.lng, carLocation.lat])
                 if (isInside !== 1) {
                     carLocation.isInside = isInside
-                    carLocation.location = customer.name
+                    carLocation.location = `SUNSET ${customer.name}`
+                    groupId = customer.chat
                 }
             })
 
@@ -624,7 +637,7 @@ class DriveUp {
             }
 
             if (check.length === 0) {
-                await Repositorie.insertLocation(carLocation)
+                const idLocation = await Repositorie.insertLocation(carLocation)
                 const url = await ShortUrl.insert(page)
                 if (carLocation.isInside !== 1) {
                     const travel = await Repositorie.findTravel(carLocation.plate)
@@ -633,6 +646,9 @@ class DriveUp {
                         let carsTravel = await RepositorieTravel.listPlates(travel.id)
                         travel.carsTravel = carsTravel
 
+                        if ([7, 2].includes(travel.typecode)) {
+                            await Repositorie.updateLocation(travel.obs, idLocation)
+                        }
                         if (travel.carsTravel && travel.carsTravel.length == 2) {
                             travel.capacity = travel.carsTravel[1].capacity
                             travel.chest = travel.carsTravel[1].plate
@@ -642,7 +658,7 @@ class DriveUp {
                     }
 
                     carLocation.url = url
-                    return this.sendMessage(carLocation, travel)
+                    return this.sendMessage(carLocation, travel, groupId)
                 }
                 return null
             }
@@ -667,9 +683,8 @@ class DriveUp {
                 }
 
                 carLocation.url = url
-                return this.sendMessage(carLocation, travel)
+                return this.sendMessage(carLocation, travel, groupId)
             }
-
             return null
         } catch (error) {
             console.log(error)
@@ -859,6 +874,39 @@ class DriveUp {
             return message
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    async historicContainer(msg) {
+        try {
+            let historic = ''
+            const travels = await Repositorie.historicContainer(msg)
+
+            for (let travel of travels) {
+
+                let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                travel.carsTravel = carsTravel
+
+                if (travel.carsTravel && travel.carsTravel.length == 2) {
+                    travel.capacity = travel.carsTravel[1].capacity
+                    travel.chest = travel.carsTravel[1].plate
+                } else {
+                    travel.capacity = travel.carsTravel[0].capacity
+                }
+
+                let car = listCars.find(car => car.code === travel.carsTravel[0].plate)
+                if (car) {
+                    carLocation.code = travel.carsTravel[0].plate
+                    carLocation.plate = car.plate
+                    carLocation.plateDesc = car.description
+                } else {
+                    carLocation.code = travel.carsTravel[0].plate
+                }
+            }
+
+            return historic
+        } catch (error) {
+            return false
         }
     }
 }

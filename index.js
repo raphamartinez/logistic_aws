@@ -119,6 +119,12 @@ if (process.env.NODE_ENV !== 'development') {
           client.sendMessage(msg.from, autoMsg)
         }
         break;
+
+      case '120363023896820238@g.us': //contenedor
+        const historic = await DriveUp.historicContainer(msg.body)
+        autoMsg = historic ? container : `Sin resultados para este numero de contenedor.`
+        client.sendMessage(msg.from, autoMsg)
+        break;
     }
 
     if (config.webhook.enabled) {

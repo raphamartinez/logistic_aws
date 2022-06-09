@@ -8,7 +8,6 @@ const https = require('https')
 const classifyPoint = require("robust-point-in-polygon")
 const Queue = require('bull')
 const geoQueue = new Queue('geo transcoding', 'redis://127.0.0.1:6379')
-const enterGeoQueue = new Queue('Enter in the geozone', 'redis://127.0.0.1:6379')
 const ShortUrl = require('./shorturl')
 
 function sleep(milliseconds) {
@@ -484,9 +483,6 @@ class DriveUp {
             switch (carLocation.isInside) {
                 case -1:
                     alertType = `*Llegada* al *${carLocation.location}*`
-                    enterGeoQueue.add({ carLocation }, {
-                        delay: 30000
-                    })
                     break
                 case 1:
                     alertType = `*Salída* del *${carLocation.location}*`
@@ -511,7 +507,7 @@ class DriveUp {
             }
             if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
             message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
-            if (travel.obs) message += `${[7, 2].includes(travel.typecode) ? 'Contenedor' : 'Obs'}: ${travel.obs}\n`
+            if (travel.desc) message += `${[7, 2].includes(travel.typecode) ? 'Contenedor' : 'Obs'}: ${travel.desc}\n`
             if (travel.origin) message += `\nSalida: _${travel.origindesc}_`
             if (travel.route) message += `\nRetiro: _${travel.routedesc}_`
             if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\n`
@@ -629,7 +625,7 @@ class DriveUp {
                 carLocation.isInside = 1
                 carLocation.location = check.length > 0 ? check[0].location : 'Sin Locale - ERROR'
                 const customer = customers.find(customer => customer.location === check[0].location)
-                groupId = customer ? customer.chat : '120363042760809190@g.us'
+                groupId = customer ? customer.chat : '120363023896820238@g.us'
             }
 
             const page = {

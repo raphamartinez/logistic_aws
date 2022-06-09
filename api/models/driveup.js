@@ -624,7 +624,7 @@ class DriveUp {
             if (!carLocation.isInside) {
                 carLocation.isInside = 1
                 carLocation.location = check.length > 0 ? check[0].location : 'Sin Locale - ERROR'
-                const customer = customers.find(customer => customer.location === check[0].location)
+                const customer = customers.find(customer => customer.name == check[0].location)
                 groupId = customer ? customer.chat : '120363024113373482@g.us'
             }
 

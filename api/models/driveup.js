@@ -500,17 +500,17 @@ class DriveUp {
             let message = `${alertType}\n`
             car.forEach((c, i) => message += i == 0 ? `*${c}* ` : ` ${c} `)
 
-            if (travel.chest) {
+            if (travel && travel.chest) {
                 message += ` - _Acople: ${travel.chest} - Cap: ${travel.capacity}_`
             } else {
-                if (travel.plate) message += `- _Cap: ${travel.capacity}_`
+                if (travel && travel.plate) message += `- _Cap: ${travel.capacity}_`
             }
-            if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
+            if (travel && travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
             message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
-            if (travel.desc) message += `${[7, 2].includes(travel.typecode) ? 'Contenedor' : 'Obs'}: ${travel.desc}\n`
-            if (travel.origin) message += `\nSalida: _${travel.origindesc}_`
-            if (travel.route) message += `\nRetiro: _${travel.routedesc}_`
-            if (travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\n`
+            if (travel && travel.desc) message += `${[7, 2].includes(travel.typecode) ? 'Contenedor' : 'Obs'}: ${travel.desc}\n`
+            if (travel && travel.origin) message += `\nSalida: _${travel.origindesc}_`
+            if (travel && travel.route) message += `\nRetiro: _${travel.routedesc}_`
+            if (travel && travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\n`
             message += `\nLat. Long: ${carLocation.lat},${carLocation.lng}`
             message += `\nURL: ${carLocation.url}`
 

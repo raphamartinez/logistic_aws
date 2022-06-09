@@ -666,11 +666,13 @@ class DriveUp {
             const difference = now.getTime() - lastDate.getTime()
             const twoMinutesInMilisseconds = 120000
             if (difference > twoMinutesInMilisseconds && carLocation.isInside !== check[0].isInside) {
-                await Repositorie.insertLocation(carLocation)
+                const idLocation = await Repositorie.insertLocation(carLocation)
                 const travel = await Repositorie.findTravel(carLocation.plate)
                 const url = await ShortUrl.insert(page)
-
                 if (travel) {
+                    if ([7, 2].includes(travel.typecode)) {
+                        await Repositorie.updateLocation(travel.obs, idLocation)
+                    }
                     let carsTravel = await RepositorieTravel.listPlates(travel.id)
                     travel.carsTravel = carsTravel
 

@@ -515,7 +515,6 @@ class DriveUp {
             message += `\nURL: ${carLocation.url}`
 
             if (process.env.NODE_ENV !== 'development') {
-                console.log({ groupId, message });
                 client.sendMessage(groupId, message)
                 sleep(2000)
                 return true
@@ -647,7 +646,7 @@ class DriveUp {
 
                         if ([7, 2].includes(travel.typecode)) {
                             groupId = '120363023896820238@g.us'
-                            await Repositorie.updateLocation(travel.obs, idLocation)
+                            await Repositorie.updateLocation(travel.description, idLocation)
                         }
                         if (travel.carsTravel && travel.carsTravel.length == 2) {
                             travel.capacity = travel.carsTravel[1].capacity
@@ -673,7 +672,7 @@ class DriveUp {
                 if (travel) {
                     if ([7, 2].includes(travel.typecode)) {
                         groupId = '120363023896820238@g.us'
-                        await Repositorie.updateLocation(travel.obs, idLocation)
+                        await Repositorie.updateLocation(travel.description, idLocation)
                     }
                     let carsTravel = await RepositorieTravel.listPlates(travel.id)
                     travel.carsTravel = carsTravel

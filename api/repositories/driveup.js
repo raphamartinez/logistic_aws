@@ -32,7 +32,7 @@ class DriveUp {
 
     async updateLocation(obs, id){
         try {
-            console.log({obs, id});
+            console.log({obs, id})
 
             const sql = 'UPDATE driveuplocation set container = ? where id = ?'
             await query(sql, [obs, id])

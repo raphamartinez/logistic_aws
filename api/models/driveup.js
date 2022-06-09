@@ -567,17 +567,17 @@ class DriveUp {
             let groupId = ''
             const customers = [
                 {
-                    name: 'KM1',
+                    name: 'SUNSET KM1',
                     coordinates: [[-54.617956, -25.509451], [-54.618058, -25.508014], [-54.61602, -25.508038], [-54.615494, -25.508352], [-54.615338, -25.508372], [-54.615312, -25.509113], [-54.615473, -25.509243], [-54.615746, -25.509234], [-54.617956, -25.509451]],
                     chat: '120363042760809190@g.us'
                 },
                 {
-                    name: 'KM28',
+                    name: 'SUNSET KM28',
                     coordinates: [[-54.882118, -25.489083], [-54.883994, -25.488989], [-54.883932, -25.487659], [-54.882599, -25.487702], [-54.882546, -25.486518], [-54.882535, -25.485993], [-54.882138, -25.486012], [-54.882131, -25.48611], [-54.881739, -25.486128], [-54.881831, -25.487478], [-54.881921, -25.487604], [-54.881966, -25.488418], [-54.882009, -25.489081], [-54.882118, -25.489083]],
                     chat: '120363042760809190@g.us'
                 },
                 {
-                    name: 'YPANE',
+                    name: 'SUNSET YPANE',
                     coordinates: [[-57.487485, -25.485866], [-57.489341, -25.48452], [-57.491133, -25.486351], [-57.491241, -25.48668], [-57.487485, -25.485866]],
                     chat: '120363042760809190@g.us'
                 },
@@ -597,7 +597,7 @@ class DriveUp {
                 const isInside = classifyPoint(customer.coordinates, [carLocation.lng, carLocation.lat])
                 if (isInside !== 1) {
                     carLocation.isInside = isInside
-                    carLocation.location = `SUNSET ${customer.name}`
+                    carLocation.location = customer.name
                     groupId = customer.chat
                 }
             })
@@ -628,6 +628,8 @@ class DriveUp {
             if (!carLocation.isInside) {
                 carLocation.isInside = 1
                 carLocation.location = check.length > 0 ? check[0].location : 'Sin Locale - ERROR'
+                const customer = customers.find(customer => customer.location === check[0].location)
+                groupId = customer ? customer.chat : '120363042760809190@g.us'
             }
 
             const page = {

@@ -38,7 +38,7 @@ class DriveUp {
 
             return true
         } catch (error) {
-            console.log(error);
+            console.log('error container');
             throw new InvalidArgumentError(error)
         }
     }

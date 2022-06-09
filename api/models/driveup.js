@@ -594,7 +594,7 @@ class DriveUp {
                 if (isInside !== 1) {
                     carLocation.isInside = isInside
                     carLocation.location = customer.name
-                    groupId = customer.chat
+                    carLocation.chat = customer.chat
                 }
             })
 
@@ -646,6 +646,7 @@ class DriveUp {
                         travel.carsTravel = carsTravel
 
                         if ([7, 2].includes(travel.typecode)) {
+                            groupId = '120363023896820238@g.us'
                             await Repositorie.updateLocation(travel.obs, idLocation)
                         }
                         if (travel.carsTravel && travel.carsTravel.length == 2) {
@@ -671,6 +672,7 @@ class DriveUp {
                 const url = await ShortUrl.insert(page)
                 if (travel) {
                     if ([7, 2].includes(travel.typecode)) {
+                        groupId = '120363023896820238@g.us'
                         await Repositorie.updateLocation(travel.obs, idLocation)
                     }
                     let carsTravel = await RepositorieTravel.listPlates(travel.id)

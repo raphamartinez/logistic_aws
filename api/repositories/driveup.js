@@ -260,7 +260,7 @@ class DriveUp {
 
     async findTravel(plate) {
         try {
-            const sql = `SELECT max(tr.id) as id, tr.type as typecode, tr.period, tr.obs as desc, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
+            const sql = `SELECT max(tr.id) as id, tr.type as typecode, tr.period, tr.obs as description, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
             IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard, ca.plate, ca.cartype, ca.model,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"

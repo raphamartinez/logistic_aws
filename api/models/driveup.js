@@ -507,7 +507,7 @@ class DriveUp {
             }
             if (travel && travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
             message += `\n${now.toLocaleTimeString('pt-BR')} ${now.toLocaleDateString('pt-BR')}\n`
-            if (travel && travel.desc) message += `${[7, 2].includes(travel.typecode) ? 'Contenedor' : 'Obs'}: ${travel.desc}\n`
+            if (travel && travel.description) message += `${[7, 2].includes(travel.typecode) ? 'Contenedor' : 'Obs'}: ${travel.description}\n`
             if (travel && travel.origin) message += `\nSalida: _${travel.origindesc}_`
             if (travel && travel.route) message += `\nRetiro: _${travel.routedesc}_`
             if (travel && travel.delivery) message += `\nEntrega: _${travel.deliverydesc}_\n`

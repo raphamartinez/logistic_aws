@@ -519,6 +519,7 @@ class DriveUp {
             message += `\nURL: ${carLocation.url}`
 
             if (process.env.NODE_ENV !== 'development') {
+                console.log({ groupId, message });
                 client.sendMessage(groupId, message)
                 sleep(2000)
                 return true

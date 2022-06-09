@@ -594,7 +594,7 @@ class DriveUp {
                 if (isInside !== 1) {
                     carLocation.isInside = isInside
                     carLocation.location = customer.name
-                    carLocation.chat = customer.chat
+                    groupId = customer.chat
                 }
             })
 

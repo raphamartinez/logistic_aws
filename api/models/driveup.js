@@ -891,20 +891,20 @@ class DriveUp {
             let historic = ''
             const travels = await Repositorie.historicContainer(msg)
             for (const travel of travels) {
+                if (historic != '') historic = '--------------------------------------------------\n'
                 const locations = await Repositorie.listLocations(travel.id)
                 historic += `*${travel.type}* - ${msg}\n\n`
+                if (travel.origin) historic += `\nSalida: _${travel.origindesc}_`
+                if (travel.route) historic += `\nRetiro: _${travel.routedesc}_`
+                if (travel.delivery) historic += `\nEntrega: _${travel.deliverydesc}_`
                 locations.forEach(location => {
-                    const car =location.plateDesc.split(' ')
-                    historic += `*${location.isInsideDesc}* ${location.location}\n`
+                    const car = location.plateDesc.split(' ')
+                    historic += `${location.isInsideDesc} ${location.location}\n`
                     car.forEach((c, i) => historic += i == 0 ? `*${c}* ` : ` ${c} `)
-                    historic += `Chofer - ${titleCase(travel.driverdesc)}\n`
-                    historic += `${location.date}\n`
-
-                    if (travel.origin) historic += `\nSalida: _${travel.origindesc}_`
-                    if (travel.route) historic += `\nRetiro: _${travel.routedesc}_`
-                    if (travel.delivery) historic += `\nEntrega: _${travel.deliverydesc}_`
-                    historic += '\n\n'
+                    historic += `\nChofer - ${titleCase(travel.driverdesc)}\n`
+                    historic += `${location.date}\n\n`
                 })
+                if (travels.length === 1) historic += `----------------------------------------------\nSin registro de devolución`
             }
 
             return historic

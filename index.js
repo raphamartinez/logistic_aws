@@ -122,7 +122,7 @@ if (process.env.NODE_ENV !== 'development') {
 
       case '120363023896820238@g.us': //contenedor
         const historic = await DriveUp.historicContainer(msg.body)
-        autoMsg = historic ? container : `Sin resultados para este numero de contenedor.`
+        autoMsg = historic ? historic : `Sin resultados para este numero de contenedor.`
         client.sendMessage(msg.from, autoMsg)
         break;
     }

@@ -15,11 +15,11 @@ class DriveUp {
             console.log(error);
             throw new InvalidArgumentError(error)
         }
-    } 
+    }
 
     async insertLocation(car) {
         try {
-        
+
             const sql = 'INSERT INTO driveuplocation set ?'
             const result = await query(sql, car)
 
@@ -30,16 +30,13 @@ class DriveUp {
         }
     }
 
-    async updateLocation(obs, id){
+    async updateLocation(id_travel, obs, id) {
         try {
-            console.log({obs, id})
-
-            const sql = 'UPDATE driveuplocation set container = ? where id = ?'
-            await query(sql, [obs, id])
+            const sql = 'UPDATE driveuplocation set id_travel = ?, container = ? where id = ?'
+            await query(sql, [id_travel, obs, id])
 
             return true
         } catch (error) {
-            console.log("teste");
             throw new InvalidArgumentError(error)
         }
     }
@@ -109,7 +106,7 @@ class DriveUp {
         }
     }
 
-    async historicContainer(msg){
+    async historicContainer(msg) {
         try {
             let sql = `SELECT max(tr.id) as id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
             IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard, du.lat, du.location, du.isInside,
@@ -249,7 +246,6 @@ class DriveUp {
                         FROM api.travel tr
                         INNER JOIN api.driver dr ON dr.id = tr.id_driver
                         INNER JOIN api.user us ON tr.id_login = us.id_login 
-                        LEFT JOIN api.driveuplocation du ON tr.obs = du.container 
                         where tr.obs = ?`
 
             const result = await query(sql, msg)
@@ -258,6 +254,26 @@ class DriveUp {
             throw new InvalidArgumentError(error)
         }
     }
+
+    async listLocations(id_travel, msg) {
+        try {
+            const sql = `SELECT du.isInside, du.location, du.plateDesc, DATE_FORMAT(du.recordedat, '%H:%i %d/%m/%Y') as date,
+                        CASE
+                        WHEN du.isInside = 1 THEN "*Salída* del"
+                        WHEN du.isInside = -1 THEN "*Llegada* al"
+                        ELSE ""
+                        END as isInsideDesc,
+                        FROM api.driveuplocation du
+                        WHERE du.container = ?
+                        AND du.id_travel = ?
+                        ORDER BY du.recordedat ASC`
+            const result = await query(sql, [msg, id_travel])
+            return result
+        } catch (error) {
+            throw new InvalidArgumentError(error)
+        }
+    }
+
 
     async findTravel(plate) {
         try {
@@ -409,7 +425,7 @@ class DriveUp {
             const result = await query(sql, [plate, plate, plate])
             return result[0]
         } catch (error) {
-console.log(error);
+            console.log(error);
         }
     }
 }

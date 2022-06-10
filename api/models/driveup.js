@@ -646,7 +646,7 @@ class DriveUp {
 
                         if ([7, 2].includes(travel.typecode)) {
                             groupId = '120363023896820238@g.us'
-                            await Repositorie.updateLocation(travel.description, idLocation)
+                            await Repositorie.updateLocation(travel.id, travel.description, idLocation)
                         }
                         if (travel.carsTravel && travel.carsTravel.length == 2) {
                             travel.capacity = travel.carsTravel[1].capacity
@@ -672,7 +672,7 @@ class DriveUp {
                 if (travel) {
                     if ([7, 2].includes(travel.typecode)) {
                         groupId = '120363023896820238@g.us'
-                        await Repositorie.updateLocation(travel.description, idLocation)
+                        await Repositorie.updateLocation(travel.id, travel.description, idLocation)
                     }
                     let carsTravel = await RepositorieTravel.listPlates(travel.id)
                     travel.carsTravel = carsTravel
@@ -880,30 +880,31 @@ class DriveUp {
     }
 
     async historicContainer(msg) {
+        function titleCase(str) {
+            var splitStr = str.toLowerCase().split(' ');
+            for (var i = 0; i < splitStr.length; i++) {
+                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+            }
+            return splitStr.join(' ');
+        }
         try {
             let historic = ''
             const travels = await Repositorie.historicContainer(msg)
+            for (const travel of travels) {
+                const locations = await Repositorie.listLocations(travel.id, msg)
+                historic += `*${travel.type}* - ${msg}\n\n`
+                locations.forEach(location => {
+                    const car =location.plateDesc.split(' ')
+                    historic += `*${location.isInsideDesc}* ${location.location}\n`
+                    car.forEach((c, i) => historic += i == 0 ? `*${c}* ` : ` ${c} `)
+                    historic += `Chofer - ${titleCase(travel.driverdesc)}\n`
+                    historic += `${location.date}\n`
 
-            for (let travel of travels) {
-
-                let carsTravel = await RepositorieTravel.listPlates(travel.id)
-                travel.carsTravel = carsTravel
-
-                if (travel.carsTravel && travel.carsTravel.length == 2) {
-                    travel.capacity = travel.carsTravel[1].capacity
-                    travel.chest = travel.carsTravel[1].plate
-                } else {
-                    travel.capacity = travel.carsTravel[0].capacity
-                }
-
-                let car = listCars.find(car => car.code === travel.carsTravel[0].plate)
-                if (car) {
-                    carLocation.code = travel.carsTravel[0].plate
-                    carLocation.plate = car.plate
-                    carLocation.plateDesc = car.description
-                } else {
-                    carLocation.code = travel.carsTravel[0].plate
-                }
+                    if (travel.origin) historic += `\nSalida: _${travel.origindesc}_`
+                    if (travel.route) historic += `\nRetiro: _${travel.routedesc}_`
+                    if (travel.delivery) historic += `\nEntrega: _${travel.deliverydesc}_`
+                    historic += '\n\n'
+                })
             }
 
             return historic

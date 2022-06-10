@@ -255,19 +255,18 @@ class DriveUp {
         }
     }
 
-    async listLocations(id_travel, msg) {
+    async listLocations(id_travel) {
         try {
             const sql = `SELECT du.isInside, du.location, du.plateDesc, DATE_FORMAT(du.recordedat, '%H:%i %d/%m/%Y') as date,
                         CASE
                         WHEN du.isInside = 1 THEN "*Salída* del"
                         WHEN du.isInside = -1 THEN "*Llegada* al"
                         ELSE ""
-                        END as isInsideDesc,
+                        END as isInsideDesc
                         FROM api.driveuplocation du
-                        WHERE du.container = ?
-                        AND du.id_travel = ?
+                        WHERE du.id_travel = ?
                         ORDER BY du.recordedat ASC`
-            const result = await query(sql, [msg, id_travel])
+            const result = await query(sql, [id_travel])
             return result
         } catch (error) {
             throw new InvalidArgumentError(error)

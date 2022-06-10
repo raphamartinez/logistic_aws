@@ -891,7 +891,7 @@ class DriveUp {
             let historic = ''
             const travels = await Repositorie.historicContainer(msg)
             for (const travel of travels) {
-                const locations = await Repositorie.listLocations(travel.id, msg)
+                const locations = await Repositorie.listLocations(travel.id)
                 historic += `*${travel.type}* - ${msg}\n\n`
                 locations.forEach(location => {
                     const car =location.plateDesc.split(' ')

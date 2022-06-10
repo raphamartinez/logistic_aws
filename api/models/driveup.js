@@ -893,10 +893,11 @@ class DriveUp {
             for (const travel of travels) {
                 if (historic != '') historic = '--------------------------------------------------\n'
                 const locations = await Repositorie.listLocations(travel.id)
-                historic += `*${travel.type}* - ${msg}\n\n`
+                historic += `*${travel.type}* - ${msg}`
                 if (travel.origin) historic += `\nSalida: _${travel.origindesc}_`
                 if (travel.route) historic += `\nRetiro: _${travel.routedesc}_`
                 if (travel.delivery) historic += `\nEntrega: _${travel.deliverydesc}_`
+                historic += '\n\n'
                 locations.forEach(location => {
                     const car = location.plateDesc.split(' ')
                     historic += `${location.isInsideDesc} ${location.location}\n`

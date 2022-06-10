@@ -891,7 +891,7 @@ class DriveUp {
             let historic = ''
             let type = { in: false, out: false }
             const travels = await Repositorie.historicContainer(msg)
-            if (!travels) return false
+            if (!travels && !travels[0] && !travels[0].id) return false
             for (const travel of travels) {
                 switch (travel.typecode) {
                     case 2:

@@ -108,8 +108,8 @@ class DriveUp {
 
     async historicContainer(msg) {
         try {
-            let sql = `SELECT max(tr.id) as id, tr.type as typecode, tr.period, tr.obs, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
-            IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard,
+            let sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
+            dr.name as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard,
                     CASE
                         WHEN tr.type = 1 THEN "Viatico Nacional"
                         WHEN tr.type = 2 THEN "Retiro Contenedor"
@@ -118,7 +118,6 @@ class DriveUp {
                         WHEN tr.type = 5 THEN "Retorno"
                         WHEN tr.type = 6 THEN "Transferencia"
                         WHEN tr.type = 7 THEN "Devolucion de Contenedor"
-                        ELSE ""
                     END as type,
                     CASE
                         WHEN tr.route = 1 THEN "KM 1"
@@ -159,7 +158,6 @@ class DriveUp {
                         WHEN tr.route = 35 THEN "Zona Franca km11"
                         WHEN tr.route = 36 THEN "Hernandarias"
                         WHEN tr.route = 37 THEN "Cap. Bado"
-                        ELSE ""
                     END as routedesc,
                         CASE
                         WHEN tr.origin = 1 THEN "KM 1"
@@ -200,7 +198,6 @@ class DriveUp {
                         WHEN tr.origin = 35 THEN "Zona Franca km11"
                         WHEN tr.origin = 36 THEN "Hernandarias"
                         WHEN tr.origin = 37 THEN "Cap. Bado"
-                        ELSE ""
 						END as origindesc,
                         CASE
                         WHEN tr.delivery = 1 THEN "KM 1"
@@ -241,7 +238,6 @@ class DriveUp {
                         WHEN tr.delivery = 35 THEN "Zona Franca km11"
                         WHEN tr.delivery = 36 THEN "Hernandarias"
                         WHEN tr.delivery = 37 THEN "Cap. Bado"
-                        ELSE ""
                     END as deliverydesc
                         FROM api.travel tr
                         INNER JOIN api.driver dr ON dr.id = tr.id_driver

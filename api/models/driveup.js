@@ -889,8 +889,18 @@ class DriveUp {
         }
         try {
             let historic = ''
+            let type = { in: false, out: false }
             const travels = await Repositorie.historicContainer(msg)
+            if (!travels) return false
             for (const travel of travels) {
+                switch (travel.typecode) {
+                    case 2:
+                        type.in = true
+                        break
+                    case 7:
+                        type.out = true
+                        break
+                }
                 if (historic != '') historic = '--------------------------------------------------\n'
                 const locations = await Repositorie.listLocations(travel.id)
                 historic += `*${travel.type}* - ${msg}`
@@ -905,7 +915,9 @@ class DriveUp {
                     historic += `\nChofer - ${titleCase(travel.driverdesc)}\n`
                     historic += `${location.date}\n\n`
                 })
-                if (travels.length === 1) historic += `----------------------------------------------\nSin registro de devolución`
+            }
+            if (!type.in || !type.out) {
+                historic += `----------------------------------------------\nSin registro de ${!type.in ? 'Retiro' : 'Devolución'}.`
             }
 
             return historic

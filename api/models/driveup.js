@@ -901,15 +901,13 @@ class DriveUp {
                         type.out = true
                         break
                 }
-                const locations = await Repositorie.listLocations(travel.id)
-                if (locations.length === 0) historic += `Sin registro de ${travel.typecode === 2 ? 'Retiro' : 'Devolucion'}.\n`
-                if (historic != '') historic += '--------------------------------------------------\n'
-
                 historic += `*${travel.type}* - ${msg}`
                 if (travel.origin) historic += `\nSalida: _${travel.origindesc}_`
                 if (travel.route) historic += `\nRetiro: _${travel.routedesc}_`
                 if (travel.delivery) historic += `\nEntrega: _${travel.deliverydesc}_`
                 historic += '\n\n'
+                const locations = await Repositorie.listLocations(travel.id)
+                if (locations.length === 0) historic += `Sin registro de ${travel.typecode === 2 ? 'Retiro' : 'Devolucion'}.\n--------------------------------------------------\n`
                 locations.forEach(location => {
                     const car = location.plateDesc.split(' ')
                     historic += `${location.isInsideDesc} ${location.location}\n`

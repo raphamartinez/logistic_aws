@@ -901,8 +901,10 @@ class DriveUp {
                         type.out = true
                         break
                 }
-                if (historic != '') historic += '--------------------------------------------------\n'
                 const locations = await Repositorie.listLocations(travel.id)
+                if (locations.length === 0) historic += `Sin registro de ${travel.typecode === 2 ? 'Retiro' : 'Devolucion'}.\n`
+                if (historic != '') historic += '--------------------------------------------------\n'
+
                 historic += `*${travel.type}* - ${msg}`
                 if (travel.origin) historic += `\nSalida: _${travel.origindesc}_`
                 if (travel.route) historic += `\nRetiro: _${travel.routedesc}_`

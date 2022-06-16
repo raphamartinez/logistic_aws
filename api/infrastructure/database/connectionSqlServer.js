@@ -1,13 +1,13 @@
 
 const config = {
-    server: "192.168.201.254",
-    user: 'G8_CONSULTA',
-    password: '##consulta##2022',
-    database: 'G8BD',
+    server: process.env.DB_SERVER_HOST,
+    user: process.env.DB_SERVER_USER,
+    password: process.env.DB_SERVER_PASSWORD,
+    database: process.env.DB_SERVER_DATABASE,
     options: {
         encrypt: false, 
-        instanceName: 'SQLG8_PRODUCAO'
+        instanceName: process.env.DB_SERVER_NAME
     }
-};
+}
 
 module.exports = config

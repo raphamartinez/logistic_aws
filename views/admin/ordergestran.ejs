@@ -22,15 +22,27 @@
                         <form target="_blank" action="/order/gestran" method="POST" data-form-generate>
                             <div class="card-body">
                                 <div class="form-row">
-                                    <div class="form-group col-12">
+                                    <div class="form-group col-6">
                                         <label for="purchaseorder">Orden de Compra</label>
                                         <select data-select-purchaseorder id="purchaseorder" name="purchaseorder"
                                             class="form-control" multiple>
                                         </select>
                                     </div>
+                                    <div class="form-group col-6">
+                                        <label for="provider">Proveedor</label>
+                                        <select data-select-provider id="provider" name="provider" class="form-control"
+                                            multiple>
+                                            <% providers.forEach(provider=> {%>
+                                                <option value="<% provider.code %>">
+                                                    <% provider.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="text-center">
+                                <button class="btn btn-warning" type="reset">Resetar</button>
                                 <button data-modal-search type="submit"
                                     class="btn btn-info align-items-center text-white justify-content-md-center mb-2">Generar</button>
                             </div>

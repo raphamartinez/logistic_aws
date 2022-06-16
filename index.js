@@ -12,8 +12,7 @@ const DriveUp = require('./api/models/driveup')
 const fs = require("fs");
 const config = require("./config.json");
 const axios = require("axios");
-const Queue = require('bull');
-const geoQueue = new Queue('geo transcoding', 'redis://127.0.0.1:6379');
+const Queue = require('./api/infrastructure/redis/queue');
 
 const { Client, Location, List, Buttons, LocalAuth } = require('whatsapp-web.js');
 
@@ -51,15 +50,15 @@ if (process.env.NODE_ENV !== 'development') {
   global.authed = false;
 
   client.on('qr', (qr) => {
-    fs.writeFileSync("./last.qr", qr);
+    fs.writeFileSync("./last.qr", qr)
   })
 
   client.on("authenticated", () => {
-    console.log("Autenticado!");
-    authed = true;
+    console.log("Autenticado!")
+    authed = true
 
     try {
-      fs.unlinkSync("./last.qr");
+      fs.unlinkSync("./last.qr")
     } catch (err) { }
   })
 
@@ -70,18 +69,13 @@ if (process.env.NODE_ENV !== 'development') {
 
   client.on('ready', () => {
     console.log('Pronto para uso!');
-
     DriveUp.stream()
-
-    geoQueue.process(async function (job, done) {
-      await DriveUp.queueResponses(job.data.carLocation)
-      done()
-    })
+    Queue.process()
   })
 
   client.on('message', async msg => {
-    if (process.env.NODE_ENV === 'development') return null
     sleep(1000)
+    if (process.env.NODE_ENV === 'development') return null
     let autoMsg = ''
     let listPlaces = []
     switch (msg.from) {
@@ -120,7 +114,7 @@ if (process.env.NODE_ENV !== 'development') {
         }
         break;
 
-      case '120363023896820238@g.us': //contenedor
+      case '120363023896820238@g.us':
         const historic = await DriveUp.historicContainer(msg.body)
         autoMsg = historic ? historic : `Sin resultados para este numero de contenedor.`
         client.sendMessage(msg.from, autoMsg)
@@ -143,15 +137,8 @@ if (process.env.NODE_ENV !== 'development') {
   client.initialize()
 }
 
-const chatRoute = require("./components/chatting");
-const groupRoute = require("./components/group");
-const authRoute = require("./components/auth");
-const contactRoute = require("./components/contact");
-
-app.use("/chat", chatRoute);
-app.use("/group", groupRoute);
-app.use("/auth", authRoute);
-app.use("/contact", contactRoute);
+const authRoute = require("./components/auth")
+app.use("/auth", authRoute)
 
 app.listen(3000, async () => {
   app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])
@@ -173,8 +160,8 @@ app.listen(3000, async () => {
     } catch (error) {
       res.render('login');
     }
-  });
-});
+  })
+})
 
 app.use((err, req, res, next) => {
 
@@ -209,7 +196,7 @@ app.use((err, req, res, next) => {
   res.status(status);
   res.json(body);
 
-});
+})
 
 
 

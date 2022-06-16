@@ -6,8 +6,7 @@ const RepositorieCar = require('../repositories/car')
 const RepositorieTravel = require('../repositories/travel')
 const https = require('https')
 const classifyPoint = require("robust-point-in-polygon")
-const Queue = require('bull')
-const geoQueue = new Queue('geo transcoding', 'redis://127.0.0.1:6379')
+const Queue = require('../infrastructure/redis/queue')
 const ShortUrl = require('./shorturl')
 
 function sleep(milliseconds) {
@@ -246,47 +245,36 @@ const listCars = [
     }
 ]
 
+const listCustomers = [
+    {
+        name: 'SUNSET KM1',
+        coordinates: [[-54.617956, -25.509451], [-54.618058, -25.508014], [-54.61602, -25.508038], [-54.615494, -25.508352], [-54.615338, -25.508372], [-54.615312, -25.509113], [-54.615473, -25.509243], [-54.615746, -25.509234], [-54.617956, -25.509451]],
+        chat: '120363042760809190@g.us'
+    },
+    {
+        name: 'SUNSET KM28',
+        coordinates: [[-54.882118, -25.489083], [-54.883994, -25.488989], [-54.883932, -25.487659], [-54.882599, -25.487702], [-54.882546, -25.486518], [-54.882535, -25.485993], [-54.882138, -25.486012], [-54.882131, -25.48611], [-54.881739, -25.486128], [-54.881831, -25.487478], [-54.881921, -25.487604], [-54.881966, -25.488418], [-54.882009, -25.489081], [-54.882118, -25.489083]],
+        chat: '120363042760809190@g.us'
+    },
+    {
+        name: 'SUNSET YPANE',
+        coordinates: [[-57.487485, -25.485866], [-57.489341, -25.48452], [-57.491133, -25.486351], [-57.491241, -25.48668], [-57.487485, -25.485866]],
+        chat: '120363042760809190@g.us'
+    },
+    {
+        name: 'PUERTO -  Seguro Fluvial S.A.',
+        coordinates: [[-57.551193, -25.548095], [-57.549112, -25.547978], [-57.549455, -25.548675], [-57.549927, -25.549372], [-57.549949, -25.549372], [-57.558239, -25.549325], [-57.55826, -25.545976], [-57.553725, -25.545965], [-57.551215, -25.546139], [-57.551193, -25.548095]],
+        chat: '120363023896820238@g.us'
+    },
+    {
+        name: 'PUERTO - Terport S.A. Villeta',
+        coordinates: [[-57.605167, -25.615033], [-57.602456, -25.613957], [-57.601005, -25.612982], [-57.604172, -25.611713], [-57.607549, -25.610679], [-57.610896, -25.613581], [-57.605167, -25.615033]],
+        chat: '120363023896820238@g.us'
+    }
+]
 let lastCarLocation = {}
 
 class DriveUp {
-
-    async vehicleAlerts() {
-
-        const endDate = new Date()
-        const minutesEnd = endDate.getMinutes() > 9 ? endDate.getMinutes() : `0${endDate.getMinutes()}`
-        const hoursEnd = endDate.getHours() > 9 ? endDate.getHours() : `0${endDate.getHours()}`
-        const dayEnd = endDate.getDate() > 9 ? endDate.getDate() : `0${endDate.getDate()}`
-        const monthEnd = endDate.getMonth() > 9 ? endDate.getMonth() + 1 : `0${endDate.getMonth() + 1}`
-
-        const startDate = new Date(endDate.getTime() + (-30 * 60000))
-        const month = startDate.getMonth() + 1 > 9 ? startDate.getMonth() + 1 : `0${startDate.getMonth() + 1}`
-        const day = startDate.getDate() > 9 ? startDate.getDate() : `0${startDate.getDate()}`
-        const minutes = startDate.getMinutes() > 9 ? startDate.getMinutes() : `0${startDate.getMinutes()}`
-        const hours = startDate.getHours() > 9 ? startDate.getHours() : `0${startDate.getHours()}`
-
-        console.log(`${startDate.getFullYear()}-${month}-${day}T${hours}:${minutes}`)
-        console.log({ now: endDate.toLocaleString() })
-
-        const data = await fetch(`https://api.driveup.info/rest/vehicle/alerts`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-driveup-token': process.env.DRIVEUP_TOKEN
-            },
-            // body: JSON.stringify({
-            //     'from': `${startDate.getFullYear()}-${month}-${day}T${hours}:${minutes}:00Z`,
-            //     'to': `${endDate.getFullYear()}-${monthEnd}-${dayEnd}T${hoursEnd}:${minutesEnd}:59Z`
-            // })
-            body: JSON.stringify({
-                "from": "2022-06-03T11:45:00Z",
-                "to": "2022-06-03T12:45:00Z"
-            })
-        })
-
-        const vehicleAlerts = await data.json()
-        return vehicleAlerts
-    }
-
 
     async cars() {
 
@@ -328,151 +316,6 @@ class DriveUp {
 
         const alerts = await data.json();
         return alerts
-    }
-
-    async saveAlerts(vehicleAlertsArr, cars, alerts, customers) {
-
-        let checkAlert = {}
-        let vehicleAlerts = []
-
-        vehicleAlertsArr.forEach(alert => {
-            switch (alert.idEventType) {
-                case 3: //Llegada
-                    if (checkAlert.data) vehicleAlerts.push(checkAlert)
-                    checkAlert = alert
-                    return null
-                case 4: //Salida
-                    if (checkAlert && alert.idVehicle == checkAlert.idVehicle && alert.data && alert.data.idzona == checkAlert.data.idzona) {
-                        const dtInit = new Date(checkAlert.recordedat)
-                        const dtEnd = new Date(alert.recordedat)
-                        const difference = dtEnd.getTime() - dtInit.getTime()
-                        const twoSecondsInMilisseconds = 120000
-                        if (difference < twoSecondsInMilisseconds) {
-                            checkAlert = {}
-                            return null
-                        } else {
-                            vehicleAlerts.push(checkAlert)
-                            vehicleAlerts.push(alert)
-                            checkAlert = {}
-                            return null
-                        }
-                    } else {
-                        if (checkAlert.data) vehicleAlerts.push(checkAlert)
-                        checkAlert = {}
-                        vehicleAlerts.push(alert)
-                    }
-                    break
-                case 32: //Inicio de Detencion
-                    return null
-                default: //Otros
-                    vehicleAlerts.push(alert)
-                    break
-            }
-        })
-
-        for (let vehicleAlert of vehicleAlerts) {
-            let customer = vehicleAlert.data ? customers.find(customer => customer.id === vehicleAlert.data.idzona) : ''
-            let car = cars.find(car => car.vehicleId === vehicleAlert.idVehicle)
-            if (customer) { vehicleAlert.customer = customer.name }
-            vehicleAlert.car = {
-                plate: car.plate.split(' ')[0] == 'XBRI' ? 'XBRI010' : car.plate.split(' ')[0],
-                model: car.modelDescription,
-                category: car.kind
-            }
-
-            let alertType = ''
-            let group = ''
-
-            console.log(vehicleAlert.car.plate);
-            const travel = await Repositorie.findTravel(vehicleAlert.car.plate)
-
-            if (travel.id) {
-                let carsTravel = await RepositorieTravel.listPlates(travel.id)
-                travel.carsTravel = carsTravel
-
-                if (travel.carsTravel && travel.carsTravel.length == 2) {
-                    travel.capacity = travel.carsTravel[1].capacity
-                } else {
-                    travel.capacity = travel.carsTravel[0].capacity
-                }
-            }
-
-            alerts.find(alert => {
-                alert.types.forEach(type => {
-                    if (type.ideventtype === vehicleAlert.idEventType) {
-                        const idgroup = alert.ideventtypegroup
-                        if (idgroup === 9 || idgroup === 10 || idgroup === 12) {
-                            group = '120363024386228914@g.us' // manten 
-                            alertType = type.description
-                        }
-
-                        if (idgroup === 3 || idgroup === 4 || idgroup === 5 || idgroup === 11) {
-                            group = '120363024113373482@g.us' //op disp
-                            alertType = type.description
-                        }
-
-                        if (idgroup === 2) {
-                            group = '120363042760809190@g.us' // cliente
-                            switch (type.ideventtype) {
-                                case 3:
-                                    alertType = `Llegada al ${vehicleAlert.customer}`
-                                    break
-                                case 4:
-                                    alertType = `Salída del ${vehicleAlert.customer}`
-                                    break
-                            }
-                        }
-                    }
-                })
-            })
-
-            function titleCase(str) {
-                var splitStr = str.toLowerCase().split(' ');
-                for (var i = 0; i < splitStr.length; i++) {
-                    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-                }
-                return splitStr.join(' ');
-            }
-
-            vehicleAlert.alert = alertType
-            vehicleAlert.successend = 0
-            vehicleAlert.successendloc = 0
-            const date = new Date(vehicleAlert.recordedat)
-            date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
-            let message = `*${vehicleAlert.alert}*`
-            message += `\n${vehicleAlert.car.plate}`
-            if (travel.plate) message += ` - _${titleCase(travel.cartype)} - Capacidad ${travel.capacity}_`
-            if (travel.driverdesc) message += `\nChofer - ${titleCase(travel.driverdesc)}`
-            message += `\n${date.toLocaleTimeString('pt-BR')} ${date.toLocaleDateString('pt-BR')}\n`
-            message += `\n@${vehicleAlert.geom.coordinates[1]},${vehicleAlert.geom.coordinates[0]}`
-            if (travel.origin) message += `\nSalida: ${travel.origindesc}`
-            if (travel.route) message += ` - Retiro: ${travel.routedesc}`
-            if (travel.delivery) message += ` - Entrega: ${travel.deliverydesc}`
-
-            vehicleAlert.message = message
-            vehicleAlert.group = group
-            if (vehicleAlert.data) {
-                vehicleAlert.idzona = vehicleAlert.data.idzona
-                vehicleAlert.odometer = vehicleAlert.data.odometer
-            }
-
-            if (process.env.NODE_ENV !== 'development') {
-                client.getChats().then((data) => {
-                    for (let chat of data) {
-                        if (chat.id.server === "g.us" && chat.id._serialized == group) {
-                            client.sendMessage(chat.id._serialized, message).then(() => vehicleAlert.successend = 1)
-                            sleep(2000)
-                            let loc = new Location(vehicleAlert.geom.coordinates[1], vehicleAlert.geom.coordinates[0], vehicleAlert.alert || "")
-                            client.sendMessage(chat.id._serialized, loc).then(() => vehicleAlert.successendloc = 1)
-                            sleep(2000)
-                            return true
-                        }
-                    }
-                }).catch(err => console.log({ msg: `listagem erro`, err }))
-            }
-
-            await Repositorie.insert(vehicleAlert)
-        }
     }
 
     sendMessage(carLocation, travel, groupId) {
@@ -538,13 +381,13 @@ class DriveUp {
                 return
             }
 
-            res.on('data', (chunk) => {
+            res.on('data', async (chunk) => {
                 try {
                     const buffer = Buffer.from(chunk)
                     const string = buffer.toString()
                     string.split('\n\n').forEach(obj => {
                         let carLocation = JSON.parse(obj)
-                        geoQueue.add({ carLocation })
+                        this.checkGeoLocation(carLocation)
                     })
                 } catch (error) {
                     console.log(error);
@@ -557,57 +400,31 @@ class DriveUp {
         })
     }
 
-    async queueResponses(carLocation) {
-        try {
-            let groupId = ''
-            const customers = [
-                {
-                    name: 'SUNSET KM1',
-                    coordinates: [[-54.617956, -25.509451], [-54.618058, -25.508014], [-54.61602, -25.508038], [-54.615494, -25.508352], [-54.615338, -25.508372], [-54.615312, -25.509113], [-54.615473, -25.509243], [-54.615746, -25.509234], [-54.617956, -25.509451]],
-                    chat: '120363042760809190@g.us'
-                },
-                {
-                    name: 'SUNSET KM28',
-                    coordinates: [[-54.882118, -25.489083], [-54.883994, -25.488989], [-54.883932, -25.487659], [-54.882599, -25.487702], [-54.882546, -25.486518], [-54.882535, -25.485993], [-54.882138, -25.486012], [-54.882131, -25.48611], [-54.881739, -25.486128], [-54.881831, -25.487478], [-54.881921, -25.487604], [-54.881966, -25.488418], [-54.882009, -25.489081], [-54.882118, -25.489083]],
-                    chat: '120363042760809190@g.us'
-                },
-                {
-                    name: 'SUNSET YPANE',
-                    coordinates: [[-57.487485, -25.485866], [-57.489341, -25.48452], [-57.491133, -25.486351], [-57.491241, -25.48668], [-57.487485, -25.485866]],
-                    chat: '120363042760809190@g.us'
-                },
-                {
-                    name: 'PUERTO -  Seguro Fluvial S.A.',
-                    coordinates: [[-57.551193, -25.548095], [-57.549112, -25.547978], [-57.549455, -25.548675], [-57.549927, -25.549372], [-57.549949, -25.549372], [-57.558239, -25.549325], [-57.55826, -25.545976], [-57.553725, -25.545965], [-57.551215, -25.546139], [-57.551193, -25.548095]],
-                    chat: '120363023896820238@g.us'
-                },
-                {
-                    name: 'PUERTO - Terport S.A. Villeta',
-                    coordinates: [[-57.605167, -25.615033], [-57.602456, -25.613957], [-57.601005, -25.612982], [-57.604172, -25.611713], [-57.607549, -25.610679], [-57.610896, -25.613581], [-57.605167, -25.615033]],
-                    chat: '120363023896820238@g.us'
-                }
-            ]
-
-            customers.forEach(customer => {
-                const isInside = classifyPoint(customer.coordinates, [carLocation.lng, carLocation.lat])
-                if (isInside !== 1) {
-                    carLocation.isInside = isInside
-                    carLocation.location = customer.name
-                    groupId = customer.chat
-                }
-            })
-
-            if (lastCarLocation && lastCarLocation.plate === carLocation.plate && lastCarLocation.isInside === carLocation.isInside) {
-                return null
-            } else {
-                lastCarLocation = carLocation
+    async checkGeoLocation(carLocation) {
+        let groupId = ''
+        listCustomers.forEach(customer => {
+            const isInside = classifyPoint(customer.coordinates, [carLocation.lng, carLocation.lat])
+            if (isInside !== 1) {
+                carLocation.isInside = isInside
+                carLocation.location = customer.name
+                groupId = customer.chat
             }
+        })
+        if (carLocation.isInside === 0) return null
+        if (lastCarLocation && lastCarLocation.plate === carLocation.plate && lastCarLocation.isInside === carLocation.isInside) {
+            return null
+        } else {
+            lastCarLocation = carLocation
+            await Queue.add('GeoQueue', { carLocation, groupId })
+        }
+    }
+
+    async queueResponses(carLocation, groupId) {
+        try {
 
             const now = new Date(carLocation.recordedat)
             now.setTime(now.getTime() + now.getTimezoneOffset() * 60 * 1000 + (-4) * 60 * 60 * 1000)
             carLocation.recordedat = now
-
-            if (carLocation.isInside === 0) return null
 
             let car = listCars.find(car => car.code === carLocation.plate)
             if (car) {
@@ -619,11 +436,10 @@ class DriveUp {
             }
 
             const check = await Repositorie.checkIntheLocation(carLocation.plate)
-
             if (!carLocation.isInside) {
                 carLocation.isInside = 1
                 carLocation.location = check.length > 0 ? check[0].location : 'Sin Locale - ERROR'
-                const customer = customers.find(customer => customer.name == check[0].location)
+                const customer = listCustomers.find(customer => customer.name == check[0].location)
                 groupId = customer ? customer.chat : '120363024113373482@g.us'
             }
 
@@ -634,59 +450,59 @@ class DriveUp {
                 expiration: false
             }
 
-            if (check.length === 0) {
-                const idLocation = await Repositorie.insertLocation(carLocation)
-                const url = await ShortUrl.insert(page)
-                if (carLocation.isInside !== 1) {
-                    const travel = await Repositorie.findTravel(carLocation.plate)
+            // if (check.length === 0) {
+            //     const idLocation = await Repositorie.insertLocation(carLocation)
+            //     const url = await ShortUrl.insert(page)
+            //     if (carLocation.isInside !== 1) {
+            //         const travel = await Repositorie.findTravel(carLocation.plate)
 
-                    if (travel) {
-                        let carsTravel = await RepositorieTravel.listPlates(travel.id)
-                        travel.carsTravel = carsTravel
+            //         if (travel) {
+            //             let carsTravel = await RepositorieTravel.listPlates(travel.id)
+            //             travel.carsTravel = carsTravel
 
-                        if ([7, 2].includes(travel.typecode)) {
-                            groupId = '120363023896820238@g.us'
-                            await Repositorie.updateLocation(travel.id, travel.description, idLocation)
-                        }
-                        if (travel.carsTravel && travel.carsTravel.length == 2) {
-                            travel.capacity = travel.carsTravel[1].capacity
-                            travel.chest = travel.carsTravel[1].plate
-                        } else {
-                            travel.capacity = travel.carsTravel[0].capacity
-                        }
-                    }
+            //             if ([7, 2].includes(travel.typecode)) {
+            //                 groupId = '120363023896820238@g.us'
+            //                 await Repositorie.updateLocation(travel.id, travel.description, idLocation)
+            //             }
+            //             if (travel.carsTravel && travel.carsTravel.length == 2) {
+            //                 travel.capacity = travel.carsTravel[1].capacity
+            //                 travel.chest = travel.carsTravel[1].plate
+            //             } else {
+            //                 travel.capacity = travel.carsTravel[0].capacity
+            //             }
+            //         }
 
-                    carLocation.url = url
-                    return this.sendMessage(carLocation, travel, groupId)
-                }
-                return null
-            }
+            //         carLocation.url = url
+            //         return this.sendMessage(carLocation, travel, groupId)
+            //     }
+            //     return null
+            // }
 
             const lastDate = new Date(check[0].recordedat)
             const difference = now.getTime() - lastDate.getTime()
             const twoMinutesInMilisseconds = 120000
-            if (difference > twoMinutesInMilisseconds && carLocation.isInside !== check[0].isInside) {
-                const idLocation = await Repositorie.insertLocation(carLocation)
-                const travel = await Repositorie.findTravel(carLocation.plate)
-                const url = await ShortUrl.insert(page)
-                if (travel) {
-                    if ([7, 2].includes(travel.typecode)) {
-                        groupId = '120363023896820238@g.us'
-                        await Repositorie.updateLocation(travel.id, travel.description, idLocation)
-                    }
-                    let carsTravel = await RepositorieTravel.listPlates(travel.id)
-                    travel.carsTravel = carsTravel
+            // if (difference > twoMinutesInMilisseconds && carLocation.isInside !== check[0].isInside) {
+            //     const idLocation = await Repositorie.insertLocation(carLocation)
+            //     const travel = await Repositorie.findTravel(carLocation.plate)
+            //     const url = await ShortUrl.insert(page)
+            //     if (travel) {
+            //         if ([7, 2].includes(travel.typecode)) {
+            //             groupId = '120363023896820238@g.us'
+            //             await Repositorie.updateLocation(travel.id, travel.description, idLocation)
+            //         }
+            //         let carsTravel = await RepositorieTravel.listPlates(travel.id)
+            //         travel.carsTravel = carsTravel
 
-                    if (travel.carsTravel && travel.carsTravel.length == 2) {
-                        travel.capacity = travel.carsTravel[1].capacity
-                    } else {
-                        travel.capacity = travel.carsTravel[0].capacity
-                    }
-                }
+            //         if (travel.carsTravel && travel.carsTravel.length == 2) {
+            //             travel.capacity = travel.carsTravel[1].capacity
+            //         } else {
+            //             travel.capacity = travel.carsTravel[0].capacity
+            //         }
+            //     }
 
-                carLocation.url = url
-                return this.sendMessage(carLocation, travel, groupId)
-            }
+            //     carLocation.url = url
+            //     return this.sendMessage(carLocation, travel, groupId)
+            // }
             return null
         } catch (error) {
             console.log(error)
@@ -699,6 +515,7 @@ class DriveUp {
 
             let descPlace = ''
             let message = ''
+            let allCarsMaintenance = []
             switch (place) {
                 case '1':
                     place = 'KM 1'
@@ -713,7 +530,7 @@ class DriveUp {
                     descPlace = 'YPANE'
                     break
                 case '4':
-                    const allCarsMaintenance = await Repositorie.countInMaintenance()
+                    allCarsMaintenance = await Repositorie.countInMaintenance()
                     if (allCarsMaintenance.length == 0) {
                         message = `*No hay vehiculos en Mantenimiento*`
                     } else {
@@ -742,6 +559,7 @@ class DriveUp {
                     }
                     return message
                 case '5':
+                    allCarsMaintenance = await Repositorie.countInMaintenance()
                     const dataCars = await Repositorie.countNotInthePlace()
                     const carsBd = await RepositorieCar.cars()
                     let carsTravel = []
@@ -749,20 +567,23 @@ class DriveUp {
                         message = `*No hay vehiculos en Viaje*`
                     } else {
                         for (let car of dataCars) {
-                            const travel = await Repositorie.findTravel(car.plate)
+                            let carInMaintenance = allCarsMaintenance.find(maintenance => maintenance.plate === car.plate)
+                            if (!carInMaintenance) {
+                                const travel = await Repositorie.findTravel(car.plate)
 
-                            if (travel.id) {
-                                let carsTravel = await RepositorieTravel.listPlates(travel.id)
-                                travel.carsTravel = carsTravel
+                                if (travel.id) {
+                                    let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                                    travel.carsTravel = carsTravel
 
-                                if (travel.carsTravel && travel.carsTravel.length == 2) {
-                                    travel.capacity = travel.carsTravel[1].capacity
-                                } else {
-                                    travel.capacity = travel.carsTravel[0].capacity
+                                    if (travel.carsTravel && travel.carsTravel.length == 2) {
+                                        travel.capacity = travel.carsTravel[1].capacity
+                                    } else {
+                                        travel.capacity = travel.carsTravel[0].capacity
+                                    }
                                 }
+                                car.travel = travel
+                                carsTravel.push(car)
                             }
-                            car.travel = travel
-                            carsTravel.push(car)
                         }
                         message = `*Vehiculos en Viaje*\n`
                         let groupsTravel = carsTravel.reduce(function (r, car) {

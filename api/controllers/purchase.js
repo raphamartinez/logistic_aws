@@ -52,8 +52,11 @@ module.exports = app => {
     app.get('/ordenGestran', Middleware.authenticatedMiddleware, async (req, res, next) => {
         try {
             if (process.env.NODE_ENV !== 'development') return res.render('notGestran')
+            let providers = await Purchase.getProviders()
 
-            res.render('ordergestran')
+            res.render('ordergestran', {
+                providers
+            })
         } catch (err) {
             next(err)
         }

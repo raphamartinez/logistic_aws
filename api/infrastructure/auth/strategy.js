@@ -28,8 +28,7 @@ passport.deserializeUser(async (id_login, done) => {
     done(null, login);
 
   } catch (error) {
-    console.log(error);
-    return done(err, null);
+    return done(error, null);
   }
 })
 

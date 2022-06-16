@@ -450,59 +450,59 @@ class DriveUp {
                 expiration: false
             }
 
-            // if (check.length === 0) {
-            //     const idLocation = await Repositorie.insertLocation(carLocation)
-            //     const url = await ShortUrl.insert(page)
-            //     if (carLocation.isInside !== 1) {
-            //         const travel = await Repositorie.findTravel(carLocation.plate)
+            if (check.length === 0) {
+                const idLocation = await Repositorie.insertLocation(carLocation)
+                const url = await ShortUrl.insert(page)
+                if (carLocation.isInside !== 1) {
+                    const travel = await Repositorie.findTravel(carLocation.plate)
 
-            //         if (travel) {
-            //             let carsTravel = await RepositorieTravel.listPlates(travel.id)
-            //             travel.carsTravel = carsTravel
+                    if (travel) {
+                        let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                        travel.carsTravel = carsTravel
 
-            //             if ([7, 2].includes(travel.typecode)) {
-            //                 groupId = '120363023896820238@g.us'
-            //                 await Repositorie.updateLocation(travel.id, travel.description, idLocation)
-            //             }
-            //             if (travel.carsTravel && travel.carsTravel.length == 2) {
-            //                 travel.capacity = travel.carsTravel[1].capacity
-            //                 travel.chest = travel.carsTravel[1].plate
-            //             } else {
-            //                 travel.capacity = travel.carsTravel[0].capacity
-            //             }
-            //         }
+                        if ([7, 2].includes(travel.typecode)) {
+                            groupId = '120363023896820238@g.us'
+                            await Repositorie.updateLocation(travel.id, travel.description, idLocation)
+                        }
+                        if (travel.carsTravel && travel.carsTravel.length == 2) {
+                            travel.capacity = travel.carsTravel[1].capacity
+                            travel.chest = travel.carsTravel[1].plate
+                        } else {
+                            travel.capacity = travel.carsTravel[0].capacity
+                        }
+                    }
 
-            //         carLocation.url = url
-            //         return this.sendMessage(carLocation, travel, groupId)
-            //     }
-            //     return null
-            // }
+                    carLocation.url = url
+                    return this.sendMessage(carLocation, travel, groupId)
+                }
+                return null
+            }
 
             const lastDate = new Date(check[0].recordedat)
             const difference = now.getTime() - lastDate.getTime()
             const twoMinutesInMilisseconds = 120000
-            // if (difference > twoMinutesInMilisseconds && carLocation.isInside !== check[0].isInside) {
-            //     const idLocation = await Repositorie.insertLocation(carLocation)
-            //     const travel = await Repositorie.findTravel(carLocation.plate)
-            //     const url = await ShortUrl.insert(page)
-            //     if (travel) {
-            //         if ([7, 2].includes(travel.typecode)) {
-            //             groupId = '120363023896820238@g.us'
-            //             await Repositorie.updateLocation(travel.id, travel.description, idLocation)
-            //         }
-            //         let carsTravel = await RepositorieTravel.listPlates(travel.id)
-            //         travel.carsTravel = carsTravel
+            if (difference > twoMinutesInMilisseconds && carLocation.isInside !== check[0].isInside) {
+                const idLocation = await Repositorie.insertLocation(carLocation)
+                const travel = await Repositorie.findTravel(carLocation.plate)
+                const url = await ShortUrl.insert(page)
+                if (travel) {
+                    if ([7, 2].includes(travel.typecode)) {
+                        groupId = '120363023896820238@g.us'
+                        await Repositorie.updateLocation(travel.id, travel.description, idLocation)
+                    }
+                    let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                    travel.carsTravel = carsTravel
 
-            //         if (travel.carsTravel && travel.carsTravel.length == 2) {
-            //             travel.capacity = travel.carsTravel[1].capacity
-            //         } else {
-            //             travel.capacity = travel.carsTravel[0].capacity
-            //         }
-            //     }
+                    if (travel.carsTravel && travel.carsTravel.length == 2) {
+                        travel.capacity = travel.carsTravel[1].capacity
+                    } else {
+                        travel.capacity = travel.carsTravel[0].capacity
+                    }
+                }
 
-            //     carLocation.url = url
-            //     return this.sendMessage(carLocation, travel, groupId)
-            // }
+                carLocation.url = url
+                return this.sendMessage(carLocation, travel, groupId)
+            }
             return null
         } catch (error) {
             console.log(error)

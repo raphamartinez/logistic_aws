@@ -1,6 +1,6 @@
 
 module.exports = {
-    key: 'teste',
+    key: 'GeoQueue',
     async handle(job, done) {
         if (!job.data) return done()
         const { carLocation, groupId } = job.data

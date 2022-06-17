@@ -18,20 +18,22 @@ module.exports = app => {
     })
 
     app.get('/drivers', [Middleware.authenticatedMiddleware, Authorization('driver', 'read')], async (req, res, next) => {
-        let drivers
+        
         try {
-            if (req.access.all.allowed) {
-                // const cached = await cachelist.searchValue(`driver`)
+            let drivers = await Driver.list()
 
-                // if (cached) {
-                //     return res.json(JSON.parse(cached))
-                // }
+            // if (req.access.all.allowed) {
+            //     // const cached = await cachelist.searchValue(`driver`)
 
-                drivers = await Driver.list()
-                // cachelist.addCache(`driver`, JSON.stringify(drivers), 60 * 60 * 2)
-            } else {
-                drivers = await Driver.list(req.login.places)
-            }
+            //     // if (cached) {
+            //     //     return res.json(JSON.parse(cached))
+            //     // }
+
+            //     drivers = await Driver.list()
+            //     // cachelist.addCache(`driver`, JSON.stringify(drivers), 60 * 60 * 2)
+            // } else {
+            //     drivers = await Driver.list(req.login.places)
+            // }
 
             res.json(drivers)
         } catch (err) {

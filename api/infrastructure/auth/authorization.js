@@ -21,7 +21,6 @@ const method = {
 }
 
 module.exports = (entity, action) => (req, res, next) => {
-
     const permissionLogin = Controll.can(`${req.login.profile}`)
     const actions = method[action]
     const permissionAll = permissionLogin[actions.all](entity)

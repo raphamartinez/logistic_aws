@@ -6,7 +6,7 @@ module.exports = {
       const login = await Login.viewLogin(req.session.passport.user)
       req.login = login
       res.locals.username = login.name
-      res.locals.perfil = login.perfil
+      res.locals.perfil = login.profile
 
       return next();
     }

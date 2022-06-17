@@ -35,7 +35,8 @@ controll
     .updateOwn('travel')
     .createOwn('travel')
     .deleteOwn('travel')
-
+    .readOwn('item')
+    
 controll
     .grant('4')
     .readAny('driver')

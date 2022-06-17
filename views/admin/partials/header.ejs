@@ -51,13 +51,15 @@
                                 </a>
 
                                 <ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-                                    <li data-menu-adm><a class="dropdown-item text-white-50"
-                                            href="/administracion">Administracion</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider text-white-50" />
-                                    </li>
-                                    <li><a class="dropdown-item text-white-50" data-toggle="modal"
-                                            data-target="#logoutModal">Salir</a></li>
+                                    <% if(perfil==4) { %>
+                                        <li data-menu-adm><a class="dropdown-item text-white-50"
+                                                href="/administracion">Administracion</a></li>
+                                        <li>
+                                            <hr class="dropdown-divider text-white-50" />
+                                            <% } %>
+                                        </li>
+                                        <li><a class="dropdown-item text-white-50" data-toggle="modal"
+                                                data-target="#logoutModal">Salir</a></li>
                                 </ul>
                             </ul>
                         </div>
@@ -65,142 +67,15 @@
                 </nav>
             </header>
 
-            <div class="col-md-12 mb-4">
-                <div class="container-fluid bg-dark fixed-menu responsive" data-modal-menu>
-                    <div class="collapse p-4 responsive" id="navbarResponsive">
-                        <div class="row align-items-start">
-                            <div class="col-md-3 text-white features-menu" data-fast-btns>
-                                <p class="h6"><i class="fas fa-star"></i> Favoritos</p>
-                                <p class="small text-white-50" data-fav-help>Agregue favoritos haciendo clic en la
-                                    estrella junto al nombre del servicio.</p>
-                                <p class="small text-white-50 mb-1" data-favs-list></p>
-                                <p class="h6 pt-2"><i class="fa fa-history"></i> Accedido recientemente</p>
-                                <p class="small text-white-50 mb-1" data-recent></p>
-
-
-                            </div>
-                            <div class="col-md-9 column-menu">
-                                <div class="row">
-                                    <div class="col-md-3 text-white">
-                                        <p data-menu-title class="h6"><i class="fas fa-file-alt"></i> Informes Generales
-                                        </p>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Control de Viajes"
-                                                data-fav-action="data-menu-travel"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/informes">Listado de Informes</a>
-                                        </div>
-                                        <div class="mb-2"></div>
-                                        <p data-menu-title class="h6"><i class="fas fa-shield-alt"></i> Patrimonio</p>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Control de Patrimonio"
-                                                data-fav-action="data-menu-patrimony"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a data-report="2"
-                                                class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/patrimonio">Control de Patrimonio</a>
-                                        </div>
-                                        <div class="mb-2"></div>
-                                        <p data-menu-title class="h6"><i class="fas fa-address-card"></i> RRHH</p>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Cuestionario RRHH"
-                                                data-fav-action="data-menu-quiz"><i class="btn-fav fas fa-star"></i></a>
-                                            <a class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/cuestionario">Cuestionario RRHH</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 text-white">
-                                        <p data-menu-title class="h6"><i class="fas fa-chart-bar"></i> Informes
-                                            Operacionales</p>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Ordenes de Compra"
-                                                data-fav-action="data-menu-order"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a data-charge class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/ordenesCompra">Ordenes de Compra</a>
-                                        </div>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Despesas con Vehiculos"
-                                                data-fav-action="data-menu-expense-car"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a data-charge class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/despesasVehiculos">Despesas con Vehiculos</a>
-                                        </div>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Orden de Compra - Gestran"
-                                                data-fav-action="data-menu-ordergestran"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/ordenGestran">Orden de Compra - Gestran</a>
-                                        </div>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Cotizacion"
-                                                data-fav-action="data-menu-quotation"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/cotizacion">Cotizacion</a>
-                                        </div>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Historial del Vehiculo"
-                                                data-fav-action="data-menu-historycar"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a data-item class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/historialVehiculos">Historial del Vehiculo</a>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 text-white">
-                                        <p class="h6"><i class="fas fa-truck"></i> Viaje</p>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Control de Viajes"
-                                                data-fav-action="data-menu-travel"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/vehiculos">Control de Viajes</a>
-                                        </div>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Disponibilidad"
-                                                data-fav-action="data-menu-disponibilidad"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/disponibilidad">Disponibilidad</a>
-                                        </div>
-                                        <div class="mb-2"></div>
-                                        <p class="h6"><i class="fas fa-folder"></i> Documientos</p>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Control de Documientos"
-                                                data-fav-action="data-menu-travel"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/documientos">Control de Documientos</a>
-                                        </div>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Control de URL"
-                                                data-fav-action="data-menu-travel"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/encurtador">Control de URL</a>
-                                        </div>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="Orden de Compra - Imagen"
-                                                data-fav-action="data-menu-travel"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/orderPhoto">Orden de Compra - Imagen</a>
-                                        </div>
-                                        <div class="mb-2"></div>
-                                        <p data-menu-title class="h6"><i class="fas fa-shopping-cart"></i>
-                                            Administracion</p>
-                                        <div class="d-block mb-1" data-div-link>
-                                            <a href="" data-fav data-fav-name="ADM" data-fav-action="data-menu-adm"><i
-                                                    class="btn-fav fas fa-star"></i></a>
-                                            <a data-charge class="menu-item d-inline nav-link menu-link text-white-50"
-                                                href="/administracion"> Gerenciar Usuarios</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <% switch(perfil) { case 1: %>
+                <%- include(partials + 'menu/admin.ejs' ) %>
+                    <% break; case 2: %>
+                        <%- include(partials + 'menu/admin.ejs' ) %>
+                            <% break; case 3: %>
+                                <%- include(partials + 'menu/travel.ejs' ) %>
+                                    <% break; case 4: %>
+                                        <%- include(partials + 'menu/admin.ejs' ) %>
+                                            <% break;default: %>
+                                            <%- include(partials + 'menu/admin.ejs' ) %>
+                                            <% break; %>
+                                                <% }%>

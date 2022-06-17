@@ -67,20 +67,12 @@ module.exports = app => {
 
     app.get('/travel/:date', [Middleware.authenticatedMiddleware, Authorization('travel', 'read')], async (req, res, next) => {
         try {
-            let travels
             const date = req.params.date
             const period = false
-
-            if (req.access.all.allowed) {
-                travels = await Travel.list(date, period, req.login.id_login)
-
-            } else {
-                travels = await Travel.list(date, period, req.login.id_login)
-            }
+            const travels = await Travel.list(date, period, req.login.id_login, req.login.profile)
 
             res.json(travels)
         } catch (err) {
-            console.log(err);
             next(err)
         }
     })

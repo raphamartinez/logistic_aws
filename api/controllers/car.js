@@ -52,12 +52,12 @@ module.exports = app => {
             // if (cached) {
             //     return res.json(JSON.parse(cached))
             // }
-            let cars
-            if (req.access.all.allowed) {
-                cars = await Car.list(req.params.date)
-            } else {
-                cars = await Car.list(req.params.date, req.login.places)
-            }
+            let cars = await Car.list(req.params.date)
+            // if (req.access.all.allowed) {
+            //     cars = await Car.list(req.params.date)
+            // } else {
+            //     cars = await Car.list(req.params.date, req.login.places)
+            // }
 
             // cachelist.addCache(`car`, JSON.stringify(cars), 60 * 60 * 2)
 

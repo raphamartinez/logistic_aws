@@ -23,7 +23,7 @@ class Travel {
     }
 
 
-    async list(date, period, id_login) {
+    async list(date, period, id_login, profile) {
         try {
             const dateSQL = new Date(date)
             let firstdate = `${dateSQL.getFullYear()}-${dateSQL.getMonth() + 1}-${dateSQL.getDate()}`
@@ -33,13 +33,14 @@ class Travel {
 
             let data = []
             for (let travel of travels) {
+                if (profile == 4) travel.access = 1
                 let cars = await Repositorie.listPlates(travel.id)
                 travel.cars = cars
 
                 if (travel.cars && travel.cars.length == 2) {
                     travel.capacity = travel.cars[1].capacity
                 } else {
-                   if(travel.cars[0]) travel.capacity = travel.cars[0].capacity
+                    if (travel.cars[0]) travel.capacity = travel.cars[0].capacity
                 }
 
                 data.push(travel)

@@ -51,7 +51,7 @@ module.exports = app => {
             }
 
             res.render(url,{
-                perfil: login.perfil,
+                perfil: login.profile,
                 username: login.name
             });
             

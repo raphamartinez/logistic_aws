@@ -3,14 +3,17 @@ const maintenance = (travel, plate, chest, platedesc, chestdesc) => {
     const div = document.createElement('div')
     div.classList.add('form-row')
 
-    div.innerHTML = `
-    <div class="form-group col-md-1" data-date>
-    <input value="${travel.type}" type="text" class="form-control" disabled>
-    <a><span data-btn-cog data-id="${travel.id}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel"
+    let access = ''
+    if (travel.access) access = `<a><span data-btn-cog data-id="${travel.id}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel"
     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
     <i data-btn-cog="${travel.id}" data-id="${travel.id}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel" class="fa fa-cog" aria-hidden="true"></i>
     <span class="visually-hidden"></span>
-</span></a>
+</span></a>`
+
+    div.innerHTML = `
+    <div class="form-group col-md-1" data-date>
+    <input value="${travel.type}" type="text" class="form-control" disabled>
+    ${access}
                                         </div>
                                         <div class="form-group text-center col-1">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
@@ -37,18 +40,21 @@ const maintenance = (travel, plate, chest, platedesc, chestdesc) => {
 }
 
 const travel = (travel, plate, chest, platedesc, chestdesc) => {
-    
+
     const div = document.createElement('div')
     div.classList.add('form-row')
+
+    let access = ''
+    if (travel.access) access = `<a><span data-btn-cog data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel"
+    class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
+    <i data-btn-cog="${travel.id}" data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel" class="fa fa-cog" aria-hidden="true"></i>
+    <span class="visually-hidden"></span>
+</span></a>`
 
     div.innerHTML = `
          <div class="form-group col-md-1" data-date>
      <input value="${travel.type}" type="text" class="form-control" disabled>
-     <a><span data-btn-cog data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel"
-     class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-secondary">
-     <i data-btn-cog="${travel.id}" data-id="${travel.id}" data-iddriver="${travel.id_driver}" data-car="${platedesc}" data-chest="${chestdesc}" data-bs-toggle="modal" data-bs-target="#settingsTravel" class="fa fa-cog" aria-hidden="true"></i>
-     <span class="visually-hidden"></span>
- </span></a>
+     ${access}
                                         </div>
                                         <div class="form-group text-center col-md-1">
                                         <input value="${travel.origindesc}" type="text" class="form-control" disabled>
@@ -63,7 +69,7 @@ const travel = (travel, plate, chest, platedesc, chestdesc) => {
                                             <input value="${travel.driverdesc}" data-ci="${travel.idcard}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group col-md-1">
-                                            <input value="${travel.company_name ? travel.company_name: ""}" data-ci="${travel.company_idcard ? travel.company_idcard : ""}" type="text" class="form-control" disabled>
+                                            <input value="${travel.company_name ? travel.company_name : ""}" data-ci="${travel.company_idcard ? travel.company_idcard : ""}" type="text" class="form-control" disabled>
                                         </div>
                                         <div class="form-group text-center col-md-2">
                                             <input value="${plate}" type="text" class="form-control" disabled>

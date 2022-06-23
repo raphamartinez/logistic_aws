@@ -63,8 +63,10 @@ module.exports = app => {
 
     app.post('/salir', async function (req, res, next) {
         try {
-            req.logout();
-            res.redirect('/')
+            req.logout(function (err) {
+                if (err) { return next(err); }
+                res.redirect('/')
+            })
         } catch (err) {
             next(err)
         }

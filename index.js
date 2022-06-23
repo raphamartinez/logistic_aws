@@ -13,7 +13,6 @@ const fs = require("fs");
 const config = require("./config.json");
 const axios = require("axios");
 const Queue = require('./api/infrastructure/redis/queue');
-
 const { Client, Location, List, Buttons, LocalAuth } = require('whatsapp-web.js');
 
 function sleep(milliseconds) {
@@ -25,14 +24,11 @@ function sleep(milliseconds) {
 }
 
 const app = customExpress();
-
 app.locals = appLocals;
 
 if (process.env.NODE_ENV !== 'development') {
   const myCustomId = '33'
-
   const authStrategy = new LocalAuth({ clientId: myCustomId })
-
   const worker = `${authStrategy.dataPath}/session-${myCustomId}/Default/Service Worker`
   if (fs.existsSync(worker)) {
     fs.rmSync(worker, { recursive: true })
@@ -46,7 +42,6 @@ if (process.env.NODE_ENV !== 'development') {
       takeoverTimeoutMs: 10
     },
   });
-
   global.authed = false;
 
   client.on('qr', (qr) => {
@@ -75,6 +70,7 @@ if (process.env.NODE_ENV !== 'development') {
 
   client.on('message', async msg => {
     sleep(1000)
+    if (msg.fromMe) return null
     if (process.env.NODE_ENV === 'development') return null
     let autoMsg = ''
     let listPlaces = []
@@ -98,7 +94,9 @@ if (process.env.NODE_ENV !== 'development') {
         break;
 
       case '120363042760809190@g.us':
-        client.sendMessage(msg.from, '*Comando no identificado*')
+        const historicCar = await DriveUp.historicCar(msg.body)
+        autoMsg = historicCar ? historicCar : `Sin resultados para este vehículo.`
+        client.sendMessage(msg.from, autoMsg)
         break;
 
       case '120363024386228914@g.us':
@@ -115,8 +113,8 @@ if (process.env.NODE_ENV !== 'development') {
         break;
 
       case '120363023896820238@g.us':
-        const historic = await DriveUp.historicContainer(msg.body)
-        autoMsg = historic ? historic : `Sin resultados para este numero de contenedor.`
+        const historicContainer = await DriveUp.historicContainer(msg.body)
+        autoMsg = historicContainer ? historicContainer : `Sin resultados para este numero de contenedor.`
         client.sendMessage(msg.from, autoMsg)
         break;
     }
@@ -133,13 +131,11 @@ if (process.env.NODE_ENV !== 'development') {
   client.on("disconnected", () => {
     console.log("Disconectado!");
   })
-
   client.initialize()
 }
 
 const authRoute = require("./components/auth")
 app.use("/auth", authRoute)
-
 app.listen(3000, async () => {
   app.set('views', [path.join(__dirname, 'views/public'), path.join(__dirname, 'views/admin'), path.join(__dirname, 'views/quiz')])
   app.set('view engine', 'ejs');

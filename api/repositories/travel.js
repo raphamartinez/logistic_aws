@@ -17,7 +17,9 @@ class Travel {
                         WHEN tr.type = 6 THEN "Transferencia"
                         WHEN tr.type = 7 THEN "Devolucion de Contenedor" 
                         WHEN tr.type = 8 THEN "Cubiertas para Reciclajes" 
-                        WHEN tr.type = 9 THEN "Retiro de Contenedor del Patio" 
+                        WHEN tr.type = 9 THEN "Retiro de Contenedor del Patio"
+                        WHEN tr.type = 10 THEN "Retorno + Transferencia Retorno + Dev. Contenedor" 
+                        WHEN tr.type = 11 THEN "Retorno + Retiro Contenedor Transferencia + Dev. Contenedor"  
                         ELSE ""
                     END as type,
                     CASE
@@ -285,6 +287,8 @@ class Travel {
                         WHEN tr.type = 7 THEN "Devolucion de Contenedor"
                         WHEN tr.type = 8 THEN "Cubiertas para Reciclajes" 
                         WHEN tr.type = 9 THEN "Retiro de Contenedor del Patio" 
+                        WHEN tr.type = 10 THEN "Retorno + Transferencia Retorno + Dev. Contenedor" 
+                        WHEN tr.type = 11 THEN "Retorno + Retiro Contenedor Transferencia + Dev. Contenedor"  
                         ELSE ""
                     END as type,
                     CASE
@@ -442,6 +446,8 @@ class Travel {
             WHEN tr.type = 7 THEN "Devolucion de Contenedor"
             WHEN tr.type = 8 THEN "Cubiertas para Reciclajes" 
             WHEN tr.type = 9 THEN "Retiro de Contenedor del Patio" 
+            WHEN tr.type = 10 THEN "Retorno + Transferencia Retorno + Dev. Contenedor" 
+            WHEN tr.type = 11 THEN "Retorno + Retiro Contenedor Transferencia + Dev. Contenedor"  
             ELSE ""
         END as type, 
         CASE

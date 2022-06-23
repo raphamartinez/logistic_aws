@@ -106,6 +106,21 @@ class DriveUp {
         }
     }
 
+    async historicNotifications(plate) {
+        try {
+            const sql = `SELECT dr.lat, dr.lng, dr.odometer, dr.plateDesc, dr.isInside, dr.location, DATE_FORMAT(dr.recordedat, '%H:%i %d/%m/%Y') as date, dr.recordedat
+            FROM api.driveuplocation dr
+            WHERE dr.plate = ?
+            ORDER BY dr.recordedat DESC
+            LIMIT 10`
+
+            const result = await query(sql, plate)
+            return result
+        } catch (error) {
+            throw new InvalidArgumentError(error)
+        }
+    }
+
     async historicContainer(msg) {
         try {
             let sql = `SELECT tr.id, tr.type as typecode, tr.period, tr.obs, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
@@ -269,8 +284,7 @@ class DriveUp {
         }
     }
 
-
-    async findTravel(plate) {
+    async findTravel(plate, date = 'now()') {
         try {
             const sql = `SELECT max(tr.id) as id, tr.type as typecode, tr.period, tr.obs as description, IF(tr.period = 1, "Mañana", "Noche") as perioddesc, DATE_FORMAT(tr.date, '%H:%i %d/%m/%Y') as datedesc, dr.id as id_driver,
             IF(dr.name is null, "", dr.name) as driverdesc, dr.idcard, tr.origin, tr.route, tr.delivery, us.name, tr.company_name, tr.company_idcard, ca.plate, ca.cartype, ca.model,
@@ -415,9 +429,9 @@ class DriveUp {
                         where tr.id = (SELECT MAX(trr.id) FROM api.travel trr 
                         INNER JOIN api.travelcar tc ON trr.id = tc.id_travel AND tc.id_car = (SELECT id FROM api.car WHERE plate = ?) 
 						INNER JOIN api.car ca ON tc.id_car = ca.id 
-                        where ca.plate = ? and trr.date between (now() - interval 4 day) and now())`
+                        where ca.plate = ? and trr.date between (? - interval 4 day) and ?)`
 
-            const result = await query(sql, [plate, plate, plate])
+            const result = await query(sql, [plate, plate, plate, date, date])
             return result[0]
         } catch (error) {
             console.log(error);

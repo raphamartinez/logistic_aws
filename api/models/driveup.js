@@ -17,6 +17,14 @@ function sleep(milliseconds) {
     } while (currentDate - date < milliseconds);
 }
 
+function titleCase(str) {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    return splitStr.join(' ');
+}
+
 const listCars = [
     {
         code: 'XBRI106TRASCAN',
@@ -330,14 +338,6 @@ class DriveUp {
                 case 1:
                     alertType = `*Salída* del *${carLocation.location}*`
                     break
-            }
-
-            function titleCase(str) {
-                var splitStr = str.toLowerCase().split(' ');
-                for (var i = 0; i < splitStr.length; i++) {
-                    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
-                }
-                return splitStr.join(' ');
             }
 
             let message = `${alertType}\n`
@@ -700,14 +700,58 @@ class DriveUp {
         }
     }
 
-    async historicContainer(msg) {
-        function titleCase(str) {
-            var splitStr = str.toLowerCase().split(' ');
-            for (var i = 0; i < splitStr.length; i++) {
-                splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    async historicCar(msg) {
+        try {
+            let historic = ''
+            const notifications = await Repositorie.historicNotifications(msg)
+            if (notifications.length === 0) return false
+            notifications.reverse()
+            for (const notification of notifications) {
+                let car = notification.plateDesc.split(' ')
+                if (historic === '') car.forEach((c, i) => historic += i == 0 ? `Historial del *${c}* ` : ` ${c} `)
+                historic += '\n\n'
+                switch (notification.isInside) {
+                    case -1:
+                        historic += `*Llegada* al *${notification.location}*\n`
+                        break
+                    case 1:
+                        historic += `*Salída* del *${notification.location}*\n`
+                        break
+                }
+                historic += `${notification.date}`
+                const travel = await Repositorie.findTravel(msg, notification.recordedat)
+                if (travel.id) {
+                    let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                    travel.carsTravel = carsTravel
+
+                    if (travel.carsTravel && travel.carsTravel.length == 2) {
+                        travel.capacity = travel.carsTravel[1].capacity
+                        travel.chest = travel.carsTravel[1].plate
+                    } else {
+                        travel.capacity = travel.carsTravel[0].capacity
+                    }
+                    if (travel.chest) {
+                        historic += `\nAcople: _${travel.chest} - Cap: ${travel.capacity}_`
+                    } else {
+                        historic += `\nCap: _${travel.capacity}_`
+                    }
+                    if (travel.driverdesc) historic += `\nChofer: ${titleCase(travel.driverdesc)}`
+                    if (travel.description) historic += `\n${[7, 2].includes(travel.typecode) ? 'Contenedor' : 'Obs'}: ${travel.description}`
+                    if (travel.origin) historic += `\nSalida: _${travel.origindesc}_`
+                    if (travel.route) historic += `\nRetiro: _${travel.routedesc}_`
+                    if (travel.delivery) historic += `\nEntrega: _${travel.deliverydesc}_`
+                } else {
+                    historic += '\nSin informaciones de la viaje'
+                }
             }
-            return splitStr.join(' ');
+
+            return historic
+        } catch (error) {
+            return false
         }
+    }
+
+    async historicContainer(msg) {
         try {
             let historic = ''
             let type = { in: false, out: false }

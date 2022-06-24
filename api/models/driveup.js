@@ -358,12 +358,14 @@ class DriveUp {
             message += `\nURL: ${carLocation.url}`
 
             if (process.env.NODE_ENV !== 'development') {
-                client.sendMessage(groupId, message)
+                client.sendMessage(groupId, message).then((rep) => {
+                   console.log(`message send to ${groupId}`)
+                }).catch(err => console.log(err))
                 sleep(2000)
                 return true
             }
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
     }
 
@@ -380,15 +382,23 @@ class DriveUp {
                 res.resume();
                 return
             }
-
             res.on('data', async (chunk) => {
                 try {
                     const buffer = Buffer.from(chunk)
                     const string = buffer.toString()
-                    string.split('\n\n').forEach(obj => {
-                        let carLocation = JSON.parse(obj)
+                    let count = 0
+                    Array.from(string).map(char => { if (char == '{') count++ })
+                    if (count == 1) {
+                        let carLocation = JSON.parse(string)
                         this.checkGeoLocation(carLocation)
-                    })
+                    } else {
+                        string.split('}').forEach(obj => {
+                            if (obj.length > 1) {
+                                let carLocation = JSON.parse(`${obj}}`)
+                                this.checkGeoLocation(carLocation)
+                            }
+                        })
+                    }
                 } catch (error) {
                     console.log(error);
                 }

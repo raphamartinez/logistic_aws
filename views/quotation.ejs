@@ -167,6 +167,7 @@
 
         <div style="padding-left: 20px; padding-right: 20px; ">
             <% orders.forEach(order => { %>
+
                 <h3
                     style="text-align:center;float:inline-start; padding-top: 20px; text-decoration: underline; background-color: #ffffa6; grid-row: 1 / 2; margin-top: 70px;">
                     COTIZACION: <%= order[0] %>
@@ -193,13 +194,13 @@
                                 <th>MARCA</th>
                                 <th>CANT</th>
                                 <% let prov1 = ''; let prov2 = ''; let prov3 = ''; %> 
-                                <% for(let group of order[1]) {%>
+                                <% order[1].forEach(group=> { %>
                                     <% group[1].forEach((brand, i)=> { %>
-                                        <% if(brand[0] && prov1 == '') { prov1= brand[0].proveedor %> <th style="text-align: right;"><%= brand[0].proveedor %></th> <% } %> 
-                                        <% if(brand[1] && prov2 == '') { prov2= brand[1].proveedor %> <th style="text-align: right;"><%= brand[1].proveedor %></th> <% } %> 
-                                        <% if(brand[2] && prov3 == '') { prov3= brand[2].proveedor %> <th style="text-align: right;"><%= brand[2].proveedor %></th> <% } %> 
+                                   <% if(brand[0] && prov1 == '') { prov1= brand[0].proveedor %> <th style="text-align: right;"><%= brand[0].proveedor %></th> <% } %> 
+                                   <% if(brand[1] && prov2 == '') { prov2= brand[1].proveedor %> <th style="text-align: right;"><%= brand[1].proveedor %></th> <% } %> 
+                                   <% if(brand[2] && prov3 == '') { prov3= brand[2].proveedor %> <th style="text-align: right;"><%= brand[2].proveedor %></th> <% } %> 
                                     <% }) %>
-                                <% }%>
+                                <% }) %>
                                 <% if(prov2 == '') { %> <th style="text-align: right;"></th> <% } %> 
                                 <% if(prov3 == '') { %> <th style="text-align: right;"></th> <% } %> 
                                 <th style="padding-left: 10px;">NATURALEZA</th>
@@ -210,12 +211,12 @@
                         <tbody>
                             <% let amountMin; %> 
                             <% let gindex = ''; let provider1 = 0; let provider2 = 0; let provider3 = 0; %> 
-                            <% for(let group of order[1]) { %>
+                            <% order[1].forEach(group=> { %>
                                 <% provider1 += group[1].minprovider1; 
                                    provider2 += group[1].minprovider2;
                                    provider3 += group[1].minprovider3;
                                 %> 
-                                <% for(let brand of group[1]) { %>
+                                <% group[1].forEach((brand, ibr) => {  %>
                                     <% if(brand[0].qtd_product) { %> 
                                         <% if(gindex != '' && gindex !== brand[0].product) {%> 
                                             <tr style="background-color: #DCDCDC;" class="bg-secondary mb-2">
@@ -240,7 +241,7 @@
                                             <%= brand[0].grupo %>
                                         </td>
                                         <td>
-                                            <% if(brand[0].type == "SERVICIO"){%> SERVICIO <% }else{ %><%= brand[0].model_product %><% } %> 
+                                            <% if(brand[0].type == "SERVICIO") {%> SERVICIO <% }else{ %>    <%= brand[0].model_product %><% } %> 
                                         </td>
                                         <td>
                                             <%= brand[0].qtd_product %>
@@ -270,10 +271,10 @@
                                     </tr>
 
                                     <% } %>
-                                    <% } %>
+                                    <% }) %>
                                     <% amountMin =order[1].reduce(function (previous, key) { return previous +
                                         key.min; }, 0); %>
-                                    <% } %>
+                    <% }) %>
                                         <tr class="bg-secondary mb-2">
                                             <td></td>
                                             <td></td>

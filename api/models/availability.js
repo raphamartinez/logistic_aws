@@ -251,21 +251,25 @@ class Availability {
 
             let carsLocation = []
             let carsTravel = []
+            const allCarsMaintenance = await Repositorie.countInMaintenance()
             const carsWithTravel = await Repositorie.countNotInthePlace()
-            for(let car of carsWithTravel){
-                let travel = await Repositorie.findTravel(car.plate)
-                if (travel.id) {
-                    let carsTravel = await RepositorieTravel.listPlates(travel.id)
-                    travel.carsTravel = carsTravel
-    
-                    if (travel.carsTravel && travel.carsTravel.length == 2) {
-                        travel.capacity = travel.carsTravel[1].capacity
-                    } else {
-                        travel.capacity = travel.carsTravel[0].capacity
+            for (let car of carsWithTravel) {
+                let carInMaintenance = allCarsMaintenance.find(maintenance => maintenance.plate === car.plate)
+                if (!carInMaintenance) {
+                    let travel = await Repositorie.findTravel(car.plate)
+                    if (travel.id) {
+                        let carsTravel = await RepositorieTravel.listPlates(travel.id)
+                        travel.carsTravel = carsTravel
+
+                        if (travel.carsTravel && travel.carsTravel.length == 2) {
+                            travel.capacity = travel.carsTravel[1].capacity
+                        } else {
+                            travel.capacity = travel.carsTravel[0].capacity
+                        }
                     }
+                    car.travel = travel
+                    carsTravel.push(car)
                 }
-                car.travel = travel
-                carsTravel.push(car)
             }
 
             for (let customer of customers) {
@@ -279,7 +283,7 @@ class Availability {
                 carsLocation.push(location)
             }
 
-            return {carsLocation, listCars, carsTravel}
+            return { carsLocation, listCars, carsTravel }
         } catch (error) {
             throw new InvalidArgumentError('No se pudo actualizar el sucursal.')
         }

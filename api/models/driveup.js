@@ -466,7 +466,7 @@ class DriveUp {
                 if (carLocation.isInside !== 1) {
                     const travel = await Repositorie.findTravel(carLocation.plate)
 
-                    if (travel) {
+                    if (travel && travel.id) {
                         let carsTravel = await RepositorieTravel.listPlates(travel.id)
                         travel.carsTravel = carsTravel
 
@@ -495,7 +495,7 @@ class DriveUp {
                 const idLocation = await Repositorie.insertLocation(carLocation)
                 const travel = await Repositorie.findTravel(carLocation.plate)
                 const url = await ShortUrl.insert(page)
-                if (travel) {
+                if (travel && travel.id) {
                     if ([7, 2].includes(travel.typecode)) {
                         groupId = '120363023896820238@g.us'
                         await Repositorie.updateLocation(travel.id, travel.description, idLocation)

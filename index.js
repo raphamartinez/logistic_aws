@@ -26,7 +26,7 @@ function sleep(milliseconds) {
 const app = customExpress();
 app.locals = appLocals;
 
-if (process.env.NODE_ENV !== 'x') {
+if (process.env.NODE_ENV !== 'development') {
   const myCustomId = '33'
   const authStrategy = new LocalAuth({ clientId: myCustomId })
   const worker = `${authStrategy.dataPath}/session-${myCustomId}/Default/Service Worker`
@@ -38,7 +38,7 @@ if (process.env.NODE_ENV !== 'x') {
   global.client = new Client({
     authStrategy: authStrategy,
     puppeteer: {
-      headless: false, args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '', takeoverOnConflict: true,
+      headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'], executablePath: '', takeoverOnConflict: true,
       takeoverTimeoutMs: 10
     },
   });

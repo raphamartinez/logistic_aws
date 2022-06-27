@@ -405,7 +405,7 @@ class DriveUp {
             })
 
             res.on('close', () => {
-                console.log('Closed connection')
+                this.stream()
             });
         })
     }
